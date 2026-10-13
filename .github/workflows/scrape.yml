@@ -1,0 +1,74 @@
+name: NBA Trends Daily Scraper
+
+on:
+  schedule:
+    # 與 MLB 相同的六輪（UTC 11:17~17:17 = 台灣 19:17~01:17），Actions 排程實測會延遲 1~2.5 小時。
+    # NBA 趨勢的發佈時間還沒實測，例行賽開打後量幾天再調整。
+    - cron: '17 11 * * *'
+    - cron: '17 12 * * *'
+    - cron: '17 13 * * *'
+    - cron: '17 15 * * *'
+    - cron: '17 16 * * *'
+    - cron: '17 17 * * *'
+  workflow_dispatch:
+
+concurrency:
+  group: scrape-and-deploy
+  cancel-in-progress: false
+
+jobs:
+  scrape-and-deploy:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Run Scraper
+        run: python scrape.py
+
+      # ⚠️ scrape.py 每輪改寫三個檔案，新增輸出檔時這裡一定要跟著加
+      # （MLB 2026-08-21 漏加 history.json，整天的輪次全部失敗）
+      - name: Commit and Push Changes
+        id: commit
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          git add index.html history.json scores.json
+          if git diff --cached --quiet; then
+            echo "changed=false" >> "$GITHUB_OUTPUT"
+            echo "內容與上一輪相同，不產生 commit"
+          else
+            git commit -m "Auto-update NBA trends for $(date +'%Y-%m-%d')"
+            git pull --rebase --autostash origin main
+            git push
+            echo "changed=true" >> "$GITHUB_OUTPUT"
+          fi
+
+      # 部署失敗 + 內容沒變不 commit 會讓網站無限期卡在舊頁面（MLB 2026-08-06），
+      # 沒有新 commit 時比對線上頁面，對不上就補空 commit 逼 Pages 重新部署。
+      - name: Verify Deployment
+        if: steps.commit.outputs.changed == 'false'
+        run: |
+          if ! curl -fsSL --max-time 30 \
+               "https://johnny1713.github.io/nba-sports-trends/index.html?cachebust=$(date +%s)" \
+               -o /tmp/live.html; then
+            echo "取不到線上頁面，略過本次檢查"
+            exit 0
+          fi
+          LIVE=$(sha256sum /tmp/live.html | cut -d' ' -f1)
+          LOCAL=$(sha256sum index.html | cut -d' ' -f1)
+          if [ "$LIVE" = "$LOCAL" ]; then
+            echo "線上頁面與最新產出一致"
+          else
+            echo "線上頁面落後於 main，補空 commit 觸發重新部署"
+            git pull --rebase --autostash origin main
+            git commit --allow-empty -m "Redeploy: Pages 頁面落後於 main"
+            git push
+          fi

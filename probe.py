@@ -89,4 +89,15 @@ def main():
 
 
 if __name__ == '__main__':
-    sys.exit(main())
+    main()
+
+
+# 連網測一次正式爬蟲（季前賽也算，但 --include-preseason 不會寫 history）。
+# 產出放 samples/preview.html 讓 workflow 一起 commit 回來檢查；日誌另存 samples/preview.log。
+if __name__ == '__main__' and os.environ.get('PROBE_SCRAPE', '1') == '1':
+    import subprocess
+    r = subprocess.run([sys.executable, 'scrape.py', '--include-preseason', '--out', 'samples/preview.html'],
+                       capture_output=True, text=True)
+    with open('samples/preview.log', 'w', encoding='utf-8') as f:
+        f.write(r.stdout + '\n--- stderr ---\n' + r.stderr)
+    print(r.stdout[-3000:], r.stderr[-2000:])

@@ -1,0 +1,7 @@
+# GitHub Pages 只需要 index.html；開發用的原始頁面與程式不要發佈出去
+exclude:
+  - samples
+  - setup
+  - "*.py"
+  - CLAUDE.md
+  - scores.json

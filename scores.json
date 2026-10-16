@@ -529,19 +529,8 @@
   ]
  },
  "2026-10-15": {
-  "complete": false,
+  "complete": true,
   "games": [
-   {
-    "away": "thunder",
-    "away_score": null,
-    "cover": null,
-    "final": false,
-    "gid": "389861",
-    "home": "rockets",
-    "home_score": null,
-    "preseason": true,
-    "spread_away": -2.5
-   },
    {
     "away": "raptors",
     "away_score": 120,
@@ -550,6 +539,17 @@
     "gid": "389876",
     "home": "knicks",
     "home_score": 122,
+    "preseason": true,
+    "spread_away": null
+   },
+   {
+    "away": "thunder",
+    "away_score": 89,
+    "cover": "home",
+    "final": true,
+    "gid": "389861",
+    "home": "rockets",
+    "home_score": 116,
     "preseason": true,
     "spread_away": null
    }

@@ -729,5 +729,43 @@
     "spread_away": null
    }
   ]
+ },
+ "2026-10-18": {
+  "complete": false,
+  "games": [
+   {
+    "away": "celtics",
+    "away_score": null,
+    "cover": null,
+    "final": false,
+    "gid": "385502",
+    "home": "pistons",
+    "home_score": null,
+    "preseason": false,
+    "spread_away": null
+   },
+   {
+    "away": "76ers",
+    "away_score": null,
+    "cover": null,
+    "final": false,
+    "gid": "385503",
+    "home": "knicks",
+    "home_score": null,
+    "preseason": false,
+    "spread_away": null
+   },
+   {
+    "away": "thunder",
+    "away_score": null,
+    "cover": null,
+    "final": false,
+    "gid": "385504",
+    "home": "spurs",
+    "home_score": null,
+    "preseason": false,
+    "spread_away": null
+   }
+  ]
  }
 }

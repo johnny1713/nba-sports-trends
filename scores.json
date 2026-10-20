@@ -704,7 +704,7 @@
     "home": "pistons",
     "home_score": null,
     "preseason": false,
-    "spread_away": -1.5
+    "spread_away": null
    },
    {
     "away": "76ers",
@@ -742,7 +742,7 @@
     "home": "pistons",
     "home_score": null,
     "preseason": false,
-    "spread_away": -1.5
+    "spread_away": null
    },
    {
     "away": "76ers",
@@ -780,7 +780,7 @@
     "home": "pistons",
     "home_score": null,
     "preseason": false,
-    "spread_away": -1.5
+    "spread_away": null
    },
    {
     "away": "76ers",

@@ -24,7 +24,7 @@ import time
 import urllib.request
 from datetime import date, datetime, timedelta, timezone
 
-APP_VERSION = "1.7"
+APP_VERSION = "1.8"
 
 # 不設樣本下限（使用者 2026-10-20）：情境趨勢 4-0 都算，全場趨勢 7-0 卻不算並不一致；
 # 小樣本由 Wilson 下界自行打折（7-0 → 81.0）。MLB 仍維持 8 場。
@@ -870,9 +870,24 @@ def paired_scores(records, support, target):
         b = groups.get(('home', mirror_key(k)))
         if not b:
             continue
+        # 方向檢查（使用者 2026-10-20）：兩隊**原始**命中率都要偏向 target 才算佐證——
+        # 勝負盤是「A 常過盤（>50%）＋ B 常不過盤（<50%）」，大小分是兩隊都 >50% 指向同一方向。
+        # 只看平均的話，A 夠強就能把「B 自己也 53%」的配對拉過 50（開幕日尼克獨贏 51.4 就是這樣來的）。
+        if not (_raw_share(a, support, target) > 0.5 and _raw_share(b, support, target) > 0.5):
+            continue
         pairs.append((_mean([x for x, _ in a]) + _mean([x for x, _ in b])) / 2)
         used.extend(r for _, r in a + b)
     return pairs, used
+
+
+def _raw_share(group, support, target):
+    """一組紀錄合計「對 target 有利」的原始比例（不打折）。"""
+    k = n = 0
+    for _lb, r in group:
+        kk, nn = support(r, target)
+        k += kk
+        n += nn
+    return k / n if n else 0.0
 
 
 def _rf_support(i, target):
@@ -1336,7 +1351,7 @@ def render_page(data):
 <span class="badge">美東 <b>{esc(data['date'])}</b></span>{tw_badge}
 <span class="badge">{len(games)} 場</span></header>
 {notices}
-<div class="legend"><span><i class="dot g"></i>≥55 強</span><span><i class="dot y"></i>50~55 普通</span><span><i class="dot n"></i>&lt;50 僅供參考</span><br>分數＝過盤命中率的保守估計。兩隊的紀錄要條件相對應才配成一對（例：A 主場 8/10 配 B 客場 1/10、A 休息後 9/10 配 B 休息後 1/10），全場趨勢與情境趨勢的所有配對權重相同、取平均。兩隊交手紀錄只顯示不計分。「趨勢」「情境」是兩者各自單獨算的分數，僅供參考。</div>
+<div class="legend"><span><i class="dot g"></i>≥55 強</span><span><i class="dot y"></i>50~55 普通</span><span><i class="dot n"></i>&lt;50 僅供參考</span><br>分數＝過盤命中率的保守估計。兩隊的紀錄要條件相對應才配成一對（例：A 主場 8/10 配 B 客場 1/10、A 休息後 9/10 配 B 休息後 1/10），而且要一隊過盤率 >50%、另一隊 <50%（大小分則兩隊都偏同一方向）才算數；全場趨勢與情境趨勢的所有配對權重相同、取平均。兩隊交手紀錄只顯示不計分。「趨勢」「情境」是兩者各自單獨算的分數，僅供參考。</div>
 {tops}
 {cards}
 {render_track(data.get('track'))}

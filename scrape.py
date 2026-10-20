@@ -24,7 +24,7 @@ import time
 import urllib.request
 from datetime import date, datetime, timedelta, timezone
 
-APP_VERSION = "1.4"
+APP_VERSION = "1.5"
 
 # 不設樣本下限（使用者 2026-10-20）：情境趨勢 4-0 都算，全場趨勢 7-0 卻不算並不一致；
 # 小樣本由 Wilson 下界自行打折（7-0 → 81.0）。MLB 仍維持 8 場。
@@ -261,8 +261,11 @@ _ARTICLE_RE = re.compile(r'<article\s+[^>]*class="[^"]*\bgamebox\b[^"]*"[^>]*>.*
 _SCORE_RE = re.compile(
     r'<strong[^>]*\bclass="(?=[^"]*\bteam-score\b)(?=[^"]*\bd-xl-inline-block\b)[^"]*"[^>]*>'
     r'\s*(\d+)\s*</strong>', re.I)
+# 例行賽的共識盤口旁邊會多一個下注比例 <strong>38%</strong>（季前賽沒有），所以先取整個 span
+# 再拿掉 <strong> 才解析數字。2026-10-20 開幕前發現：舊寫法要求 span 內沒有任何標籤，
+# 例行賽每一場都會讀不到讓分 → 整個讓分市場被靜默跳過。
 _SPREAD_RE = re.compile(
-    r'<span[^>]*\bclass="(?=[^"]*\bteam-consensus\b)[^"]*"[^>]*>\s*([^<]*?)\s*</span>', re.I)
+    r'<span[^>]*\bclass="(?=[^"]*\bteam-consensus\b)[^"]*"[^>]*>(.*?)</span>', re.I | re.S)
 _OU_RE = re.compile(
     r'<span[^>]*\bclass="(?=[^"]*\bteam-overunder\b)[^"]*"[^>]*>\s*o/u\s*([\d.]+)', re.I)
 
@@ -276,6 +279,8 @@ def _attr(art, name):
 
 def _num(text):
     text = html.unescape(text or '').replace('+', '').strip()
+    m = re.search(r'-?\d+(?:\.\d+)?|\bPK\b|\bPICK\b|\bEVEN\b', text, re.I)
+    text = m.group(0) if m else text
     if text.upper() in ('PK', 'PICK', "PICK'EM", 'EVEN'):
         return 0.0
     try:
@@ -311,7 +316,10 @@ def parse_gameboxes(html_str):
         t = re.search(r'(\d{1,2}:\d{2}\s*[AP]M)\s*ET', art, re.I)
         g['game_time'] = f"{t.group(1).upper()} ET" if t else None
 
-        spreads = [_num(s) for s in _SPREAD_RE.findall(art)]
+        spreads = [_num(re.sub(r'<strong[^>]*>.*?</strong>|<[^>]+>', ' ', s, flags=re.S))
+                   for s in _SPREAD_RE.findall(art)]
+        if _SPREAD_RE.findall(art) and None in spreads:
+            print(f"  [!] 警告：{g['gid']} 讀不到讓分數字: {[_text(x) for x in _SPREAD_RE.findall(art)]}")
         if len(spreads) == 2 and None not in spreads and abs(spreads[0] + spreads[1]) < 1e-9:
             g['spread_away'], g['spread_home'] = spreads
         else:

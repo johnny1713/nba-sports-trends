@@ -111,6 +111,12 @@ v1.3 拿掉 8 場樣本下限 → **v1.4 條件要相對應**。都是 2026-10-2
 
 - **季前賽**：列表 gamebox 標頭寫 `Pre Season`。預設整場跳過，頁面顯示「目前是季前賽」。
   `--include-preseason` 只給測試用，開了也不會寫 history。
+- ⚠️ **趨勢區兩隊是兩個巢狀 `<section>`**（away-team-section／home-team-section）。v1.6 以前取「到第一個
+  `</section>` 為止」，**第二隊（通常是主隊）的全場趨勢整個漏掉**，開幕日每場都只有客隊有趨勢——
+  使用者一眼看出「怎麼每場都只有一隊」，我卻解釋成「covers 還沒發佈」。v1.7 改成取到下一個
+  `<section class="cardWrapper` 為止。**又是「解析壞掉和沒發佈長得一樣」**（MLB CLAUDE.md 第 10 點），
+  下結論前先去原始頁面數 `team-section` 有幾個。MLB 是整頁找 h4，沒有這個問題。
+  另外 covers 發佈是**分隊陸續**的：同一場可能先只有一隊的 section。
 - **頁面驗證**：賽前頁比對 schema.org 的 homeTeam/awayTeam，已完賽頁（沒有 schema）改比 og:title。
   兩者對不上就當抓取失敗（實測有網址被導到 Odds Shark 通用頁）。
 - **盤口**：取列表 gamebox 的共識盤口（`team-consensus` 兩欄、`team-overunder`）。

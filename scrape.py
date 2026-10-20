@@ -24,7 +24,7 @@ import time
 import urllib.request
 from datetime import date, datetime, timedelta, timezone
 
-APP_VERSION = "1.6"
+APP_VERSION = "1.7"
 
 # 不設樣本下限（使用者 2026-10-20）：情境趨勢 4-0 都算，全場趨勢 7-0 卻不算並不一致；
 # 小樣本由 Wilson 下界自行打折（7-0 → 81.0）。MLB 仍維持 8 場。
@@ -477,8 +477,15 @@ def parse_matchup_page(body, game):
         return None
 
     city = re.search(r'"addressLocality"\s*:\s*"([^"]+)"', body)
-    sec = re.search(r'<section[^>]*\bid="trends"[^>]*>(.*?)</section>', body, re.S)
-    trends_html = sec.group(1) if sec else ''
+    # ⚠️ 趨勢區裡兩隊各是一個巢狀 <section>（away-team-section / home-team-section）。
+    # v1.6 以前用「到第一個 </section> 為止」，只讀到第一隊、第二隊（通常是主隊）整個漏掉
+    # （2026-10-20 使用者發現「怎麼每場都只有一隊有全場趨勢」）。改成取到下一個頁面區塊為止。
+    start = body.find('id="trends"')
+    if start >= 0:
+        end = body.find('<section class="cardWrapper', start + 10)
+        trends_html = body[start:end if end > 0 else len(body)]
+    else:
+        trends_html = ''
     heads = re.findall(r'<h4[^>]*\bclass="(?:[^"]*\s)?(High|Low)(?:\s[^"]*)?"[^>]*>(.*?)</h4>',
                        trends_html, re.S)
     roi = [{'class': c, 'text': strip_roi_text(_text(t))} for c, t in heads]

@@ -24,9 +24,11 @@ import time
 import urllib.request
 from datetime import date, datetime, timedelta, timezone
 
-APP_VERSION = "1.2"
+APP_VERSION = "1.3"
 
-MIN_TREND_SAMPLE = 8       # ROI 趨勢樣本 < 8 場不參與推薦（與 MLB 相同）
+# 不設樣本下限（使用者 2026-10-20）：情境趨勢 4-0 都算，全場趨勢 7-0 卻不算並不一致；
+# 小樣本由 Wilson 下界自行打折（7-0 → 81.0）。MLB 仍維持 8 場。
+MIN_TREND_SAMPLE = 1
 TOP_PICK_MIN_SCORE = 50    # 低於 50 分不進任何精選清單（與 MLB 相同）
 SCOREBOARD_LOOKBACK = 7    # 往回抓幾天的計分板（算休息天數、前一場勝負、回填賽果）
 TRACK_RECENT_DAYS = 30

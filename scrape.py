@@ -24,7 +24,7 @@ import time
 import urllib.request
 from datetime import date, datetime, timedelta, timezone
 
-APP_VERSION = "1.0"
+APP_VERSION = "1.1"
 
 MIN_TREND_SAMPLE = 8       # ROI 趨勢樣本 < 8 場不參與推薦（與 MLB 相同）
 TOP_PICK_MIN_SCORE = 50    # 低於 50 分不進任何精選清單（與 MLB 相同）
@@ -793,14 +793,20 @@ def trend_score(roi, market, target):
 
 def situational_score(rf, kind, target):
     """
-    情境分：今天**確定成立**的情境趨勢，對這一邊的命中率下界取平均。反向的紀錄會把分數拉低。
-    使用者要求情境趨勢參與判斷（2026-10-13）；有效性由「兩種算法分開記戰績」來驗證。
+    情境分：今天**確定成立**的情境趨勢，換算成對這一邊有利的命中率下界。
+
+    比照趨勢分的「兩隊各自佐證」（使用者 2026-10-20 決定）：兩隊都要有今天適用的紀錄，
+    缺一隊就不算——否則一條 4-0 的切片單獨就能產生 70.9 分的推薦。
+    分數 = 兩隊各自紀錄的下界平均，再取兩隊（與兩隊交手紀錄，若有）的平均。
+    每隊取平均而不是取最好那條，是為了讓同一隊反方向的紀錄能把分數拉低。
     """
     rows = [i for i in rf if i['kind'] == kind and i['applies'] is True and (i['w'] + i['l']) > 0]
-    if not rows:
+    groups = {}
+    for i in rows:
+        groups.setdefault(i['side'], []).append(wilson_lower_bound(*rf_support(i, target)))
+    if not groups.get('away') or not groups.get('home'):
         return None, []
-    lbs = [wilson_lower_bound(*rf_support(i, target)) for i in rows]
-    return pct(_mean(lbs)), rows
+    return pct(_mean([_mean(v) for v in groups.values()])), rows
 
 
 def combined(a, b):

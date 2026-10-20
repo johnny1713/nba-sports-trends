@@ -94,3 +94,14 @@ def main():
 
 if __name__ == '__main__':
     main()
+
+
+# 開幕日前驗證：用明天（美東 10/20）的真實頁面完整跑一次正式爬蟲，產出放 samples/ 帶回來檢查。
+# 只在 runner 上跑，history.json/scores.json 不會被 commit（probe.yml 只 add samples）。
+if __name__ == '__main__':
+    import subprocess, sys
+    r = subprocess.run([sys.executable, 'scrape.py', '--date', '2026-10-20', '--out', 'samples/preview_1020.html'],
+                       capture_output=True, text=True)
+    with open('samples/preview_1020.log', 'w', encoding='utf-8') as f:
+        f.write(r.stdout + '\n--- stderr ---\n' + r.stderr)
+    print(r.stdout[-4000:], r.stderr[-2000:])

@@ -24,7 +24,7 @@ import time
 import urllib.request
 from datetime import date, datetime, timedelta, timezone
 
-APP_VERSION = "1.3"
+APP_VERSION = "1.4"
 
 # 不設樣本下限（使用者 2026-10-20）：情境趨勢 4-0 都算，全場趨勢 7-0 卻不算並不一致；
 # 小樣本由 Wilson 下界自行打折（7-0 → 81.0）。MLB 仍維持 8 場。
@@ -508,6 +508,10 @@ ROI_SCOPE_ZH = {
     'games': '', '': '', 'away games': '客場', 'road games': '客場', 'home games': '主場',
     'games at home': '主場', 'games on the road': '客場', 'games away': '客場',
 }
+ROI_SCOPE_VENUE = {
+    'games': None, '': None, 'away games': 'road', 'road games': 'road', 'games away': 'road',
+    'games on the road': 'road', 'home games': 'home', 'games at home': 'home',
+}
 MARKET_ZH = {'Moneyline': '獨贏', 'Spread': '讓分', 'Game Total Over': '大分', 'Game Total Under': '小分'}
 
 
@@ -543,8 +547,14 @@ def parse_roi_trend(item, game, page):
     zh = None
     if scope_zh is not None:
         zh = f"{team_short(nick)} 近 {n} 場{scope_zh}{MARKET_ZH[m.group('market')]}過盤 {w} 場"
+    venue = ROI_SCOPE_VENUE.get(scope, 'unknown')
+    if venue == 'unknown':
+        applies = None
+    else:
+        applies = venue is None or (venue == 'home') == (side == 'home')
     return {'side': side, 'class': item['class'], 'market': market, 'direction': direction,
-            'w': w, 'n': n, 'text': item['text'], 'text_zh': zh}
+            'w': w, 'n': n, 'text': item['text'], 'text_zh': zh,
+            'key': (venue, None, ''), 'applies': applies}
 
 
 def roi_support(t, side_or_dir):
@@ -625,6 +635,11 @@ def condition_applies(cond, side, game, ctx):
         if spread == 0:
             return False
         return (spread < 0) == (m.group(2) == 'favorite')
+    m = re.match(r'^(?:games )?(?:on |played on )?an? ?(%s)s?$' % '|'.join(WEEKDAYS), c) or \
+        re.match(r'^(?:on )?(%s)s?$' % '|'.join(WEEKDAYS), c)
+    if m:
+        wd = ctx.get('weekday')
+        return None if wd is None else WEEKDAYS.index(m.group(1)) == wd
     prev = ctx.get('prev', {}).get(side)
     opp_prev = ctx.get('prev', {}).get('away' if is_home else 'home')
     m = re.match(r'^playing on (\d+) days? rest$', c)
@@ -683,6 +698,10 @@ def condition_zh(cond, ctx_city=None):
     if m:
         venue = {'home': '主場', 'road': '客場', None: ''}[m.group(1)]
         return f"{venue}當{'熱門（讓分方）' if m.group(2) == 'favorite' else '冷門（受讓方）'}"
+    m = re.match(r'^(?:games )?(?:on |played on )?an? ?(%s)s?$' % '|'.join(WEEKDAYS), c) or \
+        re.match(r'^(?:on )?(%s)s?$' % '|'.join(WEEKDAYS), c)
+    if m:
+        return WEEKDAY_ZH[WEEKDAYS.index(m.group(1))]
     m = re.match(r'^playing on (\d+) days? rest$', c)
     if m:
         return '背靠背（連兩天出賽）' if m.group(1) == '0' else f"休息 {m.group(1)} 天"
@@ -706,6 +725,43 @@ def condition_zh(cond, ctx_city=None):
             rule = f"{'≥' if m.group('cmp2') == 'more' else '≤'} {m.group('v2')}"
         return f"{who}前一場{what} {rule} 後"
     return None
+
+
+WEEKDAYS = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday']
+WEEKDAY_ZH = ['週一', '週二', '週三', '週四', '週五', '週六', '週日']
+_WEEKDAY_RE = re.compile(r'\b(%s)s?\b' % '|'.join(WEEKDAYS))
+
+
+def cond_key(cond):
+    """
+    條件的配對鍵 (主客, 熱門冷門, 其他條件)。兩隊紀錄要條件互相對應才能配成一對：
+    主↔客、熱門↔冷門對調，其他條件（休息天數、前一場輸贏…）要相同。兩隊交手回傳 'MEET'。
+    """
+    c = _cond_text(cond)
+    if c.startswith('meetings'):
+        return 'MEET'
+    if c in ('', 'overall'):
+        return (None, None, '')
+    if c in ('home', 'at home'):
+        return ('home', None, '')
+    if c in ('road', 'away', 'on the road'):
+        return ('road', None, '')
+    m = re.match(r'^as an? (?:(home|road) )?(favorite|underdog)$', c)
+    if m:
+        return (m.group(1), m.group(2), '')
+    # 休息天數不論幾天都算「休息」這一類（使用者 2026-10-20：A 休 1 天、B 休 2 天也算對應）
+    if re.match(r'^playing on \d+ days? rest$', c):
+        return (None, None, 'rest')
+    if _WEEKDAY_RE.search(c):
+        return (None, None, 'weekday')
+    return (None, None, c)
+
+
+_FLIP = {'home': 'road', 'road': 'home', 'favorite': 'underdog', 'underdog': 'favorite', None: None}
+
+
+def mirror_key(key):
+    return (_FLIP[key[0]], _FLIP[key[1]], key[2])
 
 
 def parse_recent_form(raw, game, ctx):
@@ -736,6 +792,7 @@ def parse_recent_form(raw, game, ctx):
         cond = m.group('cond')
         item['cond'] = cond
         item['applies'] = condition_applies(cond, item['side'], game, ctx)
+        item['key'] = cond_key(cond)
         cz = condition_zh(cond)
         if cz is not None:
             who = team_short(game[item['side']]) if item['side'] else '兩隊'
@@ -769,67 +826,64 @@ def _mean(xs):
     return sum(xs) / len(xs) if xs else None
 
 
+def paired_scores(records, support, target):
+    """
+    「條件相對應」的配對（使用者 2026-10-20）：A 隊的紀錄要配上 B 隊**對應條件**的紀錄才算數，
+    例如 A「主場 8/10」配 B「客場 1/10」、A「休息 1 天 9/10」配 B「休息 1 天 1/10」。
+    主↔客、熱門↔冷門對調，其他條件相同；休息天數不論幾天都算同一類、星期幾也算同一類（見 cond_key）。
+    兩隊交手紀錄只顯示、不計分。
+
+    每一對的分數 = (A 那組平均 + B 那組平均) / 2，每條換算成「對 target 有利」的下界。
+    只用今天**確定成立**的紀錄（applies is True）。回傳 (每對分數清單, 用到的紀錄)。
+    """
+    rows = [r for r in records if r.get('applies') is True]
+    groups, pairs, used = {}, [], []
+    for r in rows:
+        k = r.get('key')
+        lb = wilson_lower_bound(*support(r, target))
+        if k == 'MEET':
+            continue   # 兩隊交手紀錄不計分（使用者 2026-10-20：要兩邊各自都有紀錄才算）
+        groups.setdefault((r['side'], k), []).append((lb, r))
+    for (side, k), a in groups.items():
+        if side != 'away':
+            continue
+        b = groups.get(('home', mirror_key(k)))
+        if not b:
+            continue
+        pairs.append((_mean([x for x, _ in a]) + _mean([x for x, _ in b])) / 2)
+        used.extend(r for _, r in a + b)
+    return pairs, used
+
+
+def _rf_support(i, target):
+    return rf_support(i, target)
+
+
 def trend_score(roi, market, target):
-    """
-    ROI 趨勢分（與 MLB 相同的「兩隊各自佐證」原則）：
-    勝負盤要「押注隊有支持紀錄」且「對手有反向紀錄」；大小分要兩隊都指向同一方向。
-    分數 = 兩邊最有代表性那條（下界最高）的平均。單邊有資料不算，避免一條趨勢就出推薦。
-    """
-    usable = [t for t in roi if t['market'] == market and t['n'] >= MIN_TREND_SAMPLE]
-    if market == 'Total':
-        per_side = []
-        for side in ('away', 'home'):
-            lbs = [wilson_lower_bound(*roi_support(t, target)) for t in usable if t['side'] == side]
-            if not lbs:
-                return None, []
-            per_side.append(max(lbs))
-        best = [t for t in usable]
-        return pct(_mean(per_side)), best
-    opp = 'home' if target == 'away' else 'away'
-    mine = [wilson_lower_bound(*roi_support(t, target)) for t in usable if t['side'] == target]
-    theirs = [wilson_lower_bound(*roi_support(t, target)) for t in usable if t['side'] == opp]
-    if not mine or not theirs:
-        return None, []
-    return pct((max(mine) + max(theirs)) / 2), usable
+    """只看全場趨勢的配對分數（記戰績比較用）。"""
+    recs = [t for t in roi if t['market'] == market and t['n'] >= MIN_TREND_SAMPLE]
+    pairs, used = paired_scores(recs, roi_support, target)
+    return (pct(_mean(pairs)) if pairs else None), used
 
 
 def situational_score(rf, kind, target):
-    """
-    情境分：今天**確定成立**的情境趨勢，換算成對這一邊有利的命中率下界。
-
-    比照趨勢分的「兩隊各自佐證」（使用者 2026-10-20 決定）：兩隊都要有今天適用的紀錄，
-    缺一隊就不算——否則一條 4-0 的切片單獨就能產生 70.9 分的推薦。
-    分數 = 兩隊各自紀錄的下界平均，再取兩隊（與兩隊交手紀錄，若有）的平均。
-    每隊取平均而不是取最好那條，是為了讓同一隊反方向的紀錄能把分數拉低。
-    """
-    rows = [i for i in rf if i['kind'] == kind and i['applies'] is True and (i['w'] + i['l']) > 0]
-    groups = {}
-    for i in rows:
-        groups.setdefault(i['side'], []).append(wilson_lower_bound(*rf_support(i, target)))
-    if not groups.get('away') or not groups.get('home'):
-        return None, []
-    return pct(_mean([_mean(v) for v in groups.values()])), rows
+    """只看情境趨勢的配對分數（記戰績比較用）。"""
+    recs = [i for i in rf if i['kind'] == kind and (i['w'] or 0) + (i['l'] or 0) > 0]
+    pairs, used = paired_scores(recs, _rf_support, target)
+    return (pct(_mean(pairs)) if pairs else None), used
 
 
 def pooled_score(roi, rf, market, kind, target):
     """
-    推薦分數（網站實際用的）：全場趨勢與情境趨勢**放在一起、權重相同**（使用者 2026-10-20）。
-
-    兩種來源的每一條紀錄都換算成「對這一邊有利的命中率下界」，依「關於哪一隊」分組，
-    **兩隊都要有佐證**（不限來源：A 的有利紀錄可以來自全場趨勢、B 的不利紀錄來自情境趨勢）。
-    分數 = 每隊所有紀錄的平均，再對兩隊（與無主詞的兩隊交手紀錄，若有）取平均。
-    取平均而不是取最好那條，同隊反方向的紀錄才會把分數拉低。
+    推薦分數（網站實際用的）：全場趨勢的配對與情境趨勢的配對**權重相同**，所有配對取平均。
+    不跨來源配對——全場只配全場、情境只配情境。沒有任何一對就不出推薦。
     """
-    groups = {}
-    for t in roi:
-        if t['market'] == market and t['n'] >= MIN_TREND_SAMPLE:
-            groups.setdefault(t['side'], []).append(wilson_lower_bound(*roi_support(t, target)))
-    for i in rf:
-        if i['kind'] == kind and i['applies'] is True and (i['w'] + i['l']) > 0:
-            groups.setdefault(i['side'], []).append(wilson_lower_bound(*rf_support(i, target)))
-    if not groups.get('away') or not groups.get('home'):
-        return None
-    return pct(_mean([_mean(v) for v in groups.values()]))
+    recs_t = [t for t in roi if t['market'] == market and t['n'] >= MIN_TREND_SAMPLE]
+    recs_s = [i for i in rf if i['kind'] == kind and (i['w'] or 0) + (i['l'] or 0) > 0]
+    p1, _ = paired_scores(recs_t, roi_support, target)
+    p2, _ = paired_scores(recs_s, _rf_support, target)
+    allp = p1 + p2
+    return pct(_mean(allp)) if allp else None
 
 
 def side_label(spread):
@@ -867,12 +921,9 @@ def build_recommendations(game, roi, rf):
         for target in targets:
             ts, t_rows = trend_score(roi, market, target)
             ss, s_rows = situational_score(rf, kind, target)
-            # 畫面上列出「這一筆用到哪些紀錄」：兩種來源今天可用的都列
-            t_all = [t for t in roi if t['market'] == market and t['n'] >= MIN_TREND_SAMPLE]
-            s_all = [i for i in rf if i['kind'] == kind and i['applies'] is True]
             cands.append({'target': target, 'trend': ts, 'sit': ss,
                           'combined': pooled_score(roi, rf, market, kind, target),
-                          't_rows': t_rows or t_all, 's_rows': s_rows or s_all})
+                          't_rows': t_rows, 's_rows': s_rows})
         for algo in ('combined', 'trend', 'sit'):
             scored = [c for c in cands if c[algo] is not None]
             if not scored:
@@ -1254,7 +1305,7 @@ def render_page(data):
 <span class="badge">美東 <b>{esc(data['date'])}</b></span>{tw_badge}
 <span class="badge">{len(games)} 場</span></header>
 {notices}
-<div class="legend"><span><i class="dot g"></i>≥55 強</span><span><i class="dot y"></i>50~55 普通</span><span><i class="dot n"></i>&lt;50 僅供參考</span><br>分數＝過盤命中率的保守估計。全場過盤紀錄與今天確定成立的情境趨勢放在一起、權重相同，兩隊都要有佐證才出推薦。「趨勢」「情境」是兩者各自單獨算的分數，僅供參考。</div>
+<div class="legend"><span><i class="dot g"></i>≥55 強</span><span><i class="dot y"></i>50~55 普通</span><span><i class="dot n"></i>&lt;50 僅供參考</span><br>分數＝過盤命中率的保守估計。兩隊的紀錄要條件相對應才配成一對（例：A 主場 8/10 配 B 客場 1/10、A 休息後 9/10 配 B 休息後 1/10），全場趨勢與情境趨勢的所有配對權重相同、取平均。兩隊交手紀錄只顯示不計分。「趨勢」「情境」是兩者各自單獨算的分數，僅供參考。</div>
 {tops}
 {cards}
 {render_track(data.get('track'))}
@@ -1331,7 +1382,7 @@ def run(date_str, include_preseason=False, scores=None, history=None, write_hist
                 print(f"    [跳過] 實際是 {actual} 的比賽")
                 off_day.append(g['gid'])
                 continue
-        ctx = {'city': page['city'],
+        ctx = {'city': page['city'], 'weekday': date.fromisoformat(date_str).weekday(),
                'prev': {s: previous_game(scores, g[s], date_str) for s in ('away', 'home')}}
         roi = [t for t in (parse_roi_trend(i, g, page) for i in page['roi_raw']) if t]
         rf = parse_recent_form(page['rf_raw'], g, ctx)

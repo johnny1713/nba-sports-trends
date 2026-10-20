@@ -130,6 +130,17 @@ v1.3 拿掉 8 場樣本下限 → **v1.4 條件要相對應**。都是 2026-10-2
 離線模式讀 `samples/`（`_offline_file` 對應網址→檔名），不寫 history／scores。
 `--replay` 必須位元組相同。UI 改動另用 390px 檢查 `scrollWidth - clientWidth == 0`。
 
+### 星期幾的趨勢：covers 沒有、Odds Shark 已併入 covers（2026-10-20 查證）
+
+使用者記得以前有「週三 18 場過 16 場」這種趨勢——**是真的**，2023 年 Odds Shark 還獨立時有
+（例：「Cavaliers are 6-14 ATS in their last 20 on a Tuesday」）。但現在 oddsshark.com 的
+NBA 網址全部導回 covers（`samples/oddsshark/`），句型與 covers Recent Form 相同，112 句零星期幾；
+MLB 400 個歷史版本也零。`cond_key`／`condition_applies` 已預先支援星期幾，出現了會自動配對。
+
+唯一的路是自己用 covers 計分板（`summary-box` 有誰過讓分）回填整季算週X戰績。
+**使用者決定先不做**：自己切 7 天 × 30 隊 = 210 個切片必然長出巧合的「18 過 16」。
+等戰績表證明情境趨勢有用再說。
+
 ## 待辦
 
 - **workflow 檔 Claude 無法推送**（token 沒有 workflow scope，git push 與 API 都被拒）。

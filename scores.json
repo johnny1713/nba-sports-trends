@@ -704,7 +704,7 @@
     "home": "pistons",
     "home_score": null,
     "preseason": false,
-    "spread_away": null
+    "spread_away": -1.5
    },
    {
     "away": "76ers",
@@ -715,7 +715,7 @@
     "home": "knicks",
     "home_score": null,
     "preseason": false,
-    "spread_away": null
+    "spread_away": 4.5
    },
    {
     "away": "thunder",
@@ -726,7 +726,7 @@
     "home": "spurs",
     "home_score": null,
     "preseason": false,
-    "spread_away": null
+    "spread_away": 1.5
    }
   ]
  },
@@ -742,7 +742,7 @@
     "home": "pistons",
     "home_score": null,
     "preseason": false,
-    "spread_away": null
+    "spread_away": -1.5
    },
    {
     "away": "76ers",
@@ -753,7 +753,7 @@
     "home": "knicks",
     "home_score": null,
     "preseason": false,
-    "spread_away": null
+    "spread_away": 4.5
    },
    {
     "away": "thunder",
@@ -764,7 +764,45 @@
     "home": "spurs",
     "home_score": null,
     "preseason": false,
-    "spread_away": null
+    "spread_away": 1.5
+   }
+  ]
+ },
+ "2026-10-19": {
+  "complete": false,
+  "games": [
+   {
+    "away": "celtics",
+    "away_score": null,
+    "cover": null,
+    "final": false,
+    "gid": "385502",
+    "home": "pistons",
+    "home_score": null,
+    "preseason": false,
+    "spread_away": -1.5
+   },
+   {
+    "away": "76ers",
+    "away_score": null,
+    "cover": null,
+    "final": false,
+    "gid": "385503",
+    "home": "knicks",
+    "home_score": null,
+    "preseason": false,
+    "spread_away": 4.5
+   },
+   {
+    "away": "thunder",
+    "away_score": null,
+    "cover": null,
+    "final": false,
+    "gid": "385504",
+    "home": "spurs",
+    "home_score": null,
+    "preseason": false,
+    "spread_away": 1.5
    }
   ]
  }

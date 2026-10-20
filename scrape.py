@@ -24,7 +24,7 @@ import time
 import urllib.request
 from datetime import date, datetime, timedelta, timezone
 
-APP_VERSION = "1.5"
+APP_VERSION = "1.6"
 
 # 不設樣本下限（使用者 2026-10-20）：情境趨勢 4-0 都算，全場趨勢 7-0 卻不算並不一致；
 # 小樣本由 Wilson 下界自行打折（7-0 → 81.0）。MLB 仍維持 8 場。
@@ -1163,7 +1163,7 @@ ol.picks li:first-child{border-top:0}
 .ap{font-size:11px;padding:1px 6px;border-radius:6px;margin-right:5px;white-space:nowrap}
 .ap.yes{background:#13301f;color:var(--green)}.ap.no{background:#3a1d1d;color:#f09a95}.ap.unk{background:#262d3d;color:var(--dim)}
 .en{color:var(--dim);font-size:12px}
-.toggle{float:right;color:var(--dim);font-size:12px}
+.more{display:block;width:calc(100% - 28px);margin:0 14px 12px;padding:10px;border:1px solid var(--line);border-radius:10px;background:var(--card2);color:var(--accent);font-size:14px;font-weight:700;font-family:inherit;cursor:pointer}
 details.track{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:12px 14px;margin:14px 0}
 details.track summary{cursor:pointer;font-weight:700}
 .tw{overflow-x:auto}
@@ -1176,7 +1176,7 @@ footer{color:var(--dim);font-size:12px;text-align:center;margin:24px 0 8px}
 """
 
 JS = """
-function tg(el){el.closest('.game').classList.toggle('open')}
+function tg(el){var g=el.closest('.game');g.classList.toggle('open');var b=g.querySelector('.more');if(b)b.textContent=g.classList.contains('open')?'▲ 收起詳細趨勢':b.getAttribute('data-label')}
 function go(id){var g=document.getElementById('g'+id);if(!g)return;g.classList.add('open');g.scrollIntoView({behavior:'smooth',block:'start'})}
 """
 
@@ -1221,6 +1221,14 @@ def _ap(applies):
     return '<span class="ap unk">無法確認</span>'
 
 
+def _ap_rf(i):
+    if not i.get('kind'):
+        return ''
+    if 'meetings' in i.get('text', ''):
+        return '<span class="ap unk">交手・不計分</span>'   # 使用者 2026-10-20：交手紀錄只顯示
+    return _ap(i.get('applies'))
+
+
 def render_game(g):
     away, home = g['away'], g['home']
     times = []
@@ -1245,7 +1253,7 @@ def render_game(g):
     roi = ''.join(f'<li>{esc(t["text_zh"]) if t.get("text_zh") else ""}'
                   f'{"<br>" if t.get("text_zh") else ""}<span class="en">{esc(t["text"])}</span></li>'
                   for t in g['roi'])
-    rf = ''.join(f'<li>{_ap(i.get("applies")) if i.get("kind") else ""}'
+    rf = ''.join(f'<li>{_ap_rf(i)}'
                  f'{esc(i["text_zh"]) if i.get("text_zh") else ""}{"<br>" if i.get("text_zh") else ""}'
                  f'<span class="en">{esc(i["text"])}</span></li>' for i in g['rf'])
     detail = ''
@@ -1253,14 +1261,17 @@ def render_game(g):
         detail += f'<h3>📊 全場趨勢（計分用）</h3><ul>{roi}</ul>'
     if rf:
         detail += ('<h3>📈 情境趨勢</h3><div class="sub" style="margin-bottom:4px">'
-                   '只有標「今天適用」的才計入情境分</div>' f'<ul>{rf}</ul>')
+                   '標「今天適用」的才可能計分，而且要配上對手條件相對應的紀錄</div>' f'<ul>{rf}</ul>')
     if not detail:
         detail = '<div class="empty">沒有趨勢資料。</div>'
+    label = f"▼ 看詳細趨勢（全場 {len(g['roi'])} 條、情境 {len(g['rf'])} 條）"
     return (f'<div class="game" id="g{esc(g["gid"])}"><div class="ghead" onclick="tg(this)">'
             f'<div class="teams">{esc(team_full(away))}<span class="at">@</span>{esc(team_full(home))}</div>'
-            f'<div class="meta">{esc(when)} <span class="toggle">詳細 ▾</span></div>'
+            f'<div class="meta">{esc(when)}</div>'
             f'<div class="lines">{esc("　".join(lines))}</div></div>'
-            f'<div class="recs">{recs_html}</div><div class="detail">{detail}</div></div>')
+            f'<div class="recs">{recs_html}</div>'
+            f'<button class="more" onclick="tg(this)" data-label="{esc(label)}">{esc(label)}</button>'
+            f'<div class="detail">{detail}</div></div>')
 
 
 def _fmt_rate(pair):

@@ -17,6 +17,31 @@
   "picks": [
    {
     "algo": "combined",
+    "bet_on": "away",
+    "direction": null,
+    "gid": "385502",
+    "line": null,
+    "market": "Moneyline",
+    "score": 40.0,
+    "score_sit": null,
+    "score_trend": 40.0,
+    "top_ai": false,
+    "top_sides": false,
+    "top_totals": false
+   },
+   {
+    "algo": "trend",
+    "bet_on": "away",
+    "direction": null,
+    "gid": "385502",
+    "line": null,
+    "market": "Moneyline",
+    "score": 40.0,
+    "score_sit": null,
+    "score_trend": 40.0
+   },
+   {
+    "algo": "combined",
     "bet_on": null,
     "direction": "Over",
     "gid": "385502",
@@ -39,6 +64,56 @@
     "score": 31.1,
     "score_sit": 31.1,
     "score_trend": null
+   },
+   {
+    "algo": "combined",
+    "bet_on": "home",
+    "direction": null,
+    "gid": "385503",
+    "line": null,
+    "market": "Moneyline",
+    "score": 51.4,
+    "score_sit": null,
+    "score_trend": 51.4,
+    "top_ai": true,
+    "top_sides": true,
+    "top_totals": false
+   },
+   {
+    "algo": "trend",
+    "bet_on": "home",
+    "direction": null,
+    "gid": "385503",
+    "line": null,
+    "market": "Moneyline",
+    "score": 51.4,
+    "score_sit": null,
+    "score_trend": 51.4
+   },
+   {
+    "algo": "combined",
+    "bet_on": "away",
+    "direction": null,
+    "gid": "385504",
+    "line": null,
+    "market": "Moneyline",
+    "score": 44.5,
+    "score_sit": null,
+    "score_trend": 44.5,
+    "top_ai": false,
+    "top_sides": false,
+    "top_totals": false
+   },
+   {
+    "algo": "trend",
+    "bet_on": "away",
+    "direction": null,
+    "gid": "385504",
+    "line": null,
+    "market": "Moneyline",
+    "score": 44.5,
+    "score_sit": null,
+    "score_trend": 44.5
    }
   ],
   "results": {}

@@ -650,9 +650,12 @@ def condition_applies(cond, side, game, ctx):
         return None if wd is None else WEEKDAYS.index(m.group(1)) == wd
     prev = ctx.get('prev', {}).get(side)
     opp_prev = ctx.get('prev', {}).get('away' if is_home else 'home')
-    m = re.match(r'^playing on (\d+) days? rest$', c)
+    m = re.match(r'^playing on (\d+)( or more)? days? rest$', c)
     if m:
-        return None if prev is None else prev['rest'] == int(m.group(1))
+        if prev is None:
+            return None
+        n = int(m.group(1))
+        return prev['rest'] >= n if m.group(2) else prev['rest'] == n
     m = re.match(r'^(?:following|after) an? (straight up|ats) (loss|win)(?: of more than (\d+) points?)?$', c)
     if m:
         if prev is None:
@@ -710,8 +713,10 @@ def condition_zh(cond, ctx_city=None):
         re.match(r'^(?:on )?(%s)s?$' % '|'.join(WEEKDAYS), c)
     if m:
         return WEEKDAY_ZH[WEEKDAYS.index(m.group(1))]
-    m = re.match(r'^playing on (\d+) days? rest$', c)
+    m = re.match(r'^playing on (\d+)( or more)? days? rest$', c)
     if m:
+        if m.group(2):
+            return f"休息 {m.group(1)} 天以上"
         return '背靠背（連兩天出賽）' if m.group(1) == '0' else f"休息 {m.group(1)} 天"
     m = re.match(r'^(?:following|after) an? (straight up|ats) (loss|win)(?: of more than (\d+) points?)?$', c)
     if m:
@@ -758,7 +763,7 @@ def cond_key(cond):
     if m:
         return (m.group(1), m.group(2), '')
     # 休息天數不論幾天都算「休息」這一類（使用者 2026-10-20：A 休 1 天、B 休 2 天也算對應）
-    if re.match(r'^playing on \d+ days? rest$', c):
+    if re.match(r'^playing on \d+(?: or more)? days? rest$', c):
         return (None, None, 'rest')
     if _WEEKDAY_RE.search(c):
         return (None, None, 'weekday')

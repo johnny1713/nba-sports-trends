@@ -24,7 +24,7 @@ import time
 import urllib.request
 from datetime import date, datetime, timedelta, timezone
 
-APP_VERSION = "1.8"
+APP_VERSION = "1.9"
 
 # 不設樣本下限（使用者 2026-10-20）：情境趨勢 4-0 都算，全場趨勢 7-0 卻不算並不一致；
 # 小樣本由 Wilson 下界自行打折（7-0 → 81.0）。MLB 仍維持 8 場。
@@ -1181,6 +1181,7 @@ ol.picks li:first-child{border-top:0}
 .game.open .detail{display:block}
 .detail h3{font-size:14px;margin:4px 0 6px}
 .detail ul{margin:0 0 10px;padding-left:18px;font-size:13.5px}
+.tm{font-size:13px;font-weight:700;color:var(--accent);margin:8px 0 2px}
 .detail li{margin:3px 0}
 .ap{font-size:11px;padding:1px 6px;border-radius:6px;margin-right:5px;white-space:nowrap}
 .ap.yes{background:#13301f;color:var(--green)}.ap.no{background:#3a1d1d;color:#f09a95}.ap.unk{background:#262d3d;color:var(--dim)}
@@ -1272,18 +1273,32 @@ def render_game(g):
     if not recs_html:
         recs_html = ('<div class="empty">covers 尚未發佈這場的趨勢，稍後的自動更新會補上。</div>'
                      if not g.get('trends_published') else '<div class="empty">這場沒有符合條件的推薦。</div>')
-    roi = ''.join(f'<li>{esc(t["text_zh"]) if t.get("text_zh") else ""}'
-                  f'{"<br>" if t.get("text_zh") else ""}<span class="en">{esc(t["text"])}</span></li>'
-                  for t in g['roi'])
-    rf = ''.join(f'<li>{_ap_rf(i)}'
-                 f'{esc(i["text_zh"]) if i.get("text_zh") else ""}{"<br>" if i.get("text_zh") else ""}'
-                 f'<span class="en">{esc(i["text"])}</span></li>' for i in g['rf'])
+    def li_roi(t):
+        return (f'<li>{esc(t["text_zh"]) if t.get("text_zh") else ""}'
+                f'{"<br>" if t.get("text_zh") else ""}<span class="en">{esc(t["text"])}</span></li>')
+
+    def li_rf(i):
+        return (f'<li>{_ap_rf(i)}{esc(i["text_zh"]) if i.get("text_zh") else ""}'
+                f'{"<br>" if i.get("text_zh") else ""}<span class="en">{esc(i["text"])}</span></li>')
+
+    def by_team(items, li):
+        """依隊伍分組（使用者 2026-10-20）：客隊、主隊、最後是兩隊交手等沒有主詞的；組內維持 covers 原順序。"""
+        out = ''
+        for side, title in (('away', f"{team_short(away)}（客）"), ('home', f"{team_short(home)}（主）"),
+                            (None, '兩隊')):
+            rows = [x for x in items if x.get('side') == side]
+            if rows:
+                out += f'<div class="tm">{esc(title)}</div><ul>{"".join(li(x) for x in rows)}</ul>'
+        return out
+
+    roi = by_team(g['roi'], li_roi)
+    rf = by_team(g['rf'], li_rf)
     detail = ''
     if roi:
-        detail += f'<h3>📊 全場趨勢（計分用）</h3><ul>{roi}</ul>'
+        detail += f'<h3>📊 全場趨勢</h3>{roi}'
     if rf:
         detail += ('<h3>📈 情境趨勢</h3><div class="sub" style="margin-bottom:4px">'
-                   '標「今天適用」的才可能計分，而且要配上對手條件相對應的紀錄</div>' f'<ul>{rf}</ul>')
+                   '標「今天適用」的才可能計分，而且要配上對手條件相對應的紀錄</div>' f'{rf}')
     if not detail:
         detail = '<div class="empty">沒有趨勢資料。</div>'
     label = f"▼ 看詳細趨勢（全場 {len(g['roi'])} 條、情境 {len(g['rf'])} 條）"
@@ -1445,7 +1460,7 @@ def run(date_str, include_preseason=False, scores=None, history=None, write_hist
             'sort': start.isoformat() if start else '9',
             'trends_published': page['trends_published'],
             'roi': roi,
-            'rf': [{k: i.get(k) for k in ('text', 'text_zh', 'kind', 'applies')} for i in rf],
+            'rf': [{k: i.get(k) for k in ('text', 'text_zh', 'kind', 'applies', 'side')} for i in rf],
             'recs': sorted([r for r in recs if r['algo'] == 'combined'], key=lambda r: -r['score']),
         })
         print(f"    全場趨勢 {len(roi)} 條、情境 {len(rf)} 條（今天適用 "

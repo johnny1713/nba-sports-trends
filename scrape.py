@@ -24,7 +24,7 @@ import time
 import urllib.request
 from datetime import date, datetime, timedelta, timezone
 
-APP_VERSION = "1.1"
+APP_VERSION = "1.2"
 
 MIN_TREND_SAMPLE = 8       # ROI 趨勢樣本 < 8 場不參與推薦（與 MLB 相同）
 TOP_PICK_MIN_SCORE = 50    # 低於 50 分不進任何精選清單（與 MLB 相同）
@@ -809,9 +809,25 @@ def situational_score(rf, kind, target):
     return pct(_mean([_mean(v) for v in groups.values()])), rows
 
 
-def combined(a, b):
-    xs = [x for x in (a, b) if x is not None]
-    return round(_mean(xs), 1) if xs else None
+def pooled_score(roi, rf, market, kind, target):
+    """
+    推薦分數（網站實際用的）：全場趨勢與情境趨勢**放在一起、權重相同**（使用者 2026-10-20）。
+
+    兩種來源的每一條紀錄都換算成「對這一邊有利的命中率下界」，依「關於哪一隊」分組，
+    **兩隊都要有佐證**（不限來源：A 的有利紀錄可以來自全場趨勢、B 的不利紀錄來自情境趨勢）。
+    分數 = 每隊所有紀錄的平均，再對兩隊（與無主詞的兩隊交手紀錄，若有）取平均。
+    取平均而不是取最好那條，同隊反方向的紀錄才會把分數拉低。
+    """
+    groups = {}
+    for t in roi:
+        if t['market'] == market and t['n'] >= MIN_TREND_SAMPLE:
+            groups.setdefault(t['side'], []).append(wilson_lower_bound(*roi_support(t, target)))
+    for i in rf:
+        if i['kind'] == kind and i['applies'] is True and (i['w'] + i['l']) > 0:
+            groups.setdefault(i['side'], []).append(wilson_lower_bound(*rf_support(i, target)))
+    if not groups.get('away') or not groups.get('home'):
+        return None
+    return pct(_mean([_mean(v) for v in groups.values()]))
 
 
 def side_label(spread):
@@ -849,8 +865,12 @@ def build_recommendations(game, roi, rf):
         for target in targets:
             ts, t_rows = trend_score(roi, market, target)
             ss, s_rows = situational_score(rf, kind, target)
+            # 畫面上列出「這一筆用到哪些紀錄」：兩種來源今天可用的都列
+            t_all = [t for t in roi if t['market'] == market and t['n'] >= MIN_TREND_SAMPLE]
+            s_all = [i for i in rf if i['kind'] == kind and i['applies'] is True]
             cands.append({'target': target, 'trend': ts, 'sit': ss,
-                          'combined': combined(ts, ss), 't_rows': t_rows, 's_rows': s_rows})
+                          'combined': pooled_score(roi, rf, market, kind, target),
+                          't_rows': t_rows or t_all, 's_rows': s_rows or s_all})
         for algo in ('combined', 'trend', 'sit'):
             scored = [c for c in cands if c[algo] is not None]
             if not scored:
@@ -1232,7 +1252,7 @@ def render_page(data):
 <span class="badge">美東 <b>{esc(data['date'])}</b></span>{tw_badge}
 <span class="badge">{len(games)} 場</span></header>
 {notices}
-<div class="legend"><span><i class="dot g"></i>≥55 強</span><span><i class="dot y"></i>50~55 普通</span><span><i class="dot n"></i>&lt;50 僅供參考</span><br>分數＝過盤命中率的保守估計。「趨勢」來自全場過盤紀錄，「情境」來自今天確定成立的情境趨勢，兩者平均即為推薦分數。</div>
+<div class="legend"><span><i class="dot g"></i>≥55 強</span><span><i class="dot y"></i>50~55 普通</span><span><i class="dot n"></i>&lt;50 僅供參考</span><br>分數＝過盤命中率的保守估計。全場過盤紀錄與今天確定成立的情境趨勢放在一起、權重相同，兩隊都要有佐證才出推薦。「趨勢」「情境」是兩者各自單獨算的分數，僅供參考。</div>
 {tops}
 {cards}
 {render_track(data.get('track'))}

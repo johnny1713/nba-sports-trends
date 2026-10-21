@@ -15,6 +15,170 @@
    }
   },
   "picks": [],
+  "results": {
+   "385502": {
+    "away": 113,
+    "home": 121
+   },
+   "385503": {
+    "away": 106,
+    "home": 100
+   },
+   "385504": {
+    "away": 116,
+    "home": 104
+   }
+  }
+ },
+ "2026-10-21": {
+  "games": {
+   "385505": {
+    "away": "timberwolves",
+    "home": "heat"
+   },
+   "385506": {
+    "away": "warriors",
+    "home": "lakers"
+   },
+   "388571": {
+    "away": "hawks",
+    "home": "magic"
+   },
+   "388572": {
+    "away": "bucks",
+    "home": "wizards"
+   },
+   "388573": {
+    "away": "bulls",
+    "home": "raptors"
+   },
+   "388574": {
+    "away": "hornets",
+    "home": "nets"
+   },
+   "388575": {
+    "away": "jazz",
+    "home": "grizzlies"
+   },
+   "388576": {
+    "away": "pacers",
+    "home": "pelicans"
+   },
+   "388577": {
+    "away": "mavericks",
+    "home": "rockets"
+   },
+   "388578": {
+    "away": "suns",
+    "home": "trail blazers"
+   },
+   "388579": {
+    "away": "kings",
+    "home": "clippers"
+   }
+  },
+  "picks": [
+   {
+    "algo": "combined",
+    "bet_on": null,
+    "direction": "Over",
+    "gid": "385505",
+    "line": 239.5,
+    "market": "Total",
+    "score": 76.9,
+    "score_sit": 76.9,
+    "score_trend": null,
+    "top_ai": true,
+    "top_sides": false,
+    "top_totals": true
+   },
+   {
+    "algo": "sit",
+    "bet_on": null,
+    "direction": "Over",
+    "gid": "385505",
+    "line": 239.5,
+    "market": "Total",
+    "score": 76.9,
+    "score_sit": 76.9,
+    "score_trend": null
+   },
+   {
+    "algo": "combined",
+    "bet_on": null,
+    "direction": "Over",
+    "gid": "388575",
+    "line": 242.5,
+    "market": "Total",
+    "score": 59.9,
+    "score_sit": 59.9,
+    "score_trend": null,
+    "top_ai": true,
+    "top_sides": false,
+    "top_totals": true
+   },
+   {
+    "algo": "sit",
+    "bet_on": null,
+    "direction": "Over",
+    "gid": "388575",
+    "line": 242.5,
+    "market": "Total",
+    "score": 59.9,
+    "score_sit": 59.9,
+    "score_trend": null
+   },
+   {
+    "algo": "combined",
+    "bet_on": null,
+    "direction": "Under",
+    "gid": "388577",
+    "line": 230.0,
+    "market": "Total",
+    "score": 54.9,
+    "score_sit": null,
+    "score_trend": 54.9,
+    "top_ai": true,
+    "top_sides": false,
+    "top_totals": true
+   },
+   {
+    "algo": "trend",
+    "bet_on": null,
+    "direction": "Under",
+    "gid": "388577",
+    "line": 230.0,
+    "market": "Total",
+    "score": 54.9,
+    "score_sit": null,
+    "score_trend": 54.9
+   },
+   {
+    "algo": "combined",
+    "bet_on": "home",
+    "direction": null,
+    "gid": "385506",
+    "line": null,
+    "market": "Moneyline",
+    "score": 56.2,
+    "score_sit": null,
+    "score_trend": 56.2,
+    "top_ai": true,
+    "top_sides": true,
+    "top_totals": false
+   },
+   {
+    "algo": "trend",
+    "bet_on": "home",
+    "direction": null,
+    "gid": "385506",
+    "line": null,
+    "market": "Moneyline",
+    "score": 56.2,
+    "score_sit": null,
+    "score_trend": 56.2
+   }
+  ],
   "results": {}
  }
 }

@@ -179,6 +179,91 @@
     "score_trend": 56.2
    }
   ],
+  "results": {
+   "385505": {
+    "away": 131,
+    "home": 106
+   },
+   "385506": {
+    "away": 105,
+    "home": 127
+   },
+   "388571": {
+    "away": 132,
+    "home": 125
+   },
+   "388572": {
+    "away": 116,
+    "home": 128
+   },
+   "388573": {
+    "away": 92,
+    "home": 135
+   },
+   "388574": {
+    "away": 110,
+    "home": 103
+   },
+   "388575": {
+    "away": 103,
+    "home": 123
+   },
+   "388576": {
+    "away": 123,
+    "home": 120
+   },
+   "388577": {
+    "away": 110,
+    "home": 128
+   },
+   "388578": {
+    "away": 83,
+    "home": 124
+   },
+   "388579": {
+    "away": 96,
+    "home": 121
+   }
+  }
+ },
+ "2026-10-22": {
+  "games": {
+   "385507": {
+    "away": "cavaliers",
+    "home": "76ers"
+   },
+   "385508": {
+    "away": "nuggets",
+    "home": "thunder"
+   }
+  },
+  "picks": [
+   {
+    "algo": "combined",
+    "bet_on": null,
+    "direction": "Over",
+    "gid": "385508",
+    "line": 236.0,
+    "market": "Total",
+    "score": 68.5,
+    "score_sit": 68.5,
+    "score_trend": null,
+    "top_ai": true,
+    "top_sides": false,
+    "top_totals": true
+   },
+   {
+    "algo": "sit",
+    "bet_on": null,
+    "direction": "Over",
+    "gid": "385508",
+    "line": 236.0,
+    "market": "Total",
+    "score": 68.5,
+    "score_sit": 68.5,
+    "score_trend": null
+   }
+  ],
   "results": {}
  }
 }

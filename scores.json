@@ -559,61 +559,6 @@
   "complete": false,
   "games": [
    {
-    "away": "celtics",
-    "away_score": null,
-    "cover": null,
-    "final": false,
-    "gid": "388343",
-    "home": "76ers",
-    "home_score": null,
-    "preseason": true,
-    "spread_away": 9.5
-   },
-   {
-    "away": "kings",
-    "away_score": null,
-    "cover": null,
-    "final": false,
-    "gid": "389882",
-    "home": "spurs",
-    "home_score": null,
-    "preseason": true,
-    "spread_away": 13.5
-   },
-   {
-    "away": "wizards",
-    "away_score": null,
-    "cover": null,
-    "final": false,
-    "gid": "389879",
-    "home": "pelicans",
-    "home_score": null,
-    "preseason": true,
-    "spread_away": 1.5
-   },
-   {
-    "away": "hornets",
-    "away_score": null,
-    "cover": null,
-    "final": false,
-    "gid": "389863",
-    "home": "grizzlies",
-    "home_score": null,
-    "preseason": true,
-    "spread_away": 2.5
-   },
-   {
-    "away": "hawks",
-    "away_score": null,
-    "cover": null,
-    "final": false,
-    "gid": "388344",
-    "home": "mavericks",
-    "home_score": null,
-    "preseason": true,
-    "spread_away": 1.5
-   },
-   {
     "away": "trail blazers",
     "away_score": null,
     "cover": null,
@@ -623,6 +568,17 @@
     "home_score": null,
     "preseason": true,
     "spread_away": -1.5
+   },
+   {
+    "away": "celtics",
+    "away_score": 125,
+    "cover": "away",
+    "final": true,
+    "gid": "388343",
+    "home": "76ers",
+    "home_score": 120,
+    "preseason": true,
+    "spread_away": null
    },
    {
     "away": "heat",
@@ -654,6 +610,50 @@
     "gid": "389834",
     "home": "pacers",
     "home_score": 127,
+    "preseason": true,
+    "spread_away": null
+   },
+   {
+    "away": "kings",
+    "away_score": 97,
+    "cover": "home",
+    "final": true,
+    "gid": "389882",
+    "home": "spurs",
+    "home_score": 126,
+    "preseason": true,
+    "spread_away": null
+   },
+   {
+    "away": "wizards",
+    "away_score": 106,
+    "cover": "away",
+    "final": true,
+    "gid": "389879",
+    "home": "pelicans",
+    "home_score": 107,
+    "preseason": true,
+    "spread_away": null
+   },
+   {
+    "away": "hornets",
+    "away_score": 98,
+    "cover": "home",
+    "final": true,
+    "gid": "389863",
+    "home": "grizzlies",
+    "home_score": 116,
+    "preseason": true,
+    "spread_away": null
+   },
+   {
+    "away": "hawks",
+    "away_score": 135,
+    "cover": "away",
+    "final": true,
+    "gid": "388344",
+    "home": "mavericks",
+    "home_score": 111,
     "preseason": true,
     "spread_away": null
    },

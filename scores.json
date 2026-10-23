@@ -969,5 +969,32 @@
     "spread_away": null
    }
   ]
+ },
+ "2026-10-22": {
+  "complete": true,
+  "games": [
+   {
+    "away": "cavaliers",
+    "away_score": 106,
+    "cover": "home",
+    "final": true,
+    "gid": "385507",
+    "home": "76ers",
+    "home_score": 114,
+    "preseason": false,
+    "spread_away": null
+   },
+   {
+    "away": "nuggets",
+    "away_score": 84,
+    "cover": "home",
+    "final": true,
+    "gid": "385508",
+    "home": "thunder",
+    "home_score": 96,
+    "preseason": false,
+    "spread_away": null
+   }
+  ]
  }
 }

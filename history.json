@@ -264,6 +264,95 @@
     "score_trend": null
    }
   ],
+  "results": {
+   "385507": {
+    "away": 106,
+    "home": 114
+   },
+   "385508": {
+    "away": 84,
+    "home": 96
+   }
+  }
+ },
+ "2026-10-23": {
+  "games": {
+   "385509": {
+    "away": "knicks",
+    "home": "celtics"
+   },
+   "385510": {
+    "away": "rockets",
+    "home": "spurs"
+   },
+   "388580": {
+    "away": "hawks",
+    "home": "hornets"
+   },
+   "388581": {
+    "away": "raptors",
+    "home": "wizards"
+   },
+   "388582": {
+    "away": "timberwolves",
+    "home": "magic"
+   },
+   "388583": {
+    "away": "mavericks",
+    "home": "pacers"
+   },
+   "388584": {
+    "away": "bulls",
+    "home": "bucks"
+   },
+   "388585": {
+    "away": "pistons",
+    "home": "heat"
+   },
+   "388586": {
+    "away": "pelicans",
+    "home": "jazz"
+   },
+   "388587": {
+    "away": "clippers",
+    "home": "lakers"
+   },
+   "388588": {
+    "away": "grizzlies",
+    "home": "warriors"
+   },
+   "388589": {
+    "away": "trail blazers",
+    "home": "kings"
+   }
+  },
+  "picks": [
+   {
+    "algo": "combined",
+    "bet_on": null,
+    "direction": "Under",
+    "gid": "388587",
+    "line": 226.5,
+    "market": "Total",
+    "score": 68.5,
+    "score_sit": 68.5,
+    "score_trend": null,
+    "top_ai": true,
+    "top_sides": false,
+    "top_totals": true
+   },
+   {
+    "algo": "sit",
+    "bet_on": null,
+    "direction": "Under",
+    "gid": "388587",
+    "line": 226.5,
+    "market": "Total",
+    "score": 68.5,
+    "score_sit": 68.5,
+    "score_trend": null
+   }
+  ],
   "results": {}
  }
 }

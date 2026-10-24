@@ -353,6 +353,144 @@
     "score_trend": null
    }
   ],
+  "results": {
+   "385509": {
+    "away": 103,
+    "home": 107
+   },
+   "385510": {
+    "away": 114,
+    "home": 110
+   },
+   "388580": {
+    "away": 128,
+    "home": 81
+   },
+   "388581": {
+    "away": 112,
+    "home": 102
+   },
+   "388582": {
+    "away": 115,
+    "home": 93
+   },
+   "388583": {
+    "away": 121,
+    "home": 105
+   },
+   "388584": {
+    "away": 132,
+    "home": 125
+   },
+   "388585": {
+    "away": 128,
+    "home": 111
+   },
+   "388586": {
+    "away": 119,
+    "home": 120
+   },
+   "388587": {
+    "away": 117,
+    "home": 125
+   },
+   "388588": {
+    "away": 111,
+    "home": 108
+   },
+   "388589": {
+    "away": 128,
+    "home": 120
+   }
+  }
+ },
+ "2026-10-24": {
+  "games": {
+   "388590": {
+    "away": "heat",
+    "home": "hornets"
+   },
+   "388591": {
+    "away": "bucks",
+    "home": "76ers"
+   },
+   "388592": {
+    "away": "nets",
+    "home": "cavaliers"
+   },
+   "388593": {
+    "away": "spurs",
+    "home": "mavericks"
+   },
+   "388594": {
+    "away": "rockets",
+    "home": "hawks"
+   },
+   "388595": {
+    "away": "wizards",
+    "home": "bulls"
+   },
+   "388596": {
+    "away": "pelicans",
+    "home": "nuggets"
+   },
+   "388597": {
+    "away": "warriors",
+    "home": "suns"
+   }
+  },
+  "picks": [
+   {
+    "algo": "combined",
+    "bet_on": null,
+    "direction": "Over",
+    "gid": "388593",
+    "line": 230.0,
+    "market": "Total",
+    "score": 67.9,
+    "score_sit": 67.9,
+    "score_trend": null,
+    "top_ai": true,
+    "top_sides": false,
+    "top_totals": true
+   },
+   {
+    "algo": "sit",
+    "bet_on": null,
+    "direction": "Over",
+    "gid": "388593",
+    "line": 230.0,
+    "market": "Total",
+    "score": 67.9,
+    "score_sit": 67.9,
+    "score_trend": null
+   },
+   {
+    "algo": "combined",
+    "bet_on": null,
+    "direction": "Over",
+    "gid": "388597",
+    "line": 222.0,
+    "market": "Total",
+    "score": 57.5,
+    "score_sit": 57.5,
+    "score_trend": null,
+    "top_ai": true,
+    "top_sides": false,
+    "top_totals": true
+   },
+   {
+    "algo": "sit",
+    "bet_on": null,
+    "direction": "Over",
+    "gid": "388597",
+    "line": 222.0,
+    "market": "Total",
+    "score": 57.5,
+    "score_sit": 57.5,
+    "score_trend": null
+   }
+  ],
   "results": {}
  }
 }

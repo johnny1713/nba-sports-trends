@@ -856,6 +856,65 @@
     "score_trend": 51.9
    }
   ],
+  "results": {
+   "388605": {
+    "away": 125,
+    "home": 127
+   },
+   "388606": {
+    "away": 103,
+    "home": 110
+   },
+   "388607": {
+    "away": 99,
+    "home": 134
+   },
+   "388608": {
+    "away": 113,
+    "home": 109
+   },
+   "388609": {
+    "away": 114,
+    "home": 125
+   },
+   "388610": {
+    "away": 102,
+    "home": 110
+   },
+   "388611": {
+    "away": 110,
+    "home": 120
+   },
+   "388612": {
+    "away": 110,
+    "home": 105
+   },
+   "388613": {
+    "away": 134,
+    "home": 114
+   }
+  }
+ },
+ "2026-10-27": {
+  "games": {
+   "388614": {
+    "away": "nets",
+    "home": "celtics"
+   },
+   "388615": {
+    "away": "kings",
+    "home": "spurs"
+   },
+   "388616": {
+    "away": "pistons",
+    "home": "knicks"
+   },
+   "388617": {
+    "away": "trail blazers",
+    "home": "lakers"
+   }
+  },
+  "picks": [],
   "results": {}
  }
 }

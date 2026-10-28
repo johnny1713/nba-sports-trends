@@ -915,6 +915,153 @@
    }
   },
   "picks": [],
+  "results": {
+   "388614": {
+    "away": 124,
+    "home": 125
+   },
+   "388615": {
+    "away": 103,
+    "home": 130
+   },
+   "388616": {
+    "away": 97,
+    "home": 111
+   },
+   "388617": {
+    "away": 136,
+    "home": 129
+   }
+  }
+ },
+ "2026-10-28": {
+  "games": {
+   "388618": {
+    "away": "wizards",
+    "home": "cavaliers"
+   },
+   "388619": {
+    "away": "heat",
+    "home": "hawks"
+   },
+   "388620": {
+    "away": "76ers",
+    "home": "pacers"
+   },
+   "388621": {
+    "away": "hornets",
+    "home": "pistons"
+   },
+   "388622": {
+    "away": "magic",
+    "home": "raptors"
+   },
+   "388623": {
+    "away": "rockets",
+    "home": "bucks"
+   },
+   "388624": {
+    "away": "knicks",
+    "home": "bulls"
+   },
+   "388625": {
+    "away": "warriors",
+    "home": "timberwolves"
+   },
+   "388626": {
+    "away": "nuggets",
+    "home": "pelicans"
+   },
+   "388627": {
+    "away": "spurs",
+    "home": "jazz"
+   },
+   "388628": {
+    "away": "thunder",
+    "home": "mavericks"
+   },
+   "388629": {
+    "away": "lakers",
+    "home": "clippers"
+   }
+  },
+  "picks": [
+   {
+    "algo": "combined",
+    "bet_on": "home",
+    "direction": null,
+    "gid": "388619",
+    "line": null,
+    "market": "Moneyline",
+    "score": 58.0,
+    "score_sit": null,
+    "score_trend": 58.0,
+    "top_ai": true,
+    "top_sides": true,
+    "top_totals": false
+   },
+   {
+    "algo": "trend",
+    "bet_on": "home",
+    "direction": null,
+    "gid": "388619",
+    "line": null,
+    "market": "Moneyline",
+    "score": 58.0,
+    "score_sit": null,
+    "score_trend": 58.0
+   },
+   {
+    "algo": "combined",
+    "bet_on": "away",
+    "direction": null,
+    "gid": "388626",
+    "line": null,
+    "market": "Moneyline",
+    "score": 76.1,
+    "score_sit": null,
+    "score_trend": 76.1,
+    "top_ai": true,
+    "top_sides": true,
+    "top_totals": false
+   },
+   {
+    "algo": "trend",
+    "bet_on": "away",
+    "direction": null,
+    "gid": "388626",
+    "line": null,
+    "market": "Moneyline",
+    "score": 76.1,
+    "score_sit": null,
+    "score_trend": 76.1
+   },
+   {
+    "algo": "combined",
+    "bet_on": "away",
+    "direction": null,
+    "gid": "388624",
+    "line": null,
+    "market": "Moneyline",
+    "score": 63.8,
+    "score_sit": null,
+    "score_trend": 63.8,
+    "top_ai": true,
+    "top_sides": true,
+    "top_totals": false
+   },
+   {
+    "algo": "trend",
+    "bet_on": "away",
+    "direction": null,
+    "gid": "388624",
+    "line": null,
+    "market": "Moneyline",
+    "score": 63.8,
+    "score_sit": null,
+    "score_trend": 63.8
+   }
+  ],
   "results": {}
  }
 }

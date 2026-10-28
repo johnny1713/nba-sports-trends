@@ -1412,5 +1412,54 @@
     "spread_away": null
    }
   ]
+ },
+ "2026-10-27": {
+  "complete": true,
+  "games": [
+   {
+    "away": "nets",
+    "away_score": 124,
+    "cover": "away",
+    "final": true,
+    "gid": "388614",
+    "home": "celtics",
+    "home_score": 125,
+    "preseason": false,
+    "spread_away": null
+   },
+   {
+    "away": "pistons",
+    "away_score": 97,
+    "cover": "home",
+    "final": true,
+    "gid": "388616",
+    "home": "knicks",
+    "home_score": 111,
+    "preseason": false,
+    "spread_away": null
+   },
+   {
+    "away": "kings",
+    "away_score": 103,
+    "cover": "home",
+    "final": true,
+    "gid": "388615",
+    "home": "spurs",
+    "home_score": 130,
+    "preseason": false,
+    "spread_away": null
+   },
+   {
+    "away": "trail blazers",
+    "away_score": 136,
+    "cover": "away",
+    "final": true,
+    "gid": "388617",
+    "home": "lakers",
+    "home_score": 129,
+    "preseason": false,
+    "spread_away": null
+   }
+  ]
  }
 }

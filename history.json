@@ -1087,6 +1087,99 @@
     "score_trend": null
    }
   ],
+  "results": {
+   "388618": {
+    "away": 111,
+    "home": 121
+   },
+   "388619": {
+    "away": 129,
+    "home": 117
+   },
+   "388620": {
+    "away": 114,
+    "home": 109
+   },
+   "388621": {
+    "away": 89,
+    "home": 97
+   },
+   "388622": {
+    "away": 99,
+    "home": 129
+   },
+   "388623": {
+    "away": 132,
+    "home": 100
+   },
+   "388624": {
+    "away": 133,
+    "home": 127
+   },
+   "388625": {
+    "away": 119,
+    "home": 114
+   },
+   "388626": {
+    "away": 104,
+    "home": 91
+   },
+   "388627": {
+    "away": 117,
+    "home": 111
+   },
+   "388628": {
+    "away": 96,
+    "home": 120
+   },
+   "388629": {
+    "away": 103,
+    "home": 87
+   }
+  }
+ },
+ "2026-10-29": {
+  "games": {
+   "388630": {
+    "away": "cavaliers",
+    "home": "hawks"
+   },
+   "388631": {
+    "away": "kings",
+    "home": "pelicans"
+   },
+   "388632": {
+    "away": "grizzlies",
+    "home": "trail blazers"
+   }
+  },
+  "picks": [
+   {
+    "algo": "combined",
+    "bet_on": null,
+    "direction": "Over",
+    "gid": "388631",
+    "line": 236.5,
+    "market": "Total",
+    "score": 57.5,
+    "score_sit": 57.5,
+    "score_trend": null,
+    "top_ai": true,
+    "top_sides": false,
+    "top_totals": true
+   },
+   {
+    "algo": "sit",
+    "bet_on": null,
+    "direction": "Over",
+    "gid": "388631",
+    "line": 236.5,
+    "market": "Total",
+    "score": 57.5,
+    "score_sit": 57.5,
+    "score_trend": null
+   }
+  ],
   "results": {}
  }
 }

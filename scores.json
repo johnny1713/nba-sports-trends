@@ -1598,5 +1598,43 @@
     "spread_away": null
    }
   ]
+ },
+ "2026-10-29": {
+  "complete": true,
+  "games": [
+   {
+    "away": "cavaliers",
+    "away_score": 111,
+    "cover": "home",
+    "final": true,
+    "gid": "388630",
+    "home": "hawks",
+    "home_score": 114,
+    "preseason": false,
+    "spread_away": null
+   },
+   {
+    "away": "kings",
+    "away_score": 120,
+    "cover": "home",
+    "final": true,
+    "gid": "388631",
+    "home": "pelicans",
+    "home_score": 132,
+    "preseason": false,
+    "spread_away": null
+   },
+   {
+    "away": "grizzlies",
+    "away_score": 124,
+    "cover": "away",
+    "final": true,
+    "gid": "388632",
+    "home": "trail blazers",
+    "home_score": 103,
+    "preseason": false,
+    "spread_away": null
+   }
+  ]
  }
 }

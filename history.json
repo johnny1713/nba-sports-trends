@@ -1365,6 +1365,132 @@
     "score_trend": 57.1
    }
   ],
+  "results": {
+   "385762": {
+    "away": 79,
+    "home": 95
+   },
+   "385763": {
+    "away": 110,
+    "home": 94
+   },
+   "385764": {
+    "away": 111,
+    "home": 125
+   },
+   "385765": {
+    "away": 93,
+    "home": 98
+   },
+   "385766": {
+    "away": 95,
+    "home": 112
+   },
+   "388200": {
+    "away": 121,
+    "home": 114
+   },
+   "388201": {
+    "away": 101,
+    "home": 127
+   },
+   "388202": {
+    "away": 125,
+    "home": 145
+   },
+   "388203": {
+    "away": 111,
+    "home": 116
+   },
+   "388204": {
+    "away": 127,
+    "home": 120
+   }
+  }
+ },
+ "2026-10-31": {
+  "games": {
+   "388633": {
+    "away": "trail blazers",
+    "home": "jazz"
+   },
+   "388634": {
+    "away": "76ers",
+    "home": "hornets"
+   },
+   "388635": {
+    "away": "hawks",
+    "home": "pelicans"
+   },
+   "388636": {
+    "away": "cavaliers",
+    "home": "bucks"
+   },
+   "388637": {
+    "away": "kings",
+    "home": "grizzlies"
+   },
+   "388638": {
+    "away": "timberwolves",
+    "home": "spurs"
+   },
+   "388639": {
+    "away": "thunder",
+    "home": "rockets"
+   }
+  },
+  "picks": [
+   {
+    "algo": "combined",
+    "bet_on": null,
+    "direction": "Under",
+    "gid": "388634",
+    "line": 215.5,
+    "market": "Total",
+    "score": 58.7,
+    "score_sit": null,
+    "score_trend": 58.7,
+    "top_ai": true,
+    "top_sides": false,
+    "top_totals": true
+   },
+   {
+    "algo": "trend",
+    "bet_on": null,
+    "direction": "Under",
+    "gid": "388634",
+    "line": 215.5,
+    "market": "Total",
+    "score": 58.7,
+    "score_sit": null,
+    "score_trend": 58.7
+   },
+   {
+    "algo": "combined",
+    "bet_on": "away",
+    "direction": null,
+    "gid": "388635",
+    "line": null,
+    "market": "Moneyline",
+    "score": 64.2,
+    "score_sit": null,
+    "score_trend": 64.2,
+    "top_ai": true,
+    "top_sides": true,
+    "top_totals": false
+   },
+   {
+    "algo": "trend",
+    "bet_on": "away",
+    "direction": null,
+    "gid": "388635",
+    "line": null,
+    "market": "Moneyline",
+    "score": 64.2,
+    "score_sit": null,
+    "score_trend": 64.2
+   }
+  ],
   "results": {}
  }
 }

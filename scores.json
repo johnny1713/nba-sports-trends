@@ -1636,5 +1636,120 @@
     "spread_away": null
    }
   ]
+ },
+ "2026-10-30": {
+  "complete": true,
+  "games": [
+   {
+    "away": "hornets",
+    "away_score": 79,
+    "cover": "home",
+    "final": true,
+    "gid": "385762",
+    "home": "wizards",
+    "home_score": 95,
+    "preseason": false,
+    "spread_away": null
+   },
+   {
+    "away": "bulls",
+    "away_score": 111,
+    "cover": "home",
+    "final": true,
+    "gid": "385764",
+    "home": "celtics",
+    "home_score": 125,
+    "preseason": false,
+    "spread_away": null
+   },
+   {
+    "away": "magic",
+    "away_score": 121,
+    "cover": "away",
+    "final": true,
+    "gid": "388200",
+    "home": "raptors",
+    "home_score": 114,
+    "preseason": false,
+    "spread_away": null
+   },
+   {
+    "away": "knicks",
+    "away_score": 93,
+    "cover": "home",
+    "final": true,
+    "gid": "385765",
+    "home": "76ers",
+    "home_score": 98,
+    "preseason": false,
+    "spread_away": null
+   },
+   {
+    "away": "pistons",
+    "away_score": 110,
+    "cover": "away",
+    "final": true,
+    "gid": "385763",
+    "home": "nets",
+    "home_score": 94,
+    "preseason": false,
+    "spread_away": null
+   },
+   {
+    "away": "rockets",
+    "away_score": 111,
+    "cover": "home",
+    "final": true,
+    "gid": "388203",
+    "home": "mavericks",
+    "home_score": 116,
+    "preseason": false,
+    "spread_away": null
+   },
+   {
+    "away": "pacers",
+    "away_score": 125,
+    "cover": "home",
+    "final": true,
+    "gid": "388202",
+    "home": "heat",
+    "home_score": 145,
+    "preseason": false,
+    "spread_away": null
+   },
+   {
+    "away": "clippers",
+    "away_score": 101,
+    "cover": "home",
+    "final": true,
+    "gid": "388201",
+    "home": "timberwolves",
+    "home_score": 127,
+    "preseason": false,
+    "spread_away": null
+   },
+   {
+    "away": "lakers",
+    "away_score": 95,
+    "cover": "home",
+    "final": true,
+    "gid": "385766",
+    "home": "warriors",
+    "home_score": 112,
+    "preseason": false,
+    "spread_away": null
+   },
+   {
+    "away": "nuggets",
+    "away_score": 127,
+    "cover": "away",
+    "final": true,
+    "gid": "388204",
+    "home": "suns",
+    "home_score": 120,
+    "preseason": false,
+    "spread_away": null
+   }
+  ]
  }
 }

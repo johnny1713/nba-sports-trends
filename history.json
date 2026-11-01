@@ -1452,7 +1452,8 @@
     "score_trend": 58.7,
     "top_ai": true,
     "top_sides": false,
-    "top_totals": true
+    "top_totals": true,
+    "warn": 0
    },
    {
     "algo": "trend",
@@ -1463,7 +1464,8 @@
     "market": "Total",
     "score": 58.7,
     "score_sit": null,
-    "score_trend": 58.7
+    "score_trend": 58.7,
+    "warn": 0
    },
    {
     "algo": "combined",
@@ -1477,7 +1479,8 @@
     "score_trend": 64.2,
     "top_ai": true,
     "top_sides": true,
-    "top_totals": false
+    "top_totals": false,
+    "warn": 1
    },
    {
     "algo": "trend",
@@ -1488,7 +1491,8 @@
     "market": "Moneyline",
     "score": 64.2,
     "score_sit": null,
-    "score_trend": 64.2
+    "score_trend": 64.2,
+    "warn": 1
    }
   ],
   "results": {}

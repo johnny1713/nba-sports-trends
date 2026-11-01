@@ -24,7 +24,7 @@ import time
 import urllib.request
 from datetime import date, datetime, timedelta, timezone
 
-APP_VERSION = "1.9"
+APP_VERSION = "2.0"
 
 # 不設樣本下限（使用者 2026-10-20）：情境趨勢 4-0 都算，全場趨勢 7-0 卻不算並不一致；
 # 小樣本由 Wilson 下界自行打折（7-0 → 81.0）。MLB 仍維持 8 場。
@@ -965,7 +965,39 @@ def build_recommendations(game, roi, rf):
                 continue
             best = max(scored, key=lambda c: c[algo])
             rec = _make_rec(game, market, best, algo)
+            rec['warnings'] = opposing_records(roi, rf, market, best['target'])
             out.append(rec)
+    return out
+
+
+def opposing_records(roi, rf, market, target):
+    """
+    反向警示（使用者 2026-11-01）：今天**確定成立**、但原始紀錄偏向對手（或另一個大小分方向）的紀錄。
+    **只提醒、不改分數不改排名**——配不成對的紀錄本來就不計分，這裡只是讓使用者看得到。
+    勝負類推薦（獨贏／讓分）把全場的獨贏＋讓分、情境的讓分＋勝負都算進來；大小分只看大小分。
+    兩隊交手紀錄不算（與計分一致）。戰績另外分「有警示／沒警示」統計，資料夠了再決定要不要改成直接擋掉。
+    """
+    out = []
+    side_markets = ('Moneyline', 'Spread')
+    for t in roi:
+        if t.get('applies') is not True:
+            continue
+        if (market == 'Total') != (t['market'] == 'Total'):
+            continue
+        if t['market'] != 'Total' and t['market'] not in side_markets:
+            continue
+        k, n = roi_support(t, target)
+        if n and k / n < 0.5:
+            out.append(t.get('text_zh') or t['text'])
+    kinds = ('Total',) if market == 'Total' else ('ATS', 'SU')
+    for i in rf:
+        if i.get('applies') is not True or i.get('kind') not in kinds or i.get('key') == 'MEET':
+            continue
+        if i['kind'] != 'Total' and not i.get('side'):
+            continue
+        k, n = rf_support(i, target)
+        if n and k / n < 0.5:
+            out.append(i.get('text_zh') or i['text'])
     return out
 
 
@@ -1044,6 +1076,7 @@ def record_day(history, date_str, games, recs, ai, top_sides, top_totals):
     for r in recs:
         row = {k: r.get(k) for k in ('gid', 'market', 'algo', 'bet_on', 'direction', 'line',
                                       'score', 'score_trend', 'score_sit')}
+        row['warn'] = len(r.get('warnings') or [])
         if r['algo'] == 'combined':
             rid = _rec_id(r)
             row['top_ai'] = rid in ids['ai']
@@ -1113,6 +1146,7 @@ def compute_track_record(history, today_str):
     ai = blank()
     by_market = {k: blank() for k in ('獨贏', '受讓', '讓分', '大分', '小分')}
     algos = {'combined': blank(), 'trend': blank(), 'sit': blank()}
+    warn = {'有⚠️反向紀錄': blank(), '沒有反向紀錄': blank()}
     days = 0
     for d in sorted(history):
         if d >= today_str:
@@ -1127,10 +1161,13 @@ def compute_track_record(history, today_str):
                 continue
             if (p.get('score') or 0) >= TOP_PICK_MIN_SCORE:
                 add(algos[p['algo']], ok, d)
+                # 'warn' 是 2026-11-01 才加的欄位，之前的推薦沒有，不能算成「沒警示」
+                if p['algo'] == 'combined' and 'warn' in p:
+                    add(warn['有⚠️反向紀錄' if p['warn'] else '沒有反向紀錄'], ok, d)
             if p['algo'] == 'combined' and p.get('top_ai'):
                 add(ai, ok, d)
                 add(by_market[market_bucket(p)], ok, d)
-    return {'ai': ai, 'by_market': by_market, 'algos': algos, 'days': days}
+    return {'ai': ai, 'by_market': by_market, 'algos': algos, 'warn': warn, 'days': days}
 
 
 # ==========================================
@@ -1181,6 +1218,8 @@ ol.picks li:first-child{border-top:0}
 .game.open .detail{display:block}
 .detail h3{font-size:14px;margin:4px 0 6px}
 .detail ul{margin:0 0 10px;padding-left:18px;font-size:13.5px}
+.warn{font-size:12px;color:#ffb35c;margin-top:3px}
+.warn ul{margin:2px 0 0;padding-left:16px}
 .tm{font-size:13px;font-weight:700;color:var(--accent);margin:8px 0 2px}
 .detail li{margin:3px 0}
 .ap{font-size:11px;padding:1px 6px;border-radius:6px;margin-right:5px;white-space:nowrap}
@@ -1223,6 +1262,19 @@ def _score_sub(r):
     return '｜'.join(parts)
 
 
+def _warn_badge(r):
+    n = len(r.get('warnings') or [])
+    return f'<div class="warn">⚠️ 有 {n} 條反向紀錄</div>' if n else ''
+
+
+def _warn_list(r):
+    w = r.get('warnings') or []
+    if not w:
+        return ''
+    items = ''.join(f'<li>{esc(x)}</li>' for x in w)
+    return f'<div class="warn">⚠️ 反向紀錄（今天適用、但支持另一邊，不影響分數）：<ul>{items}</ul></div>'
+
+
 def render_top(title, recs, games_by_id, empty):
     rows = []
     for i, r in enumerate(recs, 1):
@@ -1230,7 +1282,8 @@ def render_top(title, recs, games_by_id, empty):
         rows.append(
             f'<li onclick="go(\'{esc(r["gid"])}\')"><span class="rank">{i}</span><div class="pinfo">'
             f'<div class="pmatch">{esc(team_short(g["away"]))} @ {esc(team_short(g["home"]))}</div>'
-            f'<div class="pbet">{esc(r["text"])}</div><div class="sub">{esc(_score_sub(r))}</div></div>'
+            f'<div class="pbet">{esc(r["text"])}</div><div class="sub">{esc(_score_sub(r))}</div>'
+            f'{_warn_badge(r)}</div>'
             f'<span class="score {score_class(r["score"])}">{r["score"]:.1f}</span></li>')
     body = f'<ol class="picks">{"".join(rows)}</ol>' if rows else f'<div class="empty">{esc(empty)}</div>'
     return f'<section class="box"><h2>{esc(title)}</h2>{body}</section>'
@@ -1267,7 +1320,7 @@ def render_game(g):
         lines.append(f"大小分：{g['total']:g}")
     recs_html = ''.join(
         f'<div class="rec"><div class="pinfo"><div class="pbet">{esc(r["text"])}</div>'
-        f'<div class="sub">{esc(_score_sub(r))}</div></div>'
+        f'<div class="sub">{esc(_score_sub(r))}</div>{_warn_list(r)}</div>'
         f'<span class="score {score_class(r["score"])}">{r["score"]:.1f}</span></div>'
         for r in g['recs'])
     if not recs_html:
@@ -1329,12 +1382,17 @@ def render_track(track):
     names = {'combined': '綜合分（網站推薦）', 'trend': '只看全場趨勢', 'sit': '只看情境趨勢'}
     rows2 = ''.join(f'<tr><td>{names[k]}</td>{_fmt_rate(v["all"])}{_fmt_rate(v["recent"])}</tr>'
                     for k, v in track['algos'].items())
+    rows3 = ''.join(f'<tr><td>{k}</td>{_fmt_rate(v["all"])}{_fmt_rate(v["recent"])}</tr>'
+                    for k, v in (track.get('warn') or {}).items())
     head = f'<tr><th></th><th>全期間</th><th>近 {TRACK_RECENT_DAYS} 天</th></tr>'
     return ('<details class="track"><summary>📒 推薦戰績</summary>'
             f'<div class="tw"><table class="tr">{head}{"".join(rows)}</table></div>'
             '<h3 style="font-size:14px;margin:12px 0 2px">兩種算法比較（所有 ≥50 分的推薦，不限 Top 5）</h3>'
             '<div class="sub">情境趨勢是否真的有用，看這張表：同一批比賽，三種算法各自選邊、各自計分。</div>'
-            f'<div class="tw"><table class="tr">{head}{rows2}</table></div></details>')
+            f'<div class="tw"><table class="tr">{head}{rows2}</table></div>'
+            '<h3 style="font-size:14px;margin:12px 0 2px">反向警示（2026-11-01 起）</h3>'
+            '<div class="sub">網站推薦（≥50 分）中，有⚠️反向紀錄的和沒有的分開記；有警示的明顯比較差，才考慮改成直接擋掉。</div>'
+            f'<div class="tw"><table class="tr">{head}{rows3}</table></div></details>')
 
 
 def render_page(data):

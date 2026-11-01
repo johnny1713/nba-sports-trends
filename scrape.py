@@ -1474,13 +1474,13 @@ def run(date_str, include_preseason=False, scores=None, history=None, write_hist
     if not OFFLINE_DIR:
         update_scoreboard(scores, date_str)
 
-    # 比賽一開打，列表上的共識盤口就會消失。同一天稍早那一輪抓到的盤口沿用下來，
+    # 比賽一開打，列表上的共識盤口與開賽時間就會消失。同一天稍早那一輪抓到的盤口沿用下來，
     # 否則較晚的輪次會讓讓分／大小分推薦整筆消失（戰績也跟著少記）。
     known = known_lines(date_str)
     for g in got['games']:
         prev = known.get(g['gid'])
         if prev:
-            for k in ('spread_home', 'spread_away', 'total'):
+            for k in ('spread_home', 'spread_away', 'total', 'game_time'):
                 if g.get(k) is None and prev.get(k) is not None:
                     g[k] = prev[k]
 

@@ -1495,6 +1495,57 @@
     "warn": 1
    }
   ],
+  "results": {
+   "388633": {
+    "away": 112,
+    "home": 90
+   },
+   "388634": {
+    "away": 109,
+    "home": 104
+   },
+   "388635": {
+    "away": 99,
+    "home": 121
+   },
+   "388636": {
+    "away": 136,
+    "home": 111
+   },
+   "388637": {
+    "away": 105,
+    "home": 136
+   },
+   "388638": {
+    "away": 111,
+    "home": 121
+   },
+   "388639": {
+    "away": 98,
+    "home": 119
+   }
+  }
+ },
+ "2026-11-01": {
+  "games": {
+   "388640": {
+    "away": "celtics",
+    "home": "magic"
+   },
+   "388641": {
+    "away": "nets",
+    "home": "pacers"
+   },
+   "388642": {
+    "away": "clippers",
+    "home": "warriors"
+   },
+   "388643": {
+    "away": "raptors",
+    "home": "lakers"
+   }
+  },
+  "picks": [],
   "results": {}
  }
 }

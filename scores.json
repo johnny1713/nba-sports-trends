@@ -1833,5 +1833,54 @@
     "spread_away": null
    }
   ]
+ },
+ "2026-11-01": {
+  "complete": true,
+  "games": [
+   {
+    "away": "celtics",
+    "away_score": 108,
+    "cover": "away",
+    "final": true,
+    "gid": "388640",
+    "home": "magic",
+    "home_score": 97,
+    "preseason": false,
+    "spread_away": null
+   },
+   {
+    "away": "nets",
+    "away_score": 98,
+    "cover": "away",
+    "final": true,
+    "gid": "388641",
+    "home": "pacers",
+    "home_score": 90,
+    "preseason": false,
+    "spread_away": null
+   },
+   {
+    "away": "clippers",
+    "away_score": 112,
+    "cover": "home",
+    "final": true,
+    "gid": "388642",
+    "home": "warriors",
+    "home_score": 124,
+    "preseason": false,
+    "spread_away": null
+   },
+   {
+    "away": "raptors",
+    "away_score": 125,
+    "cover": "home",
+    "final": true,
+    "gid": "388643",
+    "home": "lakers",
+    "home_score": 131,
+    "preseason": false,
+    "spread_away": null
+   }
+  ]
  }
 }

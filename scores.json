@@ -1882,5 +1882,175 @@
     "spread_away": null
    }
   ]
+ },
+ "2026-11-02": {
+  "complete": true,
+  "games": [
+   {
+    "away": "thunder",
+    "away_score": 117,
+    "cover": "away",
+    "final": true,
+    "gid": "388644",
+    "home": "cavaliers",
+    "home_score": 112,
+    "preseason": false,
+    "spread_away": null
+   },
+   {
+    "away": "nets",
+    "away_score": 90,
+    "cover": "away",
+    "final": true,
+    "gid": "388646",
+    "home": "knicks",
+    "home_score": 103,
+    "preseason": false,
+    "spread_away": null
+   },
+   {
+    "away": "pistons",
+    "away_score": 124,
+    "cover": "away",
+    "final": true,
+    "gid": "388648",
+    "home": "hornets",
+    "home_score": 91,
+    "preseason": false,
+    "spread_away": null
+   },
+   {
+    "away": "bulls",
+    "away_score": 107,
+    "cover": "home",
+    "final": true,
+    "gid": "388649",
+    "home": "76ers",
+    "home_score": 126,
+    "preseason": false,
+    "spread_away": null
+   },
+   {
+    "away": "hawks",
+    "away_score": 108,
+    "cover": "home",
+    "final": true,
+    "gid": "388645",
+    "home": "pacers",
+    "home_score": 104,
+    "preseason": false,
+    "spread_away": null
+   },
+   {
+    "away": "wizards",
+    "away_score": 103,
+    "cover": "away",
+    "final": true,
+    "gid": "388647",
+    "home": "magic",
+    "home_score": 94,
+    "preseason": false,
+    "spread_away": null
+   },
+   {
+    "away": "pelicans",
+    "away_score": 135,
+    "cover": "away",
+    "final": true,
+    "gid": "388652",
+    "home": "grizzlies",
+    "home_score": 134,
+    "preseason": false,
+    "spread_away": null
+   },
+   {
+    "away": "kings",
+    "away_score": 115,
+    "cover": "away",
+    "final": true,
+    "gid": "388650",
+    "home": "mavericks",
+    "home_score": 100,
+    "preseason": false,
+    "spread_away": null
+   },
+   {
+    "away": "bucks",
+    "away_score": 100,
+    "cover": "home",
+    "final": true,
+    "gid": "388651",
+    "home": "timberwolves",
+    "home_score": 112,
+    "preseason": false,
+    "spread_away": null
+   },
+   {
+    "away": "jazz",
+    "away_score": 97,
+    "cover": "home",
+    "final": true,
+    "gid": "388654",
+    "home": "spurs",
+    "home_score": 119,
+    "preseason": false,
+    "spread_away": null
+   },
+   {
+    "away": "celtics",
+    "away_score": 93,
+    "cover": "home",
+    "final": true,
+    "gid": "388653",
+    "home": "rockets",
+    "home_score": 109,
+    "preseason": false,
+    "spread_away": null
+   },
+   {
+    "away": "trail blazers",
+    "away_score": 118,
+    "cover": "away",
+    "final": true,
+    "gid": "388655",
+    "home": "nuggets",
+    "home_score": 110,
+    "preseason": false,
+    "spread_away": null
+   },
+   {
+    "away": "raptors",
+    "away_score": 125,
+    "cover": "away",
+    "final": true,
+    "gid": "388657",
+    "home": "clippers",
+    "home_score": 118,
+    "preseason": false,
+    "spread_away": null
+   },
+   {
+    "away": "suns",
+    "away_score": 113,
+    "cover": "home",
+    "final": true,
+    "gid": "388658",
+    "home": "warriors",
+    "home_score": 116,
+    "preseason": false,
+    "spread_away": null
+   },
+   {
+    "away": "heat",
+    "away_score": 117,
+    "cover": "home",
+    "final": true,
+    "gid": "388656",
+    "home": "lakers",
+    "home_score": 138,
+    "preseason": false,
+    "spread_away": null
+   }
+  ]
  }
 }

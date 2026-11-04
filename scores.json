@@ -2065,7 +2065,7 @@
     "home": "wizards",
     "home_score": null,
     "preseason": false,
-    "spread_away": -2.5
+    "spread_away": -3.5
    },
    {
     "away": "76ers",
@@ -2120,7 +2120,7 @@
     "home": "pelicans",
     "home_score": null,
     "preseason": false,
-    "spread_away": 5.5
+    "spread_away": 4.5
    },
    {
     "away": "pacers",
@@ -2142,7 +2142,7 @@
     "home": "thunder",
     "home_score": null,
     "preseason": false,
-    "spread_away": 2.5
+    "spread_away": 3.5
    },
    {
     "away": "timberwolves",
@@ -2153,7 +2153,7 @@
     "home": "rockets",
     "home_score": null,
     "preseason": false,
-    "spread_away": 8.5
+    "spread_away": 7.5
    },
    {
     "away": "trail blazers",
@@ -2164,7 +2164,7 @@
     "home": "suns",
     "home_score": null,
     "preseason": false,
-    "spread_away": -3.5
+    "spread_away": -2.5
    },
    {
     "away": "raptors",
@@ -2186,7 +2186,7 @@
     "home": "spurs",
     "home_score": null,
     "preseason": false,
-    "spread_away": 11.5
+    "spread_away": 12.5
    },
    {
     "away": "lakers",
@@ -2197,7 +2197,7 @@
     "home": "kings",
     "home_score": null,
     "preseason": false,
-    "spread_away": -11.5
+    "spread_away": -12.5
    },
    {
     "away": "heat",
@@ -2208,7 +2208,7 @@
     "home": "clippers",
     "home_score": null,
     "preseason": false,
-    "spread_away": -4.5
+    "spread_away": -5.5
    }
   ]
  }

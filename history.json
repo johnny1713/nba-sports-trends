@@ -1916,6 +1916,105 @@
     "warn": 0
    }
   ],
+  "results": {
+   "388659": {
+    "away": 120,
+    "home": 105
+   },
+   "388660": {
+    "away": 112,
+    "home": 106
+   },
+   "388661": {
+    "away": 104,
+    "home": 114
+   },
+   "388662": {
+    "away": 102,
+    "home": 109
+   },
+   "388663": {
+    "away": 105,
+    "home": 135
+   },
+   "388664": {
+    "away": 113,
+    "home": 120
+   },
+   "388665": {
+    "away": 107,
+    "home": 103
+   },
+   "388666": {
+    "away": 116,
+    "home": 124
+   },
+   "388667": {
+    "away": 117,
+    "home": 107
+   },
+   "388668": {
+    "away": 109,
+    "home": 128
+   },
+   "388669": {
+    "away": 132,
+    "home": 119
+   },
+   "388670": {
+    "away": 111,
+    "home": 112
+   },
+   "388671": {
+    "away": 116,
+    "home": 103
+   },
+   "388672": {
+    "away": 117,
+    "home": 116
+   }
+  }
+ },
+ "2026-11-05": {
+  "games": {
+   "388673": {
+    "away": "magic",
+    "home": "suns"
+   },
+   "388674": {
+    "away": "heat",
+    "home": "warriors"
+   }
+  },
+  "picks": [
+   {
+    "algo": "combined",
+    "bet_on": null,
+    "direction": "Over",
+    "gid": "388673",
+    "line": 223.0,
+    "market": "Total",
+    "score": 61.2,
+    "score_sit": 61.2,
+    "score_trend": null,
+    "top_ai": true,
+    "top_sides": false,
+    "top_totals": true,
+    "warn": 0
+   },
+   {
+    "algo": "sit",
+    "bet_on": null,
+    "direction": "Over",
+    "gid": "388673",
+    "line": 223.0,
+    "market": "Total",
+    "score": 61.2,
+    "score_sit": 61.2,
+    "score_trend": null,
+    "warn": 0
+   }
+  ],
   "results": {}
  }
 }

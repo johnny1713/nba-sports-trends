@@ -2370,5 +2370,32 @@
     "spread_away": null
    }
   ]
+ },
+ "2026-11-05": {
+  "complete": true,
+  "games": [
+   {
+    "away": "magic",
+    "away_score": 104,
+    "cover": "home",
+    "final": true,
+    "gid": "388673",
+    "home": "suns",
+    "home_score": 117,
+    "preseason": false,
+    "spread_away": null
+   },
+   {
+    "away": "heat",
+    "away_score": 100,
+    "cover": "home",
+    "final": true,
+    "gid": "388674",
+    "home": "warriors",
+    "home_score": 120,
+    "preseason": false,
+    "spread_away": null
+   }
+  ]
  }
 }

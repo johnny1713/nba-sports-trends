@@ -2397,5 +2397,109 @@
     "spread_away": null
    }
   ]
+ },
+ "2026-11-06": {
+  "complete": true,
+  "games": [
+   {
+    "away": "celtics",
+    "away_score": 119,
+    "cover": "away",
+    "final": true,
+    "gid": "388206",
+    "home": "hornets",
+    "home_score": 80,
+    "preseason": false,
+    "spread_away": null
+   },
+   {
+    "away": "wizards",
+    "away_score": 132,
+    "cover": "away",
+    "final": true,
+    "gid": "388205",
+    "home": "hawks",
+    "home_score": 139,
+    "preseason": false,
+    "spread_away": null
+   },
+   {
+    "away": "76ers",
+    "away_score": 95,
+    "cover": "home",
+    "final": true,
+    "gid": "388207",
+    "home": "cavaliers",
+    "home_score": 119,
+    "preseason": false,
+    "spread_away": null
+   },
+   {
+    "away": "timberwolves",
+    "away_score": 115,
+    "cover": "away",
+    "final": true,
+    "gid": "388209",
+    "home": "pelicans",
+    "home_score": 109,
+    "preseason": false,
+    "spread_away": null
+   },
+   {
+    "away": "raptors",
+    "away_score": 121,
+    "cover": "away",
+    "final": true,
+    "gid": "388210",
+    "home": "bucks",
+    "home_score": 107,
+    "preseason": false,
+    "spread_away": null
+   },
+   {
+    "away": "thunder",
+    "away_score": 128,
+    "cover": "away",
+    "final": true,
+    "gid": "388208",
+    "home": "grizzlies",
+    "home_score": 97,
+    "preseason": false,
+    "spread_away": null
+   },
+   {
+    "away": "jazz",
+    "away_score": 100,
+    "cover": "home",
+    "final": true,
+    "gid": "388211",
+    "home": "mavericks",
+    "home_score": 112,
+    "preseason": false,
+    "spread_away": null
+   },
+   {
+    "away": "trail blazers",
+    "away_score": 118,
+    "cover": "home",
+    "final": true,
+    "gid": "388212",
+    "home": "lakers",
+    "home_score": 124,
+    "preseason": false,
+    "spread_away": null
+   },
+   {
+    "away": "spurs",
+    "away_score": 124,
+    "cover": "home",
+    "final": true,
+    "gid": "388213",
+    "home": "kings",
+    "home_score": 109,
+    "preseason": false,
+    "spread_away": null
+   }
+  ]
  }
 }

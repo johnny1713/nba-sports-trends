@@ -2328,6 +2328,124 @@
     "warn": 0
    }
   ],
+  "results": {
+   "388675": {
+    "away": 114,
+    "home": 102
+   },
+   "388676": {
+    "away": 121,
+    "home": 124
+   },
+   "388677": {
+    "away": 75,
+    "home": 114
+   },
+   "388678": {
+    "away": 109,
+    "home": 97
+   },
+   "388679": {
+    "away": 119,
+    "home": 126
+   },
+   "388680": {
+    "away": 99,
+    "home": 102
+   },
+   "388681": {
+    "away": 125,
+    "home": 103
+   }
+  }
+ },
+ "2026-11-08": {
+  "games": {
+   "388682": {
+    "away": "76ers",
+    "home": "bulls"
+   },
+   "388683": {
+    "away": "lakers",
+    "home": "pistons"
+   },
+   "388684": {
+    "away": "jazz",
+    "home": "timberwolves"
+   },
+   "388685": {
+    "away": "nets",
+    "home": "mavericks"
+   },
+   "388686": {
+    "away": "celtics",
+    "home": "bucks"
+   },
+   "388687": {
+    "away": "pelicans",
+    "home": "clippers"
+   },
+   "388688": {
+    "away": "heat",
+    "home": "kings"
+   }
+  },
+  "picks": [
+   {
+    "algo": "combined",
+    "bet_on": "away",
+    "direction": null,
+    "gid": "388682",
+    "line": null,
+    "market": "Moneyline",
+    "score": 61.7,
+    "score_sit": null,
+    "score_trend": 61.7,
+    "top_ai": true,
+    "top_sides": true,
+    "top_totals": false,
+    "warn": 0
+   },
+   {
+    "algo": "trend",
+    "bet_on": "away",
+    "direction": null,
+    "gid": "388682",
+    "line": null,
+    "market": "Moneyline",
+    "score": 61.7,
+    "score_sit": null,
+    "score_trend": 61.7,
+    "warn": 0
+   },
+   {
+    "algo": "combined",
+    "bet_on": "home",
+    "direction": null,
+    "gid": "388684",
+    "line": null,
+    "market": "Moneyline",
+    "score": 61.0,
+    "score_sit": null,
+    "score_trend": 61.0,
+    "top_ai": true,
+    "top_sides": true,
+    "top_totals": false,
+    "warn": 0
+   },
+   {
+    "algo": "trend",
+    "bet_on": "home",
+    "direction": null,
+    "gid": "388684",
+    "line": null,
+    "market": "Moneyline",
+    "score": 61.0,
+    "score_sit": null,
+    "score_trend": 61.0,
+    "warn": 0
+   }
+  ],
   "results": {}
  }
 }

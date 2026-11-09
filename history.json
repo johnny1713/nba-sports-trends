@@ -2446,6 +2446,101 @@
     "warn": 0
    }
   ],
+  "results": {
+   "388682": {
+    "away": 127,
+    "home": 121
+   },
+   "388683": {
+    "away": 121,
+    "home": 116
+   },
+   "388684": {
+    "away": 100,
+    "home": 115
+   },
+   "388685": {
+    "away": 93,
+    "home": 130
+   },
+   "388686": {
+    "away": 117,
+    "home": 97
+   },
+   "388687": {
+    "away": 123,
+    "home": 139
+   },
+   "388688": {
+    "away": 114,
+    "home": 108
+   }
+  }
+ },
+ "2026-11-09": {
+  "games": {
+   "388689": {
+    "away": "wizards",
+    "home": "pistons"
+   },
+   "388690": {
+    "away": "cavaliers",
+    "home": "hornets"
+   },
+   "388691": {
+    "away": "lakers",
+    "home": "hawks"
+   },
+   "388692": {
+    "away": "grizzlies",
+    "home": "raptors"
+   },
+   "388693": {
+    "away": "pacers",
+    "home": "mavericks"
+   },
+   "388694": {
+    "away": "nuggets",
+    "home": "rockets"
+   },
+   "388695": {
+    "away": "spurs",
+    "home": "suns"
+   },
+   "388696": {
+    "away": "pelicans",
+    "home": "warriors"
+   }
+  },
+  "picks": [
+   {
+    "algo": "combined",
+    "bet_on": null,
+    "direction": "Under",
+    "gid": "388693",
+    "line": 223.0,
+    "market": "Total",
+    "score": 70.9,
+    "score_sit": 70.9,
+    "score_trend": null,
+    "top_ai": true,
+    "top_sides": false,
+    "top_totals": true,
+    "warn": 1
+   },
+   {
+    "algo": "sit",
+    "bet_on": null,
+    "direction": "Under",
+    "gid": "388693",
+    "line": 223.0,
+    "market": "Total",
+    "score": 70.9,
+    "score_sit": 70.9,
+    "score_trend": null,
+    "warn": 1
+   }
+  ],
   "results": {}
  }
 }

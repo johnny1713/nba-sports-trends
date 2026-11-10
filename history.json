@@ -2541,6 +2541,124 @@
     "warn": 1
    }
   ],
+  "results": {
+   "388689": {
+    "away": 111,
+    "home": 122
+   },
+   "388690": {
+    "away": 112,
+    "home": 124
+   },
+   "388691": {
+    "away": 124,
+    "home": 114
+   },
+   "388692": {
+    "away": 118,
+    "home": 102
+   },
+   "388693": {
+    "away": 122,
+    "home": 125
+   },
+   "388694": {
+    "away": 100,
+    "home": 110
+   },
+   "388695": {
+    "away": 122,
+    "home": 96
+   },
+   "388696": {
+    "away": 87,
+    "home": 138
+   }
+  }
+ },
+ "2026-11-10": {
+  "games": {
+   "388697": {
+    "away": "bucks",
+    "home": "knicks"
+   },
+   "388698": {
+    "away": "celtics",
+    "home": "76ers"
+   },
+   "388699": {
+    "away": "clippers",
+    "home": "suns"
+   },
+   "388700": {
+    "away": "heat",
+    "home": "jazz"
+   },
+   "388701": {
+    "away": "magic",
+    "home": "kings"
+   },
+   "388702": {
+    "away": "thunder",
+    "home": "trail blazers"
+   }
+  },
+  "picks": [
+   {
+    "algo": "combined",
+    "bet_on": "home",
+    "direction": null,
+    "gid": "388697",
+    "line": null,
+    "market": "Moneyline",
+    "score": 65.6,
+    "score_sit": null,
+    "score_trend": 65.6,
+    "top_ai": true,
+    "top_sides": true,
+    "top_totals": false,
+    "warn": 0
+   },
+   {
+    "algo": "trend",
+    "bet_on": "home",
+    "direction": null,
+    "gid": "388697",
+    "line": null,
+    "market": "Moneyline",
+    "score": 65.6,
+    "score_sit": null,
+    "score_trend": 65.6,
+    "warn": 0
+   },
+   {
+    "algo": "combined",
+    "bet_on": null,
+    "direction": "Under",
+    "gid": "388698",
+    "line": 218.5,
+    "market": "Total",
+    "score": 59.3,
+    "score_sit": null,
+    "score_trend": 59.3,
+    "top_ai": true,
+    "top_sides": false,
+    "top_totals": true,
+    "warn": 0
+   },
+   {
+    "algo": "trend",
+    "bet_on": null,
+    "direction": "Under",
+    "gid": "388698",
+    "line": 218.5,
+    "market": "Total",
+    "score": 59.3,
+    "score_sit": null,
+    "score_trend": 59.3,
+    "warn": 0
+   }
+  ],
   "results": {}
  }
 }

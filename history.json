@@ -2903,6 +2903,120 @@
     "warn": 0
    }
   ],
+  "results": {
+   "388713": {
+    "away": 112,
+    "home": 123
+   },
+   "388714": {
+    "away": 144,
+    "home": 140
+   },
+   "388715": {
+    "away": 94,
+    "home": 133
+   },
+   "388716": {
+    "away": 96,
+    "home": 101
+   }
+  }
+ },
+ "2026-11-13": {
+  "games": {
+   "388214": {
+    "away": "bucks",
+    "home": "magic"
+   },
+   "388215": {
+    "away": "knicks",
+    "home": "pacers"
+   },
+   "388216": {
+    "away": "grizzlies",
+    "home": "pelicans"
+   },
+   "388217": {
+    "away": "hawks",
+    "home": "bulls"
+   },
+   "388218": {
+    "away": "cavaliers",
+    "home": "heat"
+   },
+   "388219": {
+    "away": "jazz",
+    "home": "rockets"
+   },
+   "388220": {
+    "away": "warriors",
+    "home": "spurs"
+   },
+   "388221": {
+    "away": "trail blazers",
+    "home": "kings"
+   },
+   "388222": {
+    "away": "thunder",
+    "home": "clippers"
+   }
+  },
+  "picks": [
+   {
+    "algo": "combined",
+    "bet_on": "away",
+    "direction": null,
+    "gid": "388217",
+    "line": null,
+    "market": "Moneyline",
+    "score": 63.2,
+    "score_sit": null,
+    "score_trend": 63.2,
+    "top_ai": true,
+    "top_sides": true,
+    "top_totals": false,
+    "warn": 1
+   },
+   {
+    "algo": "trend",
+    "bet_on": "away",
+    "direction": null,
+    "gid": "388217",
+    "line": null,
+    "market": "Moneyline",
+    "score": 63.2,
+    "score_sit": null,
+    "score_trend": 63.2,
+    "warn": 1
+   },
+   {
+    "algo": "combined",
+    "bet_on": "away",
+    "direction": null,
+    "gid": "388222",
+    "line": null,
+    "market": "Moneyline",
+    "score": 55.8,
+    "score_sit": null,
+    "score_trend": 55.8,
+    "top_ai": true,
+    "top_sides": true,
+    "top_totals": false,
+    "warn": 1
+   },
+   {
+    "algo": "trend",
+    "bet_on": "away",
+    "direction": null,
+    "gid": "388222",
+    "line": null,
+    "market": "Moneyline",
+    "score": 55.8,
+    "score_sit": null,
+    "score_trend": 55.8,
+    "warn": 1
+   }
+  ],
   "results": {}
  }
 }

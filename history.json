@@ -3266,33 +3266,6 @@
    },
    {
     "algo": "combined",
-    "bet_on": null,
-    "direction": "Under",
-    "gid": "388724",
-    "line": 214.0,
-    "market": "Total",
-    "score": 78.2,
-    "score_sit": 78.2,
-    "score_trend": null,
-    "top_ai": true,
-    "top_sides": false,
-    "top_totals": true,
-    "warn": 5
-   },
-   {
-    "algo": "sit",
-    "bet_on": null,
-    "direction": "Under",
-    "gid": "388724",
-    "line": 214.0,
-    "market": "Total",
-    "score": 78.2,
-    "score_sit": 78.2,
-    "score_trend": null,
-    "warn": 5
-   },
-   {
-    "algo": "combined",
     "bet_on": "home",
     "direction": null,
     "gid": "388727",

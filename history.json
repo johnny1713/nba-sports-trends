@@ -3239,33 +3239,6 @@
   "picks": [
    {
     "algo": "combined",
-    "bet_on": "home",
-    "direction": null,
-    "gid": "388722",
-    "line": null,
-    "market": "Moneyline",
-    "score": 60.1,
-    "score_sit": null,
-    "score_trend": 60.1,
-    "top_ai": true,
-    "top_sides": true,
-    "top_totals": false,
-    "warn": 1
-   },
-   {
-    "algo": "trend",
-    "bet_on": "home",
-    "direction": null,
-    "gid": "388722",
-    "line": null,
-    "market": "Moneyline",
-    "score": 60.1,
-    "score_sit": null,
-    "score_trend": 60.1,
-    "warn": 1
-   },
-   {
-    "algo": "combined",
     "bet_on": null,
     "direction": "Under",
     "gid": "388724",
@@ -3344,6 +3317,33 @@
     "score_sit": null,
     "score_trend": 62.8,
     "warn": 0
+   },
+   {
+    "algo": "combined",
+    "bet_on": "home",
+    "direction": null,
+    "gid": "388722",
+    "line": null,
+    "market": "Moneyline",
+    "score": 60.1,
+    "score_sit": null,
+    "score_trend": 60.1,
+    "top_ai": true,
+    "top_sides": true,
+    "top_totals": false,
+    "warn": 1
+   },
+   {
+    "algo": "trend",
+    "bet_on": "home",
+    "direction": null,
+    "gid": "388722",
+    "line": null,
+    "market": "Moneyline",
+    "score": 60.1,
+    "score_sit": null,
+    "score_trend": 60.1,
+    "warn": 1
    }
   ],
   "results": {}

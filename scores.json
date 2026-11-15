@@ -3097,5 +3097,65 @@
     "spread_away": null
    }
   ]
+ },
+ "2026-11-14": {
+  "complete": true,
+  "games": [
+   {
+    "away": "nuggets",
+    "away_score": 116,
+    "cover": "home",
+    "final": true,
+    "gid": "388717",
+    "home": "pelicans",
+    "home_score": 108,
+    "preseason": false,
+    "spread_away": null
+   },
+   {
+    "away": "mavericks",
+    "away_score": 117,
+    "cover": "home",
+    "final": true,
+    "gid": "388718",
+    "home": "cavaliers",
+    "home_score": 127,
+    "preseason": false,
+    "spread_away": null
+   },
+   {
+    "away": "pistons",
+    "away_score": 117,
+    "cover": "home",
+    "final": true,
+    "gid": "388719",
+    "home": "heat",
+    "home_score": 137,
+    "preseason": false,
+    "spread_away": null
+   },
+   {
+    "away": "nets",
+    "away_score": 110,
+    "cover": "home",
+    "final": true,
+    "gid": "388721",
+    "home": "grizzlies",
+    "home_score": 129,
+    "preseason": false,
+    "spread_away": null
+   },
+   {
+    "away": "bulls",
+    "away_score": 117,
+    "cover": "away",
+    "final": true,
+    "gid": "388720",
+    "home": "timberwolves",
+    "home_score": 106,
+    "preseason": false,
+    "spread_away": null
+   }
+  ]
  }
 }

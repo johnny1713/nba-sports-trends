@@ -3476,6 +3476,65 @@
     "warn": 0
    }
   ],
+  "results": {
+   "388731": {
+    "away": 136,
+    "home": 120
+   },
+   "388732": {
+    "away": 115,
+    "home": 105
+   },
+   "388733": {
+    "away": 115,
+    "home": 126
+   },
+   "388734": {
+    "away": 135,
+    "home": 123
+   },
+   "388735": {
+    "away": 110,
+    "home": 128
+   },
+   "388736": {
+    "away": 94,
+    "home": 115
+   },
+   "388737": {
+    "away": 98,
+    "home": 106
+   },
+   "388738": {
+    "away": 117,
+    "home": 105
+   }
+  }
+ },
+ "2026-11-17": {
+  "games": {
+   "388739": {
+    "away": "knicks",
+    "home": "raptors"
+   },
+   "388740": {
+    "away": "pistons",
+    "home": "spurs"
+   },
+   "388741": {
+    "away": "trail blazers",
+    "home": "timberwolves"
+   },
+   "388742": {
+    "away": "hornets",
+    "home": "lakers"
+   },
+   "388743": {
+    "away": "jazz",
+    "home": "clippers"
+   }
+  },
+  "picks": [],
   "results": {}
  }
 }

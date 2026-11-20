@@ -115,7 +115,22 @@ def main(season):
         per_dev[k] = {'n': len(v), 'median_abs_dev': a[len(a) // 2] if a else None,
                       'share_abs_dev_le_1': pct(sum(x <= 1 for x in a), len(a)),
                       'share_abs_dev_gt_4': pct(sum(x > 4 for x in a), len(a))}
+    # 可交叉驗證比例：同場同階段同市場至少 4 家莊家（偏離市場檢查的最低條件）
+    nbooks = defaultdict(set)
+    for x in book:
+        nbooks[(x['game_id'], x['stage'], x['market'])].add(x['provider'])
+    cross = {}
+    for stage in ('open', 'close'):
+        for market, _ in MARKETS:
+            c = Counter()
+            for gid in final:
+                if len(nbooks.get((gid, stage, market), ())) >= 4:
+                    c[phase[gid]] += 1
+            cross[f'{stage}/{market}'] = {ph: pct(c[ph], n_phase[ph]) for ph in ('regular', 'postseason')}
+    books_in_season = sorted({x['provider'] for x in book})
     systematic = [k for k, v in per.items() if v['error_pct'] and v['error_pct'] >= 50]
+    out['books_in_season'] = books_in_season
+    out['cross_check_possible_pct'] = cross
     out['espn_bet'] = {'by_stage_market': per, 'deviation_vs_other_books': per_dev,
                        'systematic_markets_ge_50pct_error': systematic,
                        'verdict': '無系統性錯誤' if not systematic else '有系統性錯誤：' + ', '.join(systematic)}
@@ -204,6 +219,15 @@ def render(o, q):
           '| 階段/市場 | 紀錄數 | error 筆數 | error % | 類型 |', '|---|---|---|---|---|']
     for k, v in eb['by_stage_market'].items():
         L.append(f"| {k} | {v['records']} | {v['error_records']} | {v['error_pct']} | {v['kinds']} |")
+    L += ['', f"本季出現的博彩公司：{len(o['books_in_season'])} 家（{', '.join(o['books_in_season'])}）", '',
+          '可做多家交叉驗證的場次比例（同場同階段同市場 ≥ 4 家；偏離市場、疑似滾球盤檢查都需要這個條件）：', '',
+          '| 階段/市場 | 例行賽 % | 季後賽 % |', '|---|---|---|']
+    L += [f"| {k} | {v['regular']} | {v['postseason']} |" for k, v in o['cross_check_possible_pct'].items()]
+    low = [f'{k}（{"例行賽" if ph == "regular" else "季後賽"} {v[ph]}%）' for k, v in o['cross_check_possible_pct'].items()
+           for ph in ('regular', 'postseason') if v[ph] is not None and v[ph] < 95]
+    if low:
+        L += ['', f"- ⚠️ **以下階段/市場多數場次只有單一（或少數）博彩公司，無法做多家交叉驗證：{', '.join(low)}。"
+              '這些場次的盤口偏離、疑似滾球盤混入**未經多家比對**，不得宣稱已通過多家市場交叉驗證。**']
     L += ['', '與同場同階段其他莊家中位數的差距（只算有 ≥ 3 家其他莊家的場次）：', '',
           '| 階段/市場 | 場次 | 差距中位數（分）| 差 ≤ 1 分比例 % | 差 > 4 分比例 % |', '|---|---|---|---|---|']
     for k, v in eb['deviation_vs_other_books'].items():

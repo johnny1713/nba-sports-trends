@@ -49,10 +49,10 @@ class BackfillSmoke(unittest.TestCase):
         ok = [g for g in games if g['complete']]
         self.assertEqual([g['game_id'] for g in ok], ['401585183'])
         self.assertTrue(all(g['complete_reason'] for g in games if not g['complete']))
-        self.assertEqual(q['checks']['fails'], 0)
+        self.assertEqual(q["odds_checks"]["error"], 0)
         self.assertIn('BetfairSportsbook', {x['provider'] for x in odds})
         self.assertEqual(len(raw[0]['items']), 12)                # 原始盤口完整保留
-        self.assertEqual(q['completeness']['complete'], 1)
+        self.assertEqual(q["by_phase"]["regular"]["complete"], 1)
 
 
 if __name__ == '__main__':

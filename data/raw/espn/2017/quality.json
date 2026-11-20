@@ -1,147 +1,221 @@
 {
- "box_sources": {
-  "bbref": 168,
-  "espn": 1141
- },
- "checks": {
-  "by_kind": {
-   "ml_spread_direction_conflict": 3
+ "box_issue_examples": [],
+ "box_issues": 0,
+ "by_phase": {
+  "postseason": {
+   "abnormal_price": 12,
+   "abnormal_spread": 0,
+   "abnormal_total": 0,
+   "bbref_filled": 5,
+   "book_coverage_pct": {
+    "5Dimes.eu": 100.0,
+    "BETNOW.eu": 100.0,
+    "BETONLINE.ag": 93.67,
+    "BOVADA.lv": 100.0,
+    "BetUS.COM": 100.0,
+    "SportsBetting.ag": 93.67,
+    "SportsInteraction.com": 100.0,
+    "Sportsbook.com": 100.0,
+    "Westgate": 100.0
+   },
+   "books_per_game_median": 9,
+   "complete": 79,
+   "complete_pct": 100.0,
+   "coverage": {
+    "close/ml": {
+     "line_pct": 0.0,
+     "price_pct": 0.0
+    },
+    "close/spread": {
+     "line_pct": 0.0,
+     "price_pct": 0.0
+    },
+    "close/total": {
+     "line_pct": 0.0,
+     "price_pct": 0.0
+    },
+    "current_postgame/ml": {
+     "line_pct": 100.0,
+     "price_pct": 100.0
+    },
+    "current_postgame/spread": {
+     "line_pct": 100.0,
+     "price_pct": 100.0
+    },
+    "current_postgame/total": {
+     "line_pct": 100.0,
+     "price_pct": 100.0
+    },
+    "open/ml": {
+     "line_pct": 0.0,
+     "price_pct": 0.0
+    },
+    "open/spread": {
+     "line_pct": 100.0,
+     "price_pct": 0.0
+    },
+    "open/total": {
+     "line_pct": 100.0,
+     "price_pct": 0.0
+    }
+   },
+   "espn_box_missing": 5,
+   "final": 79,
+   "flags": {
+    "by_kind": {
+     "price_extreme": 12
+    },
+    "error": 0,
+    "warning": 12
+   },
+   "games": 79,
+   "odds_missing_examples": [],
+   "odds_missing_games": 0,
+   "status": {
+    "final": 79
+   },
+   "still_incomplete": 0
   },
-  "error_rate_pct": 0.002,
-  "examples": {
-   "ml_spread_direction_conflict": [
-    "400900598/SportsInteraction.com/current_postgame",
-    "400900168/SportsInteraction.com/current_postgame",
-    "400900076/SportsInteraction.com/current_postgame"
-   ]
-  },
-  "fails": 3,
-  "n": 179593
+  "regular": {
+   "abnormal_price": 144,
+   "abnormal_spread": 6,
+   "abnormal_total": 0,
+   "bbref_filled": 163,
+   "book_coverage_pct": {
+    "5Dimes.eu": 96.59,
+    "BETNOW.eu": 96.59,
+    "BETONLINE.ag": 97.15,
+    "BOVADA.lv": 94.55,
+    "BetUS.COM": 96.34,
+    "SportsBetting.ag": 97.15,
+    "SportsInteraction.com": 96.34,
+    "Sportsbook.com": 96.83,
+    "Westgate": 97.07
+   },
+   "books_per_game_median": 9.0,
+   "complete": 1230,
+   "complete_pct": 100.0,
+   "coverage": {
+    "close/ml": {
+     "line_pct": 0.0,
+     "price_pct": 0.0
+    },
+    "close/spread": {
+     "line_pct": 0.0,
+     "price_pct": 0.0
+    },
+    "close/total": {
+     "line_pct": 0.0,
+     "price_pct": 0.0
+    },
+    "current_postgame/ml": {
+     "line_pct": 96.42,
+     "price_pct": 96.42
+    },
+    "current_postgame/spread": {
+     "line_pct": 97.15,
+     "price_pct": 97.15
+    },
+    "current_postgame/total": {
+     "line_pct": 97.15,
+     "price_pct": 97.15
+    },
+    "open/ml": {
+     "line_pct": 0.0,
+     "price_pct": 0.0
+    },
+    "open/spread": {
+     "line_pct": 97.15,
+     "price_pct": 0.0
+    },
+    "open/total": {
+     "line_pct": 97.15,
+     "price_pct": 0.0
+    }
+   },
+   "espn_box_missing": 163,
+   "final": 1230,
+   "flags": {
+    "by_kind": {
+     "price_extreme": 144,
+     "spread_ml_direction_conflict": 6
+    },
+    "error": 6,
+    "warning": 144
+   },
+   "games": 1233,
+   "odds_missing_examples": [
+    "400899645",
+    "400899648",
+    "400899693",
+    "400899695",
+    "400899696",
+    "400899697",
+    "400899698",
+    "400899699",
+    "400899700",
+    "400899701"
+   ],
+   "odds_missing_games": 35,
+   "status": {
+    "final": 1230,
+    "postponed": 3
+   },
+   "still_incomplete": 0
+  }
  },
- "completeness": {
-  "box_issue_examples": [],
-  "box_issues": 0,
-  "complete": 1309,
-  "complete_pct": 100.0,
-  "final": 1309,
-  "incomplete_examples": []
- },
+ "duplicates": [],
+ "expected_regular": 1230,
  "fetch": {
   "http_errors": 0,
-  "notes_total": 168,
   "parse_error_examples": [],
   "parse_errors": 0,
   "requests": 3075
  },
- "games": {
-  "duplicates": [],
-  "expected_regular": 1230,
-  "postseason": 79,
-  "regular": 1233,
-  "regular_final": 1230,
-  "skipped_at_listing": {
-   "non-NBA teams (all-star etc.)": 6,
-   "season type 1": 97
-  },
-  "status": {
-   "final": 1309,
-   "postponed": 3
-  },
-  "total": 1312
- },
+ "incomplete_examples": [],
  "label": "2016-17",
  "live": false,
- "odds": {
-  "books": [
-   [
-    "5Dimes.eu",
-    2533
+ "odds_checks": {
+  "error": 6,
+  "error_rate_pct": 0.0033,
+  "examples": {
+   "price_extreme": [
+    "400899419/5Dimes.eu/current_postgame/ml: away 15.5",
+    "400899419/BETNOW.eu/current_postgame/ml: away 15.5",
+    "400899549/5Dimes.eu/current_postgame/ml: away 18.75",
+    "400899549/BETNOW.eu/current_postgame/ml: away 18.75",
+    "400899549/BOVADA.lv/current_postgame/ml: away 18.0"
    ],
-   [
-    "BETNOW.eu",
-    2533
-   ],
-   [
-    "BETONLINE.ag",
-    2527
-   ],
-   [
-    "SportsBetting.ag",
-    2527
-   ],
-   [
-    "Sportsbook.com",
-    2523
-   ],
-   [
-    "Westgate",
-    2519
-   ],
-   [
-    "BetUS.COM",
-    2513
-   ],
-   [
-    "SportsInteraction.com",
-    2503
-   ],
-   [
-    "BOVADA.lv",
-    2473
+   "spread_ml_direction_conflict": [
+    "400900076/SportsInteraction.com/current_postgame/ml: see spread",
+    "400900076/SportsInteraction.com/current_postgame/spread: home spread 2.0 but ML home 1.8 away 2.05",
+    "400900168/SportsInteraction.com/current_postgame/ml: see spread",
+    "400900168/SportsInteraction.com/current_postgame/spread: home spread -4.5 but ML home 2.05 away 1.8",
+    "400900598/SportsInteraction.com/current_postgame/ml: see spread"
    ]
-  ],
-  "books_per_game_median": 9,
-  "coverage": {
-   "close/ml": {
-    "line_pct": 0.0,
-    "price_pct": 0.0
-   },
-   "close/spread": {
-    "line_pct": 0.0,
-    "price_pct": 0.0
-   },
-   "close/total": {
-    "line_pct": 0.0,
-    "price_pct": 0.0
-   },
-   "current_postgame/ml": {
-    "line_pct": 96.64,
-    "price_pct": 96.64
-   },
-   "current_postgame/spread": {
-    "line_pct": 97.33,
-    "price_pct": 97.33
-   },
-   "current_postgame/total": {
-    "line_pct": 97.33,
-    "price_pct": 97.33
-   },
-   "open/ml": {
-    "line_pct": 0.0,
-    "price_pct": 0.0
-   },
-   "open/spread": {
-    "line_pct": 97.33,
-    "price_pct": 0.0
-   },
-   "open/total": {
-    "line_pct": 97.33,
-    "price_pct": 0.0
-   }
   },
-  "final_games_with_any_book_pct": 97.33,
-  "opening_feed_agreement": {
-   "agree_pct": 100.0,
-   "n": 1232
-  },
-  "timestamps_available": false
+  "n": 179593,
+  "warning": 156
+ },
+ "opening_feed_agreement": {
+  "agree_pct": 100.0,
+  "n": 1232
  },
  "season": 2017,
+ "skipped_at_listing": {
+  "non-NBA teams (all-star etc.)": 6,
+  "season type 1": 97
+ },
  "teams": {
+  "expected_range": [
+   82,
+   83
+  ],
   "max_games": 82,
   "min_games": 82,
   "n": 30
  },
+ "timestamps_available": false,
  "verdict": "通過",
  "verdict_ok": true
 }

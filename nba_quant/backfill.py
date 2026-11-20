@@ -243,6 +243,10 @@ def require_previous_ok(season):
 def main(season, rest):
     if '--taiwan' in rest:
         return run_taiwan()
+    if '--quality-only' in rest:
+        from . import quality
+        print(quality.season_report(season)['verdict'])
+        return 0
     if season is None:
         print('need --season or --taiwan', file=sys.stderr)
         return 2

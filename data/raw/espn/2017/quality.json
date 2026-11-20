@@ -3,30 +3,44 @@
   "by_book": [
    {
     "book_records": 12576,
-    "error_records": 6,
+    "error_records": 38,
     "provider": "SportsInteraction.com",
+    "rate_pct": 0.3
+   },
+   {
+    "book_records": 12284,
+    "error_records": 10,
+    "provider": "BOVADA.lv",
+    "rate_pct": 0.08
+   },
+   {
+    "book_records": 12450,
+    "error_records": 6,
+    "provider": "BetUS.COM",
     "rate_pct": 0.05
    }
   ],
   "by_kind": {
+   "line_deviates_from_market": 48,
    "ml_deviates_from_market": 6
   },
   "by_severity": {
-   "error": 6,
+   "error": 54,
    "warning": 156
   },
   "direction_check_same_book_same_stage": true,
   "direction_conflict_attribution": {
    "獨贏偏離市場 → 只排除該組獨贏盤（兩邊）": 3
   },
-  "error_records": 6,
+  "error_records": 54,
   "extreme_spreads": [],
-  "top_book_share_pct": 100.0
+  "top_book_share_pct": 70.37
  },
  "box_issue_examples": [],
  "box_issues": 0,
  "by_phase": {
   "postseason": {
+   "abnormal_deviation": 0,
    "abnormal_price": 12,
    "abnormal_spread": 0,
    "abnormal_total": 0,
@@ -101,9 +115,11 @@
    "status": {
     "final": 79
    },
-   "still_incomplete": 0
+   "still_incomplete": 0,
+   "suspected_live": 0
   },
   "regular": {
+   "abnormal_deviation": 48,
    "abnormal_price": 150,
    "abnormal_spread": 0,
    "abnormal_total": 0,
@@ -165,10 +181,11 @@
    "final": 1230,
    "flags": {
     "by_kind": {
+     "line_deviates_from_market": 48,
      "ml_deviates_from_market": 6,
      "price_extreme": 144
     },
-    "error": 6,
+    "error": 54,
     "missing": 0,
     "warning": 144
    },
@@ -191,7 +208,8 @@
     "final": 1230,
     "postponed": 3
    },
-   "still_incomplete": 0
+   "still_incomplete": 0,
+   "suspected_live": 10
   }
  },
  "duplicates": [],
@@ -206,9 +224,16 @@
  "label": "2016-17",
  "live": false,
  "odds_checks": {
-  "error": 6,
-  "error_rate_pct": 0.0033,
+  "error": 54,
+  "error_rate_pct": 0.0229,
   "examples": {
+   "line_deviates_from_market": [
+    "400899597/BOVADA.lv/current_postgame/spread/away: 2 vs market median -3 (n=9)",
+    "400899597/BOVADA.lv/current_postgame/spread/home: 2 vs market median -3 (n=9)",
+    "400899610/BOVADA.lv/current_postgame/spread/away: 3.5 vs market median -1 (n=9)",
+    "400899610/BOVADA.lv/current_postgame/spread/home: 3.5 vs market median -1 (n=9)",
+    "400899610/SportsInteraction.com/current_postgame/spread/away: 3.5 vs market median -1 (n=9)"
+   ],
    "ml_deviates_from_market": [
     "400900076/SportsInteraction.com/current_postgame/ml/away: home spread 2.0, peers median 1.5 (n=8), peers home-fav share 0.12",
     "400900076/SportsInteraction.com/current_postgame/ml/home: home spread 2.0, peers median 1.5 (n=8), peers home-fav share 0.12",
@@ -225,7 +250,7 @@
    ]
   },
   "missing": 0,
-  "n": 179593,
+  "n": 236136,
   "warning": 156
  },
  "opening_feed_agreement": {

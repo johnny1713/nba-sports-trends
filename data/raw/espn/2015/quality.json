@@ -1,20 +1,37 @@
 {
  "anomaly_analysis": {
-  "by_book": [],
-  "by_kind": {},
+  "by_book": [
+   {
+    "book_records": 12470,
+    "error_records": 22,
+    "provider": "5Dimes.eu",
+    "rate_pct": 0.18
+   },
+   {
+    "book_records": 11604,
+    "error_records": 4,
+    "provider": "BOVADA.lv",
+    "rate_pct": 0.03
+   }
+  ],
+  "by_kind": {
+   "line_deviates_from_market": 26
+  },
   "by_severity": {
+   "error": 26,
    "warning": 74
   },
   "direction_check_same_book_same_stage": true,
   "direction_conflict_attribution": {},
-  "error_records": 0,
+  "error_records": 26,
   "extreme_spreads": [],
-  "top_book_share_pct": null
+  "top_book_share_pct": 84.62
  },
  "box_issue_examples": [],
  "box_issues": 0,
  "by_phase": {
   "postseason": {
+   "abnormal_deviation": 22,
    "abnormal_price": 28,
    "abnormal_spread": 0,
    "abnormal_total": 0,
@@ -72,9 +89,10 @@
    "final": 81,
    "flags": {
     "by_kind": {
+     "line_deviates_from_market": 22,
      "price_extreme": 28
     },
-    "error": 0,
+    "error": 22,
     "missing": 0,
     "warning": 28
    },
@@ -85,9 +103,11 @@
    "status": {
     "final": 81
    },
-   "still_incomplete": 0
+   "still_incomplete": 0,
+   "suspected_live": 6
   },
   "regular": {
+   "abnormal_deviation": 4,
    "abnormal_price": 46,
    "abnormal_spread": 0,
    "abnormal_total": 0,
@@ -145,9 +165,10 @@
    "final": 1230,
    "flags": {
     "by_kind": {
+     "line_deviates_from_market": 4,
      "price_extreme": 46
     },
-    "error": 0,
+    "error": 4,
     "missing": 0,
     "warning": 46
    },
@@ -170,7 +191,8 @@
     "final": 1230,
     "postponed": 2
    },
-   "still_incomplete": 0
+   "still_incomplete": 0,
+   "suspected_live": 2
   }
  },
  "duplicates": [],
@@ -185,9 +207,16 @@
  "label": "2014-15",
  "live": false,
  "odds_checks": {
-  "error": 0,
-  "error_rate_pct": 0.0,
+  "error": 26,
+  "error_rate_pct": 0.0203,
   "examples": {
+   "line_deviates_from_market": [
+    "400579401/BOVADA.lv/current_postgame/ml/away: 0.674 vs market median 0.457 (n=5)",
+    "400579401/BOVADA.lv/current_postgame/ml/home: 0.674 vs market median 0.457 (n=5)",
+    "400579401/BOVADA.lv/current_postgame/spread/away: -5.5 vs market median 2 (n=5)；比市場更接近實際結果（疑似滾球盤混入）",
+    "400579401/BOVADA.lv/current_postgame/spread/home: -5.5 vs market median 2 (n=5)；比市場更接近實際結果（疑似滾球盤混入）",
+    "400790902/5Dimes.eu/current_postgame/spread/away: -8.5 vs market median -13 (n=5)；比市場更接近實際結果（疑似滾球盤混入）"
+   ],
    "price_extreme": [
     "400578419/5Dimes.eu/current_postgame/ml/away: away 20.5",
     "400578419/Fantasy911.com/current_postgame/ml/away: away 18.0",
@@ -197,7 +226,7 @@
    ]
   },
   "missing": 0,
-  "n": 97606,
+  "n": 128047,
   "warning": 74
  },
  "opening_feed_agreement": {

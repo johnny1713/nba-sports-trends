@@ -159,8 +159,9 @@ class ConflictAttributionTests(unittest.TestCase):
     def test_spread_sign_flipped_excludes_only_spread_both_sides(self):
         qs = PEERS + market('BAD', +7.5, 1.30, 3.60)           # 讓分寫反，獨贏正確
         flags, kept = self.kept(qs)
-        self.assertEqual({(f['market'], f['side'], f['flag']) for f in flags if f['provider'] == 'BAD'},
-                         {('spread', 'home', 'spread_deviates_from_market'), ('spread', 'away', 'spread_deviates_from_market')})
+        self.assertEqual({(f['market'], f['side']) for f in flags if f['provider'] == 'BAD'},
+                         {('spread', 'home'), ('spread', 'away')})                  # 只有讓分盤（兩邊）被標
+        self.assertIn('spread_deviates_from_market', {f['flag'] for f in flags if f['provider'] == 'BAD'})
         self.assertIn(('g1', 'BAD', 'close', 'ml', 'home'), kept)                # 正確的獨贏保留
         self.assertIn(('g1', 'BAD', 'close', 'ml', 'away'), kept)
         self.assertNotIn(('g1', 'BAD', 'close', 'spread', 'home'), kept)        # 讓分線是兩隊共用：兩邊都不留
@@ -171,8 +172,8 @@ class ConflictAttributionTests(unittest.TestCase):
     def test_ml_swapped_excludes_only_ml(self):
         qs = PEERS + market('BAD', -7.5, 3.60, 1.30)           # 讓分正確，獨贏主客對調
         flags, kept = self.kept(qs)
-        self.assertEqual({(f['market'], f['flag']) for f in flags if f['provider'] == 'BAD'},
-                         {('ml', 'ml_deviates_from_market')})
+        self.assertEqual({f['market'] for f in flags if f['provider'] == 'BAD'}, {'ml'})   # 只有獨贏盤被標
+        self.assertIn('ml_deviates_from_market', {f['flag'] for f in flags if f['provider'] == 'BAD'})
         self.assertIn(('g1', 'BAD', 'close', 'spread', 'home'), kept)
         self.assertIn(('g1', 'BAD', 'close', 'spread', 'away'), kept)
         self.assertNotIn(('g1', 'BAD', 'close', 'ml', 'home'), kept)
@@ -191,16 +192,19 @@ class ConflictAttributionTests(unittest.TestCase):
         self.assertEqual({f['flag'] for f in flags if f['provider'] == 'BAD'}, {'spread_ml_direction_conflict'})
 
     def test_both_deviate_is_unattributable(self):
-        qs = PEERS + market('BAD', +12.5, 3.60, 1.30)          # 讓分與獨贏都和市場相反（但彼此一致→本身不矛盾）
+        qs = PEERS + market('BAD', +12.5, 3.60, 1.30)          # 讓分與獨贏都和市場相反（彼此一致→不是方向矛盾）
         flags, _ = self.kept(qs)
-        self.assertEqual([f for f in flags if f['provider'] == 'BAD'], [])       # 不是方向矛盾，這條規則不處理
+        bad = [f for f in flags if f['provider'] == 'BAD']
+        self.assertNotIn('spread_ml_direction_conflict', {f['flag'] for f in bad})
+        self.assertEqual({f['market'] for f in bad}, {'spread', 'ml'})            # 但兩個市場都偏離市場 → 偏離規則都標
 
     def test_conflicting_books_are_not_used_as_peers(self):
         # 兩家都寫反讓分：互相不能當比較基準；P1~P3 仍足夠 → 兩家都歸因為讓分錯
         qs = PEERS + market('BAD1', +7.5, 1.30, 3.60) + market('BAD2', +7.0, 1.31, 3.50)
-        flags, _ = self.kept(qs)
-        self.assertEqual({(f['provider'], f['flag']) for f in flags},
-                         {('BAD1', 'spread_deviates_from_market'), ('BAD2', 'spread_deviates_from_market')})
+        flags, kept = self.kept(qs)
+        self.assertEqual({f['provider'] for f in flags}, {'BAD1', 'BAD2'})
+        self.assertEqual({(f['provider'], f['market']) for f in flags}, {('BAD1', 'spread'), ('BAD2', 'spread')})
+        self.assertIn(('g1', 'BAD1', 'close', 'ml', 'home'), kept)
 
     def test_no_kept_spread_settles_against_its_own_moneyline(self):
         """不變式：保留下來的同家同階段讓分＋獨贏，熱門方向一定一致（不會留下無法正確結算的錯誤讓分）。"""
@@ -247,3 +251,35 @@ class OverroundTierTests(unittest.TestCase):
               q('home', None, 1.30, 'ml', prov='A', stage='open'), q('away', None, 3.50, 'ml', prov='A', stage='open')]
         flags, _ = odds_flags.flag_quotes(qs)
         self.assertFalse([f for f in flags if f['flag'].startswith('overround')])
+
+
+class DeviationTests(unittest.TestCase):
+    def totals(self, prov, line, gid='g1'):
+        return [q('over', line, 1.91, 'total', prov=prov, gid=gid), q('under', line, 1.91, 'total', prov=prov, gid=gid)]
+
+    def test_live_contaminated_total_is_flagged_and_noted(self):
+        qs = self.totals('A', 218.5) + self.totals('B', 217.0) + self.totals('C', 219.5) + self.totals('DK', 252.5)
+        flags, _ = odds_flags.flag_quotes(qs, results={'g1': (126, 125)})
+        dk = [f for f in flags if f['provider'] == 'DK']
+        self.assertEqual({(f['flag'], f['side']) for f in dk}, {('line_deviates_from_market', 'over'), ('line_deviates_from_market', 'under')})
+        self.assertIn('滾球', dk[0]['detail'])
+        self.assertFalse([f for f in flags if f['provider'] != 'DK'])          # 其他莊家不受影響
+
+    def test_small_differences_are_normal(self):
+        qs = self.totals('A', 218.5) + self.totals('B', 214.0) + self.totals('C', 219.5) + self.totals('D', 222.5)
+        flags, _ = odds_flags.flag_quotes(qs)
+        self.assertEqual(flags, [])
+
+    def test_needs_three_peers(self):
+        qs = self.totals('A', 218.5) + self.totals('B', 217.0) + self.totals('DK', 252.5)
+        flags, _ = odds_flags.flag_quotes(qs)
+        self.assertEqual(flags, [])
+
+    def test_spread_deviation_flags_both_sides(self):
+        qs = (market('P1', -7.5, 1.30, 3.60) + market('P2', -7.0, 1.31, 3.50) + market('P3', -7.5, 1.29, 3.70)
+              + market('LIVE', -19.5, 1.02, 14.0))                               # 方向一致但數字離譜（滾球盤）
+        flags, _ = odds_flags.flag_quotes(qs)
+        live = {(f['market'], f['side']) for f in flags if f['provider'] == 'LIVE' and f['flag'] == 'line_deviates_from_market'}
+        self.assertIn(('spread', 'home'), live)
+        self.assertIn(('spread', 'away'), live)
+        self.assertIn(('ml', 'home'), live)

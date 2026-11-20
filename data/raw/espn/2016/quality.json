@@ -3,28 +3,48 @@
   "by_book": [
    {
     "book_records": 13136,
-    "error_records": 2,
+    "error_records": 8,
     "provider": "5Dimes.eu",
+    "rate_pct": 0.06
+   },
+   {
+    "book_records": 3002,
+    "error_records": 6,
+    "provider": "SportsInteraction.com",
+    "rate_pct": 0.2
+   },
+   {
+    "book_records": 9306,
+    "error_records": 2,
+    "provider": "PinnacleSports.com",
     "rate_pct": 0.02
+   },
+   {
+    "book_records": 13404,
+    "error_records": 2,
+    "provider": "BOVADA.lv",
+    "rate_pct": 0.01
    }
   ],
   "by_kind": {
+   "line_deviates_from_market": 16,
    "total_out_of_range": 2
   },
   "by_severity": {
-   "error": 2,
+   "error": 18,
    "warning": 171
   },
   "direction_check_same_book_same_stage": true,
   "direction_conflict_attribution": {},
-  "error_records": 2,
+  "error_records": 18,
   "extreme_spreads": [],
-  "top_book_share_pct": 100.0
+  "top_book_share_pct": 44.44
  },
  "box_issue_examples": [],
  "box_issues": 0,
  "by_phase": {
   "postseason": {
+   "abnormal_deviation": 4,
    "abnormal_price": 21,
    "abnormal_spread": 0,
    "abnormal_total": 0,
@@ -87,9 +107,10 @@
    "final": 86,
    "flags": {
     "by_kind": {
+     "line_deviates_from_market": 4,
      "price_extreme": 21
     },
-    "error": 0,
+    "error": 4,
     "missing": 0,
     "warning": 21
    },
@@ -100,9 +121,11 @@
    "status": {
     "final": 86
    },
-   "still_incomplete": 0
+   "still_incomplete": 0,
+   "suspected_live": 2
   },
   "regular": {
+   "abnormal_deviation": 12,
    "abnormal_price": 150,
    "abnormal_spread": 0,
    "abnormal_total": 2,
@@ -165,10 +188,11 @@
    "final": 1230,
    "flags": {
     "by_kind": {
+     "line_deviates_from_market": 12,
      "price_extreme": 150,
      "total_out_of_range": 2
     },
-    "error": 2,
+    "error": 14,
     "missing": 0,
     "warning": 150
    },
@@ -180,7 +204,8 @@
     "final": 1230,
     "postponed": 2
    },
-   "still_incomplete": 0
+   "still_incomplete": 0,
+   "suspected_live": 2
   }
  },
  "duplicates": [],
@@ -195,9 +220,16 @@
  "label": "2015-16",
  "live": false,
  "odds_checks": {
-  "error": 2,
-  "error_rate_pct": 0.0016,
+  "error": 18,
+  "error_rate_pct": 0.0108,
   "examples": {
+   "line_deviates_from_market": [
+    "400828407/PinnacleSports.com/current_postgame/total/over: 206 vs market median 212.5 (n=6)",
+    "400828407/PinnacleSports.com/current_postgame/total/under: 206 vs market median 212.5 (n=6)",
+    "400828531/5Dimes.eu/current_postgame/total/over: 2001 vs market median 200.5 (n=6)",
+    "400828531/5Dimes.eu/current_postgame/total/under: 2001 vs market median 200.5 (n=6)",
+    "400828997/BOVADA.lv/current_postgame/ml/away: 0.374 vs market median 0.543 (n=8)"
+   ],
    "price_extreme": [
     "400827970/5Dimes.eu/current_postgame/ml/away: away 23.0",
     "400827970/Fantasy911.com/current_postgame/ml/away: away 21.0",
@@ -211,7 +243,7 @@
    ]
   },
   "missing": 0,
-  "n": 125842,
+  "n": 165961,
   "warning": 171
  },
  "opening_feed_agreement": {

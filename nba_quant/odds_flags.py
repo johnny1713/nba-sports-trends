@@ -20,6 +20,13 @@
     偏高 warning 1.10 < x ≤ 1.25，或 0.98 ≤ x < 1.00
     錯誤 error   x > 1.25，或 x < 0.98
 
+盤口偏離市場（2019-20 實測發現）：ESPN 的「賽後 current」對部分莊家其實是**比賽中最後的滾球盤**
+（例：公牛@黃蜂 其他莊家總分約 218，DraftKings 252.5，實際 251）。這是資料洩漏，範圍檢查抓不到。
+同場同階段有 ≥ 3 家其他有效莊家時，與其他莊家中位數比較：
+    讓分 |差| > 4 分、總分 |差| > 6 分、獨贏去水主隊勝率 |差| > 0.15 → error（兩邊都標）
+    detail 註明是否比市場更接近實際結果（疑似滾球盤混入）
+單一莊家的年份（2024-25 起）無法比對，這類污染只能靠開盤／收盤欄位本身的定義避免。
+
 讓分×獨贏方向矛盾（同一家、同一階段：主隊讓分 < 0 ⇔ 主隊獨贏賠率較低；讓分 ≥ 2 分才比）——
 2026-11-20 使用者決定，以同場同階段**其他至少 3 家有效莊家**的市場共識歸因：
     讓分偏離共識、獨贏與共識一致 → 只標讓分盤（兩邊都標：讓分線是兩隊共用的，不能只排除一隊）
@@ -39,6 +46,7 @@ EXTREME_ML = (1.02, 15.0)          # 獨贏小數賠率超出此範圍 → warni
 EXTREME_SIDE = (1.5, 2.6)          # 讓分／大小分賠率超出此範圍 → warning
 CONFLICT_MIN_SPREAD = 2.0
 PEERS_MIN = 3
+DEVIATION_MAX = {'spread': 4.0, 'total': 6.0, 'ml': 0.15}
 SPREAD_AGREE_TOL = 1.0             # 與其他莊家中位數相差 ≤ 1 分視為一致
 ML_CONSENSUS_SHARE = 2 / 3         # 其他莊家至少 2/3 同意熱門方向才算有共識
 
@@ -60,8 +68,8 @@ def overround_tier(ov):
     return 'error'
 
 
-def flag_quotes(quotes):
-    """回傳 (flags, n_checks)。只檢查莊家（book）盤口。"""
+def flag_quotes(quotes, results=None):
+    """回傳 (flags, n_checks)。只檢查莊家（book）盤口。results: {game_id: (home_pts, away_pts)}，用來註明疑似滾球盤。"""
     grp = group_quotes(quotes)
     flags, n = [], 0
     structural_bad = set()        # (gid, prov, stage, market)：自身結構有誤，不可當比較基準
@@ -114,6 +122,52 @@ def flag_quotes(quotes):
                 add(key, 'overround_out_of_range', 'error', f'{ov:.4f}', tuple(prices))
                 structural_bad.add(key)
 
+    # ---- 盤口偏離市場（疑似滾球盤混入等）
+    def value(key):
+        sd = grp[key]
+        m = key[3]
+        if m == 'spread':
+            return sd['home']['line'] if 'home' in sd else None
+        if m == 'total':
+            ln = next(iter(sd.values()))['line']
+            return ln if ln > 0 else None
+        hp, ap = (sd.get('home') or {}).get('price_decimal'), (sd.get('away') or {}).get('price_decimal')
+        return (1 / hp) / (1 / hp + 1 / ap) if hp and ap else None
+
+    by_gsm = defaultdict(list)
+    for key in grp:
+        if key in structural_bad:
+            continue
+        v = value(key)
+        if v is not None:
+            by_gsm[(key[0], key[2], key[3])].append((key, v))
+    deviated = set()
+    for (gid, stage, market), items in by_gsm.items():
+        if len(items) < PEERS_MIN + 1:
+            continue
+        # 共識 = 全部莊家的中位數；必須有 ≥ 2/3 的其他莊家落在容許範圍內，才算真的有市場共識。
+        # （只用「其他莊家中位數」會在多家同時出錯時把正常莊家也誤判——測試 test_conflicting_books_are_not_used_as_peers）
+        med = median(w for _, w in items)
+        tol = DEVIATION_MAX[market]
+        for key, v in items:
+            peers = [w for k2, w in items if k2 != key]
+            n += 1
+            if abs(v - med) <= tol:
+                continue
+            if sum(abs(w - med) <= tol for w in peers) < ML_CONSENSUS_SHARE * len(peers):
+                continue                       # 沒有明確共識：不判定（無法歸因就不排除）
+            if True:
+                note = ''
+                if results and gid in results and market in ('spread', 'total'):
+                    hp_, ap_ = results[gid]
+                    actual = (hp_ + ap_) if market == 'total' else (ap_ - hp_)   # 主隊讓分的事後公平值 = −(主隊淨勝)
+                    if abs(v - actual) < abs(med - actual):
+                        note = '；比市場更接近實際結果（疑似滾球盤混入）'
+                fmt = (lambda x: f'{x:.3f}') if market == 'ml' else (lambda x: f'{x:g}')
+                add(key, 'line_deviates_from_market', 'error',
+                    f"{fmt(v)} vs market median {fmt(med)} (n={len(items)}){note}", tuple(grp[key]))
+                deviated.add(key)
+
     # ---- 讓分×獨贏方向矛盾（同一家、同一階段）
     def info(gid, prov, stage):
         sp = grp.get((gid, prov, stage, 'spread'), {})
@@ -143,7 +197,8 @@ def flag_quotes(quotes):
         for p in by_gs[(gid, stage)]:
             if p == prov or (gid, p, stage) in conflicts:
                 continue
-            if (gid, p, stage, 'spread') in structural_bad or (gid, p, stage, 'ml') in structural_bad:
+            if ((gid, p, stage, 'spread') in structural_bad or (gid, p, stage, 'ml') in structural_bad
+                    or (gid, p, stage, 'spread') in deviated or (gid, p, stage, 'ml') in deviated):
                 continue
             y = info(gid, p, stage)
             if y:

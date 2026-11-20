@@ -39,6 +39,7 @@ class BackfillSmoke(unittest.TestCase):
                 games = [json.loads(x) for x in gzip.open('data/raw/espn/2024/games.jsonl.gz').read().decode().splitlines()]
                 odds = [json.loads(x) for x in gzip.open('data/raw/espn/2024/odds.jsonl.gz').read().decode().splitlines()]
                 raw = [json.loads(x) for x in gzip.open('data/raw/espn/2024/odds_raw.jsonl.gz').read().decode().splitlines()]
+                q_flags = [json.loads(x) for x in gzip.open('data/raw/espn/2024/odds_flags.jsonl.gz').read().decode().splitlines()]
                 self.assertTrue(os.path.exists('docs/reports/data_quality/2024.md'))
             finally:
                 backfill.Fetcher = old_f
@@ -49,7 +50,10 @@ class BackfillSmoke(unittest.TestCase):
         ok = [g for g in games if g['complete']]
         self.assertEqual([g['game_id'] for g in ok], ['401585183'])
         self.assertTrue(all(g['complete_reason'] for g in games if not g['complete']))
-        self.assertEqual(q["odds_checks"]["error"], 0)
+        # 這場 ESPN BET 的開盤總分 211.5，其他 9 家約 227 → 唯一被標的是那兩筆（真實資料發現）
+        flags = [json.loads(x) for x in gzip.open(os.path.join(d, 'data/raw/espn/2024/odds_flags.jsonl.gz')).read().decode().splitlines()] if False else q_flags
+        self.assertEqual({(f['provider'], f['stage'], f['market'], f['flag']) for f in flags},
+                         {('ESPN BET', 'open', 'total', 'line_deviates_from_market')})
         self.assertIn('BetfairSportsbook', {x['provider'] for x in odds})
         self.assertEqual(len(raw[0]['items']), 12)                # 原始盤口完整保留
         self.assertEqual(q["by_phase"]["regular"]["complete"], 1)

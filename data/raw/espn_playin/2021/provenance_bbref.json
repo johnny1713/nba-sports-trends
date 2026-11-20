@@ -1,0 +1,42 @@
+{
+ "files": {
+  "raw/bbref_box_401326988.html.gz": {
+   "fetched_at": "2026-11-20T14:50:58Z",
+   "game_id": "401326988",
+   "sha256_uncompressed": "f63ae0ece5723f3e8712d094500158f5075b7ec47c580decf931cad7d8cbfcc4",
+   "url": "https://www.basketball-reference.com/boxscores/202105180IND.html"
+  },
+  "raw/bbref_box_401326989.html.gz": {
+   "fetched_at": "2026-11-20T14:51:02Z",
+   "game_id": "401326989",
+   "sha256_uncompressed": "07771bc54ba842388ba82aacd7491ec16f4d6eb9e9ff92b465f46d7cd659d042",
+   "url": "https://www.basketball-reference.com/boxscores/202105180BOS.html"
+  },
+  "raw/bbref_box_401326990.html.gz": {
+   "fetched_at": "2026-11-20T14:51:05Z",
+   "game_id": "401326990",
+   "sha256_uncompressed": "09e0f8ebf607beab24a40a2de7d01d891dfdeff8074a884e1faf0a7f55102bb2",
+   "url": "https://www.basketball-reference.com/boxscores/202105190MEM.html"
+  },
+  "raw/bbref_box_401326991.html.gz": {
+   "fetched_at": "2026-11-20T14:51:09Z",
+   "game_id": "401326991",
+   "sha256_uncompressed": "ee592b0e203d5bbd43f15fef2d6e50a8d07422d6bfdf3f15af7173aaa7645188",
+   "url": "https://www.basketball-reference.com/boxscores/202105190LAL.html"
+  },
+  "raw/bbref_box_401326993.html.gz": {
+   "fetched_at": "2026-11-20T14:51:12Z",
+   "game_id": "401326993",
+   "sha256_uncompressed": "809083e5a6b46cefd05376461a581178dbbe6b1d3ca149b64604f72fb864b17a",
+   "url": "https://www.basketball-reference.com/boxscores/202105200WAS.html"
+  },
+  "raw/bbref_box_401326994.html.gz": {
+   "fetched_at": "2026-11-20T14:51:16Z",
+   "game_id": "401326994",
+   "sha256_uncompressed": "504c65adc8c6ee816c0b4a182649f46badb9c6c1f63a3e865fd681a5e8828632",
+   "url": "https://www.basketball-reference.com/boxscores/202105210GSW.html"
+  }
+ },
+ "purpose": "ESPN box score 不可用的附加賽改用 BBRef（使用者 2026-11-20 第三輪）",
+ "season": 2021
+}

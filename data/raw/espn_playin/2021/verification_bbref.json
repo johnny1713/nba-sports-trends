@@ -1,0 +1,150 @@
+{
+ "games": [
+  {
+   "both_teams_present": true,
+   "box_source": "bbref",
+   "game_id": "401326988",
+   "matchup": "CHA @ IND",
+   "score": [
+    117,
+    144
+   ],
+   "teams": {
+    "11": {
+     "fields_present": true,
+     "players": 13,
+     "pts_eq_espn_scoreboard": true,
+     "pts_identity_ok": true
+    },
+    "30": {
+     "fields_present": true,
+     "players": 15,
+     "pts_eq_espn_scoreboard": true,
+     "pts_identity_ok": true
+    }
+   }
+  },
+  {
+   "both_teams_present": true,
+   "box_source": "bbref",
+   "game_id": "401326989",
+   "matchup": "WSH @ BOS",
+   "score": [
+    100,
+    118
+   ],
+   "teams": {
+    "2": {
+     "fields_present": true,
+     "players": 15,
+     "pts_eq_espn_scoreboard": true,
+     "pts_identity_ok": true
+    },
+    "27": {
+     "fields_present": true,
+     "players": 14,
+     "pts_eq_espn_scoreboard": true,
+     "pts_identity_ok": true
+    }
+   }
+  },
+  {
+   "both_teams_present": true,
+   "box_source": "bbref",
+   "game_id": "401326990",
+   "matchup": "SA @ MEM",
+   "score": [
+    96,
+    100
+   ],
+   "teams": {
+    "24": {
+     "fields_present": true,
+     "players": 10,
+     "pts_eq_espn_scoreboard": true,
+     "pts_identity_ok": true
+    },
+    "29": {
+     "fields_present": true,
+     "players": 10,
+     "pts_eq_espn_scoreboard": true,
+     "pts_identity_ok": true
+    }
+   }
+  },
+  {
+   "both_teams_present": true,
+   "box_source": "bbref",
+   "game_id": "401326991",
+   "matchup": "GS @ LAL",
+   "score": [
+    100,
+    103
+   ],
+   "teams": {
+    "13": {
+     "fields_present": true,
+     "players": 15,
+     "pts_eq_espn_scoreboard": true,
+     "pts_identity_ok": true
+    },
+    "9": {
+     "fields_present": true,
+     "players": 13,
+     "pts_eq_espn_scoreboard": true,
+     "pts_identity_ok": true
+    }
+   }
+  },
+  {
+   "both_teams_present": true,
+   "box_source": "bbref",
+   "game_id": "401326993",
+   "matchup": "IND @ WSH",
+   "score": [
+    115,
+    142
+   ],
+   "teams": {
+    "11": {
+     "fields_present": true,
+     "players": 13,
+     "pts_eq_espn_scoreboard": true,
+     "pts_identity_ok": true
+    },
+    "27": {
+     "fields_present": true,
+     "players": 14,
+     "pts_eq_espn_scoreboard": true,
+     "pts_identity_ok": true
+    }
+   }
+  },
+  {
+   "both_teams_present": true,
+   "box_source": "bbref",
+   "game_id": "401326994",
+   "matchup": "MEM @ GS",
+   "score": [
+    117,
+    112
+   ],
+   "teams": {
+    "29": {
+     "fields_present": true,
+     "players": 15,
+     "pts_eq_espn_scoreboard": true,
+     "pts_identity_ok": true
+    },
+    "9": {
+     "fields_present": true,
+     "players": 14,
+     "pts_eq_espn_scoreboard": true,
+     "pts_identity_ok": true
+    }
+   }
+  }
+ ],
+ "note": "ESPN 球隊統計空白、球員數字全為 0，無法做 ESPN/BBRef 同場比對；只能驗證 BBRef 得分 = ESPN 計分板比分與 BBRef 內部恆等式",
+ "season": 2021
+}

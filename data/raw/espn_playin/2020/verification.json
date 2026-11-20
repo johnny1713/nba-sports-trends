@@ -1,0 +1,113 @@
+{
+ "games": [
+  {
+   "both_teams_present": true,
+   "game_id": "401236333",
+   "matchup": "MEM @ POR",
+   "score": [
+    122,
+    126
+   ],
+   "season_type_espn": 5,
+   "teams": {
+    "22": {
+     "all_fields_match_bbref": true,
+     "espn_vs_bbref": {
+      "dreb": [
+       30,
+       30
+      ],
+      "fg3a": [
+       40,
+       40
+      ],
+      "fg3m": [
+       15,
+       15
+      ],
+      "fga": [
+       84,
+       84
+      ],
+      "fgm": [
+       38,
+       38
+      ],
+      "fta": [
+       41,
+       41
+      ],
+      "ftm": [
+       35,
+       35
+      ],
+      "oreb": [
+       9,
+       9
+      ],
+      "pts": [
+       126,
+       126
+      ],
+      "tov": [
+       13,
+       13
+      ]
+     },
+     "players": 12,
+     "pts_eq_scoreboard": true,
+     "pts_identity_ok": true
+    },
+    "29": {
+     "all_fields_match_bbref": true,
+     "espn_vs_bbref": {
+      "dreb": [
+       37,
+       37
+      ],
+      "fg3a": [
+       25,
+       25
+      ],
+      "fg3m": [
+       14,
+       14
+      ],
+      "fga": [
+       92,
+       92
+      ],
+      "fgm": [
+       45,
+       45
+      ],
+      "fta": [
+       22,
+       22
+      ],
+      "ftm": [
+       18,
+       18
+      ],
+      "oreb": [
+       12,
+       12
+      ],
+      "pts": [
+       122,
+       122
+      ],
+      "tov": [
+       18,
+       18
+      ]
+     },
+     "players": 13,
+     "pts_eq_scoreboard": true,
+     "pts_identity_ok": true
+    }
+   }
+  }
+ ],
+ "skipped_events": []
+}

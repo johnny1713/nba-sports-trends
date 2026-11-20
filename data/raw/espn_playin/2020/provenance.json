@@ -1,0 +1,24 @@
+{
+ "files": {
+  "raw/bbref_box_401236333.html.gz": {
+   "fetched_at": "2026-11-20T12:47:57Z",
+   "sha256_uncompressed": "46475c237891f827973e16068c0cff594fd27749070a97a180468468c582c830",
+   "url": "https://www.basketball-reference.com/boxscores/202008150POR.html"
+  },
+  "raw/espn_scoreboard_20200815.json.gz": {
+   "fetched_at": "2026-11-20T12:47:56Z",
+   "sha256_uncompressed": "ba3daa3503bc8de9057abc40cb4fefeb2b47d4b0490a77a8cc54129c28a08f6e",
+   "url": "https://site.api.espn.com/apis/site/v2/sports/basketball/nba/scoreboard?dates=20200815"
+  },
+  "raw/espn_summary_401236333.json.gz": {
+   "fetched_at": "2026-11-20T12:47:57Z",
+   "sha256_uncompressed": "bb74119f6d3db6204a31437ac72b1bf21365fe04b8824a70e1de77eff294b7a2",
+   "url": "https://site.api.espn.com/apis/site/v2/sports/basketball/nba/summary?event=401236333"
+  }
+ },
+ "parsed": {
+  "games.jsonl.gz": "espn.parse_scoreboard_event(keep={5})，加上 game_type=PLAY_IN、counts_for_standings=False",
+  "teambox.jsonl.gz": "espn.parse_boxscore（與正式回補相同的解析器）"
+ },
+ "purpose": "2019-20 Play-In（使用者 2026-11-20 核准獨立補抓）"
+}

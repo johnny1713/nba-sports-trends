@@ -28,7 +28,7 @@ nba_quant/              # V2 程式（純邏輯，不碰 HTML）
 tests/                  # 單元／API／回測測試
 data/
   raw/espn/<季>/        # 歷史原始資料（每季一組 .jsonl.gz，完成的球季不再變動）
-  raw/espn_playin/<季>/ # 附加賽（Play-In）獨立存放：原始回應 + 解析 + 來源紀錄；不混入 raw/espn/
+  raw/espn_playin/<季>/ # 附加賽（Play-In）獨立存放：原始回應 + 解析 + 來源紀錄；不混入 raw/espn/（2020～2025；2026 鎖定）
   reference/            # 分類表（不修改原始資料）：neutral_sites.csv、game_classification.csv
   audit/                # 唯讀稽核輸出：source_compare/（ESPN vs BBRef）、box_quality/v1/
   derived/              # 經使用者核准的修正版（目前沒有；2017-18 失誤修正版未核准）
@@ -63,10 +63,17 @@ docs/
 | 欄位 | 說明 |
 |---|---|
 | `game_type` | REGULAR_SEASON／CUP_GROUP／CUP_QUARTERFINAL／CUP_SEMIFINAL／CUP_FINAL／PLAY_IN／POSTSEASON |
-| `counts_for_standings` | 是否計入官方例行賽勝敗紀錄。CUP_FINAL、PLAY_IN、POSTSEASON 為 False |
+| `counts_for_standings` | **只**表示是否計入官方例行賽勝敗紀錄。CUP_FINAL、PLAY_IN、POSTSEASON 為 False |
+| `use_fatigue` | 賽程疲勞特徵（休息天數、背靠背、四天三賽）：所有實際出賽皆 True |
+| `use_elo` | Elo 歷史更新：所有比賽皆 True，依開賽時間順序 |
+| `train_sample` | 第一版訓練樣本：例行賽（含盃賽各階段與冠軍戰）True；PLAY_IN、POSTSEASON False |
+| `eval_group` | regular / play_in / postseason |
 
 規則：
 - 戰績類計算一律用 `counts_for_standings`，不可用 `season_type == 2`（盃賽冠軍戰 ESPN 仍標為 2）。
+- `counts_for_standings` 不可用來決定其他特徵或樣本；每種用途讀自己的欄位。
+- Elo 預測只用開打前已知的評分；Elo 更新清單與訓練樣本清單分開。
+- 賽事類型只有 `game_type` 一個來源；其他表格（如中立場表）不得自設賽事類型名稱。
 - 盃賽冠軍戰的比賽數據可用於效率、近期狀態、模型訓練；Elo 可納入但必須保留 `game_type`。
 - PLAY_IN 不混入例行賽訓練資料；保留完整 box score 供獨立分析。
 - 用途矩陣見 `docs/V2_MODEL_STAGE1_DESIGN.md` 3.2。

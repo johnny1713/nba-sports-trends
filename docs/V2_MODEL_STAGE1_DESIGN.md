@@ -148,39 +148,76 @@ T1 有兩種來源並列比較：(a) 直接的機率模型；(b) 由 T2 的預�
 - **無法確認的比賽一律標 unknown，不推測**。unknown 在模型中不給主場效應、也不給中立場效應，另設 unknown 指標並單獨報告。
 - 候選清單由程式從既有資料產生；判定欄位只能由有證據的紀錄填入。
 
-### 3.2 比賽分類與資料用途（`counts_for_standings`，使用者 2026-11-20 決策）
+### 3.2 比賽分類與資料用途（使用者 2026-11-20 第二、三輪決策）
 
-不可只用 ESPN `season_type == 2` 判斷資料用途。新增獨立分類表 `data/reference/game_classification.csv`（`nba_quant/game_class.py` 產生，
-不修改 games.jsonl.gz），每場有 `game_type` 與 `counts_for_standings`。
+分類表 `data/reference/game_classification.csv`（`nba_quant/game_class.py` 產生，不修改 games.jsonl.gz）。
+**賽事類型只有一個來源：`game_type`**。中立場表等其他表格不得自設賽事類型名稱（第三輪起，中立場表改用
+`venue_category` 只描述場地，賽事類型直接取自 `game_type`；原本的 `bubble_play_in` 等名稱已移除）。
 
-| game_type | ESPN season_type | 2015～2025 場數 | counts_for_standings |
-|---|---|---|---|
-| REGULAR_SEASON | 2 | 其餘例行賽 | ✅ |
-| CUP_GROUP | 2 | 60／季（2023-24、2024-25）| ✅ |
-| CUP_QUARTERFINAL | 2 | 4／季 | ✅ |
-| CUP_SEMIFINAL | 2 | 2／季 | ✅ |
-| **CUP_FINAL** | 2 | 1／季 | **❌** 不計入官方例行賽勝敗 |
-| **PLAY_IN** | 5 | 2019-20 共 1 場（獨立存放）| ❌ |
-| POSTSEASON | 3 | — | ❌ |
+| game_type | ESPN season_type | 說明 |
+|---|---|---|
+| REGULAR_SEASON | 2 | 一般例行賽 |
+| CUP_GROUP／CUP_QUARTERFINAL／CUP_SEMIFINAL | 2 | 季中錦標賽／NBA Cup，計入例行賽戰績 |
+| CUP_FINAL | 2 | 冠軍戰，**不計入**例行賽戰績（ESPN 仍標 2）|
+| PLAY_IN | 5 | 附加賽，存放在 `data/raw/espn_playin/<季>/` |
+| POSTSEASON | 3 | 季後賽 |
 
-**資料用途矩陣**（特徵實作時依 `game_type`／`counts_for_standings` 取資料，不依 `season_type`）：
+**`counts_for_standings` 只決定「是否計入例行賽戰績」，不可用來決定其他特徵或樣本是否使用該場。**
+五種用途各自獨立定義（分類表各有一欄）：
 
-| 用途 | REGULAR / CUP_GROUP / QF / SF | CUP_FINAL | PLAY_IN | POSTSEASON |
-|---|---|---|---|---|
-| 官方例行賽戰績（勝率、主客場戰績、連勝、排名、勝差）| ✅ | ❌ | ❌ | ❌ |
-| 進攻／防守效率、Pace（F1）| ✅ | ✅ | ❌（不混入）| 第一版不用（另評估）|
-| 近期狀態（最近 N 場表現）| ✅ | ✅ | ❌ | 第一版不用 |
-| 賽程疲勞（休息天數、背靠背，F2）| ✅ | ✅（實際出賽）| ⚠️ 待決定 | ⚠️ 待決定 |
-| Elo 更新 | ✅ | ✅，保留 game_type 標記 | ⚠️ 待決定 | ⚠️ 待決定 |
-| 模型訓練樣本 | ✅ | ✅ | ❌（不混入例行賽訓練）| ❌（第一版只用例行賽訓練）|
-| 評估 | 例行賽 | 例行賽（分層報告 game_type）| 獨立分析 | 另外評估 |
+| game_type | 例行賽戰績 `counts_for_standings` | 賽程疲勞 `use_fatigue` | Elo `use_elo` | 訓練樣本 `train_sample` | 評估分組 `eval_group` |
+|---|---|---|---|---|---|
+| REGULAR_SEASON | 是 | 是 | 是 | 是 | regular |
+| CUP_GROUP／QF／SF | 是 | 是 | 是 | 是 | regular |
+| CUP_FINAL | **否** | 是 | 是 | 是 | regular（分層報告 game_type）|
+| PLAY_IN | 否 | 是 | 是 | **否** | play_in（獨立）|
+| POSTSEASON | 否 | 是 | 是 | **否** | postseason（獨立評估）|
+
+**各類特徵的資料納入規則**
+
+| 特徵／用途 | 用哪些比賽 | 規則 |
+|---|---|---|
+| 例行賽戰績（勝率、主客場戰績、連勝、排名、勝差）| `counts_for_standings` = True | 只用開賽前已完賽的比賽 |
+| 賽程疲勞（休息天數、背靠背、四天三賽、近 N 天出賽數）| `use_fatigue` = True（所有實際出賽）| 附加賽、季後賽、盃賽冠軍戰都算一場實際出賽；以美東日期計算 |
+| Elo | `use_elo` = True（所有比賽）| 依開賽時間順序更新；預測時只能用**當場開打前已知**的評分，比照 asof 規則取「前一個美東日期結束時」的評分（同日較早場次不更新到較晚場次）；每次更新紀錄 game_type |
+| 進攻／防守效率、Pace（F1）| 第一版：`train_sample` = True 的比賽（例行賽含冠軍戰）| 2017-18 依賴失誤的部分停用（1.2）；附加賽、季後賽是否納入效率估計另行決定 |
+| 近期狀態（最近 N 場）| 同 F1 | 同上 |
+| 模型訓練樣本 | `train_sample` = True | 第一版只用例行賽；**Elo 納入季後賽不代表季後賽進入訓練樣本**（兩者分開處理）|
+| 模型評估樣本 | 依 `eval_group` 分組報告 | 季後賽、附加賽獨立評估，不與例行賽合併成一個數字 |
+
+- Elo 的歷史更新序列（所有比賽）與模型訓練樣本（只有例行賽）是兩份不同的清單，程式上分開產生，有測試（T20、T23）。
+- 鎖定測試期：2024-25、2025-26（config HOLDOUT）。附加賽原始資料可以收集；2025-26 在模型凍結前不抓、不讀、不分析（程式拒絕）。
 
 **其他程式檢查結果**（`season_type` 出現處；本階段都不修改）：
-- `nba_quant/quality.py`：每隊完賽場數用 `season_type == 2` 計算，2023-24 的 IND/LAL、2024-25 的 MIL/OKC 會算成 83 場。
-  這是盤口品質報告的一部分，依指示不修改，也不影響 PASS；只記錄在此。
+- `nba_quant/quality.py`：每隊完賽場數用 `season_type == 2`，會把盃賽冠軍戰算進去（見 3.3）。
 - `tools/season_audit.py`、`tools/per_game_export.py`、`tools/reconcile_season.py`：只用來把盤口分成例行賽／季後賽，與戰績無關。
-- `nba_quant/asof.py` `games_before`：不看賽事類型；play-in 存放在 `data/raw/espn_playin/`，不會被讀進一般資料。
-- 未來必須依分類表的功能：所有戰績類特徵、F1、F2、Elo、B0 基準的訓練資料篩選、訓練樣本篩選、評估分層。
+- `nba_quant/asof.py` `games_before`：不看賽事類型；附加賽存放在 `data/raw/espn_playin/`，不會被讀進一般資料。
+
+### 3.3 `quality.py` 的 83 場問題：影響分析與修正方案（待審查，尚未修改）
+
+**現況**：`season_report()` 用 `season_type == 2` 計算例行賽場數與每隊場數，盃賽冠軍戰被算進例行賽：
+2023-24、2024-25 例行賽完賽 1231 場，兩隊（IND/LAL、MIL/OKC）各 83 場。
+
+**影響範圍**
+1. **PASS 狀態：無影響**。程式本來就容許 +1（`expected <= reg_final <= expected + 1`、`TEAM_GAMES_DEFAULT = (82, 83)`，
+   註解寫明「NBA 盃冠軍賽可 +1」）；兩季的 `quality.json` 都是 PASS。
+2. **盤口品質統計**：冠軍戰被歸到「例行賽」盤口覆蓋率的分母（每季 1 場 / 1231 場，約 0.08%）。這是盤口報告的分類，與模型資料無關。
+3. **模型資料統計**：若直接用 quality.py 的數字當作「例行賽戰績」會多 1 場。新版模型資料統計不讀 quality.py，改讀分類表。
+4. **可重現性（新發現的既有問題）**：在暫存目錄重跑 2016、2024、2025 的 `season_report()`：
+   `quality.json` 與 `odds_flags.jsonl.gz` 位元組相同；但 `docs/reports/data_quality/<季>.md` 的逐家表格中，
+   **同分的列順序會變**（2016、2024 各有一列換位置，數字相同）。原因是同分時排序依賴集合的迭代順序。
+   報告內容（數字）可重現，**列順序不可重現**。
+
+**修正方案（建議 A，請選擇）**
+- **A（建議）：不修改 quality.py**。把它視為盤口品質 v1 的凍結程式（以 commit 為版本），既有報告與 PASS 完全不動。
+  新增獨立的「模型資料統計」（讀 `game_classification.csv`，依 `counts_for_standings` 計算例行賽場數、每隊場數），
+  輸出到新的路徑，不與盤口品質報告共用檔案。
+- B：在 quality.py 加一個「模型資料用」的新函式，原本的 `season_report()` 一行不改；加回歸測試：在暫存目錄重跑
+  全部球季，`quality.json` 必須與既有檔案位元組相同。缺點是新舊邏輯放在同一個檔案，容易誤改。
+- 列順序問題：任一方案都**不重新產生**既有報告。若要讓未來的報告可重現，需在排序加上決勝鍵（例如 provider 名稱），
+  但這會讓重跑結果與既有 .md 不同，所以只建議套用在未來的新報告，需另行核准。
+- 已新增回歸測試（T24）：在暫存目錄重跑 2016 的 `season_report()`，確認 `quality.json`、`odds_flags.jsonl.gz` 與既有檔案位元組相同，
+  且測試結束後既有檔案的 sha256 不變。
 
 ## 4. 時間序列切分（walk-forward，不打亂）
 
@@ -274,18 +311,18 @@ T1 有兩種來源並列比較：(a) 直接的機率模型；(b) 由 T2 的預�
 | R14 | ESPN／BBRef 的失誤、籃板定義可能不同 | 混用造成系統性偏差 | 同場比對已確認 ESPN 原生場次一致（見 1.2）；BBRef 補值場次的失誤差異未解決，靠第 8 節敏感度分析 |
 | R15 | 品質檢查未涵蓋 box score 欄位合理性 | 類似 2017-18 的錯誤可能還有 | 已建立獨立 box score 稽核 v1，未發現其他整季異常 |
 | R16 | 盃賽冠軍戰不計入例行賽戰績，但 ESPN 歸為例行賽 | 戰績類特徵與「例行賽」定義不一致 | 已決定：`counts_for_standings`（見 3.2）|
-| R17 | 2020-21 起每季都有 play-in，但正式回補不收（只補抓了 2019-20）| play-in 對手、疲勞計算缺漏 | 待決定是否補抓其他季 |
+| R17 | 2020-21 起每季都有 play-in，但正式回補不收 | 疲勞與 Elo 缺漏 | 2026-11-20 第三輪：2020-21～2024-25 獨立補抓 |
+| R18 | 盤口品質 .md 報告的同分列順序不可重現 | 重跑報告與既有檔案不同 | 只記錄，不重新產生；見 3.3 |
 | R12 | 回合數是估計值 | 效率特徵有誤差 | 用兩隊平均；文件化公式 |
 
 ## 10. 需要使用者決定（新）
 
-2026-11-20 已決定：2017-18 turnovers（停用、只列候選、不覆蓋）、盃賽淘汰賽 4 場（neutral）、無備註 6 場（兩源規則）、
-盃賽冠軍戰（`counts_for_standings`）、2019-20 Play-In（已獨立補抓）、抽樣報告用語。
+第三輪（2026-11-20）已決定：用途拆分（3.2）、附加賽多季補抓、2017-18 失誤維持現況、quality.py 先分析再提方案。
 
 仍待決定：
-1. Play-in 用於賽程疲勞（休息天數）與 Elo 嗎？（見 3.2 ⚠️）季後賽同樣待定。
-2. 2019-20 play-in 依「ESPN 場館 + BBRef 場館」判為 neutral（bubble_play_in），請確認。
-3. 2020-21～2024-25 的 play-in 是否也要獨立補抓（R17）。
+1. `quality.py` 修正方案（3.3）：建議 A（不修改、另建模型資料統計）。
+2. 附加賽、季後賽是否納入效率估計（F1）與近期狀態（目前第一版只用 `train_sample`）。
+3. 盤口品質 .md 報告的列順序：是否在**未來的新報告**加入決勝鍵（不重新產生既有報告）。
 
 ## 11. 測試計畫（實作 B0、B1 時一併完成）
 
@@ -309,7 +346,11 @@ T1 有兩種來源並列比較：(a) 直接的機率模型；(b) 由 T2 的預�
 | T16 | 中立場規則：泡泡區以美東日期切、季後賽另列、無備註 6 場不論 BBRef 為何皆 unknown、單一來源不判 neutral（已實作）| 不推測 |
 | T17 | 若核准 derived 修正版：修正版與原始檔逐筆對應、原始檔 sha256 不變、每筆附來源欄位名與 BBRef 比對結果 | 原始資料不覆寫 |
 | T18 | 分類表：CUP_FINAL／PLAY_IN／POSTSEASON 的 `counts_for_standings` = False；其餘 True；未知 season_type 或盃賽備註報錯；實際資料每隊計入 82 場（已實作）| 戰績用途分離 |
-| T19 | 戰績類特徵只讀 `counts_for_standings` = True 的比賽；效率與近期狀態包含 CUP_FINAL 但不含 PLAY_IN（實作特徵時完成）| 用途矩陣 |
+| T19 | 戰績類特徵只讀 `counts_for_standings` = True；疲勞特徵讀 `use_fatigue`（含附加賽、季後賽、冠軍戰）；效率與近期狀態讀 `train_sample`（實作特徵時完成）| 用途矩陣 |
 | T20 | Elo 紀錄保留每場 game_type；訓練樣本不含 PLAY_IN 與 POSTSEASON（實作時完成）| 用途矩陣 |
+| T23 | Elo：依開賽時間順序更新；預測某場時的評分不受該場及之後（含同一美東日期較早場次）結果影響；Elo 更新清單與訓練樣本清單分開產生（實作 Elo 時完成）| 時序與用途分離 |
+| T24 | 盤口品質報告可重現：暫存目錄重跑 2016 `season_report()`，quality.json／odds_flags 位元組相同、.md 列內容相同，既有檔案 sha256 不變（已實作）| 不影響既有報告 |
+| T25 | 用途矩陣：五種用途逐 game_type 符合 3.2；Elo 納入不代表訓練納入；中立場表的 game_type 與分類表一致、不得出現自設賽事類型名稱（已實作）| 用途分離、分類一致 |
+| T26 | 附加賽多季抓取：2025-26 鎖定拒絕；已存在的季不重抓；候選日期由資料推得；獨立目錄（已實作）| 獨立存放、鎖定測試期 |
 | T21 | Play-in：正式回補仍略過 season_type 5；獨立目錄存放；原始檔不覆寫；驗證邏輯（已實作）| 獨立存放 |
 | T22 | 中立場：盃賽淘汰賽 4 場 neutral 並附證據；無備註 6 場需 ESPN 與 BBRef 場館兩源同城才 neutral，任一缺漏或不同城 → unknown（已實作）| 不強行判定 |

@@ -28,6 +28,10 @@ nba_quant/              # V2 程式（純邏輯，不碰 HTML）
 tests/                  # 單元／API／回測測試
 data/
   raw/espn/<季>/        # 歷史原始資料（每季一組 .jsonl.gz，完成的球季不再變動）
+  raw/espn_playin/<季>/ # 附加賽（Play-In）獨立存放：原始回應 + 解析 + 來源紀錄；不混入 raw/espn/
+  reference/            # 分類表（不修改原始資料）：neutral_sites.csv、game_classification.csv
+  audit/                # 唯讀稽核輸出：source_compare/（ESPN vs BBRef）、box_quality/v1/
+  derived/              # 經使用者核准的修正版（目前沒有；2017-18 失誤修正版未核准）
   snapshots/<日期>/     # 每次預測當下的輸入快照（重現用）
   predictions/<日期>.json
   taiwan/manual/<日期>.csv   # 手動輸入的台灣運彩盤口
@@ -47,12 +51,38 @@ docs/
 |---|---|
 | `game_id` | ESPN event id |
 | `season` | 結束年份（2025-26 季 = 2026）|
-| `season_type` | 2 = 例行賽，3 = 季後賽（季前賽不收）|
+| `season_type` | ESPN 賽事類型：2 = 例行賽，3 = 季後賽，5 = 附加賽（只在獨立的 play-in 目錄出現；正式回補只收 2、3）。**不可單獨用來判斷資料用途**，見 2.7 |
 | `start_utc` | 開賽時間（UTC，ISO 8601）|
 | `home` / `away` | ESPN 隊伍縮寫 |
 | `home_pts` / `away_pts` | 完賽比分，未完賽為 null |
 | `status` | `scheduled` / `final` / `postponed` / `canceled` |
 | `neutral` | 中立場 |
+
+### 2.7 比賽分類（`data/reference/game_classification.csv`，2026-11-20 使用者決策）
+
+| 欄位 | 說明 |
+|---|---|
+| `game_type` | REGULAR_SEASON／CUP_GROUP／CUP_QUARTERFINAL／CUP_SEMIFINAL／CUP_FINAL／PLAY_IN／POSTSEASON |
+| `counts_for_standings` | 是否計入官方例行賽勝敗紀錄。CUP_FINAL、PLAY_IN、POSTSEASON 為 False |
+
+規則：
+- 戰績類計算一律用 `counts_for_standings`，不可用 `season_type == 2`（盃賽冠軍戰 ESPN 仍標為 2）。
+- 盃賽冠軍戰的比賽數據可用於效率、近期狀態、模型訓練；Elo 可納入但必須保留 `game_type`。
+- PLAY_IN 不混入例行賽訓練資料；保留完整 box score 供獨立分析。
+- 用途矩陣見 `docs/V2_MODEL_STAGE1_DESIGN.md` 3.2。
+
+### 2.8 中立場（`data/reference/neutral_sites.csv`）
+
+- 不修改 games.jsonl.gz 的 `neutral` 欄位；ESPN 的 `neutral` 旗標本身不算證據。
+- 判定需要兩個獨立來源（例：ESPN 賽事備註或 ESPN 場館 + BBRef 場館），或使用者明確指定；BBRef 場館不能單獨作判定依據。
+- 證據不足一律 unknown，不推測。每列保留證據來源與判定理由。
+
+### 2.9 Box score 來源規則（2026-11-20）
+
+- 2017-18 ESPN 失誤欄位錯位：該季所有依賴失誤的特徵停用；候選公式只列為 high-agreement candidate；
+  不產生 derived 修正版、不以 BBRef 整季覆蓋 ESPN（核准前）。
+- 來源比對結果須標示範圍：2017-18 為全季逐場，其他季為抽樣（每季 30 場），抽樣結果不可宣稱全季驗證。
+- box score 合理性稽核 `box_quality/v1` 與盤口品質報告分開保存，不影響盤口 PASS 狀態。
 
 ### 2.2 TeamBox（每場每隊一筆，**只能用於該場之後的預測**）
 投籃、三分、罰球命中/出手、進攻/防守籃板、失誤、得分、延長賽次數，

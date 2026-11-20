@@ -276,18 +276,37 @@ def _cands(stats):
                 and ' vs ' not in k] for s, st in stats.items()}
 
 
+FULL_SEASONS = (2018,)
+
+
+def scope(s, cov):
+    c = cov[s]
+    if s in FULL_SEASONS:
+        return f"全季逐場（{c['compared_games']} 場 / {c['compared_team_boxes']} 筆）"
+    return f"抽樣（{c['compared_games']} 場 / {c['compared_team_boxes']} 筆）"
+
+
 def render(stats, cov, defs, mm, conc, logs):
+    others = [s for s in sorted(stats) if s not in FULL_SEASONS]
+    o_games = sum(cov[s]['compared_games'] for s in others)
+    o_boxes = sum(cov[s]['compared_team_boxes'] for s in others)
     L = ['# ESPN vs BBRef 同場比對（box score v1）', '',
          '唯讀比對。每季固定種子（20261120）依月份輪流、優先未涵蓋的球隊抽約 30 場 ESPN 原生 box score 的例行賽；'
          '2017-18 為該季全部 ESPN 原生例行賽。差 = ESPN − BBRef。「系統性」= 完全一致 < 95% 且平均差 95% CI 不含 0。', '',
          '**本報告不產生任何修正版資料。** 一致率 ≥ 99% 的欄位只標示為「高度一致的候選欄位」；'
          '產生 derived 修正版須經使用者核准。', '',
+         '**比對範圍（兩種結果分開呈現，不可混為一談）**', '',
+         f"- 2017-18：**全季逐場比對**，ESPN 原生例行賽 {cov[2018]['compared_games'] if 2018 in cov else 0} 場、"
+         f"{cov[2018]['compared_team_boxes'] if 2018 in cov else 0} 筆球隊紀錄。" ,
+         f'- 其他 {len(others)} 季：**抽樣比對**，每季約 30 場，共 {o_games} 場、{o_boxes} 筆球隊紀錄。'
+         f'其他 {len(others)} 季抽樣資料（共 {o_boxes} 筆球隊紀錄）全部符合預期；'
+         '本報告所有其他球季的一致率（含 99.9%～100%）都是**抽樣結果，不代表全季逐場驗證**。', '',
          '## 0. 覆蓋與抓取紀錄', '',
-         '| 球季 | 例行賽完賽 | 其中 BBRef 補值（不抽）| 抽樣目標 | 完成比對場數 | 兩隊 box 筆數 | 未能比對 | 月份數 | 球隊數 | ESPN 請求 | BBRef 請求 |',
-         '|---|---|---|---|---|---|---|---|---|---|---|']
+         '| 球季 | 比對範圍 | 例行賽完賽 | 其中 BBRef 補值（不抽）| 比對目標 | 完成比對場數 | 兩隊 box 筆數 | 未能比對 | 月份數 | 球隊數 | ESPN 請求 | BBRef 請求 |',
+         '|---|---|---|---|---|---|---|---|---|---|---|---|']
     for s in sorted(stats):
         c, fl = cov[s], logs.get(s, {})
-        L.append(f"| {season_label(s)} | {c['regular_final_games']} | {c['excluded_bbref_box_games']} | {c['target']} | "
+        L.append(f"| {season_label(s)} | {scope(s, cov)} | {c['regular_final_games']} | {c['excluded_bbref_box_games']} | {c['target']} | "
                  f"{c['compared_games']} | {c['compared_team_boxes']} | {len(c['failed'])} | {len(stats[s]['months'])} | "
                  f"{stats[s]['teams']} | {fl.get('espn_requests', '')} | {fl.get('bbref_requests', '')} |")
     for s in sorted(cov):
@@ -307,7 +326,11 @@ def render(stats, cov, defs, mm, conc, logs):
                  f"{pct('bbref_orb_plus_drb_eq_trb', b)} | {', '.join(f'{k}:{v}' for k, v in d['bbref_team_minus_player_tov'].items())} |")
     cands = _cands(stats)
     L += ['', '## 2. 高度一致的候選欄位（一致率 ≥ 99%；僅標示，不觸發修正）', '']
-    for s in sorted(cands):
+    for s in sorted(cands, key=lambda x: (x not in FULL_SEASONS, x)):
+        if s == min(others or [0]):
+            L += ['', f'**其他 {len(others)} 季（抽樣結果，共 {o_boxes} 筆球隊紀錄；非全季逐場驗證）**', '']
+        elif s in FULL_SEASONS:
+            L += [f'**{season_label(s)}（全季逐場比對）**', '']
         fields = stats[s]['fields']
         listed = ', '.join('`%s` %.2f%%' % (k, 100 * fields[k]['exact_share']) for k in cands[s]) or '無'
         bt = best_tov_field(stats[s])
@@ -326,8 +349,8 @@ def render(stats, cov, defs, mm, conc, logs):
             top = ', '.join(f'{k} {a}/{b}' for k, a, b in rows[:8])
             L.append(f'- 依 {key}：{top}')
         L.append('')
-    for s in sorted(stats):
-        L += ['', f'## {season_label(s)} 逐欄位比對', '',
+    for s in sorted(stats, key=lambda x: (x not in FULL_SEASONS, x)):
+        L += ['', f'## {season_label(s)} 逐欄位比對 — {scope(s, cov)}', '',
               '| 欄位 | n | ESPN 平均 | BBRef 平均 | 平均差 | 95% CI | ≤−3 | −2 | −1 | 0 | +1 | +2 | ≥+3 | 完全一致 | 系統性 |',
               '|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|']
         for k, st in stats[s]['fields'].items():

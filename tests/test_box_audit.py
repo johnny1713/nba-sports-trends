@@ -93,11 +93,12 @@ class NeutralRules(unittest.TestCase):
     def test_bubble_postseason_separate(self):
         self.assertEqual(N.classify(self.g(season_type=3, start_utc='2020-08-17T17:30:00Z'), None, None)[1], 'bubble_postseason')
 
-    def test_flag_only_games_stay_unknown_even_with_bbref_venue(self):
+    def test_flag_only_games_unknown_with_bbref_venue_alone(self):
+        # 2026-11-20 修訂：BBRef 單一來源仍不足以判定（需 ESPN 場館 + BBRef 場館兩源）
         r = N.classify(self.g(game_id='400900010', season=2017, start_utc='2017-01-12T20:00:00Z', neutral=True),
                        None, 'The O2 Arena, London, United Kingdom')
         self.assertEqual(r[0], 'unknown')
-        self.assertIn('輔助證據', r[3])
+        self.assertIn('證據不足', r[3])
 
     def test_bbref_alone_or_espn_alone_is_not_enough(self):
         intl = self.g(season=2019, start_utc='2019-01-17T20:00:00Z', neutral=True, notes=['NBA LONDON GAME'])
@@ -129,3 +130,65 @@ class BBRefVenue(unittest.TestCase):
         self.assertEqual(N.bbref_venue(['NBA Cup', '4:30 PM, December 14, 2024', 'T-Mobile Arena, Las Vegas, Nevada']),
                          'T-Mobile Arena, Las Vegas, Nevada')
         self.assertIsNone(N.bbref_venue(['NBA Cup', '4:30 PM, December 14, 2024']))
+
+
+class NeutralDecisions20261120(unittest.TestCase):
+    """使用者 2026-11-20 決策：盃賽淘汰賽 4 場 neutral；無備註 6 場需 ESPN 與 BBRef 場館兩源皆在倫敦／墨西哥城。"""
+    G = {'game_id': '400578877', 'season': 2015, 'season_type': 2, 'start_utc': '2015-01-15T20:00:00Z', 'neutral': True, 'notes': []}
+
+    def test_no_note_two_sources_same_city_neutral(self):
+        r = N.classify(self.G, 'O2 Arena (ENG), London', 'The O2 Arena, London, United Kingdom')
+        self.assertEqual(r[:2], ('neutral', 'international_no_espn_note'))
+        self.assertEqual(r[2], 'espn_venue;bbref_venue')
+
+    def test_no_note_insufficient_evidence_stays_unknown(self):
+        self.assertEqual(N.classify(self.G, None, 'The O2 Arena, London, United Kingdom')[0], 'unknown')
+        self.assertEqual(N.classify(self.G, 'O2 Arena (ENG), London', None)[0], 'unknown')
+        self.assertEqual(N.classify(self.G, 'Fiserv Forum, Milwaukee', 'The O2 Arena, London, United Kingdom')[0], 'unknown')
+        self.assertEqual(N.classify(self.G, 'O2 Arena (ENG), London', 'Mexico City Arena, Mexico City, Mexico')[0], 'unknown')
+
+    def test_cup_knockout_user_approved(self):
+        for gid in ('401607495', '401734906', '401734907', '401734908'):
+            r = N.classify({'game_id': gid, 'season': 2025, 'season_type': 2, 'start_utc': '2024-12-14T21:30:00Z',
+                            'neutral': True, 'notes': ['NBA Cup - Semifinals']}, 'T-Mobile Arena', 'T-Mobile Arena, Las Vegas, Nevada')
+            self.assertEqual(r[:2], ('neutral', 'cup_knockout'))
+            self.assertIn('使用者 2026-11-20 核准', r[3])
+
+
+class GameClassification(unittest.TestCase):
+    def c(self, st, notes=()):
+        from nba_quant import game_class
+        return game_class.classify({'game_id': 'x', 'season_type': st, 'notes': list(notes)})
+
+    def test_types_and_standings(self):
+        self.assertEqual(self.c(2), ('REGULAR_SEASON', True, 'ESPN season_type 2，無盃賽備註'))
+        self.assertEqual(self.c(2, ['NBA Cup - Group Play'])[:2], ('CUP_GROUP', True))
+        self.assertEqual(self.c(2, ['NBA In-Season Tournament - Quarterfinals'])[:2], ('CUP_QUARTERFINAL', True))
+        self.assertEqual(self.c(2, ['NBA Cup - Semifinals'])[:2], ('CUP_SEMIFINAL', True))
+        # 冠軍戰：ESPN 仍是 season_type 2，但不計入例行賽戰績
+        self.assertEqual(self.c(2, ['NBA Cup Championship'])[:2], ('CUP_FINAL', False))
+        self.assertEqual(self.c(2, ['NBA In-Season Tournament Championship'])[:2], ('CUP_FINAL', False))
+        self.assertEqual(self.c(5)[:2], ('PLAY_IN', False))
+        self.assertEqual(self.c(3)[:2], ('POSTSEASON', False))
+
+    def test_unknown_inputs_raise(self):
+        with self.assertRaises(ValueError):
+            self.c(1)
+        with self.assertRaises(ValueError):
+            self.c(2, ['NBA Cup - Something New'])
+
+    def test_real_data_each_team_82_counted_games(self):
+        """以實際資料檢查：counts_for_standings 的完賽場數每隊 82 場（2019-20、2020-21 例外：縮水球季）。"""
+        import os
+        from collections import Counter
+        from nba_quant import game_class, store
+        for season in (2024, 2025):
+            p = os.path.join('data', 'raw', 'espn', str(season), 'games.jsonl.gz')
+            if not os.path.exists(p):
+                self.skipTest('no data')
+            c = Counter()
+            for g in store.read_jsonl_gz(p):
+                if g['status'] == 'final' and game_class.classify(g)[1]:
+                    c[g['home']] += 1
+                    c[g['away']] += 1
+            self.assertEqual(set(c.values()), {82}, season)

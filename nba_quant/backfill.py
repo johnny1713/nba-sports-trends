@@ -277,6 +277,10 @@ def require_previous_ok(season):
 def main(season, rest):
     if '--taiwan' in rest:
         return run_taiwan()
+    if '--source-audit' in rest:
+        from . import source_audit
+        only = [int(x) for x in rest[rest.index('--only') + 1].split(',')] if '--only' in rest else None
+        return source_audit.run(only)
     if '--quality-only' in rest:
         from . import quality
         print(quality.season_report(season)['verdict'])

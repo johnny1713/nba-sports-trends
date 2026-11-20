@@ -1,0 +1,13 @@
+{
+ "http_errors": [],
+ "notes": [],
+ "notes_total": 0,
+ "parse_errors": [],
+ "requests": 3085,
+ "season": 2023,
+ "skipped": {
+  "non-NBA teams (all-star etc.)": 6,
+  "season type 1": 65,
+  "season type 5": 6
+ }
+}

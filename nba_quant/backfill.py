@@ -32,23 +32,27 @@ def season_dir(season):
     return os.path.join(RAW, str(season))
 
 
-def _months(season):
-    """Aug 1 (前一年) ～ Oct 31（當年）每月一段：涵蓋 2019-20 泡泡、2020-21 延後開季。再以 season.year 過濾。"""
-    d = date(season - 1, 8, 1)
-    end = date(season, 10, 31)
+def _days(season, today=None):
+    """Aug 1（前一年）～ Oct 31（當年）逐日：涵蓋 2019-20 泡泡、2020-21 延後開季，再以 season.year 過濾。
+    ESPN 的日期區間查詢會回 400（2026-11-20 實測），而且區間結果有被截斷的風險，所以逐日查。"""
+    d, end = date(season - 1, 8, 1), date(season, 10, 31)
+    if today:
+        end = min(end, today)
     while d <= end:
-        nxt = (d.replace(day=28) + timedelta(days=4)).replace(day=1)
-        yield d, min(nxt - timedelta(days=1), end)
-        d = nxt
+        yield d
+        d += timedelta(days=1)
 
 
 def list_games(f: Fetcher, season: int, today: date = None, log=print):
-    games, skipped = {}, {}
-    for d0, d1 in _months(season):
-        if today and d0 > today:
-            break
-        d1 = min(d1, today) if today else d1
-        evs = _range_events(f, d0, d1, log)
+    games, skipped, empty_days, failed_days = {}, {}, 0, []
+    for d in _days(season, today):
+        try:
+            evs = f.get_json(espn.scoreboard_url(d)).get('events', [])
+        except FetchError as e:
+            failed_days.append(f'{d}: {e.status}')
+            continue
+        if not evs:
+            empty_days += 1
         for ev in evs:
             if int((ev.get('season') or {}).get('year', 0)) != season:
                 continue
@@ -57,18 +61,9 @@ def list_games(f: Fetcher, season: int, today: date = None, log=print):
                 skipped[why] = skipped.get(why, 0) + 1
                 continue
             games[g['game_id']] = g
+    if failed_days:
+        skipped['scoreboard_days_failed'] = failed_days
     return games, skipped
-
-
-def _range_events(f, d0, d1, log, limit=1000):
-    """區間查詢；回傳數量碰到上限就切半重抓，避免被截斷而不自知。"""
-    data = f.get_json(espn.scoreboard_url(d0, d1, limit))
-    evs = data.get('events', [])
-    if len(evs) >= limit and d0 < d1:
-        mid = d0 + (d1 - d0) // 2
-        log(f'  range {d0}~{d1} hit limit {limit}, splitting')
-        return _range_events(f, d0, mid, log) + _range_events(f, mid + timedelta(days=1), d1, log)
-    return evs
 
 
 def _load(path):

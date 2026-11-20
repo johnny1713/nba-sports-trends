@@ -80,10 +80,8 @@ def _line(node):
 
 
 # ---------------------------------------------------------------- scoreboard
-def scoreboard_url(d0: date, d1: date = None, limit=1000):
-    d1 = d1 or d0
-    rng = f'{d0:%Y%m%d}' if d0 == d1 else f'{d0:%Y%m%d}-{d1:%Y%m%d}'
-    return f'{SITE}/scoreboard?dates={rng}&limit={limit}'
+def scoreboard_url(d: date):
+    return f'{SITE}/scoreboard?dates={d:%Y%m%d}'
 
 
 def parse_scoreboard_event(ev: dict, fetched_at: str):

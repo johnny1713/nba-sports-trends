@@ -19,7 +19,7 @@ class FakeFetcher(http.Fetcher):
     def get_bytes(self, url, headers=None):
         self.calls += 1
         if 'scoreboard' in url:
-            return json.dumps(json.loads(L('scoreboard_s2024.gz')) if '202401' in url else {'events': []}).encode()
+            return json.dumps(json.loads(L('scoreboard_s2024.gz')) if 'dates=20240115' in url else {'events': []}).encode()
         if '401585183' in url:
             return L('summary_s2024_401585183.gz' if 'summary' in url else 'odds_s2024_401585183.gz')
         self.errors.append((url, 404, 'no fixture'))

@@ -1,0 +1,31 @@
+{
+ "applies_to_other_seasons": false,
+ "code_sha": "5718804a4fb9999342619c7d5942ea035b18ddf6",
+ "correction": "2026-11-20 更正：決策時說明「其他 11 家收盤正常」有誤——2022-23 只有 ESPN BET 有 close 欄位，其他 11 家只有 current_postgame（與 2014-15～2021-22 相同）。驗證程式因此判定放行不成立（同階段無替代來源），待使用者重新決定。",
+ "data_version": {
+  "games.jsonl.gz": "aa38dbe9660a969e59d01ddc33eb63b27cb93729b480b55dbee56b88fc7f296a",
+  "odds.jsonl.gz": "a6244b193f86865e2f660f6fbd925c9b790342a2d676947f1b325d96c9990538"
+ },
+ "decided_at": "2026-11-20T07:00:27+00:00",
+ "decided_by": "使用者（專案擁有者）",
+ "decision": "conditional_pass",
+ "decision_text": "方案 1：有條件放行 2022-23，不修改全域 1% 品質門檻",
+ "exclusion_scope": [
+  {
+   "flag": "line_field_contains_price",
+   "markets": [
+    "spread",
+    "total"
+   ],
+   "provider": "ESPN BET",
+   "stage": "close"
+  }
+ ],
+ "gate_threshold_changed": false,
+ "invalid_if": "資料版本變更、或任何驗證條件不成立（見 nba_quant/quality.py evaluate_conditional_pass）",
+ "kept_note": "ESPN BET 收盤獨贏（價格正常）；其他 11 家莊家所有未被標記的資料（注意：它們只有「賽後 current」，沒有 ESPN 標記的 close 欄位）",
+ "not_used": "不使用 ESPN BET 的 current 欄位補回收盤（可能混入比賽中盤口）",
+ "raw_data_modified": false,
+ "reason": "ESPN 的 2022-23 ESPN BET 收盤（close）讓分與總分欄位，系統性填入賠率（例：主 -110／客 +110、總分 -110），同一筆資料的 current 欄位才是盤口。屬於來源欄位錯誤，不是我們的解析錯誤。",
+ "season": 2023
+}

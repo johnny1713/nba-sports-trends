@@ -42,35 +42,9 @@ def save(name, url):
 
 def main():
     os.makedirs(OUT, exist_ok=True)
-    SB = 'https://site.api.espn.com/apis/site/v2/sports/basketball/nba/scoreboard?dates='
     SUM = 'https://site.api.espn.com/apis/site/v2/sports/basketball/nba/summary?event='
-    ODDS = 'https://sports.core.api.espn.com/v2/sports/basketball/leagues/nba/events/{0}/competitions/{0}/odds'
-    picks = {}
-    for tag, d in [('s2016', '20160115'), ('s2023', '20230115'), ('s2024', '20240115'), ('s2025', '20250115'), ('s2027', '20261118')]:
-        b = save(f'scoreboard_{tag}', SB + d)
-        ev = json.loads(b)['events']
-        picks[tag] = ev[0]['id']
-    # 季後賽 / play-in / 延賽 例子
-    for tag, d in [('playin2024', '20240416'), ('post2024', '20240421')]:
-        save(f'scoreboard_{tag}', SB + d)
-    for tag, eid in picks.items():
-        save(f'summary_{tag}_{eid}', SUM + eid)
-        save(f'odds_{tag}_{eid}', ODDS.format(eid))
-    # 今天未開打的一場（盤口 snapshot 格式）
-    b = save('scoreboard_today', SB + time.strftime('%Y%m%d', time.gmtime(time.time() - 5 * 3600)))
-    ev = json.loads(b).get('events', [])
-    if ev:
-        save(f'odds_today_{ev[-1]["id"]}', ODDS.format(ev[-1]['id']))
-        save(f'summary_today_{ev[-1]["id"]}', SUM + ev[-1]['id'])
-    # 玩運彩：預設頁 + 明天
-    tw = time.gmtime(time.time() + 8 * 3600)
-    save('playsport_default', 'https://www.playsport.cc/predict/games?allianceid=3')
-    save('playsport_tomorrow', 'https://www.playsport.cc/predict/games?allianceid=3&gametime=' + time.strftime('%Y%m%d', time.gmtime(time.time() + 32 * 3600)))
-    html = gzip.decompress(open(os.path.join(OUT, 'playsport_default.gz'), 'rb').read()).decode('utf-8', 'replace')
-    print('tabs:', re.findall(r'<[^>]+>\s*(國際盤|運彩盤)\s*<', html)[:10])
-    for m in re.finditer(r'(國際盤|運彩盤)', html):
-        print('  ctx:', re.sub(r'\s+', ' ', html[max(0, m.start() - 300):m.end() + 300])[:600])
-        break
+    for gid in ('400578293', '400578302', '400578446'):
+        save(f'summary_bad2015_{gid}', SUM + gid)
 
 
 if __name__ == '__main__':

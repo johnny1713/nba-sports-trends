@@ -1,900 +1,188 @@
 {
  "http_errors": [],
- "notes": [],
- "notes_total": 0,
- "parse_errors": [
-  {
-   "error": "boxscore error: KeyError: 'fieldGoalsMade-fieldGoalsAttempted'",
-   "game_id": "400578293",
-   "stage": "boxscore"
-  },
-  {
-   "error": "boxscore error: KeyError: 'fieldGoalsMade-fieldGoalsAttempted'",
-   "game_id": "400578302",
-   "stage": "boxscore"
-  },
-  {
-   "error": "boxscore error: KeyError: 'fieldGoalsMade-fieldGoalsAttempted'",
-   "game_id": "400578314",
-   "stage": "boxscore"
-  },
-  {
-   "error": "boxscore error: KeyError: 'fieldGoalsMade-fieldGoalsAttempted'",
-   "game_id": "400578319",
-   "stage": "boxscore"
-  },
-  {
-   "error": "boxscore error: KeyError: 'fieldGoalsMade-fieldGoalsAttempted'",
-   "game_id": "400578327",
-   "stage": "boxscore"
-  },
-  {
-   "error": "boxscore error: KeyError: 'fieldGoalsMade-fieldGoalsAttempted'",
-   "game_id": "400578337",
-   "stage": "boxscore"
-  },
-  {
-   "error": "boxscore error: KeyError: 'fieldGoalsMade-fieldGoalsAttempted'",
-   "game_id": "400578345",
-   "stage": "boxscore"
-  },
-  {
-   "error": "boxscore error: KeyError: 'fieldGoalsMade-fieldGoalsAttempted'",
-   "game_id": "400578346",
-   "stage": "boxscore"
-  },
-  {
-   "error": "boxscore error: KeyError: 'fieldGoalsMade-fieldGoalsAttempted'",
-   "game_id": "400578354",
-   "stage": "boxscore"
-  },
-  {
-   "error": "boxscore error: KeyError: 'fieldGoalsMade-fieldGoalsAttempted'",
-   "game_id": "400578365",
-   "stage": "boxscore"
-  },
-  {
-   "error": "boxscore error: KeyError: 'fieldGoalsMade-fieldGoalsAttempted'",
-   "game_id": "400578378",
-   "stage": "boxscore"
-  },
-  {
-   "error": "boxscore error: KeyError: 'fieldGoalsMade-fieldGoalsAttempted'",
-   "game_id": "400578381",
-   "stage": "boxscore"
-  },
-  {
-   "error": "boxscore error: KeyError: 'fieldGoalsMade-fieldGoalsAttempted'",
-   "game_id": "400578390",
-   "stage": "boxscore"
-  },
-  {
-   "error": "boxscore error: KeyError: 'fieldGoalsMade-fieldGoalsAttempted'",
-   "game_id": "400578393",
-   "stage": "boxscore"
-  },
-  {
-   "error": "boxscore error: KeyError: 'fieldGoalsMade-fieldGoalsAttempted'",
-   "game_id": "400578406",
-   "stage": "boxscore"
-  },
-  {
-   "error": "boxscore error: KeyError: 'fieldGoalsMade-fieldGoalsAttempted'",
-   "game_id": "400578411",
-   "stage": "boxscore"
-  },
-  {
-   "error": "boxscore error: KeyError: 'fieldGoalsMade-fieldGoalsAttempted'",
-   "game_id": "400578420",
-   "stage": "boxscore"
-  },
-  {
-   "error": "boxscore error: KeyError: 'fieldGoalsMade-fieldGoalsAttempted'",
-   "game_id": "400578427",
-   "stage": "boxscore"
-  },
-  {
-   "error": "boxscore error: KeyError: 'fieldGoalsMade-fieldGoalsAttempted'",
-   "game_id": "400578445",
-   "stage": "boxscore"
-  },
-  {
-   "error": "boxscore error: KeyError: 'fieldGoalsMade-fieldGoalsAttempted'",
-   "game_id": "400578446",
-   "stage": "boxscore"
-  },
-  {
-   "error": "boxscore error: KeyError: 'fieldGoalsMade-fieldGoalsAttempted'",
-   "game_id": "400578450",
-   "stage": "boxscore"
-  },
-  {
-   "error": "boxscore error: KeyError: 'fieldGoalsMade-fieldGoalsAttempted'",
-   "game_id": "400578463",
-   "stage": "boxscore"
-  },
-  {
-   "error": "boxscore error: KeyError: 'fieldGoalsMade-fieldGoalsAttempted'",
-   "game_id": "400578473",
-   "stage": "boxscore"
-  },
-  {
-   "error": "boxscore error: KeyError: 'fieldGoalsMade-fieldGoalsAttempted'",
-   "game_id": "400578475",
-   "stage": "boxscore"
-  },
-  {
-   "error": "boxscore error: KeyError: 'fieldGoalsMade-fieldGoalsAttempted'",
-   "game_id": "400578484",
-   "stage": "boxscore"
-  },
-  {
-   "error": "boxscore error: KeyError: 'fieldGoalsMade-fieldGoalsAttempted'",
-   "game_id": "400578496",
-   "stage": "boxscore"
-  },
-  {
-   "error": "boxscore error: KeyError: 'fieldGoalsMade-fieldGoalsAttempted'",
-   "game_id": "400578500",
-   "stage": "boxscore"
-  },
-  {
-   "error": "boxscore error: KeyError: 'fieldGoalsMade-fieldGoalsAttempted'",
-   "game_id": "400578501",
-   "stage": "boxscore"
-  },
-  {
-   "error": "boxscore error: KeyError: 'fieldGoalsMade-fieldGoalsAttempted'",
-   "game_id": "400578515",
-   "stage": "boxscore"
-  },
-  {
-   "error": "boxscore error: KeyError: 'fieldGoalsMade-fieldGoalsAttempted'",
-   "game_id": "400578517",
-   "stage": "boxscore"
-  },
-  {
-   "error": "boxscore error: KeyError: 'fieldGoalsMade-fieldGoalsAttempted'",
-   "game_id": "400578528",
-   "stage": "boxscore"
-  },
-  {
-   "error": "boxscore error: KeyError: 'fieldGoalsMade-fieldGoalsAttempted'",
-   "game_id": "400578534",
-   "stage": "boxscore"
-  },
-  {
-   "error": "boxscore error: KeyError: 'fieldGoalsMade-fieldGoalsAttempted'",
-   "game_id": "400578549",
-   "stage": "boxscore"
-  },
-  {
-   "error": "boxscore error: KeyError: 'fieldGoalsMade-fieldGoalsAttempted'",
-   "game_id": "400578550",
-   "stage": "boxscore"
-  },
-  {
-   "error": "boxscore error: KeyError: 'fieldGoalsMade-fieldGoalsAttempted'",
-   "game_id": "400578555",
-   "stage": "boxscore"
-  },
-  {
-   "error": "boxscore error: KeyError: 'fieldGoalsMade-fieldGoalsAttempted'",
-   "game_id": "400578567",
-   "stage": "boxscore"
-  },
-  {
-   "error": "boxscore error: KeyError: 'fieldGoalsMade-fieldGoalsAttempted'",
-   "game_id": "400578581",
-   "stage": "boxscore"
-  },
-  {
-   "error": "boxscore error: KeyError: 'fieldGoalsMade-fieldGoalsAttempted'",
-   "game_id": "400578585",
-   "stage": "boxscore"
-  },
-  {
-   "error": "boxscore error: KeyError: 'fieldGoalsMade-fieldGoalsAttempted'",
-   "game_id": "400578592",
-   "stage": "boxscore"
-  },
-  {
-   "error": "boxscore error: KeyError: 'fieldGoalsMade-fieldGoalsAttempted'",
-   "game_id": "400578603",
-   "stage": "boxscore"
-  },
-  {
-   "error": "boxscore error: KeyError: 'fieldGoalsMade-fieldGoalsAttempted'",
-   "game_id": "400578612",
-   "stage": "boxscore"
-  },
-  {
-   "error": "boxscore error: KeyError: 'fieldGoalsMade-fieldGoalsAttempted'",
-   "game_id": "400578615",
-   "stage": "boxscore"
-  },
-  {
-   "error": "boxscore error: KeyError: 'fieldGoalsMade-fieldGoalsAttempted'",
-   "game_id": "400578620",
-   "stage": "boxscore"
-  },
-  {
-   "error": "boxscore error: KeyError: 'fieldGoalsMade-fieldGoalsAttempted'",
-   "game_id": "400578628",
-   "stage": "boxscore"
-  },
-  {
-   "error": "boxscore error: KeyError: 'fieldGoalsMade-fieldGoalsAttempted'",
-   "game_id": "400578640",
-   "stage": "boxscore"
-  },
-  {
-   "error": "boxscore error: KeyError: 'fieldGoalsMade-fieldGoalsAttempted'",
-   "game_id": "400578641",
-   "stage": "boxscore"
-  },
-  {
-   "error": "boxscore error: KeyError: 'fieldGoalsMade-fieldGoalsAttempted'",
-   "game_id": "400578650",
-   "stage": "boxscore"
-  },
-  {
-   "error": "boxscore error: KeyError: 'fieldGoalsMade-fieldGoalsAttempted'",
-   "game_id": "400578658",
-   "stage": "boxscore"
-  },
-  {
-   "error": "boxscore error: KeyError: 'fieldGoalsMade-fieldGoalsAttempted'",
-   "game_id": "400578671",
-   "stage": "boxscore"
-  },
-  {
-   "error": "boxscore error: KeyError: 'fieldGoalsMade-fieldGoalsAttempted'",
-   "game_id": "400578672",
-   "stage": "boxscore"
-  },
-  {
-   "error": "boxscore error: KeyError: 'fieldGoalsMade-fieldGoalsAttempted'",
-   "game_id": "400578681",
-   "stage": "boxscore"
-  },
-  {
-   "error": "boxscore error: KeyError: 'fieldGoalsMade-fieldGoalsAttempted'",
-   "game_id": "400578686",
-   "stage": "boxscore"
-  },
-  {
-   "error": "boxscore error: KeyError: 'fieldGoalsMade-fieldGoalsAttempted'",
-   "game_id": "400578700",
-   "stage": "boxscore"
-  },
-  {
-   "error": "boxscore error: KeyError: 'fieldGoalsMade-fieldGoalsAttempted'",
-   "game_id": "400578702",
-   "stage": "boxscore"
-  },
-  {
-   "error": "boxscore error: KeyError: 'fieldGoalsMade-fieldGoalsAttempted'",
-   "game_id": "400578709",
-   "stage": "boxscore"
-  },
-  {
-   "error": "boxscore error: KeyError: 'fieldGoalsMade-fieldGoalsAttempted'",
-   "game_id": "400578711",
-   "stage": "boxscore"
-  },
-  {
-   "error": "boxscore error: KeyError: 'fieldGoalsMade-fieldGoalsAttempted'",
-   "game_id": "400578722",
-   "stage": "boxscore"
-  },
-  {
-   "error": "boxscore error: KeyError: 'fieldGoalsMade-fieldGoalsAttempted'",
-   "game_id": "400578729",
-   "stage": "boxscore"
-  },
-  {
-   "error": "boxscore error: KeyError: 'fieldGoalsMade-fieldGoalsAttempted'",
-   "game_id": "400578739",
-   "stage": "boxscore"
-  },
-  {
-   "error": "boxscore error: KeyError: 'fieldGoalsMade-fieldGoalsAttempted'",
-   "game_id": "400578752",
-   "stage": "boxscore"
-  },
-  {
-   "error": "boxscore error: KeyError: 'fieldGoalsMade-fieldGoalsAttempted'",
-   "game_id": "400578759",
-   "stage": "boxscore"
-  },
-  {
-   "error": "boxscore error: KeyError: 'fieldGoalsMade-fieldGoalsAttempted'",
-   "game_id": "400578761",
-   "stage": "boxscore"
-  },
-  {
-   "error": "boxscore error: KeyError: 'fieldGoalsMade-fieldGoalsAttempted'",
-   "game_id": "400578773",
-   "stage": "boxscore"
-  },
-  {
-   "error": "boxscore error: KeyError: 'fieldGoalsMade-fieldGoalsAttempted'",
-   "game_id": "400578774",
-   "stage": "boxscore"
-  },
-  {
-   "error": "boxscore error: KeyError: 'fieldGoalsMade-fieldGoalsAttempted'",
-   "game_id": "400578780",
-   "stage": "boxscore"
-  },
-  {
-   "error": "boxscore error: KeyError: 'fieldGoalsMade-fieldGoalsAttempted'",
-   "game_id": "400578788",
-   "stage": "boxscore"
-  },
-  {
-   "error": "boxscore error: KeyError: 'fieldGoalsMade-fieldGoalsAttempted'",
-   "game_id": "400578804",
-   "stage": "boxscore"
-  },
-  {
-   "error": "boxscore error: KeyError: 'fieldGoalsMade-fieldGoalsAttempted'",
-   "game_id": "400578807",
-   "stage": "boxscore"
-  },
-  {
-   "error": "boxscore error: KeyError: 'fieldGoalsMade-fieldGoalsAttempted'",
-   "game_id": "400578814",
-   "stage": "boxscore"
-  },
-  {
-   "error": "boxscore error: KeyError: 'fieldGoalsMade-fieldGoalsAttempted'",
-   "game_id": "400578820",
-   "stage": "boxscore"
-  },
-  {
-   "error": "boxscore error: KeyError: 'fieldGoalsMade-fieldGoalsAttempted'",
-   "game_id": "400578833",
-   "stage": "boxscore"
-  },
-  {
-   "error": "boxscore error: KeyError: 'fieldGoalsMade-fieldGoalsAttempted'",
-   "game_id": "400578835",
-   "stage": "boxscore"
-  },
-  {
-   "error": "boxscore error: KeyError: 'fieldGoalsMade-fieldGoalsAttempted'",
-   "game_id": "400578846",
-   "stage": "boxscore"
-  },
-  {
-   "error": "boxscore error: KeyError: 'fieldGoalsMade-fieldGoalsAttempted'",
-   "game_id": "400578855",
-   "stage": "boxscore"
-  },
-  {
-   "error": "boxscore error: KeyError: 'fieldGoalsMade-fieldGoalsAttempted'",
-   "game_id": "400578858",
-   "stage": "boxscore"
-  },
-  {
-   "error": "boxscore error: KeyError: 'fieldGoalsMade-fieldGoalsAttempted'",
-   "game_id": "400578869",
-   "stage": "boxscore"
-  },
-  {
-   "error": "boxscore error: KeyError: 'fieldGoalsMade-fieldGoalsAttempted'",
-   "game_id": "400578871",
-   "stage": "boxscore"
-  },
-  {
-   "error": "boxscore error: KeyError: 'fieldGoalsMade-fieldGoalsAttempted'",
-   "game_id": "400578881",
-   "stage": "boxscore"
-  },
-  {
-   "error": "boxscore error: KeyError: 'fieldGoalsMade-fieldGoalsAttempted'",
-   "game_id": "400578883",
-   "stage": "boxscore"
-  },
-  {
-   "error": "boxscore error: KeyError: 'fieldGoalsMade-fieldGoalsAttempted'",
-   "game_id": "400578894",
-   "stage": "boxscore"
-  },
-  {
-   "error": "boxscore error: KeyError: 'fieldGoalsMade-fieldGoalsAttempted'",
-   "game_id": "400578900",
-   "stage": "boxscore"
-  },
-  {
-   "error": "boxscore error: KeyError: 'fieldGoalsMade-fieldGoalsAttempted'",
-   "game_id": "400578910",
-   "stage": "boxscore"
-  },
-  {
-   "error": "boxscore error: KeyError: 'fieldGoalsMade-fieldGoalsAttempted'",
-   "game_id": "400578912",
-   "stage": "boxscore"
-  },
-  {
-   "error": "boxscore error: KeyError: 'fieldGoalsMade-fieldGoalsAttempted'",
-   "game_id": "400578924",
-   "stage": "boxscore"
-  },
-  {
-   "error": "boxscore error: KeyError: 'fieldGoalsMade-fieldGoalsAttempted'",
-   "game_id": "400578929",
-   "stage": "boxscore"
-  },
-  {
-   "error": "boxscore error: KeyError: 'fieldGoalsMade-fieldGoalsAttempted'",
-   "game_id": "400578938",
-   "stage": "boxscore"
-  },
-  {
-   "error": "boxscore error: KeyError: 'fieldGoalsMade-fieldGoalsAttempted'",
-   "game_id": "400578939",
-   "stage": "boxscore"
-  },
-  {
-   "error": "boxscore error: KeyError: 'fieldGoalsMade-fieldGoalsAttempted'",
-   "game_id": "400578949",
-   "stage": "boxscore"
-  },
-  {
-   "error": "boxscore error: KeyError: 'fieldGoalsMade-fieldGoalsAttempted'",
-   "game_id": "400578952",
-   "stage": "boxscore"
-  },
-  {
-   "error": "boxscore error: KeyError: 'fieldGoalsMade-fieldGoalsAttempted'",
-   "game_id": "400578963",
-   "stage": "boxscore"
-  },
-  {
-   "error": "boxscore error: KeyError: 'fieldGoalsMade-fieldGoalsAttempted'",
-   "game_id": "400578971",
-   "stage": "boxscore"
-  },
-  {
-   "error": "boxscore error: KeyError: 'fieldGoalsMade-fieldGoalsAttempted'",
-   "game_id": "400578979",
-   "stage": "boxscore"
-  },
-  {
-   "error": "boxscore error: KeyError: 'fieldGoalsMade-fieldGoalsAttempted'",
-   "game_id": "400578987",
-   "stage": "boxscore"
-  },
-  {
-   "error": "boxscore error: KeyError: 'fieldGoalsMade-fieldGoalsAttempted'",
-   "game_id": "400578993",
-   "stage": "boxscore"
-  },
-  {
-   "error": "boxscore error: KeyError: 'fieldGoalsMade-fieldGoalsAttempted'",
-   "game_id": "400578996",
-   "stage": "boxscore"
-  },
-  {
-   "error": "boxscore error: KeyError: 'fieldGoalsMade-fieldGoalsAttempted'",
-   "game_id": "400579014",
-   "stage": "boxscore"
-  },
-  {
-   "error": "boxscore error: KeyError: 'fieldGoalsMade-fieldGoalsAttempted'",
-   "game_id": "400579027",
-   "stage": "boxscore"
-  },
-  {
-   "error": "boxscore error: KeyError: 'fieldGoalsMade-fieldGoalsAttempted'",
-   "game_id": "400579030",
-   "stage": "boxscore"
-  },
-  {
-   "error": "boxscore error: KeyError: 'fieldGoalsMade-fieldGoalsAttempted'",
-   "game_id": "400579047",
-   "stage": "boxscore"
-  },
-  {
-   "error": "boxscore error: KeyError: 'fieldGoalsMade-fieldGoalsAttempted'",
-   "game_id": "400579050",
-   "stage": "boxscore"
-  },
-  {
-   "error": "boxscore error: KeyError: 'fieldGoalsMade-fieldGoalsAttempted'",
-   "game_id": "400579062",
-   "stage": "boxscore"
-  },
-  {
-   "error": "boxscore error: KeyError: 'fieldGoalsMade-fieldGoalsAttempted'",
-   "game_id": "400579072",
-   "stage": "boxscore"
-  },
-  {
-   "error": "boxscore error: KeyError: 'fieldGoalsMade-fieldGoalsAttempted'",
-   "game_id": "400579077",
-   "stage": "boxscore"
-  },
-  {
-   "error": "boxscore error: KeyError: 'fieldGoalsMade-fieldGoalsAttempted'",
-   "game_id": "400579086",
-   "stage": "boxscore"
-  },
-  {
-   "error": "boxscore error: KeyError: 'fieldGoalsMade-fieldGoalsAttempted'",
-   "game_id": "400579092",
-   "stage": "boxscore"
-  },
-  {
-   "error": "boxscore error: KeyError: 'fieldGoalsMade-fieldGoalsAttempted'",
-   "game_id": "400579095",
-   "stage": "boxscore"
-  },
-  {
-   "error": "boxscore error: KeyError: 'fieldGoalsMade-fieldGoalsAttempted'",
-   "game_id": "400579098",
-   "stage": "boxscore"
-  },
-  {
-   "error": "boxscore error: KeyError: 'fieldGoalsMade-fieldGoalsAttempted'",
-   "game_id": "400579109",
-   "stage": "boxscore"
-  },
-  {
-   "error": "boxscore error: KeyError: 'fieldGoalsMade-fieldGoalsAttempted'",
-   "game_id": "400579110",
-   "stage": "boxscore"
-  },
-  {
-   "error": "boxscore error: KeyError: 'fieldGoalsMade-fieldGoalsAttempted'",
-   "game_id": "400579123",
-   "stage": "boxscore"
-  },
-  {
-   "error": "boxscore error: KeyError: 'fieldGoalsMade-fieldGoalsAttempted'",
-   "game_id": "400579125",
-   "stage": "boxscore"
-  },
-  {
-   "error": "boxscore error: KeyError: 'fieldGoalsMade-fieldGoalsAttempted'",
-   "game_id": "400579137",
-   "stage": "boxscore"
-  },
-  {
-   "error": "boxscore error: KeyError: 'fieldGoalsMade-fieldGoalsAttempted'",
-   "game_id": "400579141",
-   "stage": "boxscore"
-  },
-  {
-   "error": "boxscore error: KeyError: 'fieldGoalsMade-fieldGoalsAttempted'",
-   "game_id": "400579154",
-   "stage": "boxscore"
-  },
-  {
-   "error": "boxscore error: KeyError: 'fieldGoalsMade-fieldGoalsAttempted'",
-   "game_id": "400579157",
-   "stage": "boxscore"
-  },
-  {
-   "error": "boxscore error: KeyError: 'fieldGoalsMade-fieldGoalsAttempted'",
-   "game_id": "400579169",
-   "stage": "boxscore"
-  },
-  {
-   "error": "boxscore error: KeyError: 'fieldGoalsMade-fieldGoalsAttempted'",
-   "game_id": "400579176",
-   "stage": "boxscore"
-  },
-  {
-   "error": "boxscore error: KeyError: 'fieldGoalsMade-fieldGoalsAttempted'",
-   "game_id": "400579181",
-   "stage": "boxscore"
-  },
-  {
-   "error": "boxscore error: KeyError: 'fieldGoalsMade-fieldGoalsAttempted'",
-   "game_id": "400579185",
-   "stage": "boxscore"
-  },
-  {
-   "error": "boxscore error: KeyError: 'fieldGoalsMade-fieldGoalsAttempted'",
-   "game_id": "400579195",
-   "stage": "boxscore"
-  },
-  {
-   "error": "boxscore error: KeyError: 'fieldGoalsMade-fieldGoalsAttempted'",
-   "game_id": "400579201",
-   "stage": "boxscore"
-  },
-  {
-   "error": "boxscore error: KeyError: 'fieldGoalsMade-fieldGoalsAttempted'",
-   "game_id": "400579204",
-   "stage": "boxscore"
-  },
-  {
-   "error": "boxscore error: KeyError: 'fieldGoalsMade-fieldGoalsAttempted'",
-   "game_id": "400579211",
-   "stage": "boxscore"
-  },
-  {
-   "error": "boxscore error: KeyError: 'fieldGoalsMade-fieldGoalsAttempted'",
-   "game_id": "400579215",
-   "stage": "boxscore"
-  },
-  {
-   "error": "boxscore error: KeyError: 'fieldGoalsMade-fieldGoalsAttempted'",
-   "game_id": "400579223",
-   "stage": "boxscore"
-  },
-  {
-   "error": "boxscore error: KeyError: 'fieldGoalsMade-fieldGoalsAttempted'",
-   "game_id": "400579233",
-   "stage": "boxscore"
-  },
-  {
-   "error": "boxscore error: KeyError: 'fieldGoalsMade-fieldGoalsAttempted'",
-   "game_id": "400579234",
-   "stage": "boxscore"
-  },
-  {
-   "error": "boxscore error: KeyError: 'fieldGoalsMade-fieldGoalsAttempted'",
-   "game_id": "400579239",
-   "stage": "boxscore"
-  },
-  {
-   "error": "boxscore error: KeyError: 'fieldGoalsMade-fieldGoalsAttempted'",
-   "game_id": "400579245",
-   "stage": "boxscore"
-  },
-  {
-   "error": "boxscore error: KeyError: 'fieldGoalsMade-fieldGoalsAttempted'",
-   "game_id": "400579259",
-   "stage": "boxscore"
-  },
-  {
-   "error": "boxscore error: KeyError: 'fieldGoalsMade-fieldGoalsAttempted'",
-   "game_id": "400579274",
-   "stage": "boxscore"
-  },
-  {
-   "error": "boxscore error: KeyError: 'fieldGoalsMade-fieldGoalsAttempted'",
-   "game_id": "400579276",
-   "stage": "boxscore"
-  },
-  {
-   "error": "boxscore error: KeyError: 'fieldGoalsMade-fieldGoalsAttempted'",
-   "game_id": "400579295",
-   "stage": "boxscore"
-  },
-  {
-   "error": "boxscore error: KeyError: 'fieldGoalsMade-fieldGoalsAttempted'",
-   "game_id": "400579301",
-   "stage": "boxscore"
-  },
-  {
-   "error": "boxscore error: KeyError: 'fieldGoalsMade-fieldGoalsAttempted'",
-   "game_id": "400579310",
-   "stage": "boxscore"
-  },
-  {
-   "error": "boxscore error: KeyError: 'fieldGoalsMade-fieldGoalsAttempted'",
-   "game_id": "400579317",
-   "stage": "boxscore"
-  },
-  {
-   "error": "boxscore error: KeyError: 'fieldGoalsMade-fieldGoalsAttempted'",
-   "game_id": "400579322",
-   "stage": "boxscore"
-  },
-  {
-   "error": "boxscore error: KeyError: 'fieldGoalsMade-fieldGoalsAttempted'",
-   "game_id": "400579325",
-   "stage": "boxscore"
-  },
-  {
-   "error": "boxscore error: KeyError: 'fieldGoalsMade-fieldGoalsAttempted'",
-   "game_id": "400579332",
-   "stage": "boxscore"
-  },
-  {
-   "error": "boxscore error: KeyError: 'fieldGoalsMade-fieldGoalsAttempted'",
-   "game_id": "400579343",
-   "stage": "boxscore"
-  },
-  {
-   "error": "boxscore error: KeyError: 'fieldGoalsMade-fieldGoalsAttempted'",
-   "game_id": "400579357",
-   "stage": "boxscore"
-  },
-  {
-   "error": "boxscore error: KeyError: 'fieldGoalsMade-fieldGoalsAttempted'",
-   "game_id": "400579360",
-   "stage": "boxscore"
-  },
-  {
-   "error": "boxscore error: KeyError: 'fieldGoalsMade-fieldGoalsAttempted'",
-   "game_id": "400579375",
-   "stage": "boxscore"
-  },
-  {
-   "error": "boxscore error: KeyError: 'fieldGoalsMade-fieldGoalsAttempted'",
-   "game_id": "400579380",
-   "stage": "boxscore"
-  },
-  {
-   "error": "boxscore error: KeyError: 'fieldGoalsMade-fieldGoalsAttempted'",
-   "game_id": "400579386",
-   "stage": "boxscore"
-  },
-  {
-   "error": "boxscore error: KeyError: 'fieldGoalsMade-fieldGoalsAttempted'",
-   "game_id": "400579410",
-   "stage": "boxscore"
-  },
-  {
-   "error": "boxscore error: KeyError: 'fieldGoalsMade-fieldGoalsAttempted'",
-   "game_id": "400579415",
-   "stage": "boxscore"
-  },
-  {
-   "error": "boxscore error: KeyError: 'fieldGoalsMade-fieldGoalsAttempted'",
-   "game_id": "400579423",
-   "stage": "boxscore"
-  },
-  {
-   "error": "boxscore error: KeyError: 'fieldGoalsMade-fieldGoalsAttempted'",
-   "game_id": "400579427",
-   "stage": "boxscore"
-  },
-  {
-   "error": "boxscore error: KeyError: 'fieldGoalsMade-fieldGoalsAttempted'",
-   "game_id": "400579438",
-   "stage": "boxscore"
-  },
-  {
-   "error": "boxscore error: KeyError: 'fieldGoalsMade-fieldGoalsAttempted'",
-   "game_id": "400579440",
-   "stage": "boxscore"
-  },
-  {
-   "error": "boxscore error: KeyError: 'fieldGoalsMade-fieldGoalsAttempted'",
-   "game_id": "400579448",
-   "stage": "boxscore"
-  },
-  {
-   "error": "boxscore error: KeyError: 'fieldGoalsMade-fieldGoalsAttempted'",
-   "game_id": "400579453",
-   "stage": "boxscore"
-  },
-  {
-   "error": "boxscore error: KeyError: 'fieldGoalsMade-fieldGoalsAttempted'",
-   "game_id": "400579458",
-   "stage": "boxscore"
-  },
-  {
-   "error": "boxscore error: KeyError: 'fieldGoalsMade-fieldGoalsAttempted'",
-   "game_id": "400579465",
-   "stage": "boxscore"
-  },
-  {
-   "error": "boxscore error: KeyError: 'fieldGoalsMade-fieldGoalsAttempted'",
-   "game_id": "400579474",
-   "stage": "boxscore"
-  },
-  {
-   "error": "boxscore error: KeyError: 'fieldGoalsMade-fieldGoalsAttempted'",
-   "game_id": "400579481",
-   "stage": "boxscore"
-  },
-  {
-   "error": "boxscore error: KeyError: 'fieldGoalsMade-fieldGoalsAttempted'",
-   "game_id": "400579491",
-   "stage": "boxscore"
-  },
-  {
-   "error": "boxscore error: KeyError: 'fieldGoalsMade-fieldGoalsAttempted'",
-   "game_id": "400579498",
-   "stage": "boxscore"
-  },
-  {
-   "error": "boxscore error: KeyError: 'fieldGoalsMade-fieldGoalsAttempted'",
-   "game_id": "400579500",
-   "stage": "boxscore"
-  },
-  {
-   "error": "boxscore error: KeyError: 'fieldGoalsMade-fieldGoalsAttempted'",
-   "game_id": "400579509",
-   "stage": "boxscore"
-  },
-  {
-   "error": "boxscore error: KeyError: 'fieldGoalsMade-fieldGoalsAttempted'",
-   "game_id": "400579515",
-   "stage": "boxscore"
-  },
-  {
-   "error": "boxscore error: KeyError: 'fieldGoalsMade-fieldGoalsAttempted'",
-   "game_id": "400790901",
-   "stage": "boxscore"
-  },
-  {
-   "error": "boxscore error: KeyError: 'fieldGoalsMade-fieldGoalsAttempted'",
-   "game_id": "400790919",
-   "stage": "boxscore"
-  },
-  {
-   "error": "boxscore error: KeyError: 'fieldGoalsMade-fieldGoalsAttempted'",
-   "game_id": "400790943",
-   "stage": "boxscore"
-  },
-  {
-   "error": "boxscore error: KeyError: 'fieldGoalsMade-fieldGoalsAttempted'",
-   "game_id": "400790902",
-   "stage": "boxscore"
-  },
-  {
-   "error": "boxscore error: KeyError: 'fieldGoalsMade-fieldGoalsAttempted'",
-   "game_id": "400790944",
-   "stage": "boxscore"
-  },
-  {
-   "error": "boxscore error: KeyError: 'fieldGoalsMade-fieldGoalsAttempted'",
-   "game_id": "400790903",
-   "stage": "boxscore"
-  },
-  {
-   "error": "boxscore error: KeyError: 'fieldGoalsMade-fieldGoalsAttempted'",
-   "game_id": "400790946",
-   "stage": "boxscore"
-  },
-  {
-   "error": "boxscore error: KeyError: 'fieldGoalsMade-fieldGoalsAttempted'",
-   "game_id": "400790904",
-   "stage": "boxscore"
-  },
-  {
-   "error": "boxscore error: KeyError: 'fieldGoalsMade-fieldGoalsAttempted'",
-   "game_id": "400790948",
-   "stage": "boxscore"
-  },
-  {
-   "error": "boxscore error: KeyError: 'fieldGoalsMade-fieldGoalsAttempted'",
-   "game_id": "400790949",
-   "stage": "boxscore"
-  },
-  {
-   "error": "boxscore error: KeyError: 'fieldGoalsMade-fieldGoalsAttempted'",
-   "game_id": "400793121",
-   "stage": "boxscore"
-  },
-  {
-   "error": "boxscore error: KeyError: 'fieldGoalsMade-fieldGoalsAttempted'",
-   "game_id": "400793122",
-   "stage": "boxscore"
-  },
-  {
-   "error": "boxscore error: KeyError: 'fieldGoalsMade-fieldGoalsAttempted'",
-   "game_id": "400793123",
-   "stage": "boxscore"
-  },
-  {
-   "error": "boxscore error: KeyError: 'fieldGoalsMade-fieldGoalsAttempted'",
-   "game_id": "400793124",
-   "stage": "boxscore"
-  },
-  {
-   "error": "boxscore error: KeyError: 'fieldGoalsMade-fieldGoalsAttempted'",
-   "game_id": "400793125",
-   "stage": "boxscore"
-  },
-  {
-   "error": "boxscore error: KeyError: 'fieldGoalsMade-fieldGoalsAttempted'",
-   "game_id": "400793126",
-   "stage": "boxscore"
-  }
+ "notes": [
+  "400578293: ESPN box unusable (espn boxscore error: KeyError: 'fieldGoalsMade-fieldGoalsAttempted'); used Basketball-Reference",
+  "400578302: ESPN box unusable (espn boxscore error: KeyError: 'fieldGoalsMade-fieldGoalsAttempted'); used Basketball-Reference",
+  "400578314: ESPN box unusable (espn boxscore error: KeyError: 'fieldGoalsMade-fieldGoalsAttempted'); used Basketball-Reference",
+  "400578319: ESPN box unusable (espn boxscore error: KeyError: 'fieldGoalsMade-fieldGoalsAttempted'); used Basketball-Reference",
+  "400578327: ESPN box unusable (espn boxscore error: KeyError: 'fieldGoalsMade-fieldGoalsAttempted'); used Basketball-Reference",
+  "400578337: ESPN box unusable (espn boxscore error: KeyError: 'fieldGoalsMade-fieldGoalsAttempted'); used Basketball-Reference",
+  "400578345: ESPN box unusable (espn boxscore error: KeyError: 'fieldGoalsMade-fieldGoalsAttempted'); used Basketball-Reference",
+  "400578346: ESPN box unusable (espn boxscore error: KeyError: 'fieldGoalsMade-fieldGoalsAttempted'); used Basketball-Reference",
+  "400578354: ESPN box unusable (espn boxscore error: KeyError: 'fieldGoalsMade-fieldGoalsAttempted'); used Basketball-Reference",
+  "400578365: ESPN box unusable (espn boxscore error: KeyError: 'fieldGoalsMade-fieldGoalsAttempted'); used Basketball-Reference",
+  "400578378: ESPN box unusable (espn boxscore error: KeyError: 'fieldGoalsMade-fieldGoalsAttempted'); used Basketball-Reference",
+  "400578381: ESPN box unusable (espn boxscore error: KeyError: 'fieldGoalsMade-fieldGoalsAttempted'); used Basketball-Reference",
+  "400578390: ESPN box unusable (espn boxscore error: KeyError: 'fieldGoalsMade-fieldGoalsAttempted'); used Basketball-Reference",
+  "400578393: ESPN box unusable (espn boxscore error: KeyError: 'fieldGoalsMade-fieldGoalsAttempted'); used Basketball-Reference",
+  "400578406: ESPN box unusable (espn boxscore error: KeyError: 'fieldGoalsMade-fieldGoalsAttempted'); used Basketball-Reference",
+  "400578411: ESPN box unusable (espn boxscore error: KeyError: 'fieldGoalsMade-fieldGoalsAttempted'); used Basketball-Reference",
+  "400578420: ESPN box unusable (espn boxscore error: KeyError: 'fieldGoalsMade-fieldGoalsAttempted'); used Basketball-Reference",
+  "400578427: ESPN box unusable (espn boxscore error: KeyError: 'fieldGoalsMade-fieldGoalsAttempted'); used Basketball-Reference",
+  "400578445: ESPN box unusable (espn boxscore error: KeyError: 'fieldGoalsMade-fieldGoalsAttempted'); used Basketball-Reference",
+  "400578446: ESPN box unusable (espn boxscore error: KeyError: 'fieldGoalsMade-fieldGoalsAttempted'); used Basketball-Reference",
+  "400578450: ESPN box unusable (espn boxscore error: KeyError: 'fieldGoalsMade-fieldGoalsAttempted'); used Basketball-Reference",
+  "400578463: ESPN box unusable (espn boxscore error: KeyError: 'fieldGoalsMade-fieldGoalsAttempted'); used Basketball-Reference",
+  "400578473: ESPN box unusable (espn boxscore error: KeyError: 'fieldGoalsMade-fieldGoalsAttempted'); used Basketball-Reference",
+  "400578475: ESPN box unusable (espn boxscore error: KeyError: 'fieldGoalsMade-fieldGoalsAttempted'); used Basketball-Reference",
+  "400578484: ESPN box unusable (espn boxscore error: KeyError: 'fieldGoalsMade-fieldGoalsAttempted'); used Basketball-Reference",
+  "400578496: ESPN box unusable (espn boxscore error: KeyError: 'fieldGoalsMade-fieldGoalsAttempted'); used Basketball-Reference",
+  "400578500: ESPN box unusable (espn boxscore error: KeyError: 'fieldGoalsMade-fieldGoalsAttempted'); used Basketball-Reference",
+  "400578501: ESPN box unusable (espn boxscore error: KeyError: 'fieldGoalsMade-fieldGoalsAttempted'); used Basketball-Reference",
+  "400578515: ESPN box unusable (espn boxscore error: KeyError: 'fieldGoalsMade-fieldGoalsAttempted'); used Basketball-Reference",
+  "400578517: ESPN box unusable (espn boxscore error: KeyError: 'fieldGoalsMade-fieldGoalsAttempted'); used Basketball-Reference",
+  "400578528: ESPN box unusable (espn boxscore error: KeyError: 'fieldGoalsMade-fieldGoalsAttempted'); used Basketball-Reference",
+  "400578534: ESPN box unusable (espn boxscore error: KeyError: 'fieldGoalsMade-fieldGoalsAttempted'); used Basketball-Reference",
+  "400578549: ESPN box unusable (espn boxscore error: KeyError: 'fieldGoalsMade-fieldGoalsAttempted'); used Basketball-Reference",
+  "400578550: ESPN box unusable (espn boxscore error: KeyError: 'fieldGoalsMade-fieldGoalsAttempted'); used Basketball-Reference",
+  "400578555: ESPN box unusable (espn boxscore error: KeyError: 'fieldGoalsMade-fieldGoalsAttempted'); used Basketball-Reference",
+  "400578567: ESPN box unusable (espn boxscore error: KeyError: 'fieldGoalsMade-fieldGoalsAttempted'); used Basketball-Reference",
+  "400578581: ESPN box unusable (espn boxscore error: KeyError: 'fieldGoalsMade-fieldGoalsAttempted'); used Basketball-Reference",
+  "400578585: ESPN box unusable (espn boxscore error: KeyError: 'fieldGoalsMade-fieldGoalsAttempted'); used Basketball-Reference",
+  "400578592: ESPN box unusable (espn boxscore error: KeyError: 'fieldGoalsMade-fieldGoalsAttempted'); used Basketball-Reference",
+  "400578603: ESPN box unusable (espn boxscore error: KeyError: 'fieldGoalsMade-fieldGoalsAttempted'); used Basketball-Reference",
+  "400578612: ESPN box unusable (espn boxscore error: KeyError: 'fieldGoalsMade-fieldGoalsAttempted'); used Basketball-Reference",
+  "400578615: ESPN box unusable (espn boxscore error: KeyError: 'fieldGoalsMade-fieldGoalsAttempted'); used Basketball-Reference",
+  "400578620: ESPN box unusable (espn boxscore error: KeyError: 'fieldGoalsMade-fieldGoalsAttempted'); used Basketball-Reference",
+  "400578628: ESPN box unusable (espn boxscore error: KeyError: 'fieldGoalsMade-fieldGoalsAttempted'); used Basketball-Reference",
+  "400578640: ESPN box unusable (espn boxscore error: KeyError: 'fieldGoalsMade-fieldGoalsAttempted'); used Basketball-Reference",
+  "400578641: ESPN box unusable (espn boxscore error: KeyError: 'fieldGoalsMade-fieldGoalsAttempted'); used Basketball-Reference",
+  "400578650: ESPN box unusable (espn boxscore error: KeyError: 'fieldGoalsMade-fieldGoalsAttempted'); used Basketball-Reference",
+  "400578658: ESPN box unusable (espn boxscore error: KeyError: 'fieldGoalsMade-fieldGoalsAttempted'); used Basketball-Reference",
+  "400578671: ESPN box unusable (espn boxscore error: KeyError: 'fieldGoalsMade-fieldGoalsAttempted'); used Basketball-Reference",
+  "400578672: ESPN box unusable (espn boxscore error: KeyError: 'fieldGoalsMade-fieldGoalsAttempted'); used Basketball-Reference",
+  "400578681: ESPN box unusable (espn boxscore error: KeyError: 'fieldGoalsMade-fieldGoalsAttempted'); used Basketball-Reference",
+  "400578686: ESPN box unusable (espn boxscore error: KeyError: 'fieldGoalsMade-fieldGoalsAttempted'); used Basketball-Reference",
+  "400578700: ESPN box unusable (espn boxscore error: KeyError: 'fieldGoalsMade-fieldGoalsAttempted'); used Basketball-Reference",
+  "400578702: ESPN box unusable (espn boxscore error: KeyError: 'fieldGoalsMade-fieldGoalsAttempted'); used Basketball-Reference",
+  "400578709: ESPN box unusable (espn boxscore error: KeyError: 'fieldGoalsMade-fieldGoalsAttempted'); used Basketball-Reference",
+  "400578711: ESPN box unusable (espn boxscore error: KeyError: 'fieldGoalsMade-fieldGoalsAttempted'); used Basketball-Reference",
+  "400578722: ESPN box unusable (espn boxscore error: KeyError: 'fieldGoalsMade-fieldGoalsAttempted'); used Basketball-Reference",
+  "400578729: ESPN box unusable (espn boxscore error: KeyError: 'fieldGoalsMade-fieldGoalsAttempted'); used Basketball-Reference",
+  "400578739: ESPN box unusable (espn boxscore error: KeyError: 'fieldGoalsMade-fieldGoalsAttempted'); used Basketball-Reference",
+  "400578752: ESPN box unusable (espn boxscore error: KeyError: 'fieldGoalsMade-fieldGoalsAttempted'); used Basketball-Reference",
+  "400578759: ESPN box unusable (espn boxscore error: KeyError: 'fieldGoalsMade-fieldGoalsAttempted'); used Basketball-Reference",
+  "400578761: ESPN box unusable (espn boxscore error: KeyError: 'fieldGoalsMade-fieldGoalsAttempted'); used Basketball-Reference",
+  "400578773: ESPN box unusable (espn boxscore error: KeyError: 'fieldGoalsMade-fieldGoalsAttempted'); used Basketball-Reference",
+  "400578774: ESPN box unusable (espn boxscore error: KeyError: 'fieldGoalsMade-fieldGoalsAttempted'); used Basketball-Reference",
+  "400578780: ESPN box unusable (espn boxscore error: KeyError: 'fieldGoalsMade-fieldGoalsAttempted'); used Basketball-Reference",
+  "400578788: ESPN box unusable (espn boxscore error: KeyError: 'fieldGoalsMade-fieldGoalsAttempted'); used Basketball-Reference",
+  "400578804: ESPN box unusable (espn boxscore error: KeyError: 'fieldGoalsMade-fieldGoalsAttempted'); used Basketball-Reference",
+  "400578807: ESPN box unusable (espn boxscore error: KeyError: 'fieldGoalsMade-fieldGoalsAttempted'); used Basketball-Reference",
+  "400578814: ESPN box unusable (espn boxscore error: KeyError: 'fieldGoalsMade-fieldGoalsAttempted'); used Basketball-Reference",
+  "400578820: ESPN box unusable (espn boxscore error: KeyError: 'fieldGoalsMade-fieldGoalsAttempted'); used Basketball-Reference",
+  "400578833: ESPN box unusable (espn boxscore error: KeyError: 'fieldGoalsMade-fieldGoalsAttempted'); used Basketball-Reference",
+  "400578835: ESPN box unusable (espn boxscore error: KeyError: 'fieldGoalsMade-fieldGoalsAttempted'); used Basketball-Reference",
+  "400578846: ESPN box unusable (espn boxscore error: KeyError: 'fieldGoalsMade-fieldGoalsAttempted'); used Basketball-Reference",
+  "400578855: ESPN box unusable (espn boxscore error: KeyError: 'fieldGoalsMade-fieldGoalsAttempted'); used Basketball-Reference",
+  "400578858: ESPN box unusable (espn boxscore error: KeyError: 'fieldGoalsMade-fieldGoalsAttempted'); used Basketball-Reference",
+  "400578869: ESPN box unusable (espn boxscore error: KeyError: 'fieldGoalsMade-fieldGoalsAttempted'); used Basketball-Reference",
+  "400578871: ESPN box unusable (espn boxscore error: KeyError: 'fieldGoalsMade-fieldGoalsAttempted'); used Basketball-Reference",
+  "400578881: ESPN box unusable (espn boxscore error: KeyError: 'fieldGoalsMade-fieldGoalsAttempted'); used Basketball-Reference",
+  "400578883: ESPN box unusable (espn boxscore error: KeyError: 'fieldGoalsMade-fieldGoalsAttempted'); used Basketball-Reference",
+  "400578894: ESPN box unusable (espn boxscore error: KeyError: 'fieldGoalsMade-fieldGoalsAttempted'); used Basketball-Reference",
+  "400578900: ESPN box unusable (espn boxscore error: KeyError: 'fieldGoalsMade-fieldGoalsAttempted'); used Basketball-Reference",
+  "400578910: ESPN box unusable (espn boxscore error: KeyError: 'fieldGoalsMade-fieldGoalsAttempted'); used Basketball-Reference",
+  "400578912: ESPN box unusable (espn boxscore error: KeyError: 'fieldGoalsMade-fieldGoalsAttempted'); used Basketball-Reference",
+  "400578924: ESPN box unusable (espn boxscore error: KeyError: 'fieldGoalsMade-fieldGoalsAttempted'); used Basketball-Reference",
+  "400578929: ESPN box unusable (espn boxscore error: KeyError: 'fieldGoalsMade-fieldGoalsAttempted'); used Basketball-Reference",
+  "400578938: ESPN box unusable (espn boxscore error: KeyError: 'fieldGoalsMade-fieldGoalsAttempted'); used Basketball-Reference",
+  "400578939: ESPN box unusable (espn boxscore error: KeyError: 'fieldGoalsMade-fieldGoalsAttempted'); used Basketball-Reference",
+  "400578949: ESPN box unusable (espn boxscore error: KeyError: 'fieldGoalsMade-fieldGoalsAttempted'); used Basketball-Reference",
+  "400578952: ESPN box unusable (espn boxscore error: KeyError: 'fieldGoalsMade-fieldGoalsAttempted'); used Basketball-Reference",
+  "400578963: ESPN box unusable (espn boxscore error: KeyError: 'fieldGoalsMade-fieldGoalsAttempted'); used Basketball-Reference",
+  "400578971: ESPN box unusable (espn boxscore error: KeyError: 'fieldGoalsMade-fieldGoalsAttempted'); used Basketball-Reference",
+  "400578979: ESPN box unusable (espn boxscore error: KeyError: 'fieldGoalsMade-fieldGoalsAttempted'); used Basketball-Reference",
+  "400578987: ESPN box unusable (espn boxscore error: KeyError: 'fieldGoalsMade-fieldGoalsAttempted'); used Basketball-Reference",
+  "400578993: ESPN box unusable (espn boxscore error: KeyError: 'fieldGoalsMade-fieldGoalsAttempted'); used Basketball-Reference",
+  "400578996: ESPN box unusable (espn boxscore error: KeyError: 'fieldGoalsMade-fieldGoalsAttempted'); used Basketball-Reference",
+  "400579014: ESPN box unusable (espn boxscore error: KeyError: 'fieldGoalsMade-fieldGoalsAttempted'); used Basketball-Reference",
+  "400579027: ESPN box unusable (espn boxscore error: KeyError: 'fieldGoalsMade-fieldGoalsAttempted'); used Basketball-Reference",
+  "400579030: ESPN box unusable (espn boxscore error: KeyError: 'fieldGoalsMade-fieldGoalsAttempted'); used Basketball-Reference",
+  "400579047: ESPN box unusable (espn boxscore error: KeyError: 'fieldGoalsMade-fieldGoalsAttempted'); used Basketball-Reference",
+  "400579050: ESPN box unusable (espn boxscore error: KeyError: 'fieldGoalsMade-fieldGoalsAttempted'); used Basketball-Reference",
+  "400579062: ESPN box unusable (espn boxscore error: KeyError: 'fieldGoalsMade-fieldGoalsAttempted'); used Basketball-Reference",
+  "400579072: ESPN box unusable (espn boxscore error: KeyError: 'fieldGoalsMade-fieldGoalsAttempted'); used Basketball-Reference",
+  "400579077: ESPN box unusable (espn boxscore error: KeyError: 'fieldGoalsMade-fieldGoalsAttempted'); used Basketball-Reference",
+  "400579086: ESPN box unusable (espn boxscore error: KeyError: 'fieldGoalsMade-fieldGoalsAttempted'); used Basketball-Reference",
+  "400579092: ESPN box unusable (espn boxscore error: KeyError: 'fieldGoalsMade-fieldGoalsAttempted'); used Basketball-Reference",
+  "400579095: ESPN box unusable (espn boxscore error: KeyError: 'fieldGoalsMade-fieldGoalsAttempted'); used Basketball-Reference",
+  "400579098: ESPN box unusable (espn boxscore error: KeyError: 'fieldGoalsMade-fieldGoalsAttempted'); used Basketball-Reference",
+  "400579109: ESPN box unusable (espn boxscore error: KeyError: 'fieldGoalsMade-fieldGoalsAttempted'); used Basketball-Reference",
+  "400579110: ESPN box unusable (espn boxscore error: KeyError: 'fieldGoalsMade-fieldGoalsAttempted'); used Basketball-Reference",
+  "400579123: ESPN box unusable (espn boxscore error: KeyError: 'fieldGoalsMade-fieldGoalsAttempted'); used Basketball-Reference",
+  "400579125: ESPN box unusable (espn boxscore error: KeyError: 'fieldGoalsMade-fieldGoalsAttempted'); used Basketball-Reference",
+  "400579137: ESPN box unusable (espn boxscore error: KeyError: 'fieldGoalsMade-fieldGoalsAttempted'); used Basketball-Reference",
+  "400579141: ESPN box unusable (espn boxscore error: KeyError: 'fieldGoalsMade-fieldGoalsAttempted'); used Basketball-Reference",
+  "400579154: ESPN box unusable (espn boxscore error: KeyError: 'fieldGoalsMade-fieldGoalsAttempted'); used Basketball-Reference",
+  "400579157: ESPN box unusable (espn boxscore error: KeyError: 'fieldGoalsMade-fieldGoalsAttempted'); used Basketball-Reference",
+  "400579169: ESPN box unusable (espn boxscore error: KeyError: 'fieldGoalsMade-fieldGoalsAttempted'); used Basketball-Reference",
+  "400579176: ESPN box unusable (espn boxscore error: KeyError: 'fieldGoalsMade-fieldGoalsAttempted'); used Basketball-Reference",
+  "400579181: ESPN box unusable (espn boxscore error: KeyError: 'fieldGoalsMade-fieldGoalsAttempted'); used Basketball-Reference",
+  "400579185: ESPN box unusable (espn boxscore error: KeyError: 'fieldGoalsMade-fieldGoalsAttempted'); used Basketball-Reference",
+  "400579195: ESPN box unusable (espn boxscore error: KeyError: 'fieldGoalsMade-fieldGoalsAttempted'); used Basketball-Reference",
+  "400579201: ESPN box unusable (espn boxscore error: KeyError: 'fieldGoalsMade-fieldGoalsAttempted'); used Basketball-Reference",
+  "400579204: ESPN box unusable (espn boxscore error: KeyError: 'fieldGoalsMade-fieldGoalsAttempted'); used Basketball-Reference",
+  "400579211: ESPN box unusable (espn boxscore error: KeyError: 'fieldGoalsMade-fieldGoalsAttempted'); used Basketball-Reference",
+  "400579215: ESPN box unusable (espn boxscore error: KeyError: 'fieldGoalsMade-fieldGoalsAttempted'); used Basketball-Reference",
+  "400579223: ESPN box unusable (espn boxscore error: KeyError: 'fieldGoalsMade-fieldGoalsAttempted'); used Basketball-Reference",
+  "400579233: ESPN box unusable (espn boxscore error: KeyError: 'fieldGoalsMade-fieldGoalsAttempted'); used Basketball-Reference",
+  "400579234: ESPN box unusable (espn boxscore error: KeyError: 'fieldGoalsMade-fieldGoalsAttempted'); used Basketball-Reference",
+  "400579239: ESPN box unusable (espn boxscore error: KeyError: 'fieldGoalsMade-fieldGoalsAttempted'); used Basketball-Reference",
+  "400579245: ESPN box unusable (espn boxscore error: KeyError: 'fieldGoalsMade-fieldGoalsAttempted'); used Basketball-Reference",
+  "400579259: ESPN box unusable (espn boxscore error: KeyError: 'fieldGoalsMade-fieldGoalsAttempted'); used Basketball-Reference",
+  "400579274: ESPN box unusable (espn boxscore error: KeyError: 'fieldGoalsMade-fieldGoalsAttempted'); used Basketball-Reference",
+  "400579276: ESPN box unusable (espn boxscore error: KeyError: 'fieldGoalsMade-fieldGoalsAttempted'); used Basketball-Reference",
+  "400579295: ESPN box unusable (espn boxscore error: KeyError: 'fieldGoalsMade-fieldGoalsAttempted'); used Basketball-Reference",
+  "400579301: ESPN box unusable (espn boxscore error: KeyError: 'fieldGoalsMade-fieldGoalsAttempted'); used Basketball-Reference",
+  "400579310: ESPN box unusable (espn boxscore error: KeyError: 'fieldGoalsMade-fieldGoalsAttempted'); used Basketball-Reference",
+  "400579317: ESPN box unusable (espn boxscore error: KeyError: 'fieldGoalsMade-fieldGoalsAttempted'); used Basketball-Reference",
+  "400579322: ESPN box unusable (espn boxscore error: KeyError: 'fieldGoalsMade-fieldGoalsAttempted'); used Basketball-Reference",
+  "400579325: ESPN box unusable (espn boxscore error: KeyError: 'fieldGoalsMade-fieldGoalsAttempted'); used Basketball-Reference",
+  "400579332: ESPN box unusable (espn boxscore error: KeyError: 'fieldGoalsMade-fieldGoalsAttempted'); used Basketball-Reference",
+  "400579343: ESPN box unusable (espn boxscore error: KeyError: 'fieldGoalsMade-fieldGoalsAttempted'); used Basketball-Reference",
+  "400579357: ESPN box unusable (espn boxscore error: KeyError: 'fieldGoalsMade-fieldGoalsAttempted'); used Basketball-Reference",
+  "400579360: ESPN box unusable (espn boxscore error: KeyError: 'fieldGoalsMade-fieldGoalsAttempted'); used Basketball-Reference",
+  "400579375: ESPN box unusable (espn boxscore error: KeyError: 'fieldGoalsMade-fieldGoalsAttempted'); used Basketball-Reference",
+  "400579380: ESPN box unusable (espn boxscore error: KeyError: 'fieldGoalsMade-fieldGoalsAttempted'); used Basketball-Reference",
+  "400579386: ESPN box unusable (espn boxscore error: KeyError: 'fieldGoalsMade-fieldGoalsAttempted'); used Basketball-Reference",
+  "400579410: ESPN box unusable (espn boxscore error: KeyError: 'fieldGoalsMade-fieldGoalsAttempted'); used Basketball-Reference",
+  "400579415: ESPN box unusable (espn boxscore error: KeyError: 'fieldGoalsMade-fieldGoalsAttempted'); used Basketball-Reference",
+  "400579423: ESPN box unusable (espn boxscore error: KeyError: 'fieldGoalsMade-fieldGoalsAttempted'); used Basketball-Reference",
+  "400579427: ESPN box unusable (espn boxscore error: KeyError: 'fieldGoalsMade-fieldGoalsAttempted'); used Basketball-Reference",
+  "400579438: ESPN box unusable (espn boxscore error: KeyError: 'fieldGoalsMade-fieldGoalsAttempted'); used Basketball-Reference",
+  "400579440: ESPN box unusable (espn boxscore error: KeyError: 'fieldGoalsMade-fieldGoalsAttempted'); used Basketball-Reference",
+  "400579448: ESPN box unusable (espn boxscore error: KeyError: 'fieldGoalsMade-fieldGoalsAttempted'); used Basketball-Reference",
+  "400579453: ESPN box unusable (espn boxscore error: KeyError: 'fieldGoalsMade-fieldGoalsAttempted'); used Basketball-Reference",
+  "400579458: ESPN box unusable (espn boxscore error: KeyError: 'fieldGoalsMade-fieldGoalsAttempted'); used Basketball-Reference",
+  "400579465: ESPN box unusable (espn boxscore error: KeyError: 'fieldGoalsMade-fieldGoalsAttempted'); used Basketball-Reference",
+  "400579474: ESPN box unusable (espn boxscore error: KeyError: 'fieldGoalsMade-fieldGoalsAttempted'); used Basketball-Reference",
+  "400579481: ESPN box unusable (espn boxscore error: KeyError: 'fieldGoalsMade-fieldGoalsAttempted'); used Basketball-Reference",
+  "400579491: ESPN box unusable (espn boxscore error: KeyError: 'fieldGoalsMade-fieldGoalsAttempted'); used Basketball-Reference",
+  "400579498: ESPN box unusable (espn boxscore error: KeyError: 'fieldGoalsMade-fieldGoalsAttempted'); used Basketball-Reference",
+  "400579500: ESPN box unusable (espn boxscore error: KeyError: 'fieldGoalsMade-fieldGoalsAttempted'); used Basketball-Reference",
+  "400579509: ESPN box unusable (espn boxscore error: KeyError: 'fieldGoalsMade-fieldGoalsAttempted'); used Basketball-Reference",
+  "400579515: ESPN box unusable (espn boxscore error: KeyError: 'fieldGoalsMade-fieldGoalsAttempted'); used Basketball-Reference",
+  "400790901: ESPN box unusable (espn boxscore error: KeyError: 'fieldGoalsMade-fieldGoalsAttempted'); used Basketball-Reference",
+  "400790919: ESPN box unusable (espn boxscore error: KeyError: 'fieldGoalsMade-fieldGoalsAttempted'); used Basketball-Reference",
+  "400790943: ESPN box unusable (espn boxscore error: KeyError: 'fieldGoalsMade-fieldGoalsAttempted'); used Basketball-Reference",
+  "400790902: ESPN box unusable (espn boxscore error: KeyError: 'fieldGoalsMade-fieldGoalsAttempted'); used Basketball-Reference",
+  "400790944: ESPN box unusable (espn boxscore error: KeyError: 'fieldGoalsMade-fieldGoalsAttempted'); used Basketball-Reference",
+  "400790903: ESPN box unusable (espn boxscore error: KeyError: 'fieldGoalsMade-fieldGoalsAttempted'); used Basketball-Reference",
+  "400790946: ESPN box unusable (espn boxscore error: KeyError: 'fieldGoalsMade-fieldGoalsAttempted'); used Basketball-Reference",
+  "400790904: ESPN box unusable (espn boxscore error: KeyError: 'fieldGoalsMade-fieldGoalsAttempted'); used Basketball-Reference",
+  "400790948: ESPN box unusable (espn boxscore error: KeyError: 'fieldGoalsMade-fieldGoalsAttempted'); used Basketball-Reference",
+  "400790949: ESPN box unusable (espn boxscore error: KeyError: 'fieldGoalsMade-fieldGoalsAttempted'); used Basketball-Reference",
+  "400793121: ESPN box unusable (espn boxscore error: KeyError: 'fieldGoalsMade-fieldGoalsAttempted'); used Basketball-Reference",
+  "400793122: ESPN box unusable (espn boxscore error: KeyError: 'fieldGoalsMade-fieldGoalsAttempted'); used Basketball-Reference",
+  "400793123: ESPN box unusable (espn boxscore error: KeyError: 'fieldGoalsMade-fieldGoalsAttempted'); used Basketball-Reference",
+  "400793124: ESPN box unusable (espn boxscore error: KeyError: 'fieldGoalsMade-fieldGoalsAttempted'); used Basketball-Reference",
+  "400793125: ESPN box unusable (espn boxscore error: KeyError: 'fieldGoalsMade-fieldGoalsAttempted'); used Basketball-Reference",
+  "400793126: ESPN box unusable (espn boxscore error: KeyError: 'fieldGoalsMade-fieldGoalsAttempted'); used Basketball-Reference"
  ],
- "requests": 3079,
+ "notes_total": 178,
+ "parse_errors": [],
+ "requests": 813,
  "season": 2015,
  "skipped": {
   "non-NBA teams (all-star etc.)": 12,

@@ -1,4 +1,8 @@
 {
+ "box_sources": {
+  "bbref": 178,
+  "espn": 1133
+ },
  "checks": {
   "by_kind": {},
   "error_rate_pct": 0.0,
@@ -9,149 +13,17 @@
  "completeness": {
   "box_issue_examples": [],
   "box_issues": 0,
-  "complete": 1133,
-  "complete_pct": 86.42,
+  "complete": 1311,
+  "complete_pct": 100.0,
   "final": 1311,
-  "incomplete_examples": [
-   [
-    "400578293",
-    "boxscore error: KeyError: 'fieldGoalsMade-fieldGoalsAttempted'"
-   ],
-   [
-    "400578302",
-    "boxscore error: KeyError: 'fieldGoalsMade-fieldGoalsAttempted'"
-   ],
-   [
-    "400578314",
-    "boxscore error: KeyError: 'fieldGoalsMade-fieldGoalsAttempted'"
-   ],
-   [
-    "400578319",
-    "boxscore error: KeyError: 'fieldGoalsMade-fieldGoalsAttempted'"
-   ],
-   [
-    "400578327",
-    "boxscore error: KeyError: 'fieldGoalsMade-fieldGoalsAttempted'"
-   ],
-   [
-    "400578337",
-    "boxscore error: KeyError: 'fieldGoalsMade-fieldGoalsAttempted'"
-   ],
-   [
-    "400578345",
-    "boxscore error: KeyError: 'fieldGoalsMade-fieldGoalsAttempted'"
-   ],
-   [
-    "400578346",
-    "boxscore error: KeyError: 'fieldGoalsMade-fieldGoalsAttempted'"
-   ],
-   [
-    "400578354",
-    "boxscore error: KeyError: 'fieldGoalsMade-fieldGoalsAttempted'"
-   ],
-   [
-    "400578365",
-    "boxscore error: KeyError: 'fieldGoalsMade-fieldGoalsAttempted'"
-   ],
-   [
-    "400578378",
-    "boxscore error: KeyError: 'fieldGoalsMade-fieldGoalsAttempted'"
-   ],
-   [
-    "400578381",
-    "boxscore error: KeyError: 'fieldGoalsMade-fieldGoalsAttempted'"
-   ],
-   [
-    "400578390",
-    "boxscore error: KeyError: 'fieldGoalsMade-fieldGoalsAttempted'"
-   ],
-   [
-    "400578393",
-    "boxscore error: KeyError: 'fieldGoalsMade-fieldGoalsAttempted'"
-   ],
-   [
-    "400578406",
-    "boxscore error: KeyError: 'fieldGoalsMade-fieldGoalsAttempted'"
-   ],
-   [
-    "400578411",
-    "boxscore error: KeyError: 'fieldGoalsMade-fieldGoalsAttempted'"
-   ],
-   [
-    "400578420",
-    "boxscore error: KeyError: 'fieldGoalsMade-fieldGoalsAttempted'"
-   ],
-   [
-    "400578427",
-    "boxscore error: KeyError: 'fieldGoalsMade-fieldGoalsAttempted'"
-   ],
-   [
-    "400578445",
-    "boxscore error: KeyError: 'fieldGoalsMade-fieldGoalsAttempted'"
-   ],
-   [
-    "400578446",
-    "boxscore error: KeyError: 'fieldGoalsMade-fieldGoalsAttempted'"
-   ]
-  ]
+  "incomplete_examples": []
  },
  "fetch": {
   "http_errors": 0,
-  "notes_total": 0,
-  "parse_error_examples": [
-   {
-    "error": "boxscore error: KeyError: 'fieldGoalsMade-fieldGoalsAttempted'",
-    "game_id": "400578293",
-    "stage": "boxscore"
-   },
-   {
-    "error": "boxscore error: KeyError: 'fieldGoalsMade-fieldGoalsAttempted'",
-    "game_id": "400578302",
-    "stage": "boxscore"
-   },
-   {
-    "error": "boxscore error: KeyError: 'fieldGoalsMade-fieldGoalsAttempted'",
-    "game_id": "400578314",
-    "stage": "boxscore"
-   },
-   {
-    "error": "boxscore error: KeyError: 'fieldGoalsMade-fieldGoalsAttempted'",
-    "game_id": "400578319",
-    "stage": "boxscore"
-   },
-   {
-    "error": "boxscore error: KeyError: 'fieldGoalsMade-fieldGoalsAttempted'",
-    "game_id": "400578327",
-    "stage": "boxscore"
-   },
-   {
-    "error": "boxscore error: KeyError: 'fieldGoalsMade-fieldGoalsAttempted'",
-    "game_id": "400578337",
-    "stage": "boxscore"
-   },
-   {
-    "error": "boxscore error: KeyError: 'fieldGoalsMade-fieldGoalsAttempted'",
-    "game_id": "400578345",
-    "stage": "boxscore"
-   },
-   {
-    "error": "boxscore error: KeyError: 'fieldGoalsMade-fieldGoalsAttempted'",
-    "game_id": "400578346",
-    "stage": "boxscore"
-   },
-   {
-    "error": "boxscore error: KeyError: 'fieldGoalsMade-fieldGoalsAttempted'",
-    "game_id": "400578354",
-    "stage": "boxscore"
-   },
-   {
-    "error": "boxscore error: KeyError: 'fieldGoalsMade-fieldGoalsAttempted'",
-    "game_id": "400578365",
-    "stage": "boxscore"
-   }
-  ],
-  "parse_errors": 178,
-  "requests": 3079
+  "notes_total": 178,
+  "parse_error_examples": [],
+  "parse_errors": 0,
+  "requests": 813
  },
  "games": {
   "duplicates": [],
@@ -246,6 +118,6 @@
   "min_games": 82,
   "n": 30
  },
- "verdict": "不通過：完賽比賽資料完整率 86.4% < 99%",
- "verdict_ok": false
+ "verdict": "通過",
+ "verdict_ok": true
 }

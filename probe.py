@@ -1,6 +1,10 @@
-"""資料來源探路（大改版 Phase 1）：只印日誌，不寫任何檔案、不 commit。"""
-import json, time, urllib.request, urllib.error, gzip, re, signal, sys, functools
+"""V2 Phase 2：ESPN 歷史盤口覆蓋率稽核 + 玩運彩盤口探路。只印日誌，不寫檔、不 commit。"""
+import json, time, urllib.request, urllib.error, gzip, re, signal, functools, datetime as dt
+from collections import Counter, defaultdict
 print = functools.partial(print, flush=True)
+
+UA = ('Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 '
+      '(KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36')
 
 
 class Hard(Exception):
@@ -8,133 +12,125 @@ class Hard(Exception):
 
 
 def _alarm(*_):
-    raise Hard('hard timeout 30s')
+    raise Hard('hard timeout')
 
 
 signal.signal(signal.SIGALRM, _alarm)
 
-UA = ('Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 '
-      '(KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36')
-NBA_HDR = {'Referer': 'https://www.nba.com/', 'Origin': 'https://www.nba.com',
-           'x-nba-stats-origin': 'stats', 'x-nba-stats-token': 'true', 'Accept': 'application/json'}
 
-
-def get(url, hdr=None, timeout=20):
+def get(url, timeout=20):
     h = {'User-Agent': UA, 'Accept-Language': 'en-US,en;q=0.9', 'Accept-Encoding': 'gzip'}
-    h.update(hdr or {})
-    t0 = time.time()
     signal.alarm(30)
     try:
         with urllib.request.urlopen(urllib.request.Request(url, headers=h), timeout=timeout) as r:
             b = r.read()
             if r.headers.get('Content-Encoding') == 'gzip':
                 b = gzip.decompress(b)
-            return r.status, b.decode('utf-8', 'replace'), time.time() - t0
+            return r.status, b.decode('utf-8', 'replace')
     except urllib.error.HTTPError as e:
-        return e.code, '', time.time() - t0
+        return e.code, ''
     except Exception as e:
-        return type(e).__name__ + ':' + str(e)[:80], '', time.time() - t0
+        return type(e).__name__, ''
     finally:
         signal.alarm(0)
-        time.sleep(1.5)
+        time.sleep(0.25)
 
 
-def probe(name, url, hdr=None, show=None):
-    st, body, dt = get(url, hdr)
-    print(f'\n### {name}\n  {url}\n  status={st} size={len(body)} {dt:.1f}s')
-    if body and show:
-        try:
-            show(body)
-        except Exception as e:
-            print('  [show error]', e)
-    return body
+# 每季：(年份標籤, 開始日, 結束日)。抽樣每 9 天一天，只算例行賽（season.type == 2）
+SEASONS = [(y, dt.date(y - 1, 10, 25), dt.date(y, 4, 10)) for y in range(2015, 2027)]
+SEASONS.append((2027, dt.date(2026, 10, 21), dt.date(2026, 11, 19)))
 
 
-def j(b):
-    return json.loads(b)
+def has_price(x):
+    return isinstance(x, dict) and (x.get('decimal') is not None or x.get('american') not in (None, '') or x.get('value') is not None)
 
 
-def sb_show(b):
-    d = j(b)
-    ev = d.get('events', [])
-    print(f'  events={len(ev)}')
-    for e in ev[:2]:
-        c = e['competitions'][0]
-        print('  ', e['id'], e['name'], e['date'], 'odds:', json.dumps(c.get('odds', [])[:1])[:600])
-    return ev
+def audit_item(it):
+    """回傳一家莊家在一場比賽的欄位完整度。"""
+    f = {}
+    f['spread'] = it.get('spread') is not None
+    f['total'] = it.get('overUnder') is not None
+    h, a = it.get('homeTeamOdds') or {}, it.get('awayTeamOdds') or {}
+    f['ml_cur'] = h.get('moneyLine') is not None and a.get('moneyLine') is not None
+    f['spread_price_cur'] = h.get('spreadOdds') is not None and a.get('spreadOdds') is not None
+    f['total_price_cur'] = it.get('overOdds') is not None and it.get('underOdds') is not None
+    for stage in ('open', 'close'):
+        ho, ao = h.get(stage) or {}, a.get(stage) or {}
+        f[f'{stage}_spread'] = bool((ho.get('pointSpread') or {}).get('american') or (ho.get('pointSpread') or {}).get('alternateDisplayValue'))
+        f[f'{stage}_spread_price'] = has_price(ho.get('spread')) and has_price(ao.get('spread'))
+        f[f'{stage}_ml'] = has_price(ho.get('moneyLine')) and has_price(ao.get('moneyLine'))
+        tot = it.get(stage) or {}
+        f[f'{stage}_total'] = bool(tot.get('total'))
+        f[f'{stage}_total_price'] = has_price(tot.get('over')) and has_price(tot.get('under'))
+        f[f'{stage}_decimal'] = isinstance(ho.get('moneyLine'), dict) and ho['moneyLine'].get('decimal') is not None
+    return f
 
 
 def main():
-    # ---------- ESPN ----------
-    today = time.strftime('%Y%m%d', time.gmtime(time.time() - 6 * 3600))
-    b = probe('ESPN scoreboard today', f'https://site.api.espn.com/apis/site/v2/sports/basketball/nba/scoreboard?dates={today}', show=sb_show)
-    ev_today = j(b)['events'] if b else []
-    past = {}
-    for d in ('20251110', '20250115', '20240115', '20230115', '20200115', '20150115'):
-        b = probe(f'ESPN scoreboard {d}', f'https://site.api.espn.com/apis/site/v2/sports/basketball/nba/scoreboard?dates={d}', show=sb_show)
-        if b:
-            try:
-                past[d] = j(b)['events'][0]['id']
-            except Exception:
-                pass
-    ids = ([ev_today[0]['id']] if ev_today else []) + list(past.values())
-    for eid in ids:
-        def odds_show(b):
-            d = j(b)
-            print('  count', d.get('count'))
-            for it in d.get('items', [])[:3]:
-                print('   provider', it.get('provider', {}).get('name'), '| spread', it.get('spread'), '| OU', it.get('overUnder'),
-                      '| keys', [k for k in it if k in ('open', 'close', 'current', 'homeTeamOdds', 'awayTeamOdds')])
-                for k in ('open', 'close', 'current'):
-                    if k in it:
-                        print('     ', k, json.dumps(it[k])[:300])
-                ht = it.get('homeTeamOdds', {})
-                print('      homeTeamOdds', json.dumps({x: ht.get(x) for x in ('moneyLine', 'spreadOdds', 'open', 'close', 'current')})[:500])
-        probe(f'ESPN core odds event {eid}', f'https://sports.core.api.espn.com/v2/sports/basketball/leagues/nba/events/{eid}/competitions/{eid}/odds', show=odds_show)
-    if ids:
-        def summ(b):
-            d = j(b)
-            print('  keys', list(d.keys()))
-            print('  pickcenter', json.dumps(d.get('pickcenter', []))[:600])
-            print('  injuries', json.dumps(d.get('injuries', []))[:500])
-            bx = d.get('boxscore', {}).get('teams', [])
-            if bx:
-                print('  team box stats', [s.get('name') for s in bx[0].get('statistics', [])][:30])
-        probe('ESPN summary (today)', f'https://site.api.espn.com/apis/site/v2/sports/basketball/nba/summary?event={ids[0]}', show=summ)
-        if len(ids) > 1:
-            probe('ESPN summary (past)', f'https://site.api.espn.com/apis/site/v2/sports/basketball/nba/summary?event={ids[1]}', show=summ)
-    probe('ESPN injuries', 'https://site.api.espn.com/apis/site/v2/sports/basketball/nba/injuries',
-          show=lambda b: print('  teams', len(j(b).get('injuries', [])), json.dumps(j(b).get('injuries', [])[:1])[:700]))
+    t_start = time.time()
+    summary = {}
+    for label, d0, d1 in SEASONS:
+        games = 0
+        any_odds = 0
+        prov_counts = []
+        provs = Counter()
+        best = Counter()      # 每場「至少一家」具備該欄位
+        first_prov = Counter()
+        sample_note = None
+        d = d0
+        while d <= d1:
+            st, b = get(f'https://site.api.espn.com/apis/site/v2/sports/basketball/nba/scoreboard?dates={d:%Y%m%d}')
+            d += dt.timedelta(days=9)
+            if st != 200 or not b:
+                continue
+            for e in json.loads(b).get('events', []):
+                if (e.get('season') or {}).get('type') != 2:
+                    continue
+                if not (e.get('status', {}).get('type', {}).get('completed')):
+                    continue
+                games += 1
+                st2, b2 = get(f"https://sports.core.api.espn.com/v2/sports/basketball/leagues/nba/events/{e['id']}/competitions/{e['id']}/odds")
+                if st2 != 200 or not b2:
+                    prov_counts.append(0)
+                    continue
+                items = json.loads(b2).get('items', [])
+                items = [i for i in items if 'Live' not in ((i.get('provider') or {}).get('name') or '')]
+                prov_counts.append(len(items))
+                if items:
+                    any_odds += 1
+                    first_prov[(items[0].get('provider') or {}).get('name')] += 1
+                agg = defaultdict(bool)
+                for it in items:
+                    provs[(it.get('provider') or {}).get('name')] += 1
+                    for k, v in audit_item(it).items():
+                        agg[k] = agg[k] or v
+                for k, v in agg.items():
+                    best[k] += v
+        n = games or 1
+        summary[label] = dict(games=games, any=any_odds, avg_prov=sum(prov_counts) / max(len(prov_counts), 1),
+                              fields={k: round(100 * v / n) for k, v in sorted(best.items())},
+                              providers=provs.most_common(8), primary=first_prov.most_common(3))
+        s = summary[label]
+        print(f"\n=== {label - 1}-{str(label)[2:]} 抽樣比賽 {games} 場，有盤口 {any_odds} ({100 * any_odds / n:.0f}%)，平均莊家 {s['avg_prov']:.1f}  [{time.time() - t_start:.0f}s]")
+        print('   欄位(至少一家具備,%):', json.dumps(s['fields']))
+        print('   莊家:', s['providers'])
+        print('   第一順位:', s['primary'])
 
-    # ---------- NBA official ----------
-    probe('NBA cdn schedule', 'https://cdn.nba.com/static/json/staticData/scheduleLeagueV2.json',
-          show=lambda b: print('  gameDates', len(j(b)['leagueSchedule']['gameDates'])))
-    probe('NBA cdn today scoreboard', 'https://cdn.nba.com/static/json/liveData/scoreboard/todaysScoreboard_00.json',
-          show=lambda b: print('  games', len(j(b)['scoreboard']['games'])))
-    for name, url in [
-        ('stats.nba.com team advanced', 'https://stats.nba.com/stats/leaguedashteamstats?MeasureType=Advanced&PerMode=PerGame&Season=2024-25&SeasonType=Regular%20Season&LeagueID=00&LastNGames=0&Month=0&OpponentTeamID=0&PaceAdjust=N&Period=0&PlusMinus=N&Rank=N&DateFrom=&DateTo=&GameScope=&GameSegment=&Location=&Outcome=&PORound=0&PlayerExperience=&PlayerPosition=&SeasonSegment=&ShotClockRange=&StarterBench=&TeamID=0&TwoWay=0&VsConference=&VsDivision=&Conference=&Division='),
-        ('stats.nba.com team gamelog', 'https://stats.nba.com/stats/leaguegamelog?Counter=0&Direction=ASC&LeagueID=00&PlayerOrTeam=T&Season=2024-25&SeasonType=Regular%20Season&Sorter=DATE'),
-    ]:
-        probe(name, url, hdr=NBA_HDR, show=lambda b: print('  ', b[:300]))
-    probe('NBA injury report page', 'https://official.nba.com/nba-injury-report-2025-26-season/',
-          show=lambda b: print('  pdf links', len(re.findall(r'Injury-Report_[^"]+\.pdf', b)), re.findall(r'https?://[^"]+Injury-Report_[^"]+\.pdf', b)[-2:]))
-
-    # ---------- Basketball Reference ----------
-    probe('BBRef 2025 season', 'https://www.basketball-reference.com/leagues/NBA_2025.html',
-          show=lambda b: print('  has advanced table', 'advanced-team' in b))
-    probe('BBRef games 2025 Jan', 'https://www.basketball-reference.com/leagues/NBA_2025_games-january.html',
-          show=lambda b: print('  rows', b.count('data-stat="visitor_team_name"')))
-
-    # ---------- Odds ----------
-    probe('The Odds API (no key)', 'https://api.the-odds-api.com/v4/sports')
-    probe('SBR archive index', 'https://www.sportsbookreviewsonline.com/scoresoddsarchives/nba/nbaoddsarchives.htm',
-          show=lambda b: print('  links', re.findall(r'href="([^"]*nba[^"]*\.(?:xlsx?|htm))"', b)[:20]))
-    probe('Taiwan sportslottery home', 'https://www.sportslottery.com.tw/',
-          show=lambda b: print('  title', re.findall(r'<title>(.*?)</title>', b, re.S)[:1]))
-    probe('Taiwan sportslottery blob', 'https://blob.sportslottery.com.tw/apidata/Pre/ListByLeague.json',
-          show=lambda b: print('  ', b[:300]))
-    probe('playsport NBA', 'https://www.playsport.cc/predict/games?allianceid=3',
-          show=lambda b: print('  title', re.findall(r'<title>(.*?)</title>', b, re.S)[:1]))
+    # ---------- 玩運彩 ----------
+    print('\n\n##### playsport #####')
+    st, b = get('https://www.playsport.cc/robots.txt')
+    print('robots.txt', st)
+    print(b[:1500])
+    for url in ('https://www.playsport.cc/predict/games?allianceid=3',
+                'https://www.playsport.cc/predict/games?allianceid=3&gametime=' + time.strftime('%Y%m%d', time.gmtime(time.time() + 8 * 3600))):
+        st, b = get(url)
+        print('\n', url, st, len(b))
+        plain = re.sub(r'\s+', ' ', re.sub(r'<[^>]+>', ' ', re.sub(r'<script.*?</script>|<style.*?</style>', ' ', b, flags=re.S)))
+        for kw in ('讓分', '大小', '不讓分', '主勝', '賠率', '1.7', '1.8'):
+            idx = [m.start() for m in re.finditer(re.escape(kw), plain)][:3]
+            for i in idx:
+                print(f'   [{kw}]', plain[max(0, i - 120):i + 160])
+        print('   script data hints:', re.findall(r'(?:odds|handicap|spread|total)[A-Za-z_]*["\']?\s*[:=]', b)[:20])
 
 
 if __name__ == '__main__':

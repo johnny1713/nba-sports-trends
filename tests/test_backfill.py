@@ -57,3 +57,22 @@ class BackfillSmoke(unittest.TestCase):
 
 if __name__ == '__main__':
     unittest.main()
+
+
+class SourceLabelTests(unittest.TestCase):
+    def test_committed_seasons_have_consistent_box_source_labels(self):
+        """repo 裡每一季：完整的比賽都必須有 box_source，且與兩隊 box score 的 source 一致。"""
+        import glob
+        from nba_quant import store
+        root = os.path.join(os.path.dirname(FX), '..', 'data', 'raw', 'espn')
+        for d in sorted(glob.glob(os.path.join(root, '*'))):
+            gp, bp = os.path.join(d, 'games.jsonl.gz'), os.path.join(d, 'teambox.jsonl.gz')
+            if not (os.path.exists(gp) and os.path.exists(bp)):
+                continue
+            src = {}
+            for b in store.read_jsonl_gz(bp):
+                src.setdefault(b['game_id'], set()).add(b['source'].split(':')[0])
+            for g in store.read_jsonl_gz(gp):
+                if g.get('complete'):
+                    self.assertIn(g.get('box_source'), ('espn', 'bbref'), (d, g['game_id']))
+                    self.assertEqual(src.get(g['game_id']), {g['box_source']}, (d, g['game_id']))

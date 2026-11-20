@@ -127,6 +127,10 @@ def run_season(season: int, live: bool = False, log=print):
         if reuse:
             g.update({k: prev[k] for k in ('complete', 'complete_reason', 'odds_final', 'odds_books', 'box_source') if k in prev})
             boxes[gid] = old_boxes.get(gid, [])
+            if not g.get('box_source'):
+                srcs = {b['source'].split(':')[0] for b in boxes[gid]}
+                if len(srcs) == 1:
+                    g['box_source'] = srcs.pop()
             odds[gid] = old_odds.get(gid, [])
             if gid in old_raw:
                 raws[gid] = old_raw[gid]

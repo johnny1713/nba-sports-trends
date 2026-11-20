@@ -99,8 +99,30 @@ class FlagTests(unittest.TestCase):
         flags, _ = odds_flags.flag_quotes(qs)
         self.assertEqual({f['severity'] for f in flags}, {'warning'})
         self.assertEqual(odds_flags.usable_quotes(qs, flags), [])
-        allowed = odds_flags.usable_quotes(qs, flags, allow_warnings={('g1', 'BookA', 'close', 'ml')})
+        allowed = odds_flags.usable_quotes(qs, flags, allow_warnings={('g1', 'BookA', 'close', 'ml', 'home'),
+                                                                      ('g1', 'BookA', 'close', 'ml', 'away')})
         self.assertEqual(len(allowed), 2)
+
+    def test_exclusion_is_per_record_not_per_game(self):
+        """一家莊家一筆異常：只排除那一筆；同場其他莊家、同家其他盤口、同組另一邊（若正常）全部保留。"""
+        qs = [q('home', None, 1.0076, 'ml'), q('away', None, 9.5, 'ml'),          # BookA 獨贏：只有主隊那邊極端
+              q('home', -14.5, 1.91), q('away', 14.5, 1.91),                         # BookA 讓分：正常
+              q('over', 2001.0, 1.91, 'total'), q('under', 2001.0, 1.91, 'total'),   # BookA 總分：打錯字
+              q('home', -14.0, 1.91, prov='BookB'), q('away', 14.0, 1.91, prov='BookB'),
+              q('over', 221.5, 1.91, 'total', prov='BookB'), q('under', 221.5, 1.91, 'total', prov='BookB')]
+        flags, _ = odds_flags.flag_quotes(qs)
+        kept = {odds_flags.record_key(x) for x in odds_flags.usable_quotes(qs, flags)}
+        dropped = {odds_flags.record_key(x) for x in qs} - kept
+        self.assertEqual(dropped, {('g1', 'BookA', 'close', 'ml', 'home'),
+                                   ('g1', 'BookA', 'close', 'total', 'over'), ('g1', 'BookA', 'close', 'total', 'under')})
+        self.assertIn(('g1', 'BookA', 'close', 'ml', 'away'), kept)            # 同組另一邊正常 → 保留
+        self.assertIn(('g1', 'BookA', 'close', 'spread', 'home'), kept)        # 同家其他盤口 → 保留
+        self.assertIn(('g1', 'BookB', 'close', 'total', 'over'), kept)         # 同場其他莊家 → 保留
+
+    def test_every_flag_points_to_one_record(self):
+        qs = [q('home', 7.5, 1.91), q('away', -7.5, 1.91), q('home', None, 1.3, 'ml'), q('away', None, 3.6, 'ml')]
+        flags, _ = odds_flags.flag_quotes(qs)
+        self.assertTrue(all(f['side'] in ('home', 'away', 'over', 'under') for f in flags))
 
     def test_flagging_never_mutates_raw_quotes(self):
         qs = [q('over', 2001.0, 1.91, 'total'), q('under', 2001.0, 1.91, 'total')]

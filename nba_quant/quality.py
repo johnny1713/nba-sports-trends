@@ -108,7 +108,7 @@ def season_report(season: int, live: bool = None) -> dict:
         boxes_by_game[b['game_id']].append(b)
     final_ids = {g['game_id'] for g in games if g['status'] == 'final'}
     flags, n_checks = flag_quotes([q for q in odds if q['game_id'] in final_ids])
-    flags.sort(key=lambda f: (f['game_id'], f['provider'], f['stage'], f['market'], f['flag']))
+    flags.sort(key=lambda f: (f['game_id'], f['provider'], f['stage'], f['market'], f['side'], f['flag']))
     store.write_jsonl_gz(os.path.join(RAW, str(season), 'odds_flags.jsonl.gz'), flags)
 
     by_phase = {ph: _phase_block([g for g in games if phase_of(g) == ph], odds_by_game, flags)
@@ -146,7 +146,18 @@ def season_report(season: int, live: bool = None) -> dict:
     n_err = sum(1 for f in flags if f['severity'] == 'error')
     err_rate = n_err / n_checks if n_checks else 0.0
 
+    # 資料來源標記：每場完整的比賽都必須有 box_source，且與兩隊 box score 的 source 一致
+    src_problems = []
+    for g in games:
+        if not g.get('complete'):
+            continue
+        bsrc = {b['source'].split(':')[0] for b in boxes_by_game.get(g['game_id'], [])}
+        if g.get('box_source') not in ('espn', 'bbref') or bsrc != {g.get('box_source')}:
+            src_problems.append((g['game_id'], g.get('box_source'), sorted(bsrc)))
+
     reasons = []
+    if src_problems:
+        reasons.append(f'資料來源標記缺漏或不一致 {len(src_problems)} 場')
     if not live:
         if not (expected <= reg_final <= expected + 1):
             reasons.append(f'例行賽完賽 {reg_final} 場，預期 {expected}（NBA 盃冠軍賽可 +1）')
@@ -166,6 +177,7 @@ def season_report(season: int, live: bool = None) -> dict:
                   'expected_range': [lo, hi]},
         'duplicates': dup, 'skipped_at_listing': flog.get('skipped', {}),
         'box_issues': len(box_issues), 'box_issue_examples': box_issues[:20],
+        'source_label_problems': len(src_problems), 'source_label_examples': src_problems[:10],
         'incomplete_examples': [(g['game_id'], g.get('complete_reason')) for g in games
                                 if g['status'] == 'final' and not g.get('complete')][:20],
         'odds_checks': {'n': n_checks, 'error': n_err, 'warning': len(flags) - n_err,
@@ -189,7 +201,7 @@ def _examples(flags, per_kind=5):
     out = defaultdict(list)
     for f in flags:
         if len(out[f['flag']]) < per_kind:
-            out[f['flag']].append(f"{f['game_id']}/{f['provider']}/{f['stage']}/{f['market']}: {f['detail']}")
+            out[f['flag']].append(f"{f['game_id']}/{f['provider']}/{f['stage']}/{f['market']}/{f['side']}: {f['detail']}")
     return dict(out)
 
 
@@ -232,7 +244,8 @@ def render_md(r):
     L += ['', f"- 例行賽預期 {r['expected_regular']} 場；每隊 {r['teams']['min_games']}～{r['teams']['max_games']} 場"
           f"（{r['teams']['n']} 隊，預期 {r['teams']['expected_range'][0]}～{r['teams']['expected_range'][1]}）",
           f"- 列表階段略過：{r['skipped_at_listing']}",
-          f"- box score 合理性問題：{r['box_issues']}；重複 game_id：{len(r['duplicates'])}", '']
+          f"- box score 合理性問題：{r['box_issues']}；重複 game_id：{len(r['duplicates'])}；"
+          f"資料來源標記缺漏或不一致：{r['source_label_problems']} 場", '']
     for gid, why in r['incomplete_examples']:
         L.append(f'  - 不完整 `{gid}`：{why}')
     L += ['', '## 各博彩公司覆蓋率（該公司有盤口的完賽比賽比例）', '', '| 博彩公司 | 例行賽 % | 季後賽 % |', '|---|---|---|']
@@ -249,8 +262,9 @@ def render_md(r):
         L.append(f"| {k} | {a['line_pct']} | {a['price_pct']} | {b['line_pct']} | {b['price_pct']} |")
     oc = r['odds_checks']
     L += ['', '## 盤口品質標記（原始資料不動，標記另存 odds_flags.jsonl.gz）', '',
-          f"- 檢核 {oc['n']} 項：error {oc['error']}、warning {oc['warning']}，**error 比例 {oc['error_rate_pct']}%**",
-          '- error 一律不進模型；warning（極端但可能真實）預設不進模型，需人工放行', '']
+          f"- 檢核 {oc['n']} 項：被標記的單筆盤口 error {oc['error']}、warning {oc['warning']}，**error 比例 {oc['error_rate_pct']}%**",
+          '- 以**單筆盤口紀錄**為單位排除：error 一律不進模型；warning（極端但可能真實）預設不進模型，需人工放行',
+          '- 同一場比賽的其他莊家、其他盤口、同組另一邊（若無問題）全部保留，不會因一筆異常排除整場', '']
     for kind, exs in oc['examples'].items():
         L.append(f'- {kind}：' + '；'.join(f'`{e}`' for e in exs))
     fe = r['fetch']

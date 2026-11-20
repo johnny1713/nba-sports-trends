@@ -80,7 +80,7 @@
   "regular": {
    "abnormal_price": 150,
    "abnormal_spread": 0,
-   "abnormal_total": 1,
+   "abnormal_total": 2,
    "bbref_filled": 161,
    "book_coverage_pct": {
     "5Dimes.eu": 99.92,
@@ -140,9 +140,9 @@
    "flags": {
     "by_kind": {
      "price_extreme": 150,
-     "total_out_of_range": 1
+     "total_out_of_range": 2
     },
-    "error": 1,
+    "error": 2,
     "warning": 150
    },
    "games": 1232,
@@ -167,18 +167,19 @@
  "label": "2015-16",
  "live": false,
  "odds_checks": {
-  "error": 1,
-  "error_rate_pct": 0.0008,
+  "error": 2,
+  "error_rate_pct": 0.0016,
   "examples": {
    "price_extreme": [
-    "400827970/5Dimes.eu/current_postgame/ml: away 23.0",
-    "400827970/Fantasy911.com/current_postgame/ml: home 1.014286",
-    "400827970/Fantasy911.com/current_postgame/ml: away 21.0",
-    "400828029/5Dimes.eu/current_postgame/ml: away 21.0",
-    "400828029/Fantasy911.com/current_postgame/ml: away 19.0"
+    "400827970/5Dimes.eu/current_postgame/ml/away: away 23.0",
+    "400827970/Fantasy911.com/current_postgame/ml/away: away 21.0",
+    "400827970/Fantasy911.com/current_postgame/ml/home: home 1.014286",
+    "400828029/5Dimes.eu/current_postgame/ml/away: away 21.0",
+    "400828029/Fantasy911.com/current_postgame/ml/away: away 19.0"
    ],
    "total_out_of_range": [
-    "400828531/5Dimes.eu/current_postgame/total: 2001.0"
+    "400828531/5Dimes.eu/current_postgame/total/over: 2001.0",
+    "400828531/5Dimes.eu/current_postgame/total/under: 2001.0"
    ]
   },
   "n": 125842,
@@ -193,6 +194,8 @@
   "non-NBA teams (all-star etc.)": 10,
   "season type 1": 100
  },
+ "source_label_examples": [],
+ "source_label_problems": 0,
  "teams": {
   "expected_range": [
    82,

@@ -78,7 +78,7 @@
   },
   "regular": {
    "abnormal_price": 144,
-   "abnormal_spread": 6,
+   "abnormal_spread": 12,
    "abnormal_total": 0,
    "bbref_filled": 163,
    "book_coverage_pct": {
@@ -138,9 +138,9 @@
    "flags": {
     "by_kind": {
      "price_extreme": 144,
-     "spread_ml_direction_conflict": 6
+     "spread_ml_direction_conflict": 12
     },
-    "error": 6,
+    "error": 12,
     "warning": 144
    },
    "games": 1233,
@@ -176,22 +176,22 @@
  "label": "2016-17",
  "live": false,
  "odds_checks": {
-  "error": 6,
-  "error_rate_pct": 0.0033,
+  "error": 12,
+  "error_rate_pct": 0.0067,
   "examples": {
    "price_extreme": [
-    "400899419/5Dimes.eu/current_postgame/ml: away 15.5",
-    "400899419/BETNOW.eu/current_postgame/ml: away 15.5",
-    "400899549/5Dimes.eu/current_postgame/ml: away 18.75",
-    "400899549/BETNOW.eu/current_postgame/ml: away 18.75",
-    "400899549/BOVADA.lv/current_postgame/ml: away 18.0"
+    "400899419/5Dimes.eu/current_postgame/ml/away: away 15.5",
+    "400899419/BETNOW.eu/current_postgame/ml/away: away 15.5",
+    "400899549/5Dimes.eu/current_postgame/ml/away: away 18.75",
+    "400899549/BETNOW.eu/current_postgame/ml/away: away 18.75",
+    "400899549/BOVADA.lv/current_postgame/ml/away: away 18.0"
    ],
    "spread_ml_direction_conflict": [
-    "400900076/SportsInteraction.com/current_postgame/ml: see spread",
-    "400900076/SportsInteraction.com/current_postgame/spread: home spread 2.0 but ML home 1.8 away 2.05",
-    "400900168/SportsInteraction.com/current_postgame/ml: see spread",
-    "400900168/SportsInteraction.com/current_postgame/spread: home spread -4.5 but ML home 2.05 away 1.8",
-    "400900598/SportsInteraction.com/current_postgame/ml: see spread"
+    "400900076/SportsInteraction.com/current_postgame/ml/away: see spread",
+    "400900076/SportsInteraction.com/current_postgame/ml/home: see spread",
+    "400900076/SportsInteraction.com/current_postgame/spread/away: home spread 2.0 but ML home 1.8 away 2.05",
+    "400900076/SportsInteraction.com/current_postgame/spread/home: home spread 2.0 but ML home 1.8 away 2.05",
+    "400900168/SportsInteraction.com/current_postgame/ml/away: see spread"
    ]
   },
   "n": 179593,
@@ -206,6 +206,8 @@
   "non-NBA teams (all-star etc.)": 6,
   "season type 1": 97
  },
+ "source_label_examples": [],
+ "source_label_problems": 0,
  "teams": {
   "expected_range": [
    82,

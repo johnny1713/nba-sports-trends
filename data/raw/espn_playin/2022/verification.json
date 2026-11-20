@@ -1,0 +1,752 @@
+{
+ "expected_games": 6,
+ "games": [
+  {
+   "both_teams_present": true,
+   "game_id": "401428070",
+   "matchup": "CLE @ BKN",
+   "score": [
+    108,
+    115
+   ],
+   "season_type_espn": 5,
+   "teams": {
+    "17": {
+     "all_fields_match_bbref": true,
+     "espn_vs_bbref": {
+      "dreb": [
+       33,
+       33
+      ],
+      "fg3a": [
+       28,
+       28
+      ],
+      "fg3m": [
+       9,
+       9
+      ],
+      "fga": [
+       84,
+       84
+      ],
+      "fgm": [
+       45,
+       45
+      ],
+      "fta": [
+       24,
+       24
+      ],
+      "ftm": [
+       16,
+       16
+      ],
+      "oreb": [
+       10,
+       10
+      ],
+      "pts": [
+       115,
+       115
+      ],
+      "tov": [
+       14,
+       14
+      ]
+     },
+     "players": 13,
+     "pts_eq_scoreboard": true,
+     "pts_identity_ok": true
+    },
+    "5": {
+     "all_fields_match_bbref": true,
+     "espn_vs_bbref": {
+      "dreb": [
+       30,
+       30
+      ],
+      "fg3a": [
+       26,
+       26
+      ],
+      "fg3m": [
+       9,
+       9
+      ],
+      "fga": [
+       92,
+       92
+      ],
+      "fgm": [
+       41,
+       41
+      ],
+      "fta": [
+       20,
+       20
+      ],
+      "ftm": [
+       17,
+       17
+      ],
+      "oreb": [
+       10,
+       10
+      ],
+      "pts": [
+       108,
+       108
+      ],
+      "tov": [
+       15,
+       15
+      ]
+     },
+     "players": 12,
+     "pts_eq_scoreboard": true,
+     "pts_identity_ok": true
+    }
+   }
+  },
+  {
+   "both_teams_present": true,
+   "game_id": "401428071",
+   "matchup": "LAC @ MIN",
+   "score": [
+    104,
+    109
+   ],
+   "season_type_espn": 5,
+   "teams": {
+    "12": {
+     "all_fields_match_bbref": true,
+     "espn_vs_bbref": {
+      "dreb": [
+       32,
+       32
+      ],
+      "fg3a": [
+       35,
+       35
+      ],
+      "fg3m": [
+       16,
+       16
+      ],
+      "fga": [
+       78,
+       78
+      ],
+      "fgm": [
+       34,
+       34
+      ],
+      "fta": [
+       27,
+       27
+      ],
+      "ftm": [
+       20,
+       20
+      ],
+      "oreb": [
+       7,
+       7
+      ],
+      "pts": [
+       104,
+       104
+      ],
+      "tov": [
+       17,
+       17
+      ]
+     },
+     "players": 12,
+     "pts_eq_scoreboard": true,
+     "pts_identity_ok": true
+    },
+    "16": {
+     "all_fields_match_bbref": false,
+     "espn_vs_bbref": {
+      "dreb": [
+       37,
+       37
+      ],
+      "fg3a": [
+       35,
+       35
+      ],
+      "fg3m": [
+       14,
+       14
+      ],
+      "fga": [
+       83,
+       83
+      ],
+      "fgm": [
+       36,
+       36
+      ],
+      "fta": [
+       37,
+       37
+      ],
+      "ftm": [
+       23,
+       23
+      ],
+      "oreb": [
+       12,
+       12
+      ],
+      "pts": [
+       109,
+       109
+      ],
+      "tov": [
+       13,
+       11
+      ]
+     },
+     "players": 14,
+     "pts_eq_scoreboard": true,
+     "pts_identity_ok": true
+    }
+   }
+  },
+  {
+   "both_teams_present": true,
+   "game_id": "401428072",
+   "matchup": "CHA @ ATL",
+   "score": [
+    103,
+    132
+   ],
+   "season_type_espn": 5,
+   "teams": {
+    "1": {
+     "all_fields_match_bbref": false,
+     "espn_vs_bbref": {
+      "dreb": [
+       42,
+       42
+      ],
+      "fg3a": [
+       32,
+       32
+      ],
+      "fg3m": [
+       16,
+       16
+      ],
+      "fga": [
+       94,
+       94
+      ],
+      "fgm": [
+       49,
+       49
+      ],
+      "fta": [
+       25,
+       25
+      ],
+      "ftm": [
+       18,
+       18
+      ],
+      "oreb": [
+       12,
+       12
+      ],
+      "pts": [
+       132,
+       132
+      ],
+      "tov": [
+       12,
+       10
+      ]
+     },
+     "players": 13,
+     "pts_eq_scoreboard": true,
+     "pts_identity_ok": true
+    },
+    "30": {
+     "all_fields_match_bbref": true,
+     "espn_vs_bbref": {
+      "dreb": [
+       30,
+       30
+      ],
+      "fg3a": [
+       41,
+       41
+      ],
+      "fg3m": [
+       13,
+       13
+      ],
+      "fga": [
+       90,
+       90
+      ],
+      "fgm": [
+       34,
+       34
+      ],
+      "fta": [
+       29,
+       29
+      ],
+      "ftm": [
+       22,
+       22
+      ],
+      "oreb": [
+       11,
+       11
+      ],
+      "pts": [
+       103,
+       103
+      ],
+      "tov": [
+       14,
+       14
+      ]
+     },
+     "players": 14,
+     "pts_eq_scoreboard": true,
+     "pts_identity_ok": true
+    }
+   }
+  },
+  {
+   "both_teams_present": true,
+   "game_id": "401428073",
+   "matchup": "SA @ NO",
+   "score": [
+    103,
+    113
+   ],
+   "season_type_espn": 5,
+   "teams": {
+    "24": {
+     "all_fields_match_bbref": true,
+     "espn_vs_bbref": {
+      "dreb": [
+       26,
+       26
+      ],
+      "fg3a": [
+       34,
+       34
+      ],
+      "fg3m": [
+       13,
+       13
+      ],
+      "fga": [
+       91,
+       91
+      ],
+      "fgm": [
+       37,
+       37
+      ],
+      "fta": [
+       22,
+       22
+      ],
+      "ftm": [
+       16,
+       16
+      ],
+      "oreb": [
+       8,
+       8
+      ],
+      "pts": [
+       103,
+       103
+      ],
+      "tov": [
+       6,
+       6
+      ]
+     },
+     "players": 14,
+     "pts_eq_scoreboard": true,
+     "pts_identity_ok": true
+    },
+    "3": {
+     "all_fields_match_bbref": false,
+     "espn_vs_bbref": {
+      "dreb": [
+       45,
+       45
+      ],
+      "fg3a": [
+       20,
+       20
+      ],
+      "fg3m": [
+       8,
+       8
+      ],
+      "fga": [
+       81,
+       81
+      ],
+      "fgm": [
+       44,
+       44
+      ],
+      "fta": [
+       23,
+       23
+      ],
+      "ftm": [
+       17,
+       17
+      ],
+      "oreb": [
+       8,
+       8
+      ],
+      "pts": [
+       113,
+       113
+      ],
+      "tov": [
+       14,
+       13
+      ]
+     },
+     "players": 13,
+     "pts_eq_scoreboard": true,
+     "pts_identity_ok": true
+    }
+   }
+  },
+  {
+   "both_teams_present": true,
+   "game_id": "401428074",
+   "matchup": "ATL @ CLE",
+   "score": [
+    107,
+    101
+   ],
+   "season_type_espn": 5,
+   "teams": {
+    "1": {
+     "all_fields_match_bbref": true,
+     "espn_vs_bbref": {
+      "dreb": [
+       32,
+       32
+      ],
+      "fg3a": [
+       31,
+       31
+      ],
+      "fg3m": [
+       9,
+       9
+      ],
+      "fga": [
+       80,
+       80
+      ],
+      "fgm": [
+       39,
+       39
+      ],
+      "fta": [
+       22,
+       22
+      ],
+      "ftm": [
+       20,
+       20
+      ],
+      "oreb": [
+       10,
+       10
+      ],
+      "pts": [
+       107,
+       107
+      ],
+      "tov": [
+       13,
+       13
+      ]
+     },
+     "players": 13,
+     "pts_eq_scoreboard": true,
+     "pts_identity_ok": true
+    },
+    "5": {
+     "all_fields_match_bbref": false,
+     "espn_vs_bbref": {
+      "dreb": [
+       28,
+       28
+      ],
+      "fg3a": [
+       36,
+       36
+      ],
+      "fg3m": [
+       13,
+       13
+      ],
+      "fga": [
+       81,
+       81
+      ],
+      "fgm": [
+       37,
+       37
+      ],
+      "fta": [
+       17,
+       17
+      ],
+      "ftm": [
+       14,
+       14
+      ],
+      "oreb": [
+       8,
+       8
+      ],
+      "pts": [
+       101,
+       101
+      ],
+      "tov": [
+       14,
+       11
+      ]
+     },
+     "players": 13,
+     "pts_eq_scoreboard": true,
+     "pts_identity_ok": true
+    }
+   }
+  },
+  {
+   "both_teams_present": true,
+   "game_id": "401428075",
+   "matchup": "NO @ LAC",
+   "score": [
+    105,
+    101
+   ],
+   "season_type_espn": 5,
+   "teams": {
+    "12": {
+     "all_fields_match_bbref": false,
+     "espn_vs_bbref": {
+      "dreb": [
+       33,
+       33
+      ],
+      "fg3a": [
+       36,
+       36
+      ],
+      "fg3m": [
+       9,
+       9
+      ],
+      "fga": [
+       85,
+       85
+      ],
+      "fgm": [
+       35,
+       35
+      ],
+      "fta": [
+       34,
+       34
+      ],
+      "ftm": [
+       22,
+       22
+      ],
+      "oreb": [
+       12,
+       12
+      ],
+      "pts": [
+       101,
+       101
+      ],
+      "tov": [
+       8,
+       7
+      ]
+     },
+     "players": 11,
+     "pts_eq_scoreboard": true,
+     "pts_identity_ok": true
+    },
+    "3": {
+     "all_fields_match_bbref": false,
+     "espn_vs_bbref": {
+      "dreb": [
+       37,
+       37
+      ],
+      "fg3a": [
+       22,
+       22
+      ],
+      "fg3m": [
+       6,
+       6
+      ],
+      "fga": [
+       88,
+       88
+      ],
+      "fgm": [
+       43,
+       43
+      ],
+      "fta": [
+       25,
+       25
+      ],
+      "ftm": [
+       13,
+       13
+      ],
+      "oreb": [
+       17,
+       17
+      ],
+      "pts": [
+       105,
+       105
+      ],
+      "tov": [
+       9,
+       8
+      ]
+     },
+     "players": 13,
+     "pts_eq_scoreboard": true,
+     "pts_identity_ok": true
+    }
+   }
+  }
+ ],
+ "games_found": 6,
+ "season": 2022,
+ "skipped_events": [
+  {
+   "date": "2022-04-10",
+   "event_id": "401361035",
+   "reason": "season type 2"
+  },
+  {
+   "date": "2022-04-10",
+   "event_id": "401361036",
+   "reason": "season type 2"
+  },
+  {
+   "date": "2022-04-10",
+   "event_id": "401361037",
+   "reason": "season type 2"
+  },
+  {
+   "date": "2022-04-10",
+   "event_id": "401361040",
+   "reason": "season type 2"
+  },
+  {
+   "date": "2022-04-10",
+   "event_id": "401361042",
+   "reason": "season type 2"
+  },
+  {
+   "date": "2022-04-10",
+   "event_id": "401361045",
+   "reason": "season type 2"
+  },
+  {
+   "date": "2022-04-10",
+   "event_id": "401361046",
+   "reason": "season type 2"
+  },
+  {
+   "date": "2022-04-10",
+   "event_id": "401361047",
+   "reason": "season type 2"
+  },
+  {
+   "date": "2022-04-10",
+   "event_id": "401361043",
+   "reason": "season type 2"
+  },
+  {
+   "date": "2022-04-10",
+   "event_id": "401361038",
+   "reason": "season type 2"
+  },
+  {
+   "date": "2022-04-10",
+   "event_id": "401361039",
+   "reason": "season type 2"
+  },
+  {
+   "date": "2022-04-10",
+   "event_id": "401361041",
+   "reason": "season type 2"
+  },
+  {
+   "date": "2022-04-10",
+   "event_id": "401361044",
+   "reason": "season type 2"
+  },
+  {
+   "date": "2022-04-10",
+   "event_id": "401361048",
+   "reason": "season type 2"
+  },
+  {
+   "date": "2022-04-10",
+   "event_id": "401361049",
+   "reason": "season type 2"
+  },
+  {
+   "date": "2022-04-16",
+   "event_id": "401429872",
+   "reason": "season type 3"
+  },
+  {
+   "date": "2022-04-16",
+   "event_id": "401429873",
+   "reason": "season type 3"
+  },
+  {
+   "date": "2022-04-16",
+   "event_id": "401429874",
+   "reason": "season type 3"
+  },
+  {
+   "date": "2022-04-16",
+   "event_id": "401429875",
+   "reason": "season type 3"
+  }
+ ]
+}

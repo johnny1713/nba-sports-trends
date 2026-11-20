@@ -1,0 +1,90 @@
+{
+ "files": {
+  "raw/espn_scoreboard_20210516.json.gz": {
+   "fetched_at": "2026-11-20T14:47:14Z",
+   "sha256_uncompressed": "3300de871c35c6f043169925f042e52a853c7065fda0f1fcbdcc82bfcc83f745",
+   "url": "https://site.api.espn.com/apis/site/v2/sports/basketball/nba/scoreboard?dates=20210516"
+  },
+  "raw/espn_scoreboard_20210517.json.gz": {
+   "fetched_at": "2026-11-20T14:47:14Z",
+   "sha256_uncompressed": "ea3dca9ce3756bd81bcc725fc77d59fb167da58443a3f36a03050473e2012722",
+   "url": "https://site.api.espn.com/apis/site/v2/sports/basketball/nba/scoreboard?dates=20210517"
+  },
+  "raw/espn_scoreboard_20210518.json.gz": {
+   "fetched_at": "2026-11-20T14:47:15Z",
+   "sha256_uncompressed": "bcc9b9fb82f6320df34a18e73260837d30a0a0070c042bcdd7b56381b82a8a55",
+   "url": "https://site.api.espn.com/apis/site/v2/sports/basketball/nba/scoreboard?dates=20210518"
+  },
+  "raw/espn_scoreboard_20210519.json.gz": {
+   "fetched_at": "2026-11-20T14:47:15Z",
+   "sha256_uncompressed": "f9ef5bc0c7a555b1b443aaf8a130e96d28e3ed89a029954a33529cd8cac08a08",
+   "url": "https://site.api.espn.com/apis/site/v2/sports/basketball/nba/scoreboard?dates=20210519"
+  },
+  "raw/espn_scoreboard_20210520.json.gz": {
+   "fetched_at": "2026-11-20T14:47:15Z",
+   "sha256_uncompressed": "551752f241925f7c0cbaed55753da800c074a38e6a91e5ebec154e058b4fc154",
+   "url": "https://site.api.espn.com/apis/site/v2/sports/basketball/nba/scoreboard?dates=20210520"
+  },
+  "raw/espn_scoreboard_20210521.json.gz": {
+   "fetched_at": "2026-11-20T14:47:16Z",
+   "sha256_uncompressed": "fe3298013717f66bafe219a02636ad919a4a3e6decf70bfcc737476e40676e52",
+   "url": "https://site.api.espn.com/apis/site/v2/sports/basketball/nba/scoreboard?dates=20210521"
+  },
+  "raw/espn_scoreboard_20210522.json.gz": {
+   "fetched_at": "2026-11-20T14:47:16Z",
+   "sha256_uncompressed": "6529229397584e15955903be236ad3710001b49b58cf41d7e36fbdba1d7996dd",
+   "url": "https://site.api.espn.com/apis/site/v2/sports/basketball/nba/scoreboard?dates=20210522"
+  },
+  "raw/espn_summary_401326988.json.gz": {
+   "fetched_at": "2026-11-20T14:47:17Z",
+   "game_id": "401326988",
+   "sha256_uncompressed": "b8fd016ea9eae7211ccf8d1b1c717a802b1a2fc614fa2c07b6ca03dd7c4a1d61",
+   "url": "https://site.api.espn.com/apis/site/v2/sports/basketball/nba/summary?event=401326988"
+  },
+  "raw/espn_summary_401326989.json.gz": {
+   "fetched_at": "2026-11-20T14:47:17Z",
+   "game_id": "401326989",
+   "sha256_uncompressed": "cfbd292d2513904d29325961e3d3d65bcb9e51bdfe10e1c3d4ee984e4ec091cf",
+   "url": "https://site.api.espn.com/apis/site/v2/sports/basketball/nba/summary?event=401326989"
+  },
+  "raw/espn_summary_401326990.json.gz": {
+   "fetched_at": "2026-11-20T14:47:17Z",
+   "game_id": "401326990",
+   "sha256_uncompressed": "4ac2f900485ed4d66c86e65322376e7ebe87cbbeced1fc4642fa4a89cf545f4a",
+   "url": "https://site.api.espn.com/apis/site/v2/sports/basketball/nba/summary?event=401326990"
+  },
+  "raw/espn_summary_401326991.json.gz": {
+   "fetched_at": "2026-11-20T14:47:18Z",
+   "game_id": "401326991",
+   "sha256_uncompressed": "e5a38a32b74338638d05fc9bb9abc3b11d9d88895a52b75faf57db9c598c6132",
+   "url": "https://site.api.espn.com/apis/site/v2/sports/basketball/nba/summary?event=401326991"
+  },
+  "raw/espn_summary_401326993.json.gz": {
+   "fetched_at": "2026-11-20T14:47:18Z",
+   "game_id": "401326993",
+   "sha256_uncompressed": "f2daa2f57af4b7048db7a459bec5f80ef79ce5450a4fd9b78165daac1535b8ba",
+   "url": "https://site.api.espn.com/apis/site/v2/sports/basketball/nba/summary?event=401326993"
+  },
+  "raw/espn_summary_401326994.json.gz": {
+   "fetched_at": "2026-11-20T14:47:19Z",
+   "game_id": "401326994",
+   "sha256_uncompressed": "af8429b389bd4e52c77a71f0ff26a179a58a95bbc72896e791b8a0c7e96751f6",
+   "url": "https://site.api.espn.com/apis/site/v2/sports/basketball/nba/summary?event=401326994"
+  }
+ },
+ "parsed": {
+  "games.jsonl.gz": "espn.parse_scoreboard_event(keep={5})，加上 game_type=PLAY_IN、counts_for_standings=False",
+  "teambox.jsonl.gz": "espn.parse_boxscore（與正式回補相同的解析器）"
+ },
+ "purpose": "2020-21 Play-In（使用者 2026-11-20 核准獨立補抓）",
+ "scanned_et_dates": [
+  "2021-05-16",
+  "2021-05-17",
+  "2021-05-18",
+  "2021-05-19",
+  "2021-05-20",
+  "2021-05-21",
+  "2021-05-22"
+ ],
+ "season": 2021
+}

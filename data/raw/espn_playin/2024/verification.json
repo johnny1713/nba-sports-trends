@@ -1,0 +1,752 @@
+{
+ "expected_games": 6,
+ "games": [
+  {
+   "both_teams_present": true,
+   "game_id": "401654655",
+   "matchup": "LAL @ NO",
+   "score": [
+    110,
+    106
+   ],
+   "season_type_espn": 5,
+   "teams": {
+    "13": {
+     "all_fields_match_bbref": true,
+     "espn_vs_bbref": {
+      "dreb": [
+       35,
+       35
+      ],
+      "fg3a": [
+       35,
+       35
+      ],
+      "fg3m": [
+       14,
+       14
+      ],
+      "fga": [
+       84,
+       84
+      ],
+      "fgm": [
+       35,
+       35
+      ],
+      "fta": [
+       29,
+       29
+      ],
+      "ftm": [
+       26,
+       26
+      ],
+      "oreb": [
+       6,
+       6
+      ],
+      "pts": [
+       110,
+       110
+      ],
+      "tov": [
+       8,
+       8
+      ]
+     },
+     "players": 12,
+     "pts_eq_scoreboard": true,
+     "pts_identity_ok": true
+    },
+    "3": {
+     "all_fields_match_bbref": false,
+     "espn_vs_bbref": {
+      "dreb": [
+       40,
+       40
+      ],
+      "fg3a": [
+       30,
+       30
+      ],
+      "fg3m": [
+       9,
+       9
+      ],
+      "fga": [
+       93,
+       93
+      ],
+      "fgm": [
+       43,
+       43
+      ],
+      "fta": [
+       15,
+       15
+      ],
+      "ftm": [
+       11,
+       11
+      ],
+      "oreb": [
+       10,
+       10
+      ],
+      "pts": [
+       106,
+       106
+      ],
+      "tov": [
+       13,
+       12
+      ]
+     },
+     "players": 15,
+     "pts_eq_scoreboard": true,
+     "pts_identity_ok": true
+    }
+   }
+  },
+  {
+   "both_teams_present": true,
+   "game_id": "401654656",
+   "matchup": "GS @ SAC",
+   "score": [
+    94,
+    118
+   ],
+   "season_type_espn": 5,
+   "teams": {
+    "23": {
+     "all_fields_match_bbref": true,
+     "espn_vs_bbref": {
+      "dreb": [
+       34,
+       34
+      ],
+      "fg3a": [
+       39,
+       39
+      ],
+      "fg3m": [
+       18,
+       18
+      ],
+      "fga": [
+       98,
+       98
+      ],
+      "fgm": [
+       43,
+       43
+      ],
+      "fta": [
+       15,
+       15
+      ],
+      "ftm": [
+       14,
+       14
+      ],
+      "oreb": [
+       15,
+       15
+      ],
+      "pts": [
+       118,
+       118
+      ],
+      "tov": [
+       8,
+       8
+      ]
+     },
+     "players": 13,
+     "pts_eq_scoreboard": true,
+     "pts_identity_ok": true
+    },
+    "9": {
+     "all_fields_match_bbref": true,
+     "espn_vs_bbref": {
+      "dreb": [
+       34,
+       34
+      ],
+      "fg3a": [
+       32,
+       32
+      ],
+      "fg3m": [
+       10,
+       10
+      ],
+      "fga": [
+       80,
+       80
+      ],
+      "fgm": [
+       33,
+       33
+      ],
+      "fta": [
+       23,
+       23
+      ],
+      "ftm": [
+       18,
+       18
+      ],
+      "oreb": [
+       8,
+       8
+      ],
+      "pts": [
+       94,
+       94
+      ],
+      "tov": [
+       16,
+       16
+      ]
+     },
+     "players": 14,
+     "pts_eq_scoreboard": true,
+     "pts_identity_ok": true
+    }
+   }
+  },
+  {
+   "both_teams_present": true,
+   "game_id": "401654659",
+   "matchup": "MIA @ PHI",
+   "score": [
+    104,
+    105
+   ],
+   "season_type_espn": 5,
+   "teams": {
+    "14": {
+     "all_fields_match_bbref": true,
+     "espn_vs_bbref": {
+      "dreb": [
+       29,
+       29
+      ],
+      "fg3a": [
+       39,
+       39
+      ],
+      "fg3m": [
+       14,
+       14
+      ],
+      "fga": [
+       90,
+       90
+      ],
+      "fgm": [
+       38,
+       38
+      ],
+      "fta": [
+       19,
+       19
+      ],
+      "ftm": [
+       14,
+       14
+      ],
+      "oreb": [
+       18,
+       18
+      ],
+      "pts": [
+       104,
+       104
+      ],
+      "tov": [
+       13,
+       13
+      ]
+     },
+     "players": 15,
+     "pts_eq_scoreboard": true,
+     "pts_identity_ok": true
+    },
+    "20": {
+     "all_fields_match_bbref": false,
+     "espn_vs_bbref": {
+      "dreb": [
+       34,
+       34
+      ],
+      "fg3a": [
+       35,
+       35
+      ],
+      "fg3m": [
+       12,
+       12
+      ],
+      "fga": [
+       86,
+       86
+      ],
+      "fgm": [
+       36,
+       36
+      ],
+      "fta": [
+       23,
+       23
+      ],
+      "ftm": [
+       21,
+       21
+      ],
+      "oreb": [
+       15,
+       15
+      ],
+      "pts": [
+       105,
+       105
+      ],
+      "tov": [
+       16,
+       15
+      ]
+     },
+     "players": 14,
+     "pts_eq_scoreboard": true,
+     "pts_identity_ok": true
+    }
+   }
+  },
+  {
+   "both_teams_present": true,
+   "game_id": "401654658",
+   "matchup": "ATL @ CHI",
+   "score": [
+    116,
+    131
+   ],
+   "season_type_espn": 5,
+   "teams": {
+    "1": {
+     "all_fields_match_bbref": false,
+     "espn_vs_bbref": {
+      "dreb": [
+       26,
+       26
+      ],
+      "fg3a": [
+       37,
+       37
+      ],
+      "fg3m": [
+       11,
+       11
+      ],
+      "fga": [
+       91,
+       91
+      ],
+      "fgm": [
+       41,
+       41
+      ],
+      "fta": [
+       28,
+       28
+      ],
+      "ftm": [
+       23,
+       23
+      ],
+      "oreb": [
+       8,
+       8
+      ],
+      "pts": [
+       116,
+       116
+      ],
+      "tov": [
+       11,
+       9
+      ]
+     },
+     "players": 12,
+     "pts_eq_scoreboard": true,
+     "pts_identity_ok": true
+    },
+    "4": {
+     "all_fields_match_bbref": false,
+     "espn_vs_bbref": {
+      "dreb": [
+       37,
+       37
+      ],
+      "fg3a": [
+       26,
+       26
+      ],
+      "fg3m": [
+       11,
+       11
+      ],
+      "fga": [
+       95,
+       95
+      ],
+      "fgm": [
+       54,
+       54
+      ],
+      "fta": [
+       15,
+       15
+      ],
+      "ftm": [
+       12,
+       12
+      ],
+      "oreb": [
+       10,
+       10
+      ],
+      "pts": [
+       131,
+       131
+      ],
+      "tov": [
+       10,
+       7
+      ]
+     },
+     "players": 12,
+     "pts_eq_scoreboard": true,
+     "pts_identity_ok": true
+    }
+   }
+  },
+  {
+   "both_teams_present": true,
+   "game_id": "401654660",
+   "matchup": "CHI @ MIA",
+   "score": [
+    91,
+    112
+   ],
+   "season_type_espn": 5,
+   "teams": {
+    "14": {
+     "all_fields_match_bbref": true,
+     "espn_vs_bbref": {
+      "dreb": [
+       38,
+       38
+      ],
+      "fg3a": [
+       33,
+       33
+      ],
+      "fg3m": [
+       14,
+       14
+      ],
+      "fga": [
+       82,
+       82
+      ],
+      "fgm": [
+       38,
+       38
+      ],
+      "fta": [
+       24,
+       24
+      ],
+      "ftm": [
+       22,
+       22
+      ],
+      "oreb": [
+       9,
+       9
+      ],
+      "pts": [
+       112,
+       112
+      ],
+      "tov": [
+       15,
+       15
+      ]
+     },
+     "players": 15,
+     "pts_eq_scoreboard": true,
+     "pts_identity_ok": true
+    },
+    "4": {
+     "all_fields_match_bbref": true,
+     "espn_vs_bbref": {
+      "dreb": [
+       31,
+       31
+      ],
+      "fg3a": [
+       43,
+       43
+      ],
+      "fg3m": [
+       13,
+       13
+      ],
+      "fga": [
+       92,
+       92
+      ],
+      "fgm": [
+       35,
+       35
+      ],
+      "fta": [
+       10,
+       10
+      ],
+      "ftm": [
+       8,
+       8
+      ],
+      "oreb": [
+       7,
+       7
+      ],
+      "pts": [
+       91,
+       91
+      ],
+      "tov": [
+       12,
+       12
+      ]
+     },
+     "players": 12,
+     "pts_eq_scoreboard": true,
+     "pts_identity_ok": true
+    }
+   }
+  },
+  {
+   "both_teams_present": true,
+   "game_id": "401654661",
+   "matchup": "SAC @ NO",
+   "score": [
+    98,
+    105
+   ],
+   "season_type_espn": 5,
+   "teams": {
+    "23": {
+     "all_fields_match_bbref": true,
+     "espn_vs_bbref": {
+      "dreb": [
+       26,
+       26
+      ],
+      "fg3a": [
+       41,
+       41
+      ],
+      "fg3m": [
+       11,
+       11
+      ],
+      "fga": [
+       88,
+       88
+      ],
+      "fgm": [
+       36,
+       36
+      ],
+      "fta": [
+       22,
+       22
+      ],
+      "ftm": [
+       15,
+       15
+      ],
+      "oreb": [
+       14,
+       14
+      ],
+      "pts": [
+       98,
+       98
+      ],
+      "tov": [
+       15,
+       15
+      ]
+     },
+     "players": 13,
+     "pts_eq_scoreboard": true,
+     "pts_identity_ok": true
+    },
+    "3": {
+     "all_fields_match_bbref": false,
+     "espn_vs_bbref": {
+      "dreb": [
+       34,
+       34
+      ],
+      "fg3a": [
+       19,
+       19
+      ],
+      "fg3m": [
+       7,
+       7
+      ],
+      "fga": [
+       85,
+       85
+      ],
+      "fgm": [
+       44,
+       44
+      ],
+      "fta": [
+       13,
+       13
+      ],
+      "ftm": [
+       10,
+       10
+      ],
+      "oreb": [
+       11,
+       11
+      ],
+      "pts": [
+       105,
+       105
+      ],
+      "tov": [
+       16,
+       15
+      ]
+     },
+     "players": 14,
+     "pts_eq_scoreboard": true,
+     "pts_identity_ok": true
+    }
+   }
+  }
+ ],
+ "games_found": 6,
+ "season": 2024,
+ "skipped_events": [
+  {
+   "date": "2024-04-14",
+   "event_id": "401585814",
+   "reason": "season type 2"
+  },
+  {
+   "date": "2024-04-14",
+   "event_id": "401585815",
+   "reason": "season type 2"
+  },
+  {
+   "date": "2024-04-14",
+   "event_id": "401585816",
+   "reason": "season type 2"
+  },
+  {
+   "date": "2024-04-14",
+   "event_id": "401585817",
+   "reason": "season type 2"
+  },
+  {
+   "date": "2024-04-14",
+   "event_id": "401585818",
+   "reason": "season type 2"
+  },
+  {
+   "date": "2024-04-14",
+   "event_id": "401585819",
+   "reason": "season type 2"
+  },
+  {
+   "date": "2024-04-14",
+   "event_id": "401585820",
+   "reason": "season type 2"
+  },
+  {
+   "date": "2024-04-14",
+   "event_id": "401585821",
+   "reason": "season type 2"
+  },
+  {
+   "date": "2024-04-14",
+   "event_id": "401585822",
+   "reason": "season type 2"
+  },
+  {
+   "date": "2024-04-14",
+   "event_id": "401585823",
+   "reason": "season type 2"
+  },
+  {
+   "date": "2024-04-14",
+   "event_id": "401585824",
+   "reason": "season type 2"
+  },
+  {
+   "date": "2024-04-14",
+   "event_id": "401585825",
+   "reason": "season type 2"
+  },
+  {
+   "date": "2024-04-14",
+   "event_id": "401585826",
+   "reason": "season type 2"
+  },
+  {
+   "date": "2024-04-14",
+   "event_id": "401585827",
+   "reason": "season type 2"
+  },
+  {
+   "date": "2024-04-14",
+   "event_id": "401585828",
+   "reason": "season type 2"
+  },
+  {
+   "date": "2024-04-20",
+   "event_id": "401654757",
+   "reason": "season type 3"
+  },
+  {
+   "date": "2024-04-20",
+   "event_id": "401654759",
+   "reason": "season type 3"
+  },
+  {
+   "date": "2024-04-20",
+   "event_id": "401654756",
+   "reason": "season type 3"
+  },
+  {
+   "date": "2024-04-20",
+   "event_id": "401654758",
+   "reason": "season type 3"
+  }
+ ]
+}

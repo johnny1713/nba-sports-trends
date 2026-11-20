@@ -1,0 +1,126 @@
+{
+ "files": {
+  "raw/bbref_box_401654655.html.gz": {
+   "fetched_at": "2026-11-20T14:48:03Z",
+   "game_id": "401654655",
+   "sha256_uncompressed": "a34e3a83381c2f01e41bf5854c0a58869e832b08af02c2dd4defdc7891ec49db",
+   "url": "https://www.basketball-reference.com/boxscores/202404160NOP.html"
+  },
+  "raw/bbref_box_401654656.html.gz": {
+   "fetched_at": "2026-11-20T14:48:06Z",
+   "game_id": "401654656",
+   "sha256_uncompressed": "19c11ac2700182d310c6ada8cb2f02c14c75203ffa505aadbd1f14356d9fca64",
+   "url": "https://www.basketball-reference.com/boxscores/202404160SAC.html"
+  },
+  "raw/bbref_box_401654658.html.gz": {
+   "fetched_at": "2026-11-20T14:48:13Z",
+   "game_id": "401654658",
+   "sha256_uncompressed": "40a8d28972d0d0c14ceb2be90767d12ed78f60285eadb1283abf364f7efa81f9",
+   "url": "https://www.basketball-reference.com/boxscores/202404170CHI.html"
+  },
+  "raw/bbref_box_401654659.html.gz": {
+   "fetched_at": "2026-11-20T14:48:10Z",
+   "game_id": "401654659",
+   "sha256_uncompressed": "c7190bcadeb4f60dfe44f9b25ae0f2775c3e35f78376209ee4c3ac3c0e399a37",
+   "url": "https://www.basketball-reference.com/boxscores/202404170PHI.html"
+  },
+  "raw/bbref_box_401654660.html.gz": {
+   "fetched_at": "2026-11-20T14:48:17Z",
+   "game_id": "401654660",
+   "sha256_uncompressed": "21413e8f4ba07c7db511078d0cbbfce44df40d1943bc332b987d5abc3c8e3485",
+   "url": "https://www.basketball-reference.com/boxscores/202404190MIA.html"
+  },
+  "raw/bbref_box_401654661.html.gz": {
+   "fetched_at": "2026-11-20T14:48:20Z",
+   "game_id": "401654661",
+   "sha256_uncompressed": "d7b8c7aaba203b17625ac384062de4476143f36b052fbbb9c66a1772b9cdc338",
+   "url": "https://www.basketball-reference.com/boxscores/202404190NOP.html"
+  },
+  "raw/espn_scoreboard_20240414.json.gz": {
+   "fetched_at": "2026-11-20T14:48:00Z",
+   "sha256_uncompressed": "3a0ebdf959787d9263c31d3b64c3bc14f0e76272cca79069798d7e796785eca0",
+   "url": "https://site.api.espn.com/apis/site/v2/sports/basketball/nba/scoreboard?dates=20240414"
+  },
+  "raw/espn_scoreboard_20240415.json.gz": {
+   "fetched_at": "2026-11-20T14:48:00Z",
+   "sha256_uncompressed": "852a125d90659467771617b336896b2ff5e15591925e59ccc44e977013686ff0",
+   "url": "https://site.api.espn.com/apis/site/v2/sports/basketball/nba/scoreboard?dates=20240415"
+  },
+  "raw/espn_scoreboard_20240416.json.gz": {
+   "fetched_at": "2026-11-20T14:48:01Z",
+   "sha256_uncompressed": "2538e4208926edf7c6cea16dfa5cc57cf13f49873298d3f660a55bd439f819f6",
+   "url": "https://site.api.espn.com/apis/site/v2/sports/basketball/nba/scoreboard?dates=20240416"
+  },
+  "raw/espn_scoreboard_20240417.json.gz": {
+   "fetched_at": "2026-11-20T14:48:01Z",
+   "sha256_uncompressed": "aa4d15d8b4fb4dc5c42aa29a97d739a78a610f64091840213a24dd59221d5421",
+   "url": "https://site.api.espn.com/apis/site/v2/sports/basketball/nba/scoreboard?dates=20240417"
+  },
+  "raw/espn_scoreboard_20240418.json.gz": {
+   "fetched_at": "2026-11-20T14:48:01Z",
+   "sha256_uncompressed": "852a125d90659467771617b336896b2ff5e15591925e59ccc44e977013686ff0",
+   "url": "https://site.api.espn.com/apis/site/v2/sports/basketball/nba/scoreboard?dates=20240418"
+  },
+  "raw/espn_scoreboard_20240419.json.gz": {
+   "fetched_at": "2026-11-20T14:48:02Z",
+   "sha256_uncompressed": "7007f7970a638434a3e30c8ea90a7298b44a6bb1a1ef818e44d734657882ecc7",
+   "url": "https://site.api.espn.com/apis/site/v2/sports/basketball/nba/scoreboard?dates=20240419"
+  },
+  "raw/espn_scoreboard_20240420.json.gz": {
+   "fetched_at": "2026-11-20T14:48:02Z",
+   "sha256_uncompressed": "70881aee8d50ca4c21968093160e6b4b273a30f6d3971af6100bd3284db30d05",
+   "url": "https://site.api.espn.com/apis/site/v2/sports/basketball/nba/scoreboard?dates=20240420"
+  },
+  "raw/espn_summary_401654655.json.gz": {
+   "fetched_at": "2026-11-20T14:48:03Z",
+   "game_id": "401654655",
+   "sha256_uncompressed": "65af10a248e5f87ac429a6a3688dc276074a9390bbea8614a97152227fc166b4",
+   "url": "https://site.api.espn.com/apis/site/v2/sports/basketball/nba/summary?event=401654655"
+  },
+  "raw/espn_summary_401654656.json.gz": {
+   "fetched_at": "2026-11-20T14:48:03Z",
+   "game_id": "401654656",
+   "sha256_uncompressed": "3034dbb2f1894212241c48734fbb1affb2ee684bf62981c42486b7a3558401fd",
+   "url": "https://site.api.espn.com/apis/site/v2/sports/basketball/nba/summary?event=401654656"
+  },
+  "raw/espn_summary_401654658.json.gz": {
+   "fetched_at": "2026-11-20T14:48:10Z",
+   "game_id": "401654658",
+   "sha256_uncompressed": "da747c4fff6929ecfecd026e275cc5c2700128e28f0fd311aa8f2f2ab4c5dbb8",
+   "url": "https://site.api.espn.com/apis/site/v2/sports/basketball/nba/summary?event=401654658"
+  },
+  "raw/espn_summary_401654659.json.gz": {
+   "fetched_at": "2026-11-20T14:48:06Z",
+   "game_id": "401654659",
+   "sha256_uncompressed": "23796274fa85a97056ecdf5e1555fcf1aa6767a7d34814f71f1182a6330a99be",
+   "url": "https://site.api.espn.com/apis/site/v2/sports/basketball/nba/summary?event=401654659"
+  },
+  "raw/espn_summary_401654660.json.gz": {
+   "fetched_at": "2026-11-20T14:48:13Z",
+   "game_id": "401654660",
+   "sha256_uncompressed": "46fd421e63ad77f054b41992049422bd3b581ef12dc434c5acdd7845bacab366",
+   "url": "https://site.api.espn.com/apis/site/v2/sports/basketball/nba/summary?event=401654660"
+  },
+  "raw/espn_summary_401654661.json.gz": {
+   "fetched_at": "2026-11-20T14:48:17Z",
+   "game_id": "401654661",
+   "sha256_uncompressed": "e4085d2741bffd5588bf68b22e3a761c4a55dfb696f79321c490a36d09157ef4",
+   "url": "https://site.api.espn.com/apis/site/v2/sports/basketball/nba/summary?event=401654661"
+  }
+ },
+ "parsed": {
+  "games.jsonl.gz": "espn.parse_scoreboard_event(keep={5})，加上 game_type=PLAY_IN、counts_for_standings=False",
+  "teambox.jsonl.gz": "espn.parse_boxscore（與正式回補相同的解析器）"
+ },
+ "purpose": "2023-24 Play-In（使用者 2026-11-20 核准獨立補抓）",
+ "scanned_et_dates": [
+  "2024-04-14",
+  "2024-04-15",
+  "2024-04-16",
+  "2024-04-17",
+  "2024-04-18",
+  "2024-04-19",
+  "2024-04-20"
+ ],
+ "season": 2024
+}

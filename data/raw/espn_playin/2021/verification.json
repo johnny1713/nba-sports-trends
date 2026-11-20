@@ -1,0 +1,128 @@
+{
+ "expected_games": 6,
+ "games": [
+  {
+   "error": "espn box: KeyError: 'fieldGoalsMade-fieldGoalsAttempted'",
+   "game_id": "401326988"
+  },
+  {
+   "error": "espn box: KeyError: 'fieldGoalsMade-fieldGoalsAttempted'",
+   "game_id": "401326989"
+  },
+  {
+   "error": "espn box: KeyError: 'fieldGoalsMade-fieldGoalsAttempted'",
+   "game_id": "401326990"
+  },
+  {
+   "error": "espn box: KeyError: 'fieldGoalsMade-fieldGoalsAttempted'",
+   "game_id": "401326991"
+  },
+  {
+   "error": "espn box: KeyError: 'fieldGoalsMade-fieldGoalsAttempted'",
+   "game_id": "401326993"
+  },
+  {
+   "error": "espn box: KeyError: 'fieldGoalsMade-fieldGoalsAttempted'",
+   "game_id": "401326994"
+  }
+ ],
+ "games_found": 6,
+ "season": 2021,
+ "skipped_events": [
+  {
+   "date": "2021-05-16",
+   "event_id": "401307887",
+   "reason": "season type 2"
+  },
+  {
+   "date": "2021-05-16",
+   "event_id": "401307893",
+   "reason": "season type 2"
+  },
+  {
+   "date": "2021-05-16",
+   "event_id": "401307894",
+   "reason": "season type 2"
+  },
+  {
+   "date": "2021-05-16",
+   "event_id": "401307892",
+   "reason": "season type 2"
+  },
+  {
+   "date": "2021-05-16",
+   "event_id": "401307884",
+   "reason": "season type 2"
+  },
+  {
+   "date": "2021-05-16",
+   "event_id": "401307880",
+   "reason": "season type 2"
+  },
+  {
+   "date": "2021-05-16",
+   "event_id": "401307881",
+   "reason": "season type 2"
+  },
+  {
+   "date": "2021-05-16",
+   "event_id": "401307889",
+   "reason": "season type 2"
+  },
+  {
+   "date": "2021-05-16",
+   "event_id": "401307883",
+   "reason": "season type 2"
+  },
+  {
+   "date": "2021-05-16",
+   "event_id": "401307882",
+   "reason": "season type 2"
+  },
+  {
+   "date": "2021-05-16",
+   "event_id": "401307885",
+   "reason": "season type 2"
+  },
+  {
+   "date": "2021-05-16",
+   "event_id": "401307886",
+   "reason": "season type 2"
+  },
+  {
+   "date": "2021-05-16",
+   "event_id": "401307888",
+   "reason": "season type 2"
+  },
+  {
+   "date": "2021-05-16",
+   "event_id": "401307890",
+   "reason": "season type 2"
+  },
+  {
+   "date": "2021-05-16",
+   "event_id": "401307891",
+   "reason": "season type 2"
+  },
+  {
+   "date": "2021-05-22",
+   "event_id": "401327715",
+   "reason": "season type 3"
+  },
+  {
+   "date": "2021-05-22",
+   "event_id": "401327716",
+   "reason": "season type 3"
+  },
+  {
+   "date": "2021-05-22",
+   "event_id": "401327714",
+   "reason": "season type 3"
+  },
+  {
+   "date": "2021-05-22",
+   "event_id": "401327717",
+   "reason": "season type 3"
+  }
+ ]
+}

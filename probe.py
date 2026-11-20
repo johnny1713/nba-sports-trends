@@ -34,7 +34,7 @@ def get(url):
 def save(name, url):
     st, b = get(url)
     p = os.path.join(OUT, name + '.gz')
-    with gzip.open(p, 'wb', mtime=0) as f:
+    with open(p, 'wb') as raw, gzip.GzipFile(fileobj=raw, mode='wb', mtime=0) as f:
         f.write(b)
     print(name, st, len(b))
     return b

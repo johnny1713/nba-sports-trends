@@ -1,0 +1,7046 @@
+{
+ "candidates_ge_99pct": {
+  "2015": [
+   "fgm",
+   "fga",
+   "fg3m",
+   "fg3a",
+   "ftm",
+   "fta",
+   "oreb",
+   "dreb",
+   "tov[totalTurnovers]",
+   "tov[player_to_sum+teamTurnovers]"
+  ],
+  "2016": [
+   "fgm",
+   "fga",
+   "fg3m",
+   "fg3a",
+   "ftm",
+   "fta",
+   "oreb",
+   "dreb",
+   "tov[totalTurnovers]",
+   "tov[player_to_sum+teamTurnovers]"
+  ],
+  "2017": [
+   "fgm",
+   "fga",
+   "fg3m",
+   "fg3a",
+   "ftm",
+   "fta",
+   "oreb",
+   "dreb",
+   "tov[totalTurnovers]",
+   "tov[player_to_sum+teamTurnovers]"
+  ],
+  "2018": [
+   "fgm",
+   "fga",
+   "fg3m",
+   "fg3a",
+   "ftm",
+   "fta",
+   "oreb",
+   "dreb",
+   "tov[player_to_sum+turnovers]"
+  ],
+  "2019": [
+   "fgm",
+   "fga",
+   "fg3m",
+   "fg3a",
+   "ftm",
+   "fta",
+   "oreb",
+   "dreb",
+   "tov[totalTurnovers]",
+   "tov[player_to_sum+teamTurnovers]"
+  ],
+  "2020": [
+   "fgm",
+   "fga",
+   "fg3m",
+   "fg3a",
+   "ftm",
+   "fta",
+   "oreb",
+   "dreb",
+   "tov[totalTurnovers]",
+   "tov[player_to_sum+teamTurnovers]"
+  ],
+  "2021": [
+   "fgm",
+   "fga",
+   "fg3m",
+   "fg3a",
+   "ftm",
+   "fta",
+   "oreb",
+   "dreb",
+   "tov[totalTurnovers]",
+   "tov[player_to_sum+teamTurnovers]"
+  ],
+  "2022": [
+   "fgm",
+   "fga",
+   "fg3m",
+   "fg3a",
+   "ftm",
+   "fta",
+   "oreb",
+   "dreb",
+   "trb",
+   "tov[totalTurnovers]",
+   "tov[player_to_sum+teamTurnovers]"
+  ],
+  "2023": [
+   "fgm",
+   "fga",
+   "fg3m",
+   "fg3a",
+   "ftm",
+   "fta",
+   "oreb",
+   "dreb",
+   "trb",
+   "tov[totalTurnovers]",
+   "tov[player_to_sum+teamTurnovers]"
+  ],
+  "2024": [
+   "fgm",
+   "fga",
+   "fg3m",
+   "fg3a",
+   "ftm",
+   "fta",
+   "oreb",
+   "dreb",
+   "trb",
+   "tov[totalTurnovers]",
+   "tov[player_to_sum+teamTurnovers]"
+  ],
+  "2025": [
+   "fgm",
+   "fga",
+   "fg3m",
+   "fg3a",
+   "ftm",
+   "fta",
+   "oreb",
+   "dreb",
+   "trb",
+   "tov[totalTurnovers]",
+   "tov[player_to_sum+teamTurnovers]"
+  ]
+ },
+ "coverage": {
+  "2015": {
+   "compared_games": 30,
+   "compared_team_boxes": 60,
+   "excluded_bbref_box_games": 162,
+   "excluded_incomplete": 0,
+   "failed": [],
+   "regular_final_games": 1230,
+   "target": 30
+  },
+  "2016": {
+   "compared_games": 30,
+   "compared_team_boxes": 60,
+   "excluded_bbref_box_games": 161,
+   "excluded_incomplete": 0,
+   "failed": [],
+   "regular_final_games": 1230,
+   "target": 30
+  },
+  "2017": {
+   "compared_games": 30,
+   "compared_team_boxes": 60,
+   "excluded_bbref_box_games": 163,
+   "excluded_incomplete": 0,
+   "failed": [],
+   "regular_final_games": 1230,
+   "target": 30
+  },
+  "2018": {
+   "compared_games": 1067,
+   "compared_team_boxes": 2134,
+   "excluded_bbref_box_games": 163,
+   "excluded_incomplete": 0,
+   "failed": [],
+   "regular_final_games": 1230,
+   "target": 1067
+  },
+  "2019": {
+   "compared_games": 30,
+   "compared_team_boxes": 60,
+   "excluded_bbref_box_games": 0,
+   "excluded_incomplete": 0,
+   "failed": [],
+   "regular_final_games": 1230,
+   "target": 30
+  },
+  "2020": {
+   "compared_games": 30,
+   "compared_team_boxes": 60,
+   "excluded_bbref_box_games": 0,
+   "excluded_incomplete": 0,
+   "failed": [],
+   "regular_final_games": 1059,
+   "target": 30
+  },
+  "2021": {
+   "compared_games": 30,
+   "compared_team_boxes": 60,
+   "excluded_bbref_box_games": 0,
+   "excluded_incomplete": 0,
+   "failed": [],
+   "regular_final_games": 1080,
+   "target": 30
+  },
+  "2022": {
+   "compared_games": 30,
+   "compared_team_boxes": 60,
+   "excluded_bbref_box_games": 0,
+   "excluded_incomplete": 0,
+   "failed": [],
+   "regular_final_games": 1230,
+   "target": 30
+  },
+  "2023": {
+   "compared_games": 30,
+   "compared_team_boxes": 60,
+   "excluded_bbref_box_games": 0,
+   "excluded_incomplete": 0,
+   "failed": [],
+   "regular_final_games": 1230,
+   "target": 30
+  },
+  "2024": {
+   "compared_games": 30,
+   "compared_team_boxes": 60,
+   "excluded_bbref_box_games": 0,
+   "excluded_incomplete": 0,
+   "failed": [],
+   "regular_final_games": 1231,
+   "target": 30
+  },
+  "2025": {
+   "compared_games": 30,
+   "compared_team_boxes": 60,
+   "excluded_bbref_box_games": 1,
+   "excluded_incomplete": 0,
+   "failed": [],
+   "regular_final_games": 1231,
+   "target": 30
+  }
+ },
+ "definition_checks": {
+  "2015": {
+   "bbref_n": 60,
+   "bbref_orb_plus_drb_eq_trb": 60,
+   "bbref_team_minus_player_tov": {
+    "0": 37,
+    "1": 14,
+    "2": 8,
+    "3": 1
+   },
+   "espn_n": 60,
+   "espn_oreb_plus_dreb_eq_trb": 0,
+   "espn_total_eq_player_sum": 37,
+   "espn_total_eq_tov_plus_team": 60,
+   "espn_turnovers_eq_player_sum": 60
+  },
+  "2016": {
+   "bbref_n": 60,
+   "bbref_orb_plus_drb_eq_trb": 60,
+   "bbref_team_minus_player_tov": {
+    "0": 31,
+    "1": 23,
+    "2": 4,
+    "3": 2
+   },
+   "espn_n": 60,
+   "espn_oreb_plus_dreb_eq_trb": 2,
+   "espn_total_eq_player_sum": 31,
+   "espn_total_eq_tov_plus_team": 60,
+   "espn_turnovers_eq_player_sum": 60
+  },
+  "2017": {
+   "bbref_n": 60,
+   "bbref_orb_plus_drb_eq_trb": 60,
+   "bbref_team_minus_player_tov": {
+    "0": 36,
+    "1": 15,
+    "2": 5,
+    "3": 3,
+    "4": 1
+   },
+   "espn_n": 60,
+   "espn_oreb_plus_dreb_eq_trb": 0,
+   "espn_total_eq_player_sum": 36,
+   "espn_total_eq_tov_plus_team": 60,
+   "espn_turnovers_eq_player_sum": 60
+  },
+  "2018": {
+   "bbref_n": 2134,
+   "bbref_orb_plus_drb_eq_trb": 2134,
+   "bbref_team_minus_player_tov": {
+    "-1": 1,
+    "0": 1197,
+    "1": 689,
+    "2": 191,
+    "3": 47,
+    "4": 9
+   },
+   "espn_n": 2134,
+   "espn_oreb_plus_dreb_eq_trb": 0,
+   "espn_total_eq_player_sum": 1,
+   "espn_total_eq_tov_plus_team": 2134,
+   "espn_turnovers_eq_player_sum": 1
+  },
+  "2019": {
+   "bbref_n": 60,
+   "bbref_orb_plus_drb_eq_trb": 60,
+   "bbref_team_minus_player_tov": {
+    "0": 38,
+    "1": 18,
+    "2": 3,
+    "3": 1
+   },
+   "espn_n": 60,
+   "espn_oreb_plus_dreb_eq_trb": 6,
+   "espn_total_eq_player_sum": 38,
+   "espn_total_eq_tov_plus_team": 60,
+   "espn_turnovers_eq_player_sum": 60
+  },
+  "2020": {
+   "bbref_n": 60,
+   "bbref_orb_plus_drb_eq_trb": 60,
+   "bbref_team_minus_player_tov": {
+    "0": 30,
+    "1": 24,
+    "2": 6
+   },
+   "espn_n": 60,
+   "espn_oreb_plus_dreb_eq_trb": 10,
+   "espn_total_eq_player_sum": 30,
+   "espn_total_eq_tov_plus_team": 60,
+   "espn_turnovers_eq_player_sum": 60
+  },
+  "2021": {
+   "bbref_n": 60,
+   "bbref_orb_plus_drb_eq_trb": 60,
+   "bbref_team_minus_player_tov": {
+    "0": 32,
+    "1": 22,
+    "2": 5,
+    "3": 1
+   },
+   "espn_n": 60,
+   "espn_oreb_plus_dreb_eq_trb": 28,
+   "espn_total_eq_player_sum": 32,
+   "espn_total_eq_tov_plus_team": 60,
+   "espn_turnovers_eq_player_sum": 60
+  },
+  "2022": {
+   "bbref_n": 60,
+   "bbref_orb_plus_drb_eq_trb": 60,
+   "bbref_team_minus_player_tov": {
+    "0": 27,
+    "1": 26,
+    "2": 3,
+    "3": 4
+   },
+   "espn_n": 60,
+   "espn_oreb_plus_dreb_eq_trb": 60,
+   "espn_total_eq_player_sum": 27,
+   "espn_total_eq_tov_plus_team": 60,
+   "espn_turnovers_eq_player_sum": 60
+  },
+  "2023": {
+   "bbref_n": 60,
+   "bbref_orb_plus_drb_eq_trb": 60,
+   "bbref_team_minus_player_tov": {
+    "0": 26,
+    "1": 24,
+    "2": 9,
+    "3": 1
+   },
+   "espn_n": 60,
+   "espn_oreb_plus_dreb_eq_trb": 60,
+   "espn_total_eq_player_sum": 26,
+   "espn_total_eq_tov_plus_team": 60,
+   "espn_turnovers_eq_player_sum": 60
+  },
+  "2024": {
+   "bbref_n": 60,
+   "bbref_orb_plus_drb_eq_trb": 60,
+   "bbref_team_minus_player_tov": {
+    "0": 28,
+    "1": 21,
+    "2": 8,
+    "3": 2,
+    "4": 1
+   },
+   "espn_n": 60,
+   "espn_oreb_plus_dreb_eq_trb": 60,
+   "espn_total_eq_player_sum": 28,
+   "espn_total_eq_tov_plus_team": 60,
+   "espn_turnovers_eq_player_sum": 60
+  },
+  "2025": {
+   "bbref_n": 60,
+   "bbref_orb_plus_drb_eq_trb": 60,
+   "bbref_team_minus_player_tov": {
+    "0": 27,
+    "1": 26,
+    "2": 6,
+    "3": 1
+   },
+   "espn_n": 60,
+   "espn_oreb_plus_dreb_eq_trb": 60,
+   "espn_total_eq_player_sum": 27,
+   "espn_total_eq_tov_plus_team": 60,
+   "espn_turnovers_eq_player_sum": 60
+  }
+ },
+ "derived_generated": false,
+ "seasons": {
+  "2015": {
+   "fields": {
+    "dreb": {
+     "bbref_mean": 32.2,
+     "ci95": [
+      0.0,
+      0.0
+     ],
+     "dist": {
+      "-1": 0,
+      "-2": 0,
+      "-3": 0,
+      "0": 60,
+      "1": 0,
+      "2": 0,
+      "3": 0
+     },
+     "espn_mean": 32.2,
+     "exact_share": 1.0,
+     "mean_diff": 0,
+     "n": 60,
+     "systematic": false
+    },
+    "fg3a": {
+     "bbref_mean": 22.183,
+     "ci95": [
+      0.0,
+      0.0
+     ],
+     "dist": {
+      "-1": 0,
+      "-2": 0,
+      "-3": 0,
+      "0": 60,
+      "1": 0,
+      "2": 0,
+      "3": 0
+     },
+     "espn_mean": 22.183,
+     "exact_share": 1.0,
+     "mean_diff": 0,
+     "n": 60,
+     "systematic": false
+    },
+    "fg3m": {
+     "bbref_mean": 7.483,
+     "ci95": [
+      0.0,
+      0.0
+     ],
+     "dist": {
+      "-1": 0,
+      "-2": 0,
+      "-3": 0,
+      "0": 60,
+      "1": 0,
+      "2": 0,
+      "3": 0
+     },
+     "espn_mean": 7.483,
+     "exact_share": 1.0,
+     "mean_diff": 0,
+     "n": 60,
+     "systematic": false
+    },
+    "fga": {
+     "bbref_mean": 83.1,
+     "ci95": [
+      0.0,
+      0.0
+     ],
+     "dist": {
+      "-1": 0,
+      "-2": 0,
+      "-3": 0,
+      "0": 60,
+      "1": 0,
+      "2": 0,
+      "3": 0
+     },
+     "espn_mean": 83.1,
+     "exact_share": 1.0,
+     "mean_diff": 0,
+     "n": 60,
+     "systematic": false
+    },
+    "fgm": {
+     "bbref_mean": 37.35,
+     "ci95": [
+      0.0,
+      0.0
+     ],
+     "dist": {
+      "-1": 0,
+      "-2": 0,
+      "-3": 0,
+      "0": 60,
+      "1": 0,
+      "2": 0,
+      "3": 0
+     },
+     "espn_mean": 37.35,
+     "exact_share": 1.0,
+     "mean_diff": 0,
+     "n": 60,
+     "systematic": false
+    },
+    "fta": {
+     "bbref_mean": 23.533,
+     "ci95": [
+      0.0,
+      0.0
+     ],
+     "dist": {
+      "-1": 0,
+      "-2": 0,
+      "-3": 0,
+      "0": 60,
+      "1": 0,
+      "2": 0,
+      "3": 0
+     },
+     "espn_mean": 23.533,
+     "exact_share": 1.0,
+     "mean_diff": 0,
+     "n": 60,
+     "systematic": false
+    },
+    "ftm": {
+     "bbref_mean": 17.3,
+     "ci95": [
+      0.0,
+      0.0
+     ],
+     "dist": {
+      "-1": 0,
+      "-2": 0,
+      "-3": 0,
+      "0": 60,
+      "1": 0,
+      "2": 0,
+      "3": 0
+     },
+     "espn_mean": 17.3,
+     "exact_share": 1.0,
+     "mean_diff": 0,
+     "n": 60,
+     "systematic": false
+    },
+    "oreb": {
+     "bbref_mean": 11.083,
+     "ci95": [
+      0.0,
+      0.0
+     ],
+     "dist": {
+      "-1": 0,
+      "-2": 0,
+      "-3": 0,
+      "0": 60,
+      "1": 0,
+      "2": 0,
+      "3": 0
+     },
+     "espn_mean": 11.083,
+     "exact_share": 1.0,
+     "mean_diff": 0,
+     "n": 60,
+     "systematic": false
+    },
+    "stored.dreb": {
+     "bbref_mean": 32.2,
+     "ci95": [
+      0.0,
+      0.0
+     ],
+     "dist": {
+      "-1": 0,
+      "-2": 0,
+      "-3": 0,
+      "0": 60,
+      "1": 0,
+      "2": 0,
+      "3": 0
+     },
+     "espn_mean": 32.2,
+     "exact_share": 1.0,
+     "mean_diff": 0,
+     "n": 60,
+     "systematic": false
+    },
+    "stored.fg3a": {
+     "bbref_mean": 22.183,
+     "ci95": [
+      0.0,
+      0.0
+     ],
+     "dist": {
+      "-1": 0,
+      "-2": 0,
+      "-3": 0,
+      "0": 60,
+      "1": 0,
+      "2": 0,
+      "3": 0
+     },
+     "espn_mean": 22.183,
+     "exact_share": 1.0,
+     "mean_diff": 0,
+     "n": 60,
+     "systematic": false
+    },
+    "stored.fg3m": {
+     "bbref_mean": 7.483,
+     "ci95": [
+      0.0,
+      0.0
+     ],
+     "dist": {
+      "-1": 0,
+      "-2": 0,
+      "-3": 0,
+      "0": 60,
+      "1": 0,
+      "2": 0,
+      "3": 0
+     },
+     "espn_mean": 7.483,
+     "exact_share": 1.0,
+     "mean_diff": 0,
+     "n": 60,
+     "systematic": false
+    },
+    "stored.fga": {
+     "bbref_mean": 83.1,
+     "ci95": [
+      0.0,
+      0.0
+     ],
+     "dist": {
+      "-1": 0,
+      "-2": 0,
+      "-3": 0,
+      "0": 60,
+      "1": 0,
+      "2": 0,
+      "3": 0
+     },
+     "espn_mean": 83.1,
+     "exact_share": 1.0,
+     "mean_diff": 0,
+     "n": 60,
+     "systematic": false
+    },
+    "stored.fgm": {
+     "bbref_mean": 37.35,
+     "ci95": [
+      0.0,
+      0.0
+     ],
+     "dist": {
+      "-1": 0,
+      "-2": 0,
+      "-3": 0,
+      "0": 60,
+      "1": 0,
+      "2": 0,
+      "3": 0
+     },
+     "espn_mean": 37.35,
+     "exact_share": 1.0,
+     "mean_diff": 0,
+     "n": 60,
+     "systematic": false
+    },
+    "stored.fta": {
+     "bbref_mean": 23.533,
+     "ci95": [
+      0.0,
+      0.0
+     ],
+     "dist": {
+      "-1": 0,
+      "-2": 0,
+      "-3": 0,
+      "0": 60,
+      "1": 0,
+      "2": 0,
+      "3": 0
+     },
+     "espn_mean": 23.533,
+     "exact_share": 1.0,
+     "mean_diff": 0,
+     "n": 60,
+     "systematic": false
+    },
+    "stored.ftm": {
+     "bbref_mean": 17.3,
+     "ci95": [
+      0.0,
+      0.0
+     ],
+     "dist": {
+      "-1": 0,
+      "-2": 0,
+      "-3": 0,
+      "0": 60,
+      "1": 0,
+      "2": 0,
+      "3": 0
+     },
+     "espn_mean": 17.3,
+     "exact_share": 1.0,
+     "mean_diff": 0,
+     "n": 60,
+     "systematic": false
+    },
+    "stored.oreb": {
+     "bbref_mean": 11.083,
+     "ci95": [
+      0.0,
+      0.0
+     ],
+     "dist": {
+      "-1": 0,
+      "-2": 0,
+      "-3": 0,
+      "0": 60,
+      "1": 0,
+      "2": 0,
+      "3": 0
+     },
+     "espn_mean": 11.083,
+     "exact_share": 1.0,
+     "mean_diff": 0,
+     "n": 60,
+     "systematic": false
+    },
+    "stored.pts": {
+     "bbref_mean": 99.483,
+     "ci95": [
+      0.0,
+      0.0
+     ],
+     "dist": {
+      "-1": 0,
+      "-2": 0,
+      "-3": 0,
+      "0": 60,
+      "1": 0,
+      "2": 0,
+      "3": 0
+     },
+     "espn_mean": 99.483,
+     "exact_share": 1.0,
+     "mean_diff": 0,
+     "n": 60,
+     "systematic": false
+    },
+    "stored.tov": {
+     "bbref_mean": 14.85,
+     "ci95": [
+      0.0,
+      0.0
+     ],
+     "dist": {
+      "-1": 0,
+      "-2": 0,
+      "-3": 0,
+      "0": 60,
+      "1": 0,
+      "2": 0,
+      "3": 0
+     },
+     "espn_mean": 14.85,
+     "exact_share": 1.0,
+     "mean_diff": 0,
+     "n": 60,
+     "systematic": false
+    },
+    "team_tov[teamTurnovers] vs bbref_team_minus_player": {
+     "bbref_mean": 0.55,
+     "ci95": [
+      0.0,
+      0.0
+     ],
+     "dist": {
+      "-1": 0,
+      "-2": 0,
+      "-3": 0,
+      "0": 60,
+      "1": 0,
+      "2": 0,
+      "3": 0
+     },
+     "espn_mean": 0.55,
+     "exact_share": 1.0,
+     "mean_diff": 0,
+     "n": 60,
+     "systematic": false
+    },
+    "team_tov[turnovers] vs bbref_team_minus_player": {
+     "bbref_mean": 0.55,
+     "ci95": [
+      12.64,
+      14.86
+     ],
+     "dist": {
+      "-1": 0,
+      "-2": 0,
+      "-3": 0,
+      "0": 0,
+      "1": 0,
+      "2": 0,
+      "3": 60
+     },
+     "espn_mean": 14.3,
+     "exact_share": 0.0,
+     "mean_diff": 13.75,
+     "n": 60,
+     "systematic": true
+    },
+    "tov[player_to_sum+teamTurnovers]": {
+     "bbref_mean": 14.85,
+     "ci95": [
+      0.0,
+      0.0
+     ],
+     "dist": {
+      "-1": 0,
+      "-2": 0,
+      "-3": 0,
+      "0": 60,
+      "1": 0,
+      "2": 0,
+      "3": 0
+     },
+     "espn_mean": 14.85,
+     "exact_share": 1.0,
+     "mean_diff": 0,
+     "n": 60,
+     "systematic": false
+    },
+    "tov[player_to_sum+turnovers]": {
+     "bbref_mean": 14.85,
+     "ci95": [
+      12.64,
+      14.86
+     ],
+     "dist": {
+      "-1": 0,
+      "-2": 0,
+      "-3": 0,
+      "0": 0,
+      "1": 0,
+      "2": 0,
+      "3": 60
+     },
+     "espn_mean": 28.6,
+     "exact_share": 0.0,
+     "mean_diff": 13.75,
+     "n": 60,
+     "systematic": true
+    },
+    "tov[player_to_sum]": {
+     "bbref_mean": 14.85,
+     "ci95": [
+      -0.75,
+      -0.35
+     ],
+     "dist": {
+      "-1": 14,
+      "-2": 8,
+      "-3": 1,
+      "0": 37,
+      "1": 0,
+      "2": 0,
+      "3": 0
+     },
+     "espn_mean": 14.3,
+     "exact_share": 0.6167,
+     "mean_diff": -0.55,
+     "n": 60,
+     "systematic": true
+    },
+    "tov[player_to_sum] vs bbref_player_tov_sum": {
+     "bbref_mean": 14.3,
+     "ci95": [
+      0.0,
+      0.0
+     ],
+     "dist": {
+      "-1": 0,
+      "-2": 0,
+      "-3": 0,
+      "0": 60,
+      "1": 0,
+      "2": 0,
+      "3": 0
+     },
+     "espn_mean": 14.3,
+     "exact_share": 1.0,
+     "mean_diff": 0,
+     "n": 60,
+     "systematic": false
+    },
+    "tov[teamTurnovers]": {
+     "bbref_mean": 14.85,
+     "ci95": [
+      -15.395,
+      -13.205
+     ],
+     "dist": {
+      "-1": 0,
+      "-2": 0,
+      "-3": 60,
+      "0": 0,
+      "1": 0,
+      "2": 0,
+      "3": 0
+     },
+     "espn_mean": 0.55,
+     "exact_share": 0.0,
+     "mean_diff": -14.3,
+     "n": 60,
+     "systematic": true
+    },
+    "tov[totalTurnovers]": {
+     "bbref_mean": 14.85,
+     "ci95": [
+      0.0,
+      0.0
+     ],
+     "dist": {
+      "-1": 0,
+      "-2": 0,
+      "-3": 0,
+      "0": 60,
+      "1": 0,
+      "2": 0,
+      "3": 0
+     },
+     "espn_mean": 14.85,
+     "exact_share": 1.0,
+     "mean_diff": 0,
+     "n": 60,
+     "systematic": false
+    },
+    "tov[turnovers]": {
+     "bbref_mean": 14.85,
+     "ci95": [
+      -0.75,
+      -0.35
+     ],
+     "dist": {
+      "-1": 14,
+      "-2": 8,
+      "-3": 1,
+      "0": 37,
+      "1": 0,
+      "2": 0,
+      "3": 0
+     },
+     "espn_mean": 14.3,
+     "exact_share": 0.6167,
+     "mean_diff": -0.55,
+     "n": 60,
+     "systematic": true
+    },
+    "trb": {
+     "bbref_mean": 43.283,
+     "ci95": [
+      7.812,
+      9.588
+     ],
+     "dist": {
+      "-1": 0,
+      "-2": 0,
+      "-3": 0,
+      "0": 0,
+      "1": 0,
+      "2": 1,
+      "3": 59
+     },
+     "espn_mean": 51.983,
+     "exact_share": 0.0,
+     "mean_diff": 8.7,
+     "n": 60,
+     "systematic": true
+    }
+   },
+   "games": 30,
+   "months": [
+    "2014-10",
+    "2014-11",
+    "2014-12",
+    "2015-01",
+    "2015-02",
+    "2015-03",
+    "2015-04"
+   ],
+   "teams": 28
+  },
+  "2016": {
+   "fields": {
+    "dreb": {
+     "bbref_mean": 35.05,
+     "ci95": [
+      0.0,
+      0.0
+     ],
+     "dist": {
+      "-1": 0,
+      "-2": 0,
+      "-3": 0,
+      "0": 60,
+      "1": 0,
+      "2": 0,
+      "3": 0
+     },
+     "espn_mean": 35.05,
+     "exact_share": 1.0,
+     "mean_diff": 0,
+     "n": 60,
+     "systematic": false
+    },
+    "fg3a": {
+     "bbref_mean": 24.65,
+     "ci95": [
+      0.0,
+      0.0
+     ],
+     "dist": {
+      "-1": 0,
+      "-2": 0,
+      "-3": 0,
+      "0": 60,
+      "1": 0,
+      "2": 0,
+      "3": 0
+     },
+     "espn_mean": 24.65,
+     "exact_share": 1.0,
+     "mean_diff": 0,
+     "n": 60,
+     "systematic": false
+    },
+    "fg3m": {
+     "bbref_mean": 8.467,
+     "ci95": [
+      0.0,
+      0.0
+     ],
+     "dist": {
+      "-1": 0,
+      "-2": 0,
+      "-3": 0,
+      "0": 60,
+      "1": 0,
+      "2": 0,
+      "3": 0
+     },
+     "espn_mean": 8.467,
+     "exact_share": 1.0,
+     "mean_diff": 0,
+     "n": 60,
+     "systematic": false
+    },
+    "fga": {
+     "bbref_mean": 85.933,
+     "ci95": [
+      0.0,
+      0.0
+     ],
+     "dist": {
+      "-1": 0,
+      "-2": 0,
+      "-3": 0,
+      "0": 60,
+      "1": 0,
+      "2": 0,
+      "3": 0
+     },
+     "espn_mean": 85.933,
+     "exact_share": 1.0,
+     "mean_diff": 0,
+     "n": 60,
+     "systematic": false
+    },
+    "fgm": {
+     "bbref_mean": 38.4,
+     "ci95": [
+      0.0,
+      0.0
+     ],
+     "dist": {
+      "-1": 0,
+      "-2": 0,
+      "-3": 0,
+      "0": 60,
+      "1": 0,
+      "2": 0,
+      "3": 0
+     },
+     "espn_mean": 38.4,
+     "exact_share": 1.0,
+     "mean_diff": 0,
+     "n": 60,
+     "systematic": false
+    },
+    "fta": {
+     "bbref_mean": 23.083,
+     "ci95": [
+      0.0,
+      0.0
+     ],
+     "dist": {
+      "-1": 0,
+      "-2": 0,
+      "-3": 0,
+      "0": 60,
+      "1": 0,
+      "2": 0,
+      "3": 0
+     },
+     "espn_mean": 23.083,
+     "exact_share": 1.0,
+     "mean_diff": 0,
+     "n": 60,
+     "systematic": false
+    },
+    "ftm": {
+     "bbref_mean": 17.25,
+     "ci95": [
+      0.0,
+      0.0
+     ],
+     "dist": {
+      "-1": 0,
+      "-2": 0,
+      "-3": 0,
+      "0": 60,
+      "1": 0,
+      "2": 0,
+      "3": 0
+     },
+     "espn_mean": 17.25,
+     "exact_share": 1.0,
+     "mean_diff": 0,
+     "n": 60,
+     "systematic": false
+    },
+    "oreb": {
+     "bbref_mean": 10.533,
+     "ci95": [
+      0.0,
+      0.0
+     ],
+     "dist": {
+      "-1": 0,
+      "-2": 0,
+      "-3": 0,
+      "0": 60,
+      "1": 0,
+      "2": 0,
+      "3": 0
+     },
+     "espn_mean": 10.533,
+     "exact_share": 1.0,
+     "mean_diff": 0,
+     "n": 60,
+     "systematic": false
+    },
+    "stored.dreb": {
+     "bbref_mean": 35.05,
+     "ci95": [
+      0.0,
+      0.0
+     ],
+     "dist": {
+      "-1": 0,
+      "-2": 0,
+      "-3": 0,
+      "0": 60,
+      "1": 0,
+      "2": 0,
+      "3": 0
+     },
+     "espn_mean": 35.05,
+     "exact_share": 1.0,
+     "mean_diff": 0,
+     "n": 60,
+     "systematic": false
+    },
+    "stored.fg3a": {
+     "bbref_mean": 24.65,
+     "ci95": [
+      0.0,
+      0.0
+     ],
+     "dist": {
+      "-1": 0,
+      "-2": 0,
+      "-3": 0,
+      "0": 60,
+      "1": 0,
+      "2": 0,
+      "3": 0
+     },
+     "espn_mean": 24.65,
+     "exact_share": 1.0,
+     "mean_diff": 0,
+     "n": 60,
+     "systematic": false
+    },
+    "stored.fg3m": {
+     "bbref_mean": 8.467,
+     "ci95": [
+      0.0,
+      0.0
+     ],
+     "dist": {
+      "-1": 0,
+      "-2": 0,
+      "-3": 0,
+      "0": 60,
+      "1": 0,
+      "2": 0,
+      "3": 0
+     },
+     "espn_mean": 8.467,
+     "exact_share": 1.0,
+     "mean_diff": 0,
+     "n": 60,
+     "systematic": false
+    },
+    "stored.fga": {
+     "bbref_mean": 85.933,
+     "ci95": [
+      0.0,
+      0.0
+     ],
+     "dist": {
+      "-1": 0,
+      "-2": 0,
+      "-3": 0,
+      "0": 60,
+      "1": 0,
+      "2": 0,
+      "3": 0
+     },
+     "espn_mean": 85.933,
+     "exact_share": 1.0,
+     "mean_diff": 0,
+     "n": 60,
+     "systematic": false
+    },
+    "stored.fgm": {
+     "bbref_mean": 38.4,
+     "ci95": [
+      0.0,
+      0.0
+     ],
+     "dist": {
+      "-1": 0,
+      "-2": 0,
+      "-3": 0,
+      "0": 60,
+      "1": 0,
+      "2": 0,
+      "3": 0
+     },
+     "espn_mean": 38.4,
+     "exact_share": 1.0,
+     "mean_diff": 0,
+     "n": 60,
+     "systematic": false
+    },
+    "stored.fta": {
+     "bbref_mean": 23.083,
+     "ci95": [
+      0.0,
+      0.0
+     ],
+     "dist": {
+      "-1": 0,
+      "-2": 0,
+      "-3": 0,
+      "0": 60,
+      "1": 0,
+      "2": 0,
+      "3": 0
+     },
+     "espn_mean": 23.083,
+     "exact_share": 1.0,
+     "mean_diff": 0,
+     "n": 60,
+     "systematic": false
+    },
+    "stored.ftm": {
+     "bbref_mean": 17.25,
+     "ci95": [
+      0.0,
+      0.0
+     ],
+     "dist": {
+      "-1": 0,
+      "-2": 0,
+      "-3": 0,
+      "0": 60,
+      "1": 0,
+      "2": 0,
+      "3": 0
+     },
+     "espn_mean": 17.25,
+     "exact_share": 1.0,
+     "mean_diff": 0,
+     "n": 60,
+     "systematic": false
+    },
+    "stored.oreb": {
+     "bbref_mean": 10.533,
+     "ci95": [
+      0.0,
+      0.0
+     ],
+     "dist": {
+      "-1": 0,
+      "-2": 0,
+      "-3": 0,
+      "0": 60,
+      "1": 0,
+      "2": 0,
+      "3": 0
+     },
+     "espn_mean": 10.533,
+     "exact_share": 1.0,
+     "mean_diff": 0,
+     "n": 60,
+     "systematic": false
+    },
+    "stored.pts": {
+     "bbref_mean": 102.517,
+     "ci95": [
+      0.0,
+      0.0
+     ],
+     "dist": {
+      "-1": 0,
+      "-2": 0,
+      "-3": 0,
+      "0": 60,
+      "1": 0,
+      "2": 0,
+      "3": 0
+     },
+     "espn_mean": 102.517,
+     "exact_share": 1.0,
+     "mean_diff": 0,
+     "n": 60,
+     "systematic": false
+    },
+    "stored.tov": {
+     "bbref_mean": 15.067,
+     "ci95": [
+      0.0,
+      0.0
+     ],
+     "dist": {
+      "-1": 0,
+      "-2": 0,
+      "-3": 0,
+      "0": 60,
+      "1": 0,
+      "2": 0,
+      "3": 0
+     },
+     "espn_mean": 15.067,
+     "exact_share": 1.0,
+     "mean_diff": 0,
+     "n": 60,
+     "systematic": false
+    },
+    "team_tov[teamTurnovers] vs bbref_team_minus_player": {
+     "bbref_mean": 0.617,
+     "ci95": [
+      0.0,
+      0.0
+     ],
+     "dist": {
+      "-1": 0,
+      "-2": 0,
+      "-3": 0,
+      "0": 60,
+      "1": 0,
+      "2": 0,
+      "3": 0
+     },
+     "espn_mean": 0.617,
+     "exact_share": 1.0,
+     "mean_diff": 0,
+     "n": 60,
+     "systematic": false
+    },
+    "team_tov[turnovers] vs bbref_team_minus_player": {
+     "bbref_mean": 0.617,
+     "ci95": [
+      12.84,
+      14.826
+     ],
+     "dist": {
+      "-1": 0,
+      "-2": 0,
+      "-3": 0,
+      "0": 0,
+      "1": 0,
+      "2": 0,
+      "3": 60
+     },
+     "espn_mean": 14.45,
+     "exact_share": 0.0,
+     "mean_diff": 13.833,
+     "n": 60,
+     "systematic": true
+    },
+    "tov[player_to_sum+teamTurnovers]": {
+     "bbref_mean": 15.067,
+     "ci95": [
+      0.0,
+      0.0
+     ],
+     "dist": {
+      "-1": 0,
+      "-2": 0,
+      "-3": 0,
+      "0": 60,
+      "1": 0,
+      "2": 0,
+      "3": 0
+     },
+     "espn_mean": 15.067,
+     "exact_share": 1.0,
+     "mean_diff": 0,
+     "n": 60,
+     "systematic": false
+    },
+    "tov[player_to_sum+turnovers]": {
+     "bbref_mean": 15.067,
+     "ci95": [
+      12.84,
+      14.826
+     ],
+     "dist": {
+      "-1": 0,
+      "-2": 0,
+      "-3": 0,
+      "0": 0,
+      "1": 0,
+      "2": 0,
+      "3": 60
+     },
+     "espn_mean": 28.9,
+     "exact_share": 0.0,
+     "mean_diff": 13.833,
+     "n": 60,
+     "systematic": true
+    },
+    "tov[player_to_sum]": {
+     "bbref_mean": 15.067,
+     "ci95": [
+      -0.809,
+      -0.424
+     ],
+     "dist": {
+      "-1": 23,
+      "-2": 4,
+      "-3": 2,
+      "0": 31,
+      "1": 0,
+      "2": 0,
+      "3": 0
+     },
+     "espn_mean": 14.45,
+     "exact_share": 0.5167,
+     "mean_diff": -0.617,
+     "n": 60,
+     "systematic": true
+    },
+    "tov[player_to_sum] vs bbref_player_tov_sum": {
+     "bbref_mean": 14.45,
+     "ci95": [
+      0.0,
+      0.0
+     ],
+     "dist": {
+      "-1": 0,
+      "-2": 0,
+      "-3": 0,
+      "0": 60,
+      "1": 0,
+      "2": 0,
+      "3": 0
+     },
+     "espn_mean": 14.45,
+     "exact_share": 1.0,
+     "mean_diff": 0,
+     "n": 60,
+     "systematic": false
+    },
+    "tov[teamTurnovers]": {
+     "bbref_mean": 15.067,
+     "ci95": [
+      -15.393,
+      -13.507
+     ],
+     "dist": {
+      "-1": 0,
+      "-2": 0,
+      "-3": 60,
+      "0": 0,
+      "1": 0,
+      "2": 0,
+      "3": 0
+     },
+     "espn_mean": 0.617,
+     "exact_share": 0.0,
+     "mean_diff": -14.45,
+     "n": 60,
+     "systematic": true
+    },
+    "tov[totalTurnovers]": {
+     "bbref_mean": 15.067,
+     "ci95": [
+      0.0,
+      0.0
+     ],
+     "dist": {
+      "-1": 0,
+      "-2": 0,
+      "-3": 0,
+      "0": 60,
+      "1": 0,
+      "2": 0,
+      "3": 0
+     },
+     "espn_mean": 15.067,
+     "exact_share": 1.0,
+     "mean_diff": 0,
+     "n": 60,
+     "systematic": false
+    },
+    "tov[turnovers]": {
+     "bbref_mean": 15.067,
+     "ci95": [
+      -0.809,
+      -0.424
+     ],
+     "dist": {
+      "-1": 23,
+      "-2": 4,
+      "-3": 2,
+      "0": 31,
+      "1": 0,
+      "2": 0,
+      "3": 0
+     },
+     "espn_mean": 14.45,
+     "exact_share": 0.5167,
+     "mean_diff": -0.617,
+     "n": 60,
+     "systematic": true
+    },
+    "trb": {
+     "bbref_mean": 45.583,
+     "ci95": [
+      6.586,
+      8.448
+     ],
+     "dist": {
+      "-1": 0,
+      "-2": 0,
+      "-3": 0,
+      "0": 2,
+      "1": 0,
+      "2": 2,
+      "3": 56
+     },
+     "espn_mean": 53.1,
+     "exact_share": 0.0333,
+     "mean_diff": 7.517,
+     "n": 60,
+     "systematic": true
+    }
+   },
+   "games": 30,
+   "months": [
+    "2015-10",
+    "2015-11",
+    "2015-12",
+    "2016-01",
+    "2016-02",
+    "2016-03",
+    "2016-04"
+   ],
+   "teams": 29
+  },
+  "2017": {
+   "fields": {
+    "dreb": {
+     "bbref_mean": 34.767,
+     "ci95": [
+      0.0,
+      0.0
+     ],
+     "dist": {
+      "-1": 0,
+      "-2": 0,
+      "-3": 0,
+      "0": 60,
+      "1": 0,
+      "2": 0,
+      "3": 0
+     },
+     "espn_mean": 34.767,
+     "exact_share": 1.0,
+     "mean_diff": 0,
+     "n": 60,
+     "systematic": false
+    },
+    "fg3a": {
+     "bbref_mean": 25.483,
+     "ci95": [
+      0.0,
+      0.0
+     ],
+     "dist": {
+      "-1": 0,
+      "-2": 0,
+      "-3": 0,
+      "0": 60,
+      "1": 0,
+      "2": 0,
+      "3": 0
+     },
+     "espn_mean": 25.483,
+     "exact_share": 1.0,
+     "mean_diff": 0,
+     "n": 60,
+     "systematic": false
+    },
+    "fg3m": {
+     "bbref_mean": 8.633,
+     "ci95": [
+      0.0,
+      0.0
+     ],
+     "dist": {
+      "-1": 0,
+      "-2": 0,
+      "-3": 0,
+      "0": 60,
+      "1": 0,
+      "2": 0,
+      "3": 0
+     },
+     "espn_mean": 8.633,
+     "exact_share": 1.0,
+     "mean_diff": 0,
+     "n": 60,
+     "systematic": false
+    },
+    "fga": {
+     "bbref_mean": 84.517,
+     "ci95": [
+      0.0,
+      0.0
+     ],
+     "dist": {
+      "-1": 0,
+      "-2": 0,
+      "-3": 0,
+      "0": 60,
+      "1": 0,
+      "2": 0,
+      "3": 0
+     },
+     "espn_mean": 84.517,
+     "exact_share": 1.0,
+     "mean_diff": 0,
+     "n": 60,
+     "systematic": false
+    },
+    "fgm": {
+     "bbref_mean": 37.217,
+     "ci95": [
+      0.0,
+      0.0
+     ],
+     "dist": {
+      "-1": 0,
+      "-2": 0,
+      "-3": 0,
+      "0": 60,
+      "1": 0,
+      "2": 0,
+      "3": 0
+     },
+     "espn_mean": 37.217,
+     "exact_share": 1.0,
+     "mean_diff": 0,
+     "n": 60,
+     "systematic": false
+    },
+    "fta": {
+     "bbref_mean": 24.083,
+     "ci95": [
+      0.0,
+      0.0
+     ],
+     "dist": {
+      "-1": 0,
+      "-2": 0,
+      "-3": 0,
+      "0": 60,
+      "1": 0,
+      "2": 0,
+      "3": 0
+     },
+     "espn_mean": 24.083,
+     "exact_share": 1.0,
+     "mean_diff": 0,
+     "n": 60,
+     "systematic": false
+    },
+    "ftm": {
+     "bbref_mean": 18.55,
+     "ci95": [
+      0.0,
+      0.0
+     ],
+     "dist": {
+      "-1": 0,
+      "-2": 0,
+      "-3": 0,
+      "0": 60,
+      "1": 0,
+      "2": 0,
+      "3": 0
+     },
+     "espn_mean": 18.55,
+     "exact_share": 1.0,
+     "mean_diff": 0,
+     "n": 60,
+     "systematic": false
+    },
+    "oreb": {
+     "bbref_mean": 9.483,
+     "ci95": [
+      0.0,
+      0.0
+     ],
+     "dist": {
+      "-1": 0,
+      "-2": 0,
+      "-3": 0,
+      "0": 60,
+      "1": 0,
+      "2": 0,
+      "3": 0
+     },
+     "espn_mean": 9.483,
+     "exact_share": 1.0,
+     "mean_diff": 0,
+     "n": 60,
+     "systematic": false
+    },
+    "stored.dreb": {
+     "bbref_mean": 34.767,
+     "ci95": [
+      0.0,
+      0.0
+     ],
+     "dist": {
+      "-1": 0,
+      "-2": 0,
+      "-3": 0,
+      "0": 60,
+      "1": 0,
+      "2": 0,
+      "3": 0
+     },
+     "espn_mean": 34.767,
+     "exact_share": 1.0,
+     "mean_diff": 0,
+     "n": 60,
+     "systematic": false
+    },
+    "stored.fg3a": {
+     "bbref_mean": 25.483,
+     "ci95": [
+      0.0,
+      0.0
+     ],
+     "dist": {
+      "-1": 0,
+      "-2": 0,
+      "-3": 0,
+      "0": 60,
+      "1": 0,
+      "2": 0,
+      "3": 0
+     },
+     "espn_mean": 25.483,
+     "exact_share": 1.0,
+     "mean_diff": 0,
+     "n": 60,
+     "systematic": false
+    },
+    "stored.fg3m": {
+     "bbref_mean": 8.633,
+     "ci95": [
+      0.0,
+      0.0
+     ],
+     "dist": {
+      "-1": 0,
+      "-2": 0,
+      "-3": 0,
+      "0": 60,
+      "1": 0,
+      "2": 0,
+      "3": 0
+     },
+     "espn_mean": 8.633,
+     "exact_share": 1.0,
+     "mean_diff": 0,
+     "n": 60,
+     "systematic": false
+    },
+    "stored.fga": {
+     "bbref_mean": 84.517,
+     "ci95": [
+      0.0,
+      0.0
+     ],
+     "dist": {
+      "-1": 0,
+      "-2": 0,
+      "-3": 0,
+      "0": 60,
+      "1": 0,
+      "2": 0,
+      "3": 0
+     },
+     "espn_mean": 84.517,
+     "exact_share": 1.0,
+     "mean_diff": 0,
+     "n": 60,
+     "systematic": false
+    },
+    "stored.fgm": {
+     "bbref_mean": 37.217,
+     "ci95": [
+      0.0,
+      0.0
+     ],
+     "dist": {
+      "-1": 0,
+      "-2": 0,
+      "-3": 0,
+      "0": 60,
+      "1": 0,
+      "2": 0,
+      "3": 0
+     },
+     "espn_mean": 37.217,
+     "exact_share": 1.0,
+     "mean_diff": 0,
+     "n": 60,
+     "systematic": false
+    },
+    "stored.fta": {
+     "bbref_mean": 24.083,
+     "ci95": [
+      0.0,
+      0.0
+     ],
+     "dist": {
+      "-1": 0,
+      "-2": 0,
+      "-3": 0,
+      "0": 60,
+      "1": 0,
+      "2": 0,
+      "3": 0
+     },
+     "espn_mean": 24.083,
+     "exact_share": 1.0,
+     "mean_diff": 0,
+     "n": 60,
+     "systematic": false
+    },
+    "stored.ftm": {
+     "bbref_mean": 18.55,
+     "ci95": [
+      0.0,
+      0.0
+     ],
+     "dist": {
+      "-1": 0,
+      "-2": 0,
+      "-3": 0,
+      "0": 60,
+      "1": 0,
+      "2": 0,
+      "3": 0
+     },
+     "espn_mean": 18.55,
+     "exact_share": 1.0,
+     "mean_diff": 0,
+     "n": 60,
+     "systematic": false
+    },
+    "stored.oreb": {
+     "bbref_mean": 9.483,
+     "ci95": [
+      0.0,
+      0.0
+     ],
+     "dist": {
+      "-1": 0,
+      "-2": 0,
+      "-3": 0,
+      "0": 60,
+      "1": 0,
+      "2": 0,
+      "3": 0
+     },
+     "espn_mean": 9.483,
+     "exact_share": 1.0,
+     "mean_diff": 0,
+     "n": 60,
+     "systematic": false
+    },
+    "stored.pts": {
+     "bbref_mean": 101.617,
+     "ci95": [
+      0.0,
+      0.0
+     ],
+     "dist": {
+      "-1": 0,
+      "-2": 0,
+      "-3": 0,
+      "0": 60,
+      "1": 0,
+      "2": 0,
+      "3": 0
+     },
+     "espn_mean": 101.617,
+     "exact_share": 1.0,
+     "mean_diff": 0,
+     "n": 60,
+     "systematic": false
+    },
+    "stored.tov": {
+     "bbref_mean": 14.7,
+     "ci95": [
+      0.0,
+      0.0
+     ],
+     "dist": {
+      "-1": 0,
+      "-2": 0,
+      "-3": 0,
+      "0": 60,
+      "1": 0,
+      "2": 0,
+      "3": 0
+     },
+     "espn_mean": 14.7,
+     "exact_share": 1.0,
+     "mean_diff": 0,
+     "n": 60,
+     "systematic": false
+    },
+    "team_tov[teamTurnovers] vs bbref_team_minus_player": {
+     "bbref_mean": 0.633,
+     "ci95": [
+      0.0,
+      0.0
+     ],
+     "dist": {
+      "-1": 0,
+      "-2": 0,
+      "-3": 0,
+      "0": 60,
+      "1": 0,
+      "2": 0,
+      "3": 0
+     },
+     "espn_mean": 0.633,
+     "exact_share": 1.0,
+     "mean_diff": 0,
+     "n": 60,
+     "systematic": false
+    },
+    "team_tov[turnovers] vs bbref_team_minus_player": {
+     "bbref_mean": 0.633,
+     "ci95": [
+      12.425,
+      14.442
+     ],
+     "dist": {
+      "-1": 0,
+      "-2": 0,
+      "-3": 0,
+      "0": 0,
+      "1": 0,
+      "2": 0,
+      "3": 60
+     },
+     "espn_mean": 14.067,
+     "exact_share": 0.0,
+     "mean_diff": 13.433,
+     "n": 60,
+     "systematic": true
+    },
+    "tov[player_to_sum+teamTurnovers]": {
+     "bbref_mean": 14.7,
+     "ci95": [
+      0.0,
+      0.0
+     ],
+     "dist": {
+      "-1": 0,
+      "-2": 0,
+      "-3": 0,
+      "0": 60,
+      "1": 0,
+      "2": 0,
+      "3": 0
+     },
+     "espn_mean": 14.7,
+     "exact_share": 1.0,
+     "mean_diff": 0,
+     "n": 60,
+     "systematic": false
+    },
+    "tov[player_to_sum+turnovers]": {
+     "bbref_mean": 14.7,
+     "ci95": [
+      12.425,
+      14.442
+     ],
+     "dist": {
+      "-1": 0,
+      "-2": 0,
+      "-3": 0,
+      "0": 0,
+      "1": 0,
+      "2": 0,
+      "3": 60
+     },
+     "espn_mean": 28.133,
+     "exact_share": 0.0,
+     "mean_diff": 13.433,
+     "n": 60,
+     "systematic": true
+    },
+    "tov[player_to_sum]": {
+     "bbref_mean": 14.7,
+     "ci95": [
+      -0.875,
+      -0.391
+     ],
+     "dist": {
+      "-1": 15,
+      "-2": 5,
+      "-3": 4,
+      "0": 36,
+      "1": 0,
+      "2": 0,
+      "3": 0
+     },
+     "espn_mean": 14.067,
+     "exact_share": 0.6,
+     "mean_diff": -0.633,
+     "n": 60,
+     "systematic": true
+    },
+    "tov[player_to_sum] vs bbref_player_tov_sum": {
+     "bbref_mean": 14.067,
+     "ci95": [
+      0.0,
+      0.0
+     ],
+     "dist": {
+      "-1": 0,
+      "-2": 0,
+      "-3": 0,
+      "0": 60,
+      "1": 0,
+      "2": 0,
+      "3": 0
+     },
+     "espn_mean": 14.067,
+     "exact_share": 1.0,
+     "mean_diff": 0,
+     "n": 60,
+     "systematic": false
+    },
+    "tov[teamTurnovers]": {
+     "bbref_mean": 14.7,
+     "ci95": [
+      -15.034,
+      -13.1
+     ],
+     "dist": {
+      "-1": 0,
+      "-2": 0,
+      "-3": 60,
+      "0": 0,
+      "1": 0,
+      "2": 0,
+      "3": 0
+     },
+     "espn_mean": 0.633,
+     "exact_share": 0.0,
+     "mean_diff": -14.067,
+     "n": 60,
+     "systematic": true
+    },
+    "tov[totalTurnovers]": {
+     "bbref_mean": 14.7,
+     "ci95": [
+      0.0,
+      0.0
+     ],
+     "dist": {
+      "-1": 0,
+      "-2": 0,
+      "-3": 0,
+      "0": 60,
+      "1": 0,
+      "2": 0,
+      "3": 0
+     },
+     "espn_mean": 14.7,
+     "exact_share": 1.0,
+     "mean_diff": 0,
+     "n": 60,
+     "systematic": false
+    },
+    "tov[turnovers]": {
+     "bbref_mean": 14.7,
+     "ci95": [
+      -0.875,
+      -0.391
+     ],
+     "dist": {
+      "-1": 15,
+      "-2": 5,
+      "-3": 4,
+      "0": 36,
+      "1": 0,
+      "2": 0,
+      "3": 0
+     },
+     "espn_mean": 14.067,
+     "exact_share": 0.6,
+     "mean_diff": -0.633,
+     "n": 60,
+     "systematic": true
+    },
+    "trb": {
+     "bbref_mean": 44.25,
+     "ci95": [
+      7.898,
+      9.268
+     ],
+     "dist": {
+      "-1": 0,
+      "-2": 0,
+      "-3": 0,
+      "0": 0,
+      "1": 0,
+      "2": 0,
+      "3": 60
+     },
+     "espn_mean": 52.833,
+     "exact_share": 0.0,
+     "mean_diff": 8.583,
+     "n": 60,
+     "systematic": true
+    }
+   },
+   "games": 30,
+   "months": [
+    "2016-10",
+    "2016-11",
+    "2016-12",
+    "2017-01",
+    "2017-02",
+    "2017-03",
+    "2017-04"
+   ],
+   "teams": 28
+  },
+  "2018": {
+   "fields": {
+    "dreb": {
+     "bbref_mean": 33.537,
+     "ci95": [
+      0.0,
+      0.0
+     ],
+     "dist": {
+      "-1": 0,
+      "-2": 0,
+      "-3": 0,
+      "0": 2134,
+      "1": 0,
+      "2": 0,
+      "3": 0
+     },
+     "espn_mean": 33.537,
+     "exact_share": 1.0,
+     "mean_diff": 0,
+     "n": 2134,
+     "systematic": false
+    },
+    "fg3a": {
+     "bbref_mean": 28.759,
+     "ci95": [
+      -0.001,
+      0.0
+     ],
+     "dist": {
+      "-1": 1,
+      "-2": 0,
+      "-3": 0,
+      "0": 2133,
+      "1": 0,
+      "2": 0,
+      "3": 0
+     },
+     "espn_mean": 28.758,
+     "exact_share": 0.9995,
+     "mean_diff": -0.0,
+     "n": 2134,
+     "systematic": false
+    },
+    "fg3m": {
+     "bbref_mean": 10.404,
+     "ci95": [
+      0.0,
+      0.0
+     ],
+     "dist": {
+      "-1": 0,
+      "-2": 0,
+      "-3": 0,
+      "0": 2134,
+      "1": 0,
+      "2": 0,
+      "3": 0
+     },
+     "espn_mean": 10.404,
+     "exact_share": 1.0,
+     "mean_diff": 0,
+     "n": 2134,
+     "systematic": false
+    },
+    "fga": {
+     "bbref_mean": 85.635,
+     "ci95": [
+      -0.001,
+      0.0
+     ],
+     "dist": {
+      "-1": 1,
+      "-2": 0,
+      "-3": 0,
+      "0": 2133,
+      "1": 0,
+      "2": 0,
+      "3": 0
+     },
+     "espn_mean": 85.634,
+     "exact_share": 0.9995,
+     "mean_diff": -0.0,
+     "n": 2134,
+     "systematic": false
+    },
+    "fgm": {
+     "bbref_mean": 39.394,
+     "ci95": [
+      0.0,
+      0.0
+     ],
+     "dist": {
+      "-1": 0,
+      "-2": 0,
+      "-3": 0,
+      "0": 2134,
+      "1": 0,
+      "2": 0,
+      "3": 0
+     },
+     "espn_mean": 39.394,
+     "exact_share": 1.0,
+     "mean_diff": 0,
+     "n": 2134,
+     "systematic": false
+    },
+    "fta": {
+     "bbref_mean": 21.905,
+     "ci95": [
+      0.0,
+      0.0
+     ],
+     "dist": {
+      "-1": 0,
+      "-2": 0,
+      "-3": 0,
+      "0": 2134,
+      "1": 0,
+      "2": 0,
+      "3": 0
+     },
+     "espn_mean": 21.905,
+     "exact_share": 1.0,
+     "mean_diff": 0,
+     "n": 2134,
+     "systematic": false
+    },
+    "ftm": {
+     "bbref_mean": 16.779,
+     "ci95": [
+      0.0,
+      0.0
+     ],
+     "dist": {
+      "-1": 0,
+      "-2": 0,
+      "-3": 0,
+      "0": 2134,
+      "1": 0,
+      "2": 0,
+      "3": 0
+     },
+     "espn_mean": 16.779,
+     "exact_share": 1.0,
+     "mean_diff": 0,
+     "n": 2134,
+     "systematic": false
+    },
+    "oreb": {
+     "bbref_mean": 9.763,
+     "ci95": [
+      -0.001,
+      0.001
+     ],
+     "dist": {
+      "-1": 1,
+      "-2": 0,
+      "-3": 0,
+      "0": 2132,
+      "1": 1,
+      "2": 0,
+      "3": 0
+     },
+     "espn_mean": 9.763,
+     "exact_share": 0.9991,
+     "mean_diff": 0,
+     "n": 2134,
+     "systematic": false
+    },
+    "stored.dreb": {
+     "bbref_mean": 33.537,
+     "ci95": [
+      0.0,
+      0.0
+     ],
+     "dist": {
+      "-1": 0,
+      "-2": 0,
+      "-3": 0,
+      "0": 2134,
+      "1": 0,
+      "2": 0,
+      "3": 0
+     },
+     "espn_mean": 33.537,
+     "exact_share": 1.0,
+     "mean_diff": 0,
+     "n": 2134,
+     "systematic": false
+    },
+    "stored.fg3a": {
+     "bbref_mean": 28.759,
+     "ci95": [
+      -0.001,
+      0.0
+     ],
+     "dist": {
+      "-1": 1,
+      "-2": 0,
+      "-3": 0,
+      "0": 2133,
+      "1": 0,
+      "2": 0,
+      "3": 0
+     },
+     "espn_mean": 28.758,
+     "exact_share": 0.9995,
+     "mean_diff": -0.0,
+     "n": 2134,
+     "systematic": false
+    },
+    "stored.fg3m": {
+     "bbref_mean": 10.404,
+     "ci95": [
+      0.0,
+      0.0
+     ],
+     "dist": {
+      "-1": 0,
+      "-2": 0,
+      "-3": 0,
+      "0": 2134,
+      "1": 0,
+      "2": 0,
+      "3": 0
+     },
+     "espn_mean": 10.404,
+     "exact_share": 1.0,
+     "mean_diff": 0,
+     "n": 2134,
+     "systematic": false
+    },
+    "stored.fga": {
+     "bbref_mean": 85.635,
+     "ci95": [
+      -0.001,
+      0.0
+     ],
+     "dist": {
+      "-1": 1,
+      "-2": 0,
+      "-3": 0,
+      "0": 2133,
+      "1": 0,
+      "2": 0,
+      "3": 0
+     },
+     "espn_mean": 85.634,
+     "exact_share": 0.9995,
+     "mean_diff": -0.0,
+     "n": 2134,
+     "systematic": false
+    },
+    "stored.fgm": {
+     "bbref_mean": 39.394,
+     "ci95": [
+      0.0,
+      0.0
+     ],
+     "dist": {
+      "-1": 0,
+      "-2": 0,
+      "-3": 0,
+      "0": 2134,
+      "1": 0,
+      "2": 0,
+      "3": 0
+     },
+     "espn_mean": 39.394,
+     "exact_share": 1.0,
+     "mean_diff": 0,
+     "n": 2134,
+     "systematic": false
+    },
+    "stored.fta": {
+     "bbref_mean": 21.905,
+     "ci95": [
+      0.0,
+      0.0
+     ],
+     "dist": {
+      "-1": 0,
+      "-2": 0,
+      "-3": 0,
+      "0": 2134,
+      "1": 0,
+      "2": 0,
+      "3": 0
+     },
+     "espn_mean": 21.905,
+     "exact_share": 1.0,
+     "mean_diff": 0,
+     "n": 2134,
+     "systematic": false
+    },
+    "stored.ftm": {
+     "bbref_mean": 16.779,
+     "ci95": [
+      0.0,
+      0.0
+     ],
+     "dist": {
+      "-1": 0,
+      "-2": 0,
+      "-3": 0,
+      "0": 2134,
+      "1": 0,
+      "2": 0,
+      "3": 0
+     },
+     "espn_mean": 16.779,
+     "exact_share": 1.0,
+     "mean_diff": 0,
+     "n": 2134,
+     "systematic": false
+    },
+    "stored.oreb": {
+     "bbref_mean": 9.763,
+     "ci95": [
+      -0.001,
+      0.001
+     ],
+     "dist": {
+      "-1": 1,
+      "-2": 0,
+      "-3": 0,
+      "0": 2132,
+      "1": 1,
+      "2": 0,
+      "3": 0
+     },
+     "espn_mean": 9.763,
+     "exact_share": 0.9991,
+     "mean_diff": 0,
+     "n": 2134,
+     "systematic": false
+    },
+    "stored.pts": {
+     "bbref_mean": 105.97,
+     "ci95": [
+      0.0,
+      0.0
+     ],
+     "dist": {
+      "-1": 0,
+      "-2": 0,
+      "-3": 0,
+      "0": 2134,
+      "1": 0,
+      "2": 0,
+      "3": 0
+     },
+     "espn_mean": 105.97,
+     "exact_share": 1.0,
+     "mean_diff": 0,
+     "n": 2134,
+     "systematic": false
+    },
+    "stored.tov": {
+     "bbref_mean": 14.274,
+     "ci95": [
+      -13.253,
+      -12.933
+     ],
+     "dist": {
+      "-1": 0,
+      "-2": 0,
+      "-3": 2134,
+      "0": 0,
+      "1": 0,
+      "2": 0,
+      "3": 0
+     },
+     "espn_mean": 1.181,
+     "exact_share": 0.0,
+     "mean_diff": -13.093,
+     "n": 2134,
+     "systematic": true
+    },
+    "team_tov[teamTurnovers] vs bbref_team_minus_player": {
+     "bbref_mean": 0.584,
+     "ci95": [
+      -0.037,
+      0.06
+     ],
+     "dist": {
+      "-1": 473,
+      "-2": 116,
+      "-3": 32,
+      "0": 926,
+      "1": 397,
+      "2": 147,
+      "3": 43
+     },
+     "espn_mean": 0.596,
+     "exact_share": 0.4339,
+     "mean_diff": 0.012,
+     "n": 2134,
+     "systematic": false
+    },
+    "team_tov[turnovers] vs bbref_team_minus_player": {
+     "bbref_mean": 0.584,
+     "ci95": [
+      -0.002,
+      0.003
+     ],
+     "dist": {
+      "-1": 3,
+      "-2": 0,
+      "-3": 0,
+      "0": 2127,
+      "1": 4,
+      "2": 0,
+      "3": 0
+     },
+     "espn_mean": 0.585,
+     "exact_share": 0.9967,
+     "mean_diff": 0.0,
+     "n": 2134,
+     "systematic": false
+    },
+    "tov[player_to_sum+teamTurnovers]": {
+     "bbref_mean": 14.274,
+     "ci95": [
+      -0.038,
+      0.059
+     ],
+     "dist": {
+      "-1": 474,
+      "-2": 115,
+      "-3": 33,
+      "0": 924,
+      "1": 400,
+      "2": 144,
+      "3": 44
+     },
+     "espn_mean": 14.284,
+     "exact_share": 0.433,
+     "mean_diff": 0.011,
+     "n": 2134,
+     "systematic": false
+    },
+    "tov[player_to_sum+turnovers]": {
+     "bbref_mean": 14.274,
+     "ci95": [
+      -0.003,
+      0.002
+     ],
+     "dist": {
+      "-1": 3,
+      "-2": 0,
+      "-3": 0,
+      "0": 2129,
+      "1": 2,
+      "2": 0,
+      "3": 0
+     },
+     "espn_mean": 14.273,
+     "exact_share": 0.9977,
+     "mean_diff": -0.0,
+     "n": 2134,
+     "systematic": false
+    },
+    "tov[player_to_sum]": {
+     "bbref_mean": 14.274,
+     "ci95": [
+      -0.618,
+      -0.552
+     ],
+     "dist": {
+      "-1": 691,
+      "-2": 191,
+      "-3": 56,
+      "0": 1195,
+      "1": 1,
+      "2": 0,
+      "3": 0
+     },
+     "espn_mean": 13.688,
+     "exact_share": 0.56,
+     "mean_diff": -0.585,
+     "n": 2134,
+     "systematic": true
+    },
+    "tov[player_to_sum] vs bbref_player_tov_sum": {
+     "bbref_mean": 13.689,
+     "ci95": [
+      -0.004,
+      0.002
+     ],
+     "dist": {
+      "-1": 5,
+      "-2": 0,
+      "-3": 0,
+      "0": 2126,
+      "1": 3,
+      "2": 0,
+      "3": 0
+     },
+     "espn_mean": 13.688,
+     "exact_share": 0.9963,
+     "mean_diff": -0.001,
+     "n": 2134,
+     "systematic": false
+    },
+    "tov[teamTurnovers]": {
+     "bbref_mean": 14.274,
+     "ci95": [
+      -13.84,
+      -13.515
+     ],
+     "dist": {
+      "-1": 0,
+      "-2": 0,
+      "-3": 2134,
+      "0": 0,
+      "1": 0,
+      "2": 0,
+      "3": 0
+     },
+     "espn_mean": 0.596,
+     "exact_share": 0.0,
+     "mean_diff": -13.678,
+     "n": 2134,
+     "systematic": true
+    },
+    "tov[totalTurnovers]": {
+     "bbref_mean": 14.274,
+     "ci95": [
+      -13.253,
+      -12.933
+     ],
+     "dist": {
+      "-1": 0,
+      "-2": 0,
+      "-3": 2134,
+      "0": 0,
+      "1": 0,
+      "2": 0,
+      "3": 0
+     },
+     "espn_mean": 1.181,
+     "exact_share": 0.0,
+     "mean_diff": -13.093,
+     "n": 2134,
+     "systematic": true
+    },
+    "tov[turnovers]": {
+     "bbref_mean": 14.274,
+     "ci95": [
+      -13.848,
+      -13.53
+     ],
+     "dist": {
+      "-1": 0,
+      "-2": 0,
+      "-3": 2134,
+      "0": 0,
+      "1": 0,
+      "2": 0,
+      "3": 0
+     },
+     "espn_mean": 0.585,
+     "exact_share": 0.0,
+     "mean_diff": -13.689,
+     "n": 2134,
+     "systematic": true
+    },
+    "trb": {
+     "bbref_mean": 43.3,
+     "ci95": [
+      7.941,
+      8.192
+     ],
+     "dist": {
+      "-1": 0,
+      "-2": 0,
+      "-3": 0,
+      "0": 0,
+      "1": 9,
+      "2": 30,
+      "3": 2095
+     },
+     "espn_mean": 51.367,
+     "exact_share": 0.0,
+     "mean_diff": 8.067,
+     "n": 2134,
+     "systematic": true
+    }
+   },
+   "games": 1067,
+   "months": [
+    "2017-10",
+    "2017-11",
+    "2017-12",
+    "2018-01",
+    "2018-02",
+    "2018-03",
+    "2018-04"
+   ],
+   "teams": 28
+  },
+  "2019": {
+   "fields": {
+    "dreb": {
+     "bbref_mean": 36.7,
+     "ci95": [
+      0.0,
+      0.0
+     ],
+     "dist": {
+      "-1": 0,
+      "-2": 0,
+      "-3": 0,
+      "0": 60,
+      "1": 0,
+      "2": 0,
+      "3": 0
+     },
+     "espn_mean": 36.7,
+     "exact_share": 1.0,
+     "mean_diff": 0,
+     "n": 60,
+     "systematic": false
+    },
+    "fg3a": {
+     "bbref_mean": 32.667,
+     "ci95": [
+      0.0,
+      0.0
+     ],
+     "dist": {
+      "-1": 0,
+      "-2": 0,
+      "-3": 0,
+      "0": 60,
+      "1": 0,
+      "2": 0,
+      "3": 0
+     },
+     "espn_mean": 32.667,
+     "exact_share": 1.0,
+     "mean_diff": 0,
+     "n": 60,
+     "systematic": false
+    },
+    "fg3m": {
+     "bbref_mean": 11.317,
+     "ci95": [
+      0.0,
+      0.0
+     ],
+     "dist": {
+      "-1": 0,
+      "-2": 0,
+      "-3": 0,
+      "0": 60,
+      "1": 0,
+      "2": 0,
+      "3": 0
+     },
+     "espn_mean": 11.317,
+     "exact_share": 1.0,
+     "mean_diff": 0,
+     "n": 60,
+     "systematic": false
+    },
+    "fga": {
+     "bbref_mean": 90.7,
+     "ci95": [
+      0.0,
+      0.0
+     ],
+     "dist": {
+      "-1": 0,
+      "-2": 0,
+      "-3": 0,
+      "0": 60,
+      "1": 0,
+      "2": 0,
+      "3": 0
+     },
+     "espn_mean": 90.7,
+     "exact_share": 1.0,
+     "mean_diff": 0,
+     "n": 60,
+     "systematic": false
+    },
+    "fgm": {
+     "bbref_mean": 41.1,
+     "ci95": [
+      0.0,
+      0.0
+     ],
+     "dist": {
+      "-1": 0,
+      "-2": 0,
+      "-3": 0,
+      "0": 60,
+      "1": 0,
+      "2": 0,
+      "3": 0
+     },
+     "espn_mean": 41.1,
+     "exact_share": 1.0,
+     "mean_diff": 0,
+     "n": 60,
+     "systematic": false
+    },
+    "fta": {
+     "bbref_mean": 20.917,
+     "ci95": [
+      0.0,
+      0.0
+     ],
+     "dist": {
+      "-1": 0,
+      "-2": 0,
+      "-3": 0,
+      "0": 60,
+      "1": 0,
+      "2": 0,
+      "3": 0
+     },
+     "espn_mean": 20.917,
+     "exact_share": 1.0,
+     "mean_diff": 0,
+     "n": 60,
+     "systematic": false
+    },
+    "ftm": {
+     "bbref_mean": 15.867,
+     "ci95": [
+      0.0,
+      0.0
+     ],
+     "dist": {
+      "-1": 0,
+      "-2": 0,
+      "-3": 0,
+      "0": 60,
+      "1": 0,
+      "2": 0,
+      "3": 0
+     },
+     "espn_mean": 15.867,
+     "exact_share": 1.0,
+     "mean_diff": 0,
+     "n": 60,
+     "systematic": false
+    },
+    "oreb": {
+     "bbref_mean": 9.917,
+     "ci95": [
+      0.0,
+      0.0
+     ],
+     "dist": {
+      "-1": 0,
+      "-2": 0,
+      "-3": 0,
+      "0": 60,
+      "1": 0,
+      "2": 0,
+      "3": 0
+     },
+     "espn_mean": 9.917,
+     "exact_share": 1.0,
+     "mean_diff": 0,
+     "n": 60,
+     "systematic": false
+    },
+    "stored.dreb": {
+     "bbref_mean": 36.7,
+     "ci95": [
+      0.0,
+      0.0
+     ],
+     "dist": {
+      "-1": 0,
+      "-2": 0,
+      "-3": 0,
+      "0": 60,
+      "1": 0,
+      "2": 0,
+      "3": 0
+     },
+     "espn_mean": 36.7,
+     "exact_share": 1.0,
+     "mean_diff": 0,
+     "n": 60,
+     "systematic": false
+    },
+    "stored.fg3a": {
+     "bbref_mean": 32.667,
+     "ci95": [
+      0.0,
+      0.0
+     ],
+     "dist": {
+      "-1": 0,
+      "-2": 0,
+      "-3": 0,
+      "0": 60,
+      "1": 0,
+      "2": 0,
+      "3": 0
+     },
+     "espn_mean": 32.667,
+     "exact_share": 1.0,
+     "mean_diff": 0,
+     "n": 60,
+     "systematic": false
+    },
+    "stored.fg3m": {
+     "bbref_mean": 11.317,
+     "ci95": [
+      0.0,
+      0.0
+     ],
+     "dist": {
+      "-1": 0,
+      "-2": 0,
+      "-3": 0,
+      "0": 60,
+      "1": 0,
+      "2": 0,
+      "3": 0
+     },
+     "espn_mean": 11.317,
+     "exact_share": 1.0,
+     "mean_diff": 0,
+     "n": 60,
+     "systematic": false
+    },
+    "stored.fga": {
+     "bbref_mean": 90.7,
+     "ci95": [
+      0.0,
+      0.0
+     ],
+     "dist": {
+      "-1": 0,
+      "-2": 0,
+      "-3": 0,
+      "0": 60,
+      "1": 0,
+      "2": 0,
+      "3": 0
+     },
+     "espn_mean": 90.7,
+     "exact_share": 1.0,
+     "mean_diff": 0,
+     "n": 60,
+     "systematic": false
+    },
+    "stored.fgm": {
+     "bbref_mean": 41.1,
+     "ci95": [
+      0.0,
+      0.0
+     ],
+     "dist": {
+      "-1": 0,
+      "-2": 0,
+      "-3": 0,
+      "0": 60,
+      "1": 0,
+      "2": 0,
+      "3": 0
+     },
+     "espn_mean": 41.1,
+     "exact_share": 1.0,
+     "mean_diff": 0,
+     "n": 60,
+     "systematic": false
+    },
+    "stored.fta": {
+     "bbref_mean": 20.917,
+     "ci95": [
+      0.0,
+      0.0
+     ],
+     "dist": {
+      "-1": 0,
+      "-2": 0,
+      "-3": 0,
+      "0": 60,
+      "1": 0,
+      "2": 0,
+      "3": 0
+     },
+     "espn_mean": 20.917,
+     "exact_share": 1.0,
+     "mean_diff": 0,
+     "n": 60,
+     "systematic": false
+    },
+    "stored.ftm": {
+     "bbref_mean": 15.867,
+     "ci95": [
+      0.0,
+      0.0
+     ],
+     "dist": {
+      "-1": 0,
+      "-2": 0,
+      "-3": 0,
+      "0": 60,
+      "1": 0,
+      "2": 0,
+      "3": 0
+     },
+     "espn_mean": 15.867,
+     "exact_share": 1.0,
+     "mean_diff": 0,
+     "n": 60,
+     "systematic": false
+    },
+    "stored.oreb": {
+     "bbref_mean": 9.917,
+     "ci95": [
+      0.0,
+      0.0
+     ],
+     "dist": {
+      "-1": 0,
+      "-2": 0,
+      "-3": 0,
+      "0": 60,
+      "1": 0,
+      "2": 0,
+      "3": 0
+     },
+     "espn_mean": 9.917,
+     "exact_share": 1.0,
+     "mean_diff": 0,
+     "n": 60,
+     "systematic": false
+    },
+    "stored.pts": {
+     "bbref_mean": 109.383,
+     "ci95": [
+      0.0,
+      0.0
+     ],
+     "dist": {
+      "-1": 0,
+      "-2": 0,
+      "-3": 0,
+      "0": 60,
+      "1": 0,
+      "2": 0,
+      "3": 0
+     },
+     "espn_mean": 109.383,
+     "exact_share": 1.0,
+     "mean_diff": 0,
+     "n": 60,
+     "systematic": false
+    },
+    "stored.tov": {
+     "bbref_mean": 13.917,
+     "ci95": [
+      0.0,
+      0.0
+     ],
+     "dist": {
+      "-1": 0,
+      "-2": 0,
+      "-3": 0,
+      "0": 60,
+      "1": 0,
+      "2": 0,
+      "3": 0
+     },
+     "espn_mean": 13.917,
+     "exact_share": 1.0,
+     "mean_diff": 0,
+     "n": 60,
+     "systematic": false
+    },
+    "team_tov[teamTurnovers] vs bbref_team_minus_player": {
+     "bbref_mean": 0.45,
+     "ci95": [
+      0.0,
+      0.0
+     ],
+     "dist": {
+      "-1": 0,
+      "-2": 0,
+      "-3": 0,
+      "0": 60,
+      "1": 0,
+      "2": 0,
+      "3": 0
+     },
+     "espn_mean": 0.45,
+     "exact_share": 1.0,
+     "mean_diff": 0,
+     "n": 60,
+     "systematic": false
+    },
+    "team_tov[turnovers] vs bbref_team_minus_player": {
+     "bbref_mean": 0.45,
+     "ci95": [
+      12.017,
+      14.016
+     ],
+     "dist": {
+      "-1": 0,
+      "-2": 0,
+      "-3": 0,
+      "0": 0,
+      "1": 0,
+      "2": 0,
+      "3": 60
+     },
+     "espn_mean": 13.467,
+     "exact_share": 0.0,
+     "mean_diff": 13.017,
+     "n": 60,
+     "systematic": true
+    },
+    "tov[player_to_sum+teamTurnovers]": {
+     "bbref_mean": 13.917,
+     "ci95": [
+      0.0,
+      0.0
+     ],
+     "dist": {
+      "-1": 0,
+      "-2": 0,
+      "-3": 0,
+      "0": 60,
+      "1": 0,
+      "2": 0,
+      "3": 0
+     },
+     "espn_mean": 13.917,
+     "exact_share": 1.0,
+     "mean_diff": 0,
+     "n": 60,
+     "systematic": false
+    },
+    "tov[player_to_sum+turnovers]": {
+     "bbref_mean": 13.917,
+     "ci95": [
+      12.017,
+      14.016
+     ],
+     "dist": {
+      "-1": 0,
+      "-2": 0,
+      "-3": 0,
+      "0": 0,
+      "1": 0,
+      "2": 0,
+      "3": 60
+     },
+     "espn_mean": 26.933,
+     "exact_share": 0.0,
+     "mean_diff": 13.017,
+     "n": 60,
+     "systematic": true
+    },
+    "tov[player_to_sum]": {
+     "bbref_mean": 13.917,
+     "ci95": [
+      -0.621,
+      -0.279
+     ],
+     "dist": {
+      "-1": 18,
+      "-2": 3,
+      "-3": 1,
+      "0": 38,
+      "1": 0,
+      "2": 0,
+      "3": 0
+     },
+     "espn_mean": 13.467,
+     "exact_share": 0.6333,
+     "mean_diff": -0.45,
+     "n": 60,
+     "systematic": true
+    },
+    "tov[player_to_sum] vs bbref_player_tov_sum": {
+     "bbref_mean": 13.467,
+     "ci95": [
+      0.0,
+      0.0
+     ],
+     "dist": {
+      "-1": 0,
+      "-2": 0,
+      "-3": 0,
+      "0": 60,
+      "1": 0,
+      "2": 0,
+      "3": 0
+     },
+     "espn_mean": 13.467,
+     "exact_share": 1.0,
+     "mean_diff": 0,
+     "n": 60,
+     "systematic": false
+    },
+    "tov[teamTurnovers]": {
+     "bbref_mean": 13.917,
+     "ci95": [
+      -14.441,
+      -12.492
+     ],
+     "dist": {
+      "-1": 0,
+      "-2": 0,
+      "-3": 60,
+      "0": 0,
+      "1": 0,
+      "2": 0,
+      "3": 0
+     },
+     "espn_mean": 0.45,
+     "exact_share": 0.0,
+     "mean_diff": -13.467,
+     "n": 60,
+     "systematic": true
+    },
+    "tov[totalTurnovers]": {
+     "bbref_mean": 13.917,
+     "ci95": [
+      0.0,
+      0.0
+     ],
+     "dist": {
+      "-1": 0,
+      "-2": 0,
+      "-3": 0,
+      "0": 60,
+      "1": 0,
+      "2": 0,
+      "3": 0
+     },
+     "espn_mean": 13.917,
+     "exact_share": 1.0,
+     "mean_diff": 0,
+     "n": 60,
+     "systematic": false
+    },
+    "tov[turnovers]": {
+     "bbref_mean": 13.917,
+     "ci95": [
+      -0.621,
+      -0.279
+     ],
+     "dist": {
+      "-1": 18,
+      "-2": 3,
+      "-3": 1,
+      "0": 38,
+      "1": 0,
+      "2": 0,
+      "3": 0
+     },
+     "espn_mean": 13.467,
+     "exact_share": 0.6333,
+     "mean_diff": -0.45,
+     "n": 60,
+     "systematic": true
+    },
+    "trb": {
+     "bbref_mean": 46.617,
+     "ci95": [
+      6.363,
+      8.404
+     ],
+     "dist": {
+      "-1": 0,
+      "-2": 0,
+      "-3": 0,
+      "0": 6,
+      "1": 0,
+      "2": 2,
+      "3": 52
+     },
+     "espn_mean": 54,
+     "exact_share": 0.1,
+     "mean_diff": 7.383,
+     "n": 60,
+     "systematic": true
+    }
+   },
+   "games": 30,
+   "months": [
+    "2018-10",
+    "2018-11",
+    "2018-12",
+    "2019-01",
+    "2019-02",
+    "2019-03",
+    "2019-04"
+   ],
+   "teams": 30
+  },
+  "2020": {
+   "fields": {
+    "dreb": {
+     "bbref_mean": 33.833,
+     "ci95": [
+      0.0,
+      0.0
+     ],
+     "dist": {
+      "-1": 0,
+      "-2": 0,
+      "-3": 0,
+      "0": 60,
+      "1": 0,
+      "2": 0,
+      "3": 0
+     },
+     "espn_mean": 33.833,
+     "exact_share": 1.0,
+     "mean_diff": 0,
+     "n": 60,
+     "systematic": false
+    },
+    "fg3a": {
+     "bbref_mean": 34.05,
+     "ci95": [
+      0.0,
+      0.0
+     ],
+     "dist": {
+      "-1": 0,
+      "-2": 0,
+      "-3": 0,
+      "0": 60,
+      "1": 0,
+      "2": 0,
+      "3": 0
+     },
+     "espn_mean": 34.05,
+     "exact_share": 1.0,
+     "mean_diff": 0,
+     "n": 60,
+     "systematic": false
+    },
+    "fg3m": {
+     "bbref_mean": 13.05,
+     "ci95": [
+      0.0,
+      0.0
+     ],
+     "dist": {
+      "-1": 0,
+      "-2": 0,
+      "-3": 0,
+      "0": 60,
+      "1": 0,
+      "2": 0,
+      "3": 0
+     },
+     "espn_mean": 13.05,
+     "exact_share": 1.0,
+     "mean_diff": 0,
+     "n": 60,
+     "systematic": false
+    },
+    "fga": {
+     "bbref_mean": 87.4,
+     "ci95": [
+      0.0,
+      0.0
+     ],
+     "dist": {
+      "-1": 0,
+      "-2": 0,
+      "-3": 0,
+      "0": 60,
+      "1": 0,
+      "2": 0,
+      "3": 0
+     },
+     "espn_mean": 87.4,
+     "exact_share": 1.0,
+     "mean_diff": 0,
+     "n": 60,
+     "systematic": false
+    },
+    "fgm": {
+     "bbref_mean": 41.75,
+     "ci95": [
+      0.0,
+      0.0
+     ],
+     "dist": {
+      "-1": 0,
+      "-2": 0,
+      "-3": 0,
+      "0": 60,
+      "1": 0,
+      "2": 0,
+      "3": 0
+     },
+     "espn_mean": 41.75,
+     "exact_share": 1.0,
+     "mean_diff": 0,
+     "n": 60,
+     "systematic": false
+    },
+    "fta": {
+     "bbref_mean": 25.783,
+     "ci95": [
+      0.0,
+      0.0
+     ],
+     "dist": {
+      "-1": 0,
+      "-2": 0,
+      "-3": 0,
+      "0": 60,
+      "1": 0,
+      "2": 0,
+      "3": 0
+     },
+     "espn_mean": 25.783,
+     "exact_share": 1.0,
+     "mean_diff": 0,
+     "n": 60,
+     "systematic": false
+    },
+    "ftm": {
+     "bbref_mean": 19.933,
+     "ci95": [
+      0.0,
+      0.0
+     ],
+     "dist": {
+      "-1": 0,
+      "-2": 0,
+      "-3": 0,
+      "0": 60,
+      "1": 0,
+      "2": 0,
+      "3": 0
+     },
+     "espn_mean": 19.933,
+     "exact_share": 1.0,
+     "mean_diff": 0,
+     "n": 60,
+     "systematic": false
+    },
+    "oreb": {
+     "bbref_mean": 8.933,
+     "ci95": [
+      0.0,
+      0.0
+     ],
+     "dist": {
+      "-1": 0,
+      "-2": 0,
+      "-3": 0,
+      "0": 60,
+      "1": 0,
+      "2": 0,
+      "3": 0
+     },
+     "espn_mean": 8.933,
+     "exact_share": 1.0,
+     "mean_diff": 0,
+     "n": 60,
+     "systematic": false
+    },
+    "stored.dreb": {
+     "bbref_mean": 33.833,
+     "ci95": [
+      0.0,
+      0.0
+     ],
+     "dist": {
+      "-1": 0,
+      "-2": 0,
+      "-3": 0,
+      "0": 60,
+      "1": 0,
+      "2": 0,
+      "3": 0
+     },
+     "espn_mean": 33.833,
+     "exact_share": 1.0,
+     "mean_diff": 0,
+     "n": 60,
+     "systematic": false
+    },
+    "stored.fg3a": {
+     "bbref_mean": 34.05,
+     "ci95": [
+      0.0,
+      0.0
+     ],
+     "dist": {
+      "-1": 0,
+      "-2": 0,
+      "-3": 0,
+      "0": 60,
+      "1": 0,
+      "2": 0,
+      "3": 0
+     },
+     "espn_mean": 34.05,
+     "exact_share": 1.0,
+     "mean_diff": 0,
+     "n": 60,
+     "systematic": false
+    },
+    "stored.fg3m": {
+     "bbref_mean": 13.05,
+     "ci95": [
+      0.0,
+      0.0
+     ],
+     "dist": {
+      "-1": 0,
+      "-2": 0,
+      "-3": 0,
+      "0": 60,
+      "1": 0,
+      "2": 0,
+      "3": 0
+     },
+     "espn_mean": 13.05,
+     "exact_share": 1.0,
+     "mean_diff": 0,
+     "n": 60,
+     "systematic": false
+    },
+    "stored.fga": {
+     "bbref_mean": 87.4,
+     "ci95": [
+      0.0,
+      0.0
+     ],
+     "dist": {
+      "-1": 0,
+      "-2": 0,
+      "-3": 0,
+      "0": 60,
+      "1": 0,
+      "2": 0,
+      "3": 0
+     },
+     "espn_mean": 87.4,
+     "exact_share": 1.0,
+     "mean_diff": 0,
+     "n": 60,
+     "systematic": false
+    },
+    "stored.fgm": {
+     "bbref_mean": 41.75,
+     "ci95": [
+      0.0,
+      0.0
+     ],
+     "dist": {
+      "-1": 0,
+      "-2": 0,
+      "-3": 0,
+      "0": 60,
+      "1": 0,
+      "2": 0,
+      "3": 0
+     },
+     "espn_mean": 41.75,
+     "exact_share": 1.0,
+     "mean_diff": 0,
+     "n": 60,
+     "systematic": false
+    },
+    "stored.fta": {
+     "bbref_mean": 25.783,
+     "ci95": [
+      0.0,
+      0.0
+     ],
+     "dist": {
+      "-1": 0,
+      "-2": 0,
+      "-3": 0,
+      "0": 60,
+      "1": 0,
+      "2": 0,
+      "3": 0
+     },
+     "espn_mean": 25.783,
+     "exact_share": 1.0,
+     "mean_diff": 0,
+     "n": 60,
+     "systematic": false
+    },
+    "stored.ftm": {
+     "bbref_mean": 19.933,
+     "ci95": [
+      0.0,
+      0.0
+     ],
+     "dist": {
+      "-1": 0,
+      "-2": 0,
+      "-3": 0,
+      "0": 60,
+      "1": 0,
+      "2": 0,
+      "3": 0
+     },
+     "espn_mean": 19.933,
+     "exact_share": 1.0,
+     "mean_diff": 0,
+     "n": 60,
+     "systematic": false
+    },
+    "stored.oreb": {
+     "bbref_mean": 8.933,
+     "ci95": [
+      0.0,
+      0.0
+     ],
+     "dist": {
+      "-1": 0,
+      "-2": 0,
+      "-3": 0,
+      "0": 60,
+      "1": 0,
+      "2": 0,
+      "3": 0
+     },
+     "espn_mean": 8.933,
+     "exact_share": 1.0,
+     "mean_diff": 0,
+     "n": 60,
+     "systematic": false
+    },
+    "stored.pts": {
+     "bbref_mean": 116.483,
+     "ci95": [
+      0.0,
+      0.0
+     ],
+     "dist": {
+      "-1": 0,
+      "-2": 0,
+      "-3": 0,
+      "0": 60,
+      "1": 0,
+      "2": 0,
+      "3": 0
+     },
+     "espn_mean": 116.483,
+     "exact_share": 1.0,
+     "mean_diff": 0,
+     "n": 60,
+     "systematic": false
+    },
+    "stored.tov": {
+     "bbref_mean": 14.9,
+     "ci95": [
+      0.0,
+      0.0
+     ],
+     "dist": {
+      "-1": 0,
+      "-2": 0,
+      "-3": 0,
+      "0": 60,
+      "1": 0,
+      "2": 0,
+      "3": 0
+     },
+     "espn_mean": 14.9,
+     "exact_share": 1.0,
+     "mean_diff": 0,
+     "n": 60,
+     "systematic": false
+    },
+    "team_tov[teamTurnovers] vs bbref_team_minus_player": {
+     "bbref_mean": 0.6,
+     "ci95": [
+      0.0,
+      0.0
+     ],
+     "dist": {
+      "-1": 0,
+      "-2": 0,
+      "-3": 0,
+      "0": 60,
+      "1": 0,
+      "2": 0,
+      "3": 0
+     },
+     "espn_mean": 0.6,
+     "exact_share": 1.0,
+     "mean_diff": 0,
+     "n": 60,
+     "systematic": false
+    },
+    "team_tov[turnovers] vs bbref_team_minus_player": {
+     "bbref_mean": 0.6,
+     "ci95": [
+      12.726,
+      14.674
+     ],
+     "dist": {
+      "-1": 0,
+      "-2": 0,
+      "-3": 0,
+      "0": 0,
+      "1": 0,
+      "2": 0,
+      "3": 60
+     },
+     "espn_mean": 14.3,
+     "exact_share": 0.0,
+     "mean_diff": 13.7,
+     "n": 60,
+     "systematic": true
+    },
+    "tov[player_to_sum+teamTurnovers]": {
+     "bbref_mean": 14.9,
+     "ci95": [
+      0.0,
+      0.0
+     ],
+     "dist": {
+      "-1": 0,
+      "-2": 0,
+      "-3": 0,
+      "0": 60,
+      "1": 0,
+      "2": 0,
+      "3": 0
+     },
+     "espn_mean": 14.9,
+     "exact_share": 1.0,
+     "mean_diff": 0,
+     "n": 60,
+     "systematic": false
+    },
+    "tov[player_to_sum+turnovers]": {
+     "bbref_mean": 14.9,
+     "ci95": [
+      12.726,
+      14.674
+     ],
+     "dist": {
+      "-1": 0,
+      "-2": 0,
+      "-3": 0,
+      "0": 0,
+      "1": 0,
+      "2": 0,
+      "3": 60
+     },
+     "espn_mean": 28.6,
+     "exact_share": 0.0,
+     "mean_diff": 13.7,
+     "n": 60,
+     "systematic": true
+    },
+    "tov[player_to_sum]": {
+     "bbref_mean": 14.9,
+     "ci95": [
+      -0.769,
+      -0.431
+     ],
+     "dist": {
+      "-1": 24,
+      "-2": 6,
+      "-3": 0,
+      "0": 30,
+      "1": 0,
+      "2": 0,
+      "3": 0
+     },
+     "espn_mean": 14.3,
+     "exact_share": 0.5,
+     "mean_diff": -0.6,
+     "n": 60,
+     "systematic": true
+    },
+    "tov[player_to_sum] vs bbref_player_tov_sum": {
+     "bbref_mean": 14.3,
+     "ci95": [
+      0.0,
+      0.0
+     ],
+     "dist": {
+      "-1": 0,
+      "-2": 0,
+      "-3": 0,
+      "0": 60,
+      "1": 0,
+      "2": 0,
+      "3": 0
+     },
+     "espn_mean": 14.3,
+     "exact_share": 1.0,
+     "mean_diff": 0,
+     "n": 60,
+     "systematic": false
+    },
+    "tov[teamTurnovers]": {
+     "bbref_mean": 14.9,
+     "ci95": [
+      -15.262,
+      -13.338
+     ],
+     "dist": {
+      "-1": 0,
+      "-2": 0,
+      "-3": 60,
+      "0": 0,
+      "1": 0,
+      "2": 0,
+      "3": 0
+     },
+     "espn_mean": 0.6,
+     "exact_share": 0.0,
+     "mean_diff": -14.3,
+     "n": 60,
+     "systematic": true
+    },
+    "tov[totalTurnovers]": {
+     "bbref_mean": 14.9,
+     "ci95": [
+      0.0,
+      0.0
+     ],
+     "dist": {
+      "-1": 0,
+      "-2": 0,
+      "-3": 0,
+      "0": 60,
+      "1": 0,
+      "2": 0,
+      "3": 0
+     },
+     "espn_mean": 14.9,
+     "exact_share": 1.0,
+     "mean_diff": 0,
+     "n": 60,
+     "systematic": false
+    },
+    "tov[turnovers]": {
+     "bbref_mean": 14.9,
+     "ci95": [
+      -0.769,
+      -0.431
+     ],
+     "dist": {
+      "-1": 24,
+      "-2": 6,
+      "-3": 0,
+      "0": 30,
+      "1": 0,
+      "2": 0,
+      "3": 0
+     },
+     "espn_mean": 14.3,
+     "exact_share": 0.5,
+     "mean_diff": -0.6,
+     "n": 60,
+     "systematic": true
+    },
+    "trb": {
+     "bbref_mean": 42.767,
+     "ci95": [
+      6.14,
+      8.527
+     ],
+     "dist": {
+      "-1": 0,
+      "-2": 0,
+      "-3": 0,
+      "0": 10,
+      "1": 0,
+      "2": 0,
+      "3": 50
+     },
+     "espn_mean": 50.1,
+     "exact_share": 0.1667,
+     "mean_diff": 7.333,
+     "n": 60,
+     "systematic": true
+    }
+   },
+   "games": 30,
+   "months": [
+    "2019-10",
+    "2019-11",
+    "2019-12",
+    "2020-01",
+    "2020-02",
+    "2020-03",
+    "2020-07",
+    "2020-08"
+   ],
+   "teams": 30
+  },
+  "2021": {
+   "fields": {
+    "dreb": {
+     "bbref_mean": 33.983,
+     "ci95": [
+      0.0,
+      0.0
+     ],
+     "dist": {
+      "-1": 0,
+      "-2": 0,
+      "-3": 0,
+      "0": 60,
+      "1": 0,
+      "2": 0,
+      "3": 0
+     },
+     "espn_mean": 33.983,
+     "exact_share": 1.0,
+     "mean_diff": 0,
+     "n": 60,
+     "systematic": false
+    },
+    "fg3a": {
+     "bbref_mean": 34.483,
+     "ci95": [
+      0.0,
+      0.0
+     ],
+     "dist": {
+      "-1": 0,
+      "-2": 0,
+      "-3": 0,
+      "0": 60,
+      "1": 0,
+      "2": 0,
+      "3": 0
+     },
+     "espn_mean": 34.483,
+     "exact_share": 1.0,
+     "mean_diff": 0,
+     "n": 60,
+     "systematic": false
+    },
+    "fg3m": {
+     "bbref_mean": 13.017,
+     "ci95": [
+      0.0,
+      0.0
+     ],
+     "dist": {
+      "-1": 0,
+      "-2": 0,
+      "-3": 0,
+      "0": 60,
+      "1": 0,
+      "2": 0,
+      "3": 0
+     },
+     "espn_mean": 13.017,
+     "exact_share": 1.0,
+     "mean_diff": 0,
+     "n": 60,
+     "systematic": false
+    },
+    "fga": {
+     "bbref_mean": 88.083,
+     "ci95": [
+      0.0,
+      0.0
+     ],
+     "dist": {
+      "-1": 0,
+      "-2": 0,
+      "-3": 0,
+      "0": 60,
+      "1": 0,
+      "2": 0,
+      "3": 0
+     },
+     "espn_mean": 88.083,
+     "exact_share": 1.0,
+     "mean_diff": 0,
+     "n": 60,
+     "systematic": false
+    },
+    "fgm": {
+     "bbref_mean": 42.067,
+     "ci95": [
+      0.0,
+      0.0
+     ],
+     "dist": {
+      "-1": 0,
+      "-2": 0,
+      "-3": 0,
+      "0": 60,
+      "1": 0,
+      "2": 0,
+      "3": 0
+     },
+     "espn_mean": 42.067,
+     "exact_share": 1.0,
+     "mean_diff": 0,
+     "n": 60,
+     "systematic": false
+    },
+    "fta": {
+     "bbref_mean": 21.483,
+     "ci95": [
+      0.0,
+      0.0
+     ],
+     "dist": {
+      "-1": 0,
+      "-2": 0,
+      "-3": 0,
+      "0": 60,
+      "1": 0,
+      "2": 0,
+      "3": 0
+     },
+     "espn_mean": 21.483,
+     "exact_share": 1.0,
+     "mean_diff": 0,
+     "n": 60,
+     "systematic": false
+    },
+    "ftm": {
+     "bbref_mean": 16.367,
+     "ci95": [
+      0.0,
+      0.0
+     ],
+     "dist": {
+      "-1": 0,
+      "-2": 0,
+      "-3": 0,
+      "0": 60,
+      "1": 0,
+      "2": 0,
+      "3": 0
+     },
+     "espn_mean": 16.367,
+     "exact_share": 1.0,
+     "mean_diff": 0,
+     "n": 60,
+     "systematic": false
+    },
+    "oreb": {
+     "bbref_mean": 9.617,
+     "ci95": [
+      0.0,
+      0.0
+     ],
+     "dist": {
+      "-1": 0,
+      "-2": 0,
+      "-3": 0,
+      "0": 60,
+      "1": 0,
+      "2": 0,
+      "3": 0
+     },
+     "espn_mean": 9.617,
+     "exact_share": 1.0,
+     "mean_diff": 0,
+     "n": 60,
+     "systematic": false
+    },
+    "stored.dreb": {
+     "bbref_mean": 33.983,
+     "ci95": [
+      0.0,
+      0.0
+     ],
+     "dist": {
+      "-1": 0,
+      "-2": 0,
+      "-3": 0,
+      "0": 60,
+      "1": 0,
+      "2": 0,
+      "3": 0
+     },
+     "espn_mean": 33.983,
+     "exact_share": 1.0,
+     "mean_diff": 0,
+     "n": 60,
+     "systematic": false
+    },
+    "stored.fg3a": {
+     "bbref_mean": 34.483,
+     "ci95": [
+      0.0,
+      0.0
+     ],
+     "dist": {
+      "-1": 0,
+      "-2": 0,
+      "-3": 0,
+      "0": 60,
+      "1": 0,
+      "2": 0,
+      "3": 0
+     },
+     "espn_mean": 34.483,
+     "exact_share": 1.0,
+     "mean_diff": 0,
+     "n": 60,
+     "systematic": false
+    },
+    "stored.fg3m": {
+     "bbref_mean": 13.017,
+     "ci95": [
+      0.0,
+      0.0
+     ],
+     "dist": {
+      "-1": 0,
+      "-2": 0,
+      "-3": 0,
+      "0": 60,
+      "1": 0,
+      "2": 0,
+      "3": 0
+     },
+     "espn_mean": 13.017,
+     "exact_share": 1.0,
+     "mean_diff": 0,
+     "n": 60,
+     "systematic": false
+    },
+    "stored.fga": {
+     "bbref_mean": 88.083,
+     "ci95": [
+      0.0,
+      0.0
+     ],
+     "dist": {
+      "-1": 0,
+      "-2": 0,
+      "-3": 0,
+      "0": 60,
+      "1": 0,
+      "2": 0,
+      "3": 0
+     },
+     "espn_mean": 88.083,
+     "exact_share": 1.0,
+     "mean_diff": 0,
+     "n": 60,
+     "systematic": false
+    },
+    "stored.fgm": {
+     "bbref_mean": 42.067,
+     "ci95": [
+      0.0,
+      0.0
+     ],
+     "dist": {
+      "-1": 0,
+      "-2": 0,
+      "-3": 0,
+      "0": 60,
+      "1": 0,
+      "2": 0,
+      "3": 0
+     },
+     "espn_mean": 42.067,
+     "exact_share": 1.0,
+     "mean_diff": 0,
+     "n": 60,
+     "systematic": false
+    },
+    "stored.fta": {
+     "bbref_mean": 21.483,
+     "ci95": [
+      0.0,
+      0.0
+     ],
+     "dist": {
+      "-1": 0,
+      "-2": 0,
+      "-3": 0,
+      "0": 60,
+      "1": 0,
+      "2": 0,
+      "3": 0
+     },
+     "espn_mean": 21.483,
+     "exact_share": 1.0,
+     "mean_diff": 0,
+     "n": 60,
+     "systematic": false
+    },
+    "stored.ftm": {
+     "bbref_mean": 16.367,
+     "ci95": [
+      0.0,
+      0.0
+     ],
+     "dist": {
+      "-1": 0,
+      "-2": 0,
+      "-3": 0,
+      "0": 60,
+      "1": 0,
+      "2": 0,
+      "3": 0
+     },
+     "espn_mean": 16.367,
+     "exact_share": 1.0,
+     "mean_diff": 0,
+     "n": 60,
+     "systematic": false
+    },
+    "stored.oreb": {
+     "bbref_mean": 9.617,
+     "ci95": [
+      0.0,
+      0.0
+     ],
+     "dist": {
+      "-1": 0,
+      "-2": 0,
+      "-3": 0,
+      "0": 60,
+      "1": 0,
+      "2": 0,
+      "3": 0
+     },
+     "espn_mean": 9.617,
+     "exact_share": 1.0,
+     "mean_diff": 0,
+     "n": 60,
+     "systematic": false
+    },
+    "stored.pts": {
+     "bbref_mean": 113.517,
+     "ci95": [
+      0.0,
+      0.0
+     ],
+     "dist": {
+      "-1": 0,
+      "-2": 0,
+      "-3": 0,
+      "0": 60,
+      "1": 0,
+      "2": 0,
+      "3": 0
+     },
+     "espn_mean": 113.517,
+     "exact_share": 1.0,
+     "mean_diff": 0,
+     "n": 60,
+     "systematic": false
+    },
+    "stored.tov": {
+     "bbref_mean": 14.233,
+     "ci95": [
+      0.0,
+      0.0
+     ],
+     "dist": {
+      "-1": 0,
+      "-2": 0,
+      "-3": 0,
+      "0": 60,
+      "1": 0,
+      "2": 0,
+      "3": 0
+     },
+     "espn_mean": 14.233,
+     "exact_share": 1.0,
+     "mean_diff": 0,
+     "n": 60,
+     "systematic": false
+    },
+    "team_tov[teamTurnovers] vs bbref_team_minus_player": {
+     "bbref_mean": 0.583,
+     "ci95": [
+      0.0,
+      0.0
+     ],
+     "dist": {
+      "-1": 0,
+      "-2": 0,
+      "-3": 0,
+      "0": 60,
+      "1": 0,
+      "2": 0,
+      "3": 0
+     },
+     "espn_mean": 0.583,
+     "exact_share": 1.0,
+     "mean_diff": 0,
+     "n": 60,
+     "systematic": false
+    },
+    "team_tov[turnovers] vs bbref_team_minus_player": {
+     "bbref_mean": 0.583,
+     "ci95": [
+      11.832,
+      14.302
+     ],
+     "dist": {
+      "-1": 0,
+      "-2": 0,
+      "-3": 0,
+      "0": 0,
+      "1": 0,
+      "2": 0,
+      "3": 60
+     },
+     "espn_mean": 13.65,
+     "exact_share": 0.0,
+     "mean_diff": 13.067,
+     "n": 60,
+     "systematic": true
+    },
+    "tov[player_to_sum+teamTurnovers]": {
+     "bbref_mean": 14.233,
+     "ci95": [
+      0.0,
+      0.0
+     ],
+     "dist": {
+      "-1": 0,
+      "-2": 0,
+      "-3": 0,
+      "0": 60,
+      "1": 0,
+      "2": 0,
+      "3": 0
+     },
+     "espn_mean": 14.233,
+     "exact_share": 1.0,
+     "mean_diff": 0,
+     "n": 60,
+     "systematic": false
+    },
+    "tov[player_to_sum+turnovers]": {
+     "bbref_mean": 14.233,
+     "ci95": [
+      11.832,
+      14.302
+     ],
+     "dist": {
+      "-1": 0,
+      "-2": 0,
+      "-3": 0,
+      "0": 0,
+      "1": 0,
+      "2": 0,
+      "3": 60
+     },
+     "espn_mean": 27.3,
+     "exact_share": 0.0,
+     "mean_diff": 13.067,
+     "n": 60,
+     "systematic": true
+    },
+    "tov[player_to_sum]": {
+     "bbref_mean": 14.233,
+     "ci95": [
+      -0.766,
+      -0.401
+     ],
+     "dist": {
+      "-1": 22,
+      "-2": 5,
+      "-3": 1,
+      "0": 32,
+      "1": 0,
+      "2": 0,
+      "3": 0
+     },
+     "espn_mean": 13.65,
+     "exact_share": 0.5333,
+     "mean_diff": -0.583,
+     "n": 60,
+     "systematic": true
+    },
+    "tov[player_to_sum] vs bbref_player_tov_sum": {
+     "bbref_mean": 13.65,
+     "ci95": [
+      0.0,
+      0.0
+     ],
+     "dist": {
+      "-1": 0,
+      "-2": 0,
+      "-3": 0,
+      "0": 60,
+      "1": 0,
+      "2": 0,
+      "3": 0
+     },
+     "espn_mean": 13.65,
+     "exact_share": 1.0,
+     "mean_diff": 0,
+     "n": 60,
+     "systematic": false
+    },
+    "tov[teamTurnovers]": {
+     "bbref_mean": 14.233,
+     "ci95": [
+      -14.883,
+      -12.417
+     ],
+     "dist": {
+      "-1": 0,
+      "-2": 0,
+      "-3": 60,
+      "0": 0,
+      "1": 0,
+      "2": 0,
+      "3": 0
+     },
+     "espn_mean": 0.583,
+     "exact_share": 0.0,
+     "mean_diff": -13.65,
+     "n": 60,
+     "systematic": true
+    },
+    "tov[totalTurnovers]": {
+     "bbref_mean": 14.233,
+     "ci95": [
+      0.0,
+      0.0
+     ],
+     "dist": {
+      "-1": 0,
+      "-2": 0,
+      "-3": 0,
+      "0": 60,
+      "1": 0,
+      "2": 0,
+      "3": 0
+     },
+     "espn_mean": 14.233,
+     "exact_share": 1.0,
+     "mean_diff": 0,
+     "n": 60,
+     "systematic": false
+    },
+    "tov[turnovers]": {
+     "bbref_mean": 14.233,
+     "ci95": [
+      -0.766,
+      -0.401
+     ],
+     "dist": {
+      "-1": 22,
+      "-2": 5,
+      "-3": 1,
+      "0": 32,
+      "1": 0,
+      "2": 0,
+      "3": 0
+     },
+     "espn_mean": 13.65,
+     "exact_share": 0.5333,
+     "mean_diff": -0.583,
+     "n": 60,
+     "systematic": true
+    },
+    "trb": {
+     "bbref_mean": 43.6,
+     "ci95": [
+      2.977,
+      5.223
+     ],
+     "dist": {
+      "-1": 0,
+      "-2": 0,
+      "-3": 0,
+      "0": 28,
+      "1": 0,
+      "2": 1,
+      "3": 31
+     },
+     "espn_mean": 47.7,
+     "exact_share": 0.4667,
+     "mean_diff": 4.1,
+     "n": 60,
+     "systematic": true
+    }
+   },
+   "games": 30,
+   "months": [
+    "2020-12",
+    "2021-01",
+    "2021-02",
+    "2021-03",
+    "2021-04",
+    "2021-05"
+   ],
+   "teams": 30
+  },
+  "2022": {
+   "fields": {
+    "dreb": {
+     "bbref_mean": 34.05,
+     "ci95": [
+      0.0,
+      0.0
+     ],
+     "dist": {
+      "-1": 0,
+      "-2": 0,
+      "-3": 0,
+      "0": 60,
+      "1": 0,
+      "2": 0,
+      "3": 0
+     },
+     "espn_mean": 34.05,
+     "exact_share": 1.0,
+     "mean_diff": 0,
+     "n": 60,
+     "systematic": false
+    },
+    "fg3a": {
+     "bbref_mean": 37.633,
+     "ci95": [
+      0.0,
+      0.0
+     ],
+     "dist": {
+      "-1": 0,
+      "-2": 0,
+      "-3": 0,
+      "0": 60,
+      "1": 0,
+      "2": 0,
+      "3": 0
+     },
+     "espn_mean": 37.633,
+     "exact_share": 1.0,
+     "mean_diff": 0,
+     "n": 60,
+     "systematic": false
+    },
+    "fg3m": {
+     "bbref_mean": 13.25,
+     "ci95": [
+      0.0,
+      0.0
+     ],
+     "dist": {
+      "-1": 0,
+      "-2": 0,
+      "-3": 0,
+      "0": 60,
+      "1": 0,
+      "2": 0,
+      "3": 0
+     },
+     "espn_mean": 13.25,
+     "exact_share": 1.0,
+     "mean_diff": 0,
+     "n": 60,
+     "systematic": false
+    },
+    "fga": {
+     "bbref_mean": 87.667,
+     "ci95": [
+      0.0,
+      0.0
+     ],
+     "dist": {
+      "-1": 0,
+      "-2": 0,
+      "-3": 0,
+      "0": 60,
+      "1": 0,
+      "2": 0,
+      "3": 0
+     },
+     "espn_mean": 87.667,
+     "exact_share": 1.0,
+     "mean_diff": 0,
+     "n": 60,
+     "systematic": false
+    },
+    "fgm": {
+     "bbref_mean": 40.083,
+     "ci95": [
+      0.0,
+      0.0
+     ],
+     "dist": {
+      "-1": 0,
+      "-2": 0,
+      "-3": 0,
+      "0": 60,
+      "1": 0,
+      "2": 0,
+      "3": 0
+     },
+     "espn_mean": 40.083,
+     "exact_share": 1.0,
+     "mean_diff": 0,
+     "n": 60,
+     "systematic": false
+    },
+    "fta": {
+     "bbref_mean": 22.55,
+     "ci95": [
+      0.0,
+      0.0
+     ],
+     "dist": {
+      "-1": 0,
+      "-2": 0,
+      "-3": 0,
+      "0": 60,
+      "1": 0,
+      "2": 0,
+      "3": 0
+     },
+     "espn_mean": 22.55,
+     "exact_share": 1.0,
+     "mean_diff": 0,
+     "n": 60,
+     "systematic": false
+    },
+    "ftm": {
+     "bbref_mean": 17.35,
+     "ci95": [
+      0.0,
+      0.0
+     ],
+     "dist": {
+      "-1": 0,
+      "-2": 0,
+      "-3": 0,
+      "0": 60,
+      "1": 0,
+      "2": 0,
+      "3": 0
+     },
+     "espn_mean": 17.35,
+     "exact_share": 1.0,
+     "mean_diff": 0,
+     "n": 60,
+     "systematic": false
+    },
+    "oreb": {
+     "bbref_mean": 10.167,
+     "ci95": [
+      0.0,
+      0.0
+     ],
+     "dist": {
+      "-1": 0,
+      "-2": 0,
+      "-3": 0,
+      "0": 60,
+      "1": 0,
+      "2": 0,
+      "3": 0
+     },
+     "espn_mean": 10.167,
+     "exact_share": 1.0,
+     "mean_diff": 0,
+     "n": 60,
+     "systematic": false
+    },
+    "stored.dreb": {
+     "bbref_mean": 34.05,
+     "ci95": [
+      0.0,
+      0.0
+     ],
+     "dist": {
+      "-1": 0,
+      "-2": 0,
+      "-3": 0,
+      "0": 60,
+      "1": 0,
+      "2": 0,
+      "3": 0
+     },
+     "espn_mean": 34.05,
+     "exact_share": 1.0,
+     "mean_diff": 0,
+     "n": 60,
+     "systematic": false
+    },
+    "stored.fg3a": {
+     "bbref_mean": 37.633,
+     "ci95": [
+      0.0,
+      0.0
+     ],
+     "dist": {
+      "-1": 0,
+      "-2": 0,
+      "-3": 0,
+      "0": 60,
+      "1": 0,
+      "2": 0,
+      "3": 0
+     },
+     "espn_mean": 37.633,
+     "exact_share": 1.0,
+     "mean_diff": 0,
+     "n": 60,
+     "systematic": false
+    },
+    "stored.fg3m": {
+     "bbref_mean": 13.25,
+     "ci95": [
+      0.0,
+      0.0
+     ],
+     "dist": {
+      "-1": 0,
+      "-2": 0,
+      "-3": 0,
+      "0": 60,
+      "1": 0,
+      "2": 0,
+      "3": 0
+     },
+     "espn_mean": 13.25,
+     "exact_share": 1.0,
+     "mean_diff": 0,
+     "n": 60,
+     "systematic": false
+    },
+    "stored.fga": {
+     "bbref_mean": 87.667,
+     "ci95": [
+      0.0,
+      0.0
+     ],
+     "dist": {
+      "-1": 0,
+      "-2": 0,
+      "-3": 0,
+      "0": 60,
+      "1": 0,
+      "2": 0,
+      "3": 0
+     },
+     "espn_mean": 87.667,
+     "exact_share": 1.0,
+     "mean_diff": 0,
+     "n": 60,
+     "systematic": false
+    },
+    "stored.fgm": {
+     "bbref_mean": 40.083,
+     "ci95": [
+      0.0,
+      0.0
+     ],
+     "dist": {
+      "-1": 0,
+      "-2": 0,
+      "-3": 0,
+      "0": 60,
+      "1": 0,
+      "2": 0,
+      "3": 0
+     },
+     "espn_mean": 40.083,
+     "exact_share": 1.0,
+     "mean_diff": 0,
+     "n": 60,
+     "systematic": false
+    },
+    "stored.fta": {
+     "bbref_mean": 22.55,
+     "ci95": [
+      0.0,
+      0.0
+     ],
+     "dist": {
+      "-1": 0,
+      "-2": 0,
+      "-3": 0,
+      "0": 60,
+      "1": 0,
+      "2": 0,
+      "3": 0
+     },
+     "espn_mean": 22.55,
+     "exact_share": 1.0,
+     "mean_diff": 0,
+     "n": 60,
+     "systematic": false
+    },
+    "stored.ftm": {
+     "bbref_mean": 17.35,
+     "ci95": [
+      0.0,
+      0.0
+     ],
+     "dist": {
+      "-1": 0,
+      "-2": 0,
+      "-3": 0,
+      "0": 60,
+      "1": 0,
+      "2": 0,
+      "3": 0
+     },
+     "espn_mean": 17.35,
+     "exact_share": 1.0,
+     "mean_diff": 0,
+     "n": 60,
+     "systematic": false
+    },
+    "stored.oreb": {
+     "bbref_mean": 10.167,
+     "ci95": [
+      0.0,
+      0.0
+     ],
+     "dist": {
+      "-1": 0,
+      "-2": 0,
+      "-3": 0,
+      "0": 60,
+      "1": 0,
+      "2": 0,
+      "3": 0
+     },
+     "espn_mean": 10.167,
+     "exact_share": 1.0,
+     "mean_diff": 0,
+     "n": 60,
+     "systematic": false
+    },
+    "stored.pts": {
+     "bbref_mean": 110.767,
+     "ci95": [
+      0.0,
+      0.0
+     ],
+     "dist": {
+      "-1": 0,
+      "-2": 0,
+      "-3": 0,
+      "0": 60,
+      "1": 0,
+      "2": 0,
+      "3": 0
+     },
+     "espn_mean": 110.767,
+     "exact_share": 1.0,
+     "mean_diff": 0,
+     "n": 60,
+     "systematic": false
+    },
+    "stored.tov": {
+     "bbref_mean": 14.35,
+     "ci95": [
+      0.0,
+      0.0
+     ],
+     "dist": {
+      "-1": 0,
+      "-2": 0,
+      "-3": 0,
+      "0": 60,
+      "1": 0,
+      "2": 0,
+      "3": 0
+     },
+     "espn_mean": 14.35,
+     "exact_share": 1.0,
+     "mean_diff": 0,
+     "n": 60,
+     "systematic": false
+    },
+    "team_tov[teamTurnovers] vs bbref_team_minus_player": {
+     "bbref_mean": 0.733,
+     "ci95": [
+      0.0,
+      0.0
+     ],
+     "dist": {
+      "-1": 0,
+      "-2": 0,
+      "-3": 0,
+      "0": 60,
+      "1": 0,
+      "2": 0,
+      "3": 0
+     },
+     "espn_mean": 0.733,
+     "exact_share": 1.0,
+     "mean_diff": 0,
+     "n": 60,
+     "systematic": false
+    },
+    "team_tov[turnovers] vs bbref_team_minus_player": {
+     "bbref_mean": 0.733,
+     "ci95": [
+      11.808,
+      13.959
+     ],
+     "dist": {
+      "-1": 0,
+      "-2": 0,
+      "-3": 0,
+      "0": 0,
+      "1": 0,
+      "2": 0,
+      "3": 60
+     },
+     "espn_mean": 13.617,
+     "exact_share": 0.0,
+     "mean_diff": 12.883,
+     "n": 60,
+     "systematic": true
+    },
+    "tov[player_to_sum+teamTurnovers]": {
+     "bbref_mean": 14.35,
+     "ci95": [
+      0.0,
+      0.0
+     ],
+     "dist": {
+      "-1": 0,
+      "-2": 0,
+      "-3": 0,
+      "0": 60,
+      "1": 0,
+      "2": 0,
+      "3": 0
+     },
+     "espn_mean": 14.35,
+     "exact_share": 1.0,
+     "mean_diff": 0,
+     "n": 60,
+     "systematic": false
+    },
+    "tov[player_to_sum+turnovers]": {
+     "bbref_mean": 14.35,
+     "ci95": [
+      11.808,
+      13.959
+     ],
+     "dist": {
+      "-1": 0,
+      "-2": 0,
+      "-3": 0,
+      "0": 0,
+      "1": 0,
+      "2": 0,
+      "3": 60
+     },
+     "espn_mean": 27.233,
+     "exact_share": 0.0,
+     "mean_diff": 12.883,
+     "n": 60,
+     "systematic": true
+    },
+    "tov[player_to_sum]": {
+     "bbref_mean": 14.35,
+     "ci95": [
+      -0.946,
+      -0.521
+     ],
+     "dist": {
+      "-1": 26,
+      "-2": 3,
+      "-3": 4,
+      "0": 27,
+      "1": 0,
+      "2": 0,
+      "3": 0
+     },
+     "espn_mean": 13.617,
+     "exact_share": 0.45,
+     "mean_diff": -0.733,
+     "n": 60,
+     "systematic": true
+    },
+    "tov[player_to_sum] vs bbref_player_tov_sum": {
+     "bbref_mean": 13.617,
+     "ci95": [
+      0.0,
+      0.0
+     ],
+     "dist": {
+      "-1": 0,
+      "-2": 0,
+      "-3": 0,
+      "0": 60,
+      "1": 0,
+      "2": 0,
+      "3": 0
+     },
+     "espn_mean": 13.617,
+     "exact_share": 1.0,
+     "mean_diff": 0,
+     "n": 60,
+     "systematic": false
+    },
+    "tov[teamTurnovers]": {
+     "bbref_mean": 14.35,
+     "ci95": [
+      -14.671,
+      -12.562
+     ],
+     "dist": {
+      "-1": 0,
+      "-2": 0,
+      "-3": 60,
+      "0": 0,
+      "1": 0,
+      "2": 0,
+      "3": 0
+     },
+     "espn_mean": 0.733,
+     "exact_share": 0.0,
+     "mean_diff": -13.617,
+     "n": 60,
+     "systematic": true
+    },
+    "tov[totalTurnovers]": {
+     "bbref_mean": 14.35,
+     "ci95": [
+      0.0,
+      0.0
+     ],
+     "dist": {
+      "-1": 0,
+      "-2": 0,
+      "-3": 0,
+      "0": 60,
+      "1": 0,
+      "2": 0,
+      "3": 0
+     },
+     "espn_mean": 14.35,
+     "exact_share": 1.0,
+     "mean_diff": 0,
+     "n": 60,
+     "systematic": false
+    },
+    "tov[turnovers]": {
+     "bbref_mean": 14.35,
+     "ci95": [
+      -0.946,
+      -0.521
+     ],
+     "dist": {
+      "-1": 26,
+      "-2": 3,
+      "-3": 4,
+      "0": 27,
+      "1": 0,
+      "2": 0,
+      "3": 0
+     },
+     "espn_mean": 13.617,
+     "exact_share": 0.45,
+     "mean_diff": -0.733,
+     "n": 60,
+     "systematic": true
+    },
+    "trb": {
+     "bbref_mean": 44.217,
+     "ci95": [
+      0.0,
+      0.0
+     ],
+     "dist": {
+      "-1": 0,
+      "-2": 0,
+      "-3": 0,
+      "0": 60,
+      "1": 0,
+      "2": 0,
+      "3": 0
+     },
+     "espn_mean": 44.217,
+     "exact_share": 1.0,
+     "mean_diff": 0,
+     "n": 60,
+     "systematic": false
+    }
+   },
+   "games": 30,
+   "months": [
+    "2021-10",
+    "2021-11",
+    "2021-12",
+    "2022-01",
+    "2022-02",
+    "2022-03",
+    "2022-04"
+   ],
+   "teams": 30
+  },
+  "2023": {
+   "fields": {
+    "dreb": {
+     "bbref_mean": 33.383,
+     "ci95": [
+      0.0,
+      0.0
+     ],
+     "dist": {
+      "-1": 0,
+      "-2": 0,
+      "-3": 0,
+      "0": 60,
+      "1": 0,
+      "2": 0,
+      "3": 0
+     },
+     "espn_mean": 33.383,
+     "exact_share": 1.0,
+     "mean_diff": 0,
+     "n": 60,
+     "systematic": false
+    },
+    "fg3a": {
+     "bbref_mean": 34.4,
+     "ci95": [
+      0.0,
+      0.0
+     ],
+     "dist": {
+      "-1": 0,
+      "-2": 0,
+      "-3": 0,
+      "0": 60,
+      "1": 0,
+      "2": 0,
+      "3": 0
+     },
+     "espn_mean": 34.4,
+     "exact_share": 1.0,
+     "mean_diff": 0,
+     "n": 60,
+     "systematic": false
+    },
+    "fg3m": {
+     "bbref_mean": 12.4,
+     "ci95": [
+      0.0,
+      0.0
+     ],
+     "dist": {
+      "-1": 0,
+      "-2": 0,
+      "-3": 0,
+      "0": 60,
+      "1": 0,
+      "2": 0,
+      "3": 0
+     },
+     "espn_mean": 12.4,
+     "exact_share": 1.0,
+     "mean_diff": 0,
+     "n": 60,
+     "systematic": false
+    },
+    "fga": {
+     "bbref_mean": 87.633,
+     "ci95": [
+      0.0,
+      0.0
+     ],
+     "dist": {
+      "-1": 0,
+      "-2": 0,
+      "-3": 0,
+      "0": 60,
+      "1": 0,
+      "2": 0,
+      "3": 0
+     },
+     "espn_mean": 87.633,
+     "exact_share": 1.0,
+     "mean_diff": 0,
+     "n": 60,
+     "systematic": false
+    },
+    "fgm": {
+     "bbref_mean": 41.75,
+     "ci95": [
+      0.0,
+      0.0
+     ],
+     "dist": {
+      "-1": 0,
+      "-2": 0,
+      "-3": 0,
+      "0": 60,
+      "1": 0,
+      "2": 0,
+      "3": 0
+     },
+     "espn_mean": 41.75,
+     "exact_share": 1.0,
+     "mean_diff": 0,
+     "n": 60,
+     "systematic": false
+    },
+    "fta": {
+     "bbref_mean": 24.967,
+     "ci95": [
+      0.0,
+      0.0
+     ],
+     "dist": {
+      "-1": 0,
+      "-2": 0,
+      "-3": 0,
+      "0": 60,
+      "1": 0,
+      "2": 0,
+      "3": 0
+     },
+     "espn_mean": 24.967,
+     "exact_share": 1.0,
+     "mean_diff": 0,
+     "n": 60,
+     "systematic": false
+    },
+    "ftm": {
+     "bbref_mean": 19.233,
+     "ci95": [
+      0.0,
+      0.0
+     ],
+     "dist": {
+      "-1": 0,
+      "-2": 0,
+      "-3": 0,
+      "0": 60,
+      "1": 0,
+      "2": 0,
+      "3": 0
+     },
+     "espn_mean": 19.233,
+     "exact_share": 1.0,
+     "mean_diff": 0,
+     "n": 60,
+     "systematic": false
+    },
+    "oreb": {
+     "bbref_mean": 9.65,
+     "ci95": [
+      0.0,
+      0.0
+     ],
+     "dist": {
+      "-1": 0,
+      "-2": 0,
+      "-3": 0,
+      "0": 60,
+      "1": 0,
+      "2": 0,
+      "3": 0
+     },
+     "espn_mean": 9.65,
+     "exact_share": 1.0,
+     "mean_diff": 0,
+     "n": 60,
+     "systematic": false
+    },
+    "stored.dreb": {
+     "bbref_mean": 33.383,
+     "ci95": [
+      0.0,
+      0.0
+     ],
+     "dist": {
+      "-1": 0,
+      "-2": 0,
+      "-3": 0,
+      "0": 60,
+      "1": 0,
+      "2": 0,
+      "3": 0
+     },
+     "espn_mean": 33.383,
+     "exact_share": 1.0,
+     "mean_diff": 0,
+     "n": 60,
+     "systematic": false
+    },
+    "stored.fg3a": {
+     "bbref_mean": 34.4,
+     "ci95": [
+      0.0,
+      0.0
+     ],
+     "dist": {
+      "-1": 0,
+      "-2": 0,
+      "-3": 0,
+      "0": 60,
+      "1": 0,
+      "2": 0,
+      "3": 0
+     },
+     "espn_mean": 34.4,
+     "exact_share": 1.0,
+     "mean_diff": 0,
+     "n": 60,
+     "systematic": false
+    },
+    "stored.fg3m": {
+     "bbref_mean": 12.4,
+     "ci95": [
+      0.0,
+      0.0
+     ],
+     "dist": {
+      "-1": 0,
+      "-2": 0,
+      "-3": 0,
+      "0": 60,
+      "1": 0,
+      "2": 0,
+      "3": 0
+     },
+     "espn_mean": 12.4,
+     "exact_share": 1.0,
+     "mean_diff": 0,
+     "n": 60,
+     "systematic": false
+    },
+    "stored.fga": {
+     "bbref_mean": 87.633,
+     "ci95": [
+      0.0,
+      0.0
+     ],
+     "dist": {
+      "-1": 0,
+      "-2": 0,
+      "-3": 0,
+      "0": 60,
+      "1": 0,
+      "2": 0,
+      "3": 0
+     },
+     "espn_mean": 87.633,
+     "exact_share": 1.0,
+     "mean_diff": 0,
+     "n": 60,
+     "systematic": false
+    },
+    "stored.fgm": {
+     "bbref_mean": 41.75,
+     "ci95": [
+      0.0,
+      0.0
+     ],
+     "dist": {
+      "-1": 0,
+      "-2": 0,
+      "-3": 0,
+      "0": 60,
+      "1": 0,
+      "2": 0,
+      "3": 0
+     },
+     "espn_mean": 41.75,
+     "exact_share": 1.0,
+     "mean_diff": 0,
+     "n": 60,
+     "systematic": false
+    },
+    "stored.fta": {
+     "bbref_mean": 24.967,
+     "ci95": [
+      0.0,
+      0.0
+     ],
+     "dist": {
+      "-1": 0,
+      "-2": 0,
+      "-3": 0,
+      "0": 60,
+      "1": 0,
+      "2": 0,
+      "3": 0
+     },
+     "espn_mean": 24.967,
+     "exact_share": 1.0,
+     "mean_diff": 0,
+     "n": 60,
+     "systematic": false
+    },
+    "stored.ftm": {
+     "bbref_mean": 19.233,
+     "ci95": [
+      0.0,
+      0.0
+     ],
+     "dist": {
+      "-1": 0,
+      "-2": 0,
+      "-3": 0,
+      "0": 60,
+      "1": 0,
+      "2": 0,
+      "3": 0
+     },
+     "espn_mean": 19.233,
+     "exact_share": 1.0,
+     "mean_diff": 0,
+     "n": 60,
+     "systematic": false
+    },
+    "stored.oreb": {
+     "bbref_mean": 9.65,
+     "ci95": [
+      0.0,
+      0.0
+     ],
+     "dist": {
+      "-1": 0,
+      "-2": 0,
+      "-3": 0,
+      "0": 60,
+      "1": 0,
+      "2": 0,
+      "3": 0
+     },
+     "espn_mean": 9.65,
+     "exact_share": 1.0,
+     "mean_diff": 0,
+     "n": 60,
+     "systematic": false
+    },
+    "stored.pts": {
+     "bbref_mean": 115.133,
+     "ci95": [
+      0.0,
+      0.0
+     ],
+     "dist": {
+      "-1": 0,
+      "-2": 0,
+      "-3": 0,
+      "0": 60,
+      "1": 0,
+      "2": 0,
+      "3": 0
+     },
+     "espn_mean": 115.133,
+     "exact_share": 1.0,
+     "mean_diff": 0,
+     "n": 60,
+     "systematic": false
+    },
+    "stored.tov": {
+     "bbref_mean": 15.117,
+     "ci95": [
+      0.0,
+      0.0
+     ],
+     "dist": {
+      "-1": 0,
+      "-2": 0,
+      "-3": 0,
+      "0": 60,
+      "1": 0,
+      "2": 0,
+      "3": 0
+     },
+     "espn_mean": 15.117,
+     "exact_share": 1.0,
+     "mean_diff": 0,
+     "n": 60,
+     "systematic": false
+    },
+    "team_tov[teamTurnovers] vs bbref_team_minus_player": {
+     "bbref_mean": 0.75,
+     "ci95": [
+      0.0,
+      0.0
+     ],
+     "dist": {
+      "-1": 0,
+      "-2": 0,
+      "-3": 0,
+      "0": 60,
+      "1": 0,
+      "2": 0,
+      "3": 0
+     },
+     "espn_mean": 0.75,
+     "exact_share": 1.0,
+     "mean_diff": 0,
+     "n": 60,
+     "systematic": false
+    },
+    "team_tov[turnovers] vs bbref_team_minus_player": {
+     "bbref_mean": 0.75,
+     "ci95": [
+      12.749,
+      14.485
+     ],
+     "dist": {
+      "-1": 0,
+      "-2": 0,
+      "-3": 0,
+      "0": 0,
+      "1": 0,
+      "2": 0,
+      "3": 60
+     },
+     "espn_mean": 14.367,
+     "exact_share": 0.0,
+     "mean_diff": 13.617,
+     "n": 60,
+     "systematic": true
+    },
+    "tov[player_to_sum+teamTurnovers]": {
+     "bbref_mean": 15.117,
+     "ci95": [
+      0.0,
+      0.0
+     ],
+     "dist": {
+      "-1": 0,
+      "-2": 0,
+      "-3": 0,
+      "0": 60,
+      "1": 0,
+      "2": 0,
+      "3": 0
+     },
+     "espn_mean": 15.117,
+     "exact_share": 1.0,
+     "mean_diff": 0,
+     "n": 60,
+     "systematic": false
+    },
+    "tov[player_to_sum+turnovers]": {
+     "bbref_mean": 15.117,
+     "ci95": [
+      12.749,
+      14.485
+     ],
+     "dist": {
+      "-1": 0,
+      "-2": 0,
+      "-3": 0,
+      "0": 0,
+      "1": 0,
+      "2": 0,
+      "3": 60
+     },
+     "espn_mean": 28.733,
+     "exact_share": 0.0,
+     "mean_diff": 13.617,
+     "n": 60,
+     "systematic": true
+    },
+    "tov[player_to_sum]": {
+     "bbref_mean": 15.117,
+     "ci95": [
+      -0.946,
+      -0.554
+     ],
+     "dist": {
+      "-1": 24,
+      "-2": 9,
+      "-3": 1,
+      "0": 26,
+      "1": 0,
+      "2": 0,
+      "3": 0
+     },
+     "espn_mean": 14.367,
+     "exact_share": 0.4333,
+     "mean_diff": -0.75,
+     "n": 60,
+     "systematic": true
+    },
+    "tov[player_to_sum] vs bbref_player_tov_sum": {
+     "bbref_mean": 14.367,
+     "ci95": [
+      0.0,
+      0.0
+     ],
+     "dist": {
+      "-1": 0,
+      "-2": 0,
+      "-3": 0,
+      "0": 60,
+      "1": 0,
+      "2": 0,
+      "3": 0
+     },
+     "espn_mean": 14.367,
+     "exact_share": 1.0,
+     "mean_diff": 0,
+     "n": 60,
+     "systematic": false
+    },
+    "tov[teamTurnovers]": {
+     "bbref_mean": 15.117,
+     "ci95": [
+      -15.253,
+      -13.48
+     ],
+     "dist": {
+      "-1": 0,
+      "-2": 0,
+      "-3": 60,
+      "0": 0,
+      "1": 0,
+      "2": 0,
+      "3": 0
+     },
+     "espn_mean": 0.75,
+     "exact_share": 0.0,
+     "mean_diff": -14.367,
+     "n": 60,
+     "systematic": true
+    },
+    "tov[totalTurnovers]": {
+     "bbref_mean": 15.117,
+     "ci95": [
+      0.0,
+      0.0
+     ],
+     "dist": {
+      "-1": 0,
+      "-2": 0,
+      "-3": 0,
+      "0": 60,
+      "1": 0,
+      "2": 0,
+      "3": 0
+     },
+     "espn_mean": 15.117,
+     "exact_share": 1.0,
+     "mean_diff": 0,
+     "n": 60,
+     "systematic": false
+    },
+    "tov[turnovers]": {
+     "bbref_mean": 15.117,
+     "ci95": [
+      -0.946,
+      -0.554
+     ],
+     "dist": {
+      "-1": 24,
+      "-2": 9,
+      "-3": 1,
+      "0": 26,
+      "1": 0,
+      "2": 0,
+      "3": 0
+     },
+     "espn_mean": 14.367,
+     "exact_share": 0.4333,
+     "mean_diff": -0.75,
+     "n": 60,
+     "systematic": true
+    },
+    "trb": {
+     "bbref_mean": 43.033,
+     "ci95": [
+      0.0,
+      0.0
+     ],
+     "dist": {
+      "-1": 0,
+      "-2": 0,
+      "-3": 0,
+      "0": 60,
+      "1": 0,
+      "2": 0,
+      "3": 0
+     },
+     "espn_mean": 43.033,
+     "exact_share": 1.0,
+     "mean_diff": 0,
+     "n": 60,
+     "systematic": false
+    }
+   },
+   "games": 30,
+   "months": [
+    "2022-10",
+    "2022-11",
+    "2022-12",
+    "2023-01",
+    "2023-02",
+    "2023-03",
+    "2023-04"
+   ],
+   "teams": 30
+  },
+  "2024": {
+   "fields": {
+    "dreb": {
+     "bbref_mean": 32.883,
+     "ci95": [
+      0.0,
+      0.0
+     ],
+     "dist": {
+      "-1": 0,
+      "-2": 0,
+      "-3": 0,
+      "0": 60,
+      "1": 0,
+      "2": 0,
+      "3": 0
+     },
+     "espn_mean": 32.883,
+     "exact_share": 1.0,
+     "mean_diff": 0,
+     "n": 60,
+     "systematic": false
+    },
+    "fg3a": {
+     "bbref_mean": 34.733,
+     "ci95": [
+      0.0,
+      0.0
+     ],
+     "dist": {
+      "-1": 0,
+      "-2": 0,
+      "-3": 0,
+      "0": 60,
+      "1": 0,
+      "2": 0,
+      "3": 0
+     },
+     "espn_mean": 34.733,
+     "exact_share": 1.0,
+     "mean_diff": 0,
+     "n": 60,
+     "systematic": false
+    },
+    "fg3m": {
+     "bbref_mean": 12.067,
+     "ci95": [
+      0.0,
+      0.0
+     ],
+     "dist": {
+      "-1": 0,
+      "-2": 0,
+      "-3": 0,
+      "0": 60,
+      "1": 0,
+      "2": 0,
+      "3": 0
+     },
+     "espn_mean": 12.067,
+     "exact_share": 1.0,
+     "mean_diff": 0,
+     "n": 60,
+     "systematic": false
+    },
+    "fga": {
+     "bbref_mean": 87.95,
+     "ci95": [
+      0.0,
+      0.0
+     ],
+     "dist": {
+      "-1": 0,
+      "-2": 0,
+      "-3": 0,
+      "0": 60,
+      "1": 0,
+      "2": 0,
+      "3": 0
+     },
+     "espn_mean": 87.95,
+     "exact_share": 1.0,
+     "mean_diff": 0,
+     "n": 60,
+     "systematic": false
+    },
+    "fgm": {
+     "bbref_mean": 41.2,
+     "ci95": [
+      0.0,
+      0.0
+     ],
+     "dist": {
+      "-1": 0,
+      "-2": 0,
+      "-3": 0,
+      "0": 60,
+      "1": 0,
+      "2": 0,
+      "3": 0
+     },
+     "espn_mean": 41.2,
+     "exact_share": 1.0,
+     "mean_diff": 0,
+     "n": 60,
+     "systematic": false
+    },
+    "fta": {
+     "bbref_mean": 21.95,
+     "ci95": [
+      0.0,
+      0.0
+     ],
+     "dist": {
+      "-1": 0,
+      "-2": 0,
+      "-3": 0,
+      "0": 60,
+      "1": 0,
+      "2": 0,
+      "3": 0
+     },
+     "espn_mean": 21.95,
+     "exact_share": 1.0,
+     "mean_diff": 0,
+     "n": 60,
+     "systematic": false
+    },
+    "ftm": {
+     "bbref_mean": 17.167,
+     "ci95": [
+      0.0,
+      0.0
+     ],
+     "dist": {
+      "-1": 0,
+      "-2": 0,
+      "-3": 0,
+      "0": 60,
+      "1": 0,
+      "2": 0,
+      "3": 0
+     },
+     "espn_mean": 17.167,
+     "exact_share": 1.0,
+     "mean_diff": 0,
+     "n": 60,
+     "systematic": false
+    },
+    "oreb": {
+     "bbref_mean": 10.783,
+     "ci95": [
+      0.0,
+      0.0
+     ],
+     "dist": {
+      "-1": 0,
+      "-2": 0,
+      "-3": 0,
+      "0": 60,
+      "1": 0,
+      "2": 0,
+      "3": 0
+     },
+     "espn_mean": 10.783,
+     "exact_share": 1.0,
+     "mean_diff": 0,
+     "n": 60,
+     "systematic": false
+    },
+    "stored.dreb": {
+     "bbref_mean": 32.883,
+     "ci95": [
+      0.0,
+      0.0
+     ],
+     "dist": {
+      "-1": 0,
+      "-2": 0,
+      "-3": 0,
+      "0": 60,
+      "1": 0,
+      "2": 0,
+      "3": 0
+     },
+     "espn_mean": 32.883,
+     "exact_share": 1.0,
+     "mean_diff": 0,
+     "n": 60,
+     "systematic": false
+    },
+    "stored.fg3a": {
+     "bbref_mean": 34.733,
+     "ci95": [
+      0.0,
+      0.0
+     ],
+     "dist": {
+      "-1": 0,
+      "-2": 0,
+      "-3": 0,
+      "0": 60,
+      "1": 0,
+      "2": 0,
+      "3": 0
+     },
+     "espn_mean": 34.733,
+     "exact_share": 1.0,
+     "mean_diff": 0,
+     "n": 60,
+     "systematic": false
+    },
+    "stored.fg3m": {
+     "bbref_mean": 12.067,
+     "ci95": [
+      0.0,
+      0.0
+     ],
+     "dist": {
+      "-1": 0,
+      "-2": 0,
+      "-3": 0,
+      "0": 60,
+      "1": 0,
+      "2": 0,
+      "3": 0
+     },
+     "espn_mean": 12.067,
+     "exact_share": 1.0,
+     "mean_diff": 0,
+     "n": 60,
+     "systematic": false
+    },
+    "stored.fga": {
+     "bbref_mean": 87.95,
+     "ci95": [
+      0.0,
+      0.0
+     ],
+     "dist": {
+      "-1": 0,
+      "-2": 0,
+      "-3": 0,
+      "0": 60,
+      "1": 0,
+      "2": 0,
+      "3": 0
+     },
+     "espn_mean": 87.95,
+     "exact_share": 1.0,
+     "mean_diff": 0,
+     "n": 60,
+     "systematic": false
+    },
+    "stored.fgm": {
+     "bbref_mean": 41.2,
+     "ci95": [
+      0.0,
+      0.0
+     ],
+     "dist": {
+      "-1": 0,
+      "-2": 0,
+      "-3": 0,
+      "0": 60,
+      "1": 0,
+      "2": 0,
+      "3": 0
+     },
+     "espn_mean": 41.2,
+     "exact_share": 1.0,
+     "mean_diff": 0,
+     "n": 60,
+     "systematic": false
+    },
+    "stored.fta": {
+     "bbref_mean": 21.95,
+     "ci95": [
+      0.0,
+      0.0
+     ],
+     "dist": {
+      "-1": 0,
+      "-2": 0,
+      "-3": 0,
+      "0": 60,
+      "1": 0,
+      "2": 0,
+      "3": 0
+     },
+     "espn_mean": 21.95,
+     "exact_share": 1.0,
+     "mean_diff": 0,
+     "n": 60,
+     "systematic": false
+    },
+    "stored.ftm": {
+     "bbref_mean": 17.167,
+     "ci95": [
+      0.0,
+      0.0
+     ],
+     "dist": {
+      "-1": 0,
+      "-2": 0,
+      "-3": 0,
+      "0": 60,
+      "1": 0,
+      "2": 0,
+      "3": 0
+     },
+     "espn_mean": 17.167,
+     "exact_share": 1.0,
+     "mean_diff": 0,
+     "n": 60,
+     "systematic": false
+    },
+    "stored.oreb": {
+     "bbref_mean": 10.783,
+     "ci95": [
+      0.0,
+      0.0
+     ],
+     "dist": {
+      "-1": 0,
+      "-2": 0,
+      "-3": 0,
+      "0": 60,
+      "1": 0,
+      "2": 0,
+      "3": 0
+     },
+     "espn_mean": 10.783,
+     "exact_share": 1.0,
+     "mean_diff": 0,
+     "n": 60,
+     "systematic": false
+    },
+    "stored.pts": {
+     "bbref_mean": 111.633,
+     "ci95": [
+      0.0,
+      0.0
+     ],
+     "dist": {
+      "-1": 0,
+      "-2": 0,
+      "-3": 0,
+      "0": 60,
+      "1": 0,
+      "2": 0,
+      "3": 0
+     },
+     "espn_mean": 111.633,
+     "exact_share": 1.0,
+     "mean_diff": 0,
+     "n": 60,
+     "systematic": false
+    },
+    "stored.tov": {
+     "bbref_mean": 14.1,
+     "ci95": [
+      0.0,
+      0.0
+     ],
+     "dist": {
+      "-1": 0,
+      "-2": 0,
+      "-3": 0,
+      "0": 60,
+      "1": 0,
+      "2": 0,
+      "3": 0
+     },
+     "espn_mean": 14.1,
+     "exact_share": 1.0,
+     "mean_diff": 0,
+     "n": 60,
+     "systematic": false
+    },
+    "team_tov[teamTurnovers] vs bbref_team_minus_player": {
+     "bbref_mean": 0.783,
+     "ci95": [
+      0.0,
+      0.0
+     ],
+     "dist": {
+      "-1": 0,
+      "-2": 0,
+      "-3": 0,
+      "0": 60,
+      "1": 0,
+      "2": 0,
+      "3": 0
+     },
+     "espn_mean": 0.783,
+     "exact_share": 1.0,
+     "mean_diff": 0,
+     "n": 60,
+     "systematic": false
+    },
+    "team_tov[turnovers] vs bbref_team_minus_player": {
+     "bbref_mean": 0.783,
+     "ci95": [
+      11.73,
+      13.337
+     ],
+     "dist": {
+      "-1": 0,
+      "-2": 0,
+      "-3": 0,
+      "0": 0,
+      "1": 0,
+      "2": 0,
+      "3": 60
+     },
+     "espn_mean": 13.317,
+     "exact_share": 0.0,
+     "mean_diff": 12.533,
+     "n": 60,
+     "systematic": true
+    },
+    "tov[player_to_sum+teamTurnovers]": {
+     "bbref_mean": 14.1,
+     "ci95": [
+      0.0,
+      0.0
+     ],
+     "dist": {
+      "-1": 0,
+      "-2": 0,
+      "-3": 0,
+      "0": 60,
+      "1": 0,
+      "2": 0,
+      "3": 0
+     },
+     "espn_mean": 14.1,
+     "exact_share": 1.0,
+     "mean_diff": 0,
+     "n": 60,
+     "systematic": false
+    },
+    "tov[player_to_sum+turnovers]": {
+     "bbref_mean": 14.1,
+     "ci95": [
+      11.73,
+      13.337
+     ],
+     "dist": {
+      "-1": 0,
+      "-2": 0,
+      "-3": 0,
+      "0": 0,
+      "1": 0,
+      "2": 0,
+      "3": 60
+     },
+     "espn_mean": 26.633,
+     "exact_share": 0.0,
+     "mean_diff": 12.533,
+     "n": 60,
+     "systematic": true
+    },
+    "tov[player_to_sum]": {
+     "bbref_mean": 14.1,
+     "ci95": [
+      -1.017,
+      -0.55
+     ],
+     "dist": {
+      "-1": 21,
+      "-2": 8,
+      "-3": 3,
+      "0": 28,
+      "1": 0,
+      "2": 0,
+      "3": 0
+     },
+     "espn_mean": 13.317,
+     "exact_share": 0.4667,
+     "mean_diff": -0.783,
+     "n": 60,
+     "systematic": true
+    },
+    "tov[player_to_sum] vs bbref_player_tov_sum": {
+     "bbref_mean": 13.317,
+     "ci95": [
+      0.0,
+      0.0
+     ],
+     "dist": {
+      "-1": 0,
+      "-2": 0,
+      "-3": 0,
+      "0": 60,
+      "1": 0,
+      "2": 0,
+      "3": 0
+     },
+     "espn_mean": 13.317,
+     "exact_share": 1.0,
+     "mean_diff": 0,
+     "n": 60,
+     "systematic": false
+    },
+    "tov[teamTurnovers]": {
+     "bbref_mean": 14.1,
+     "ci95": [
+      -14.131,
+      -12.502
+     ],
+     "dist": {
+      "-1": 0,
+      "-2": 0,
+      "-3": 60,
+      "0": 0,
+      "1": 0,
+      "2": 0,
+      "3": 0
+     },
+     "espn_mean": 0.783,
+     "exact_share": 0.0,
+     "mean_diff": -13.317,
+     "n": 60,
+     "systematic": true
+    },
+    "tov[totalTurnovers]": {
+     "bbref_mean": 14.1,
+     "ci95": [
+      0.0,
+      0.0
+     ],
+     "dist": {
+      "-1": 0,
+      "-2": 0,
+      "-3": 0,
+      "0": 60,
+      "1": 0,
+      "2": 0,
+      "3": 0
+     },
+     "espn_mean": 14.1,
+     "exact_share": 1.0,
+     "mean_diff": 0,
+     "n": 60,
+     "systematic": false
+    },
+    "tov[turnovers]": {
+     "bbref_mean": 14.1,
+     "ci95": [
+      -1.017,
+      -0.55
+     ],
+     "dist": {
+      "-1": 21,
+      "-2": 8,
+      "-3": 3,
+      "0": 28,
+      "1": 0,
+      "2": 0,
+      "3": 0
+     },
+     "espn_mean": 13.317,
+     "exact_share": 0.4667,
+     "mean_diff": -0.783,
+     "n": 60,
+     "systematic": true
+    },
+    "trb": {
+     "bbref_mean": 43.667,
+     "ci95": [
+      0.0,
+      0.0
+     ],
+     "dist": {
+      "-1": 0,
+      "-2": 0,
+      "-3": 0,
+      "0": 60,
+      "1": 0,
+      "2": 0,
+      "3": 0
+     },
+     "espn_mean": 43.667,
+     "exact_share": 1.0,
+     "mean_diff": 0,
+     "n": 60,
+     "systematic": false
+    }
+   },
+   "games": 30,
+   "months": [
+    "2023-10",
+    "2023-11",
+    "2023-12",
+    "2024-01",
+    "2024-02",
+    "2024-03",
+    "2024-04"
+   ],
+   "teams": 30
+  },
+  "2025": {
+   "fields": {
+    "dreb": {
+     "bbref_mean": 33.4,
+     "ci95": [
+      0.0,
+      0.0
+     ],
+     "dist": {
+      "-1": 0,
+      "-2": 0,
+      "-3": 0,
+      "0": 60,
+      "1": 0,
+      "2": 0,
+      "3": 0
+     },
+     "espn_mean": 33.4,
+     "exact_share": 1.0,
+     "mean_diff": 0,
+     "n": 60,
+     "systematic": false
+    },
+    "fg3a": {
+     "bbref_mean": 38.7,
+     "ci95": [
+      0.0,
+      0.0
+     ],
+     "dist": {
+      "-1": 0,
+      "-2": 0,
+      "-3": 0,
+      "0": 60,
+      "1": 0,
+      "2": 0,
+      "3": 0
+     },
+     "espn_mean": 38.7,
+     "exact_share": 1.0,
+     "mean_diff": 0,
+     "n": 60,
+     "systematic": false
+    },
+    "fg3m": {
+     "bbref_mean": 13.867,
+     "ci95": [
+      0.0,
+      0.0
+     ],
+     "dist": {
+      "-1": 0,
+      "-2": 0,
+      "-3": 0,
+      "0": 60,
+      "1": 0,
+      "2": 0,
+      "3": 0
+     },
+     "espn_mean": 13.867,
+     "exact_share": 1.0,
+     "mean_diff": 0,
+     "n": 60,
+     "systematic": false
+    },
+    "fga": {
+     "bbref_mean": 90.133,
+     "ci95": [
+      0.0,
+      0.0
+     ],
+     "dist": {
+      "-1": 0,
+      "-2": 0,
+      "-3": 0,
+      "0": 60,
+      "1": 0,
+      "2": 0,
+      "3": 0
+     },
+     "espn_mean": 90.133,
+     "exact_share": 1.0,
+     "mean_diff": 0,
+     "n": 60,
+     "systematic": false
+    },
+    "fgm": {
+     "bbref_mean": 41.717,
+     "ci95": [
+      0.0,
+      0.0
+     ],
+     "dist": {
+      "-1": 0,
+      "-2": 0,
+      "-3": 0,
+      "0": 60,
+      "1": 0,
+      "2": 0,
+      "3": 0
+     },
+     "espn_mean": 41.717,
+     "exact_share": 1.0,
+     "mean_diff": 0,
+     "n": 60,
+     "systematic": false
+    },
+    "fta": {
+     "bbref_mean": 20.783,
+     "ci95": [
+      0.0,
+      0.0
+     ],
+     "dist": {
+      "-1": 0,
+      "-2": 0,
+      "-3": 0,
+      "0": 60,
+      "1": 0,
+      "2": 0,
+      "3": 0
+     },
+     "espn_mean": 20.783,
+     "exact_share": 1.0,
+     "mean_diff": 0,
+     "n": 60,
+     "systematic": false
+    },
+    "ftm": {
+     "bbref_mean": 16.033,
+     "ci95": [
+      0.0,
+      0.0
+     ],
+     "dist": {
+      "-1": 0,
+      "-2": 0,
+      "-3": 0,
+      "0": 60,
+      "1": 0,
+      "2": 0,
+      "3": 0
+     },
+     "espn_mean": 16.033,
+     "exact_share": 1.0,
+     "mean_diff": 0,
+     "n": 60,
+     "systematic": false
+    },
+    "oreb": {
+     "bbref_mean": 10.983,
+     "ci95": [
+      0.0,
+      0.0
+     ],
+     "dist": {
+      "-1": 0,
+      "-2": 0,
+      "-3": 0,
+      "0": 60,
+      "1": 0,
+      "2": 0,
+      "3": 0
+     },
+     "espn_mean": 10.983,
+     "exact_share": 1.0,
+     "mean_diff": 0,
+     "n": 60,
+     "systematic": false
+    },
+    "stored.dreb": {
+     "bbref_mean": 33.4,
+     "ci95": [
+      0.0,
+      0.0
+     ],
+     "dist": {
+      "-1": 0,
+      "-2": 0,
+      "-3": 0,
+      "0": 60,
+      "1": 0,
+      "2": 0,
+      "3": 0
+     },
+     "espn_mean": 33.4,
+     "exact_share": 1.0,
+     "mean_diff": 0,
+     "n": 60,
+     "systematic": false
+    },
+    "stored.fg3a": {
+     "bbref_mean": 38.7,
+     "ci95": [
+      0.0,
+      0.0
+     ],
+     "dist": {
+      "-1": 0,
+      "-2": 0,
+      "-3": 0,
+      "0": 60,
+      "1": 0,
+      "2": 0,
+      "3": 0
+     },
+     "espn_mean": 38.7,
+     "exact_share": 1.0,
+     "mean_diff": 0,
+     "n": 60,
+     "systematic": false
+    },
+    "stored.fg3m": {
+     "bbref_mean": 13.867,
+     "ci95": [
+      0.0,
+      0.0
+     ],
+     "dist": {
+      "-1": 0,
+      "-2": 0,
+      "-3": 0,
+      "0": 60,
+      "1": 0,
+      "2": 0,
+      "3": 0
+     },
+     "espn_mean": 13.867,
+     "exact_share": 1.0,
+     "mean_diff": 0,
+     "n": 60,
+     "systematic": false
+    },
+    "stored.fga": {
+     "bbref_mean": 90.133,
+     "ci95": [
+      0.0,
+      0.0
+     ],
+     "dist": {
+      "-1": 0,
+      "-2": 0,
+      "-3": 0,
+      "0": 60,
+      "1": 0,
+      "2": 0,
+      "3": 0
+     },
+     "espn_mean": 90.133,
+     "exact_share": 1.0,
+     "mean_diff": 0,
+     "n": 60,
+     "systematic": false
+    },
+    "stored.fgm": {
+     "bbref_mean": 41.717,
+     "ci95": [
+      0.0,
+      0.0
+     ],
+     "dist": {
+      "-1": 0,
+      "-2": 0,
+      "-3": 0,
+      "0": 60,
+      "1": 0,
+      "2": 0,
+      "3": 0
+     },
+     "espn_mean": 41.717,
+     "exact_share": 1.0,
+     "mean_diff": 0,
+     "n": 60,
+     "systematic": false
+    },
+    "stored.fta": {
+     "bbref_mean": 20.783,
+     "ci95": [
+      0.0,
+      0.0
+     ],
+     "dist": {
+      "-1": 0,
+      "-2": 0,
+      "-3": 0,
+      "0": 60,
+      "1": 0,
+      "2": 0,
+      "3": 0
+     },
+     "espn_mean": 20.783,
+     "exact_share": 1.0,
+     "mean_diff": 0,
+     "n": 60,
+     "systematic": false
+    },
+    "stored.ftm": {
+     "bbref_mean": 16.033,
+     "ci95": [
+      0.0,
+      0.0
+     ],
+     "dist": {
+      "-1": 0,
+      "-2": 0,
+      "-3": 0,
+      "0": 60,
+      "1": 0,
+      "2": 0,
+      "3": 0
+     },
+     "espn_mean": 16.033,
+     "exact_share": 1.0,
+     "mean_diff": 0,
+     "n": 60,
+     "systematic": false
+    },
+    "stored.oreb": {
+     "bbref_mean": 10.983,
+     "ci95": [
+      0.0,
+      0.0
+     ],
+     "dist": {
+      "-1": 0,
+      "-2": 0,
+      "-3": 0,
+      "0": 60,
+      "1": 0,
+      "2": 0,
+      "3": 0
+     },
+     "espn_mean": 10.983,
+     "exact_share": 1.0,
+     "mean_diff": 0,
+     "n": 60,
+     "systematic": false
+    },
+    "stored.pts": {
+     "bbref_mean": 113.333,
+     "ci95": [
+      0.0,
+      0.0
+     ],
+     "dist": {
+      "-1": 0,
+      "-2": 0,
+      "-3": 0,
+      "0": 60,
+      "1": 0,
+      "2": 0,
+      "3": 0
+     },
+     "espn_mean": 113.333,
+     "exact_share": 1.0,
+     "mean_diff": 0,
+     "n": 60,
+     "systematic": false
+    },
+    "stored.tov": {
+     "bbref_mean": 13.85,
+     "ci95": [
+      0.0,
+      0.0
+     ],
+     "dist": {
+      "-1": 0,
+      "-2": 0,
+      "-3": 0,
+      "0": 60,
+      "1": 0,
+      "2": 0,
+      "3": 0
+     },
+     "espn_mean": 13.85,
+     "exact_share": 1.0,
+     "mean_diff": 0,
+     "n": 60,
+     "systematic": false
+    },
+    "team_tov[teamTurnovers] vs bbref_team_minus_player": {
+     "bbref_mean": 0.683,
+     "ci95": [
+      0.0,
+      0.0
+     ],
+     "dist": {
+      "-1": 0,
+      "-2": 0,
+      "-3": 0,
+      "0": 60,
+      "1": 0,
+      "2": 0,
+      "3": 0
+     },
+     "espn_mean": 0.683,
+     "exact_share": 1.0,
+     "mean_diff": 0,
+     "n": 60,
+     "systematic": false
+    },
+    "team_tov[turnovers] vs bbref_team_minus_player": {
+     "bbref_mean": 0.683,
+     "ci95": [
+      11.489,
+      13.478
+     ],
+     "dist": {
+      "-1": 0,
+      "-2": 0,
+      "-3": 0,
+      "0": 0,
+      "1": 0,
+      "2": 0,
+      "3": 60
+     },
+     "espn_mean": 13.167,
+     "exact_share": 0.0,
+     "mean_diff": 12.483,
+     "n": 60,
+     "systematic": true
+    },
+    "tov[player_to_sum+teamTurnovers]": {
+     "bbref_mean": 13.85,
+     "ci95": [
+      0.0,
+      0.0
+     ],
+     "dist": {
+      "-1": 0,
+      "-2": 0,
+      "-3": 0,
+      "0": 60,
+      "1": 0,
+      "2": 0,
+      "3": 0
+     },
+     "espn_mean": 13.85,
+     "exact_share": 1.0,
+     "mean_diff": 0,
+     "n": 60,
+     "systematic": false
+    },
+    "tov[player_to_sum+turnovers]": {
+     "bbref_mean": 13.85,
+     "ci95": [
+      11.489,
+      13.478
+     ],
+     "dist": {
+      "-1": 0,
+      "-2": 0,
+      "-3": 0,
+      "0": 0,
+      "1": 0,
+      "2": 0,
+      "3": 60
+     },
+     "espn_mean": 26.333,
+     "exact_share": 0.0,
+     "mean_diff": 12.483,
+     "n": 60,
+     "systematic": true
+    },
+    "tov[player_to_sum]": {
+     "bbref_mean": 13.85,
+     "ci95": [
+      -0.867,
+      -0.5
+     ],
+     "dist": {
+      "-1": 26,
+      "-2": 6,
+      "-3": 1,
+      "0": 27,
+      "1": 0,
+      "2": 0,
+      "3": 0
+     },
+     "espn_mean": 13.167,
+     "exact_share": 0.45,
+     "mean_diff": -0.683,
+     "n": 60,
+     "systematic": true
+    },
+    "tov[player_to_sum] vs bbref_player_tov_sum": {
+     "bbref_mean": 13.167,
+     "ci95": [
+      0.0,
+      0.0
+     ],
+     "dist": {
+      "-1": 0,
+      "-2": 0,
+      "-3": 0,
+      "0": 60,
+      "1": 0,
+      "2": 0,
+      "3": 0
+     },
+     "espn_mean": 13.167,
+     "exact_share": 1.0,
+     "mean_diff": 0,
+     "n": 60,
+     "systematic": false
+    },
+    "tov[teamTurnovers]": {
+     "bbref_mean": 13.85,
+     "ci95": [
+      -14.108,
+      -12.225
+     ],
+     "dist": {
+      "-1": 0,
+      "-2": 0,
+      "-3": 60,
+      "0": 0,
+      "1": 0,
+      "2": 0,
+      "3": 0
+     },
+     "espn_mean": 0.683,
+     "exact_share": 0.0,
+     "mean_diff": -13.167,
+     "n": 60,
+     "systematic": true
+    },
+    "tov[totalTurnovers]": {
+     "bbref_mean": 13.85,
+     "ci95": [
+      0.0,
+      0.0
+     ],
+     "dist": {
+      "-1": 0,
+      "-2": 0,
+      "-3": 0,
+      "0": 60,
+      "1": 0,
+      "2": 0,
+      "3": 0
+     },
+     "espn_mean": 13.85,
+     "exact_share": 1.0,
+     "mean_diff": 0,
+     "n": 60,
+     "systematic": false
+    },
+    "tov[turnovers]": {
+     "bbref_mean": 13.85,
+     "ci95": [
+      -0.867,
+      -0.5
+     ],
+     "dist": {
+      "-1": 26,
+      "-2": 6,
+      "-3": 1,
+      "0": 27,
+      "1": 0,
+      "2": 0,
+      "3": 0
+     },
+     "espn_mean": 13.167,
+     "exact_share": 0.45,
+     "mean_diff": -0.683,
+     "n": 60,
+     "systematic": true
+    },
+    "trb": {
+     "bbref_mean": 44.383,
+     "ci95": [
+      0.0,
+      0.0
+     ],
+     "dist": {
+      "-1": 0,
+      "-2": 0,
+      "-3": 0,
+      "0": 60,
+      "1": 0,
+      "2": 0,
+      "3": 0
+     },
+     "espn_mean": 44.383,
+     "exact_share": 1.0,
+     "mean_diff": 0,
+     "n": 60,
+     "systematic": false
+    }
+   },
+   "games": 30,
+   "months": [
+    "2024-10",
+    "2024-11",
+    "2024-12",
+    "2025-01",
+    "2025-02",
+    "2025-03",
+    "2025-04"
+   ],
+   "teams": 30
+  }
+ }
+}

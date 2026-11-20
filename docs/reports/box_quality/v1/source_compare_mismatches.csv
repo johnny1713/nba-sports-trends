@@ -1,0 +1,14 @@
+season,field,game_id,start_utc,month,phase,team,team_abbr,home_away,espn,bbref,diff
+2018,fg3a,400974854,2017-11-01T00:00:00Z,2017-11,regular,25,OKC,away,27,28,-1
+2018,fga,400974854,2017-11-01T00:00:00Z,2017-11,regular,25,OKC,away,80,81,-1
+2018,oreb,400974958,2017-11-16T01:00:00Z,2017-11,regular,5,CLE,away,15,16,-1
+2018,oreb,400975973,2018-04-12T00:00:00Z,2018-04,regular,29,MEM,away,10,9,1
+2018,stored.fg3a,400974854,2017-11-01T00:00:00Z,2017-11,regular,25,OKC,away,27,28,-1
+2018,stored.fga,400974854,2017-11-01T00:00:00Z,2017-11,regular,25,OKC,away,80,81,-1
+2018,stored.oreb,400974958,2017-11-16T01:00:00Z,2017-11,regular,5,CLE,away,15,16,-1
+2018,stored.oreb,400975973,2018-04-12T00:00:00Z,2018-04,regular,29,MEM,away,10,9,1
+2018,tov[player_to_sum+turnovers],400974811,2017-10-26T00:00:00Z,2017-10,regular,25,OKC,home,20,21,-1
+2018,tov[player_to_sum+turnovers],400974933,2017-11-12T01:30:00Z,2017-11,regular,15,MIL,home,15,16,-1
+2018,tov[player_to_sum+turnovers],400974945,2017-11-14T01:00:00Z,2017-11,regular,15,MIL,home,10,11,-1
+2018,tov[player_to_sum+turnovers],400975263,2017-12-29T01:00:00Z,2017-12,regular,2,BOS,home,18,17,1
+2018,tov[player_to_sum+turnovers],400975932,2018-04-06T23:30:00Z,2018-04,regular,14,MIA,away,13,12,1

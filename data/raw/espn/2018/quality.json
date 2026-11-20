@@ -335,6 +335,13 @@
   "agree_pct": null,
   "n": 0
  },
+ "price_time_classes": {
+  "close_records": 0,
+  "close_timestamp_verified_pct": null,
+  "counts": {
+   "POSTGAME_SNAPSHOT": 46106
+  }
+ },
  "quality_status": "PASS",
  "season": 2018,
  "skipped_at_listing": {

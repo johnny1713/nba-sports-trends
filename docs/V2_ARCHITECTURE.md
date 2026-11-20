@@ -70,7 +70,22 @@ docs/
 | `price_decimal` | 小數賠率；缺就 null，**絕不補值** |
 | `observed_at` | 我們親眼看到的時間：`snapshot` 有，`open`/`close` 為 null（ESPN 沒給確切時間）|
 
-`stage` 的規則：
+`stage` 的規則（每筆價格另由 `nba_quant/price_time.py` 依**實際存在的時間欄位**判定時間性質）：
+
+| 時間性質 | 條件 | 用途 |
+|---|---|---|
+| PROVIDER_LABELED_OPEN / CLOSE | 供應商欄位標示為開盤／收盤，**沒有時間戳**（ESPN 全部屬於此類）| 可依標記使用，但不能宣稱已獨立驗證取得時間 |
+| TIMESTAMP_VERIFIED_OPEN / CLOSE | 有供應商時間戳 `provider_timestamp`，且早於開賽 | 可確認是賽前價格 |
+| PREGAME_SNAPSHOT | 我們自己在開賽前抓到（`observed_at` < 開賽）| 賽前價格 |
+| POSTGAME_SNAPSHOT | 賽後取得的 current | **不是收盤**；只供品質稽核 |
+| INVALID_AFTER_START | 時間戳或抓取時間 ≥ 開賽 | 不可當賽前價格 |
+
+- **不推測、不補造時間**：開盤／收盤只看 `provider_timestamp`；`fetched_at`（我們的抓取時間）不是價格時間。
+- **CLV 的收盤只能是 PROVIDER_LABELED_CLOSE 或 TIMESTAMP_VERIFIED_CLOSE**（`price_time.clv_closing_quotes()`、入口 `assert_clv_close()`）。
+- 每季品質報告揭露各類別筆數與「收盤時間戳驗證比例」（ESPN 目前為 0%）。
+- 未來若改用有時間戳的來源，`classify()` 會自動把早於開賽的收盤升級為 TIMESTAMP_VERIFIED_CLOSE，晚於開賽的判為無效。
+
+原有規則：
 - `open`：開盤，視為賽前可得 → 可用於預測與回測下注。
 - `snapshot`：我們每輪自己抓的即時盤，帶 `observed_at` → 只有 `observed_at < 預測時間` 才可用。
 - `close`：真正的收盤（CLOSING，ESPN 明確標記）→ **只能用於 CLV 與賽前市場基準的評估**，透過 `asof.closing_quotes()` 取得。

@@ -318,6 +318,13 @@
   "agree_pct": null,
   "n": 0
  },
+ "price_time_classes": {
+  "close_records": 0,
+  "close_timestamp_verified_pct": null,
+  "counts": {
+   "POSTGAME_SNAPSHOT": 68808
+  }
+ },
  "quality_status": "PASS",
  "season": 2021,
  "skipped_at_listing": {

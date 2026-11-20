@@ -255,6 +255,14 @@
   "agree_pct": 100.0,
   "n": 1268
  },
+ "price_time_classes": {
+  "close_records": 0,
+  "close_timestamp_verified_pct": null,
+  "counts": {
+   "POSTGAME_SNAPSHOT": 48402,
+   "PROVIDER_LABELED_OPEN": 33116
+  }
+ },
  "quality_status": "PASS",
  "season": 2016,
  "skipped_at_listing": {

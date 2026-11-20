@@ -19,7 +19,8 @@ POSTGAME_STAGES = {'current_postgame'}                   # 賽後才抓到的快
 EVAL_ONLY_STAGES = CLOSING_STAGES | POSTGAME_STAGES      # 兩者都不能進預測
 # 時間性質標籤（2026-11-20 使用者決定）：current_postgame 一律稱 POSTGAME_SNAPSHOT，不得稱為 CLOSING。
 # POSTGAME_SNAPSHOT 不得用於賽前模型訓練、賽前市場基準、CLV 或任何需要賽前資訊的回測評估。
-STAGE_TIME_CLASS = {'open': 'OPENING', 'snapshot': 'PREGAME_SNAPSHOT', 'close': 'CLOSING',
+# 沒有時間戳時的預設類別；有時間戳時由 price_time.classify() 升級為 TIMESTAMP_VERIFIED_* 或判為 INVALID_AFTER_START
+STAGE_TIME_CLASS = {'open': 'PROVIDER_LABELED_OPEN', 'snapshot': 'PREGAME_SNAPSHOT', 'close': 'PROVIDER_LABELED_CLOSE',
                     'current_postgame': 'POSTGAME_SNAPSHOT'}
 MARKETS = {'ml', 'spread', 'total'}
 SIDES = {'ml': {'home', 'away'}, 'spread': {'home', 'away'}, 'total': {'over', 'under'}}
@@ -127,7 +128,8 @@ class OddsQuote:
     price_decimal: Optional[float]
     source: str
     fetched_at: str
-    observed_at: Optional[str] = None
+    observed_at: Optional[str] = None          # 我們自己看到這個價格的時間（只有 snapshot 有）
+    provider_timestamp: Optional[str] = None   # 供應商提供的價格時間戳；ESPN 沒有 → 一律 None，絕不推測
 
     def validate(self):
         _req(self.stage in ODDS_STAGES, f'{self.game_id}: stage {self.stage}')
@@ -141,7 +143,7 @@ class OddsQuote:
             _req(self.price_decimal > 1.0, f'{self.game_id}: decimal price {self.price_decimal} <= 1')
         if self.stage == 'snapshot':
             _req(self.observed_at is not None, f'{self.game_id}: snapshot without observed_at')
-        parse_utc(self.observed_at), parse_utc(self.fetched_at)
+        parse_utc(self.observed_at), parse_utc(self.fetched_at), parse_utc(self.provider_timestamp)
         return self
 
 

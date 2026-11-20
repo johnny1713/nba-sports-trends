@@ -90,7 +90,8 @@ class StageLabelTests(unittest.TestCase):
     def test_postgame_is_never_labeled_closing(self):
         from nba_quant.schema import STAGE_TIME_CLASS, CLOSING_STAGES, POSTGAME_STAGES
         self.assertEqual(STAGE_TIME_CLASS['current_postgame'], 'POSTGAME_SNAPSHOT')
-        self.assertEqual(STAGE_TIME_CLASS['close'], 'CLOSING')
+        self.assertEqual(STAGE_TIME_CLASS['close'], 'PROVIDER_LABELED_CLOSE')
+        self.assertEqual(STAGE_TIME_CLASS['open'], 'PROVIDER_LABELED_OPEN')
         self.assertFalse(CLOSING_STAGES & POSTGAME_STAGES)
         self.assertFalse(hasattr(asof, 'quotes_for_evaluation'))     # 舊的混用介面已移除
 

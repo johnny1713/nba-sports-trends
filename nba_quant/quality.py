@@ -225,6 +225,7 @@ def season_report(season: int, live: bool = None) -> dict:
                         'error_rate_pct': round(100 * err_rate, 4), 'examples': _examples(flags)},
         'anomaly_analysis': anomaly_analysis(odds, flags, final_ids),
         'timestamps_available': False,
+        'price_time_classes': price_time_disclosure(odds, games),
         'opening_feed_agreement': _opening_agreement(odds_by_game, final_ids),
         'fetch': {'requests': flog.get('requests'), 'http_errors': len(flog.get('http_errors', [])),
                   'parse_errors': len(flog.get('parse_errors', [])),
@@ -322,6 +323,7 @@ def render_md(r):
           '- 同一場比賽的其他莊家、其他盤口、同組另一邊（若無問題）全部保留，不會因一筆異常排除整場', '']
     for kind, exs in oc['examples'].items():
         L.append(f'- {kind}：' + '；'.join(f'`{e}`' for e in exs))
+    L += render_price_time(r.get('price_time_classes'))
     L += render_conditional(r.get('conditional'))
     if r.get('strict_stage_coverage'):
         L += ['', '## 開盤／收盤嚴格覆蓋（2023-24 起；可用 = 未被標記、雙邊齊全、有價格）', '',
@@ -516,4 +518,33 @@ def render_conditional(c):
     keep = a.get('kept_note')
     if keep:
         L += ['', f'- 保留使用：{keep}']
+    return L
+
+
+# ---------------------------------------------------------------- 價格時間性質揭露
+def price_time_disclosure(odds, games):
+    from .price_time import verification_summary, PROVIDER_LABELED_CLOSE, TIMESTAMP_VERIFIED_CLOSE
+    start = {g['game_id']: g['start_utc'] for g in games if g['status'] == 'final'}
+    summ = verification_summary([q for q in odds if q['game_id'] in start], start)
+    closes = summ.get(PROVIDER_LABELED_CLOSE, 0) + summ.get(TIMESTAMP_VERIFIED_CLOSE, 0)
+    return {'counts': summ, 'close_records': closes,
+            'close_timestamp_verified_pct': _pct(summ.get(TIMESTAMP_VERIFIED_CLOSE, 0), closes)}
+
+
+def render_price_time(pt):
+    if not pt:
+        return []
+    labels = {'PROVIDER_LABELED_OPEN': '供應商標記的開盤（無時間戳）', 'PROVIDER_LABELED_CLOSE': '供應商標記的收盤（無時間戳）',
+              'TIMESTAMP_VERIFIED_OPEN': '時間戳驗證的開盤', 'TIMESTAMP_VERIFIED_CLOSE': '時間戳驗證的收盤',
+              'PREGAME_SNAPSHOT': '我們自己的賽前快照', 'POSTGAME_SNAPSHOT': '賽後快照（非收盤）',
+              'INVALID_AFTER_START': '時間晚於開賽（不可當賽前價格）', 'UNCLASSIFIABLE': '無法分類'}
+    L = ['', '## 價格時間性質（莊家盤口筆數）', '', '| 類別 | 筆數 |', '|---|---|']
+    for k, v in sorted(pt['counts'].items()):
+        L.append(f"| {labels.get(k, k)}（{k}） | {v} |")
+    v = pt['close_timestamp_verified_pct']
+    L += ['', f"- **收盤時間戳驗證：{'無收盤資料' if v is None else str(v) + '%'}**"
+          + ('' if not pt['close_records'] else f"（收盤 {pt['close_records']} 筆）"),
+          '- ESPN 沒有提供開盤、收盤或最後更新的實際時間：開盤／收盤只能依供應商欄位標記使用，'
+          '**不能宣稱已獨立驗證取得時間**；我們不推測、不補造時間（fetched_at 是我們的抓取時間，不是價格時間）。',
+          '- CLV 只能使用供應商標記的收盤（PROVIDER_LABELED_CLOSE）或時間戳驗證的收盤；賽後快照一律不可用。']
     return L

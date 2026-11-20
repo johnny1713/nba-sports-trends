@@ -1,0 +1,13 @@
+{
+ "http_errors": [],
+ "notes": [],
+ "notes_total": 0,
+ "parse_errors": [],
+ "requests": 3091,
+ "season": 2022,
+ "skipped": {
+  "non-NBA teams (all-star etc.)": 1,
+  "season type 1": 66,
+  "season type 5": 6
+ }
+}

@@ -1,0 +1,337 @@
+{
+ "anomaly_analysis": {
+  "by_book": [
+   {
+    "book_records": 7888,
+    "error_records": 346,
+    "provider": "Unibet",
+    "rate_pct": 4.39
+   },
+   {
+    "book_records": 7706,
+    "error_records": 252,
+    "provider": "SugarHouse",
+    "rate_pct": 3.27
+   },
+   {
+    "book_records": 7640,
+    "error_records": 210,
+    "provider": "Caesars Sportsbook",
+    "rate_pct": 2.75
+   },
+   {
+    "book_records": 6992,
+    "error_records": 14,
+    "provider": "Caesars Sportsbook (Colorado)",
+    "rate_pct": 0.2
+   },
+   {
+    "book_records": 7260,
+    "error_records": 6,
+    "provider": "Holland Casino",
+    "rate_pct": 0.08
+   },
+   {
+    "book_records": 5458,
+    "error_records": 4,
+    "provider": "PointsBet",
+    "rate_pct": 0.07
+   },
+   {
+    "book_records": 7884,
+    "error_records": 2,
+    "provider": "DraftKings",
+    "rate_pct": 0.03
+   },
+   {
+    "book_records": 7606,
+    "error_records": 2,
+    "provider": "Westgate",
+    "rate_pct": 0.03
+   }
+  ],
+  "by_kind": {
+   "line_deviates_from_market": 660,
+   "spread_deviates_from_market": 100,
+   "spread_ml_direction_conflict": 24,
+   "total_out_of_range": 52
+  },
+  "by_severity": {
+   "error": 836,
+   "warning": 790
+  },
+  "direction_check_same_book_same_stage": true,
+  "direction_conflict_attribution": {
+   "無法歸因或可比較莊家不足 3 家 → 讓分與獨贏都排除": 6,
+   "讓分偏離市場 → 只排除該組讓分盤（兩邊）": 50
+  },
+  "error_records": 836,
+  "extreme_spreads": [],
+  "top_book_share_pct": 41.39
+ },
+ "box_issue_examples": [],
+ "box_issues": 0,
+ "by_phase": {
+  "postseason": {
+   "abnormal_deviation": 18,
+   "abnormal_price": 14,
+   "abnormal_spread": 4,
+   "abnormal_total": 4,
+   "abnormal_unattributed": 0,
+   "bbref_filled": 0,
+   "book_coverage_pct": {
+    "BetfairSportsbook": 25.29,
+    "Caesars Sportsbook": 100.0,
+    "Caesars Sportsbook (Colorado)": 100.0,
+    "Caesars Sportsbook (New Jersey)": 100.0,
+    "Caesars Sportsbook (Pennsylvania)": 100.0,
+    "DraftKings": 100.0,
+    "Holland Casino": 100.0,
+    "MGM": 98.85,
+    "PointsBet": 87.36,
+    "SugarHouse": 98.85,
+    "Titanbets": 100.0,
+    "Unibet": 100.0,
+    "Westgate": 85.06
+   },
+   "books_per_game_median": 12,
+   "complete": 87,
+   "complete_pct": 100.0,
+   "coverage": {
+    "close/ml": {
+     "line_pct": 0.0,
+     "price_pct": 0.0
+    },
+    "close/spread": {
+     "line_pct": 0.0,
+     "price_pct": 0.0
+    },
+    "close/total": {
+     "line_pct": 0.0,
+     "price_pct": 0.0
+    },
+    "current_postgame/ml": {
+     "line_pct": 100.0,
+     "price_pct": 100.0
+    },
+    "current_postgame/spread": {
+     "line_pct": 100.0,
+     "price_pct": 100.0
+    },
+    "current_postgame/total": {
+     "line_pct": 100.0,
+     "price_pct": 100.0
+    },
+    "open/ml": {
+     "line_pct": 0.0,
+     "price_pct": 0.0
+    },
+    "open/spread": {
+     "line_pct": 0.0,
+     "price_pct": 0.0
+    },
+    "open/total": {
+     "line_pct": 0.0,
+     "price_pct": 0.0
+    }
+   },
+   "espn_box_missing": 0,
+   "final": 87,
+   "flags": {
+    "by_kind": {
+     "line_deviates_from_market": 18,
+     "overround_high": 4,
+     "price_extreme": 10,
+     "spread_deviates_from_market": 4,
+     "total_out_of_range": 4
+    },
+    "error": 26,
+    "missing": 0,
+    "warning": 14
+   },
+   "games": 87,
+   "odds_missing_examples": [],
+   "odds_missing_games": 0,
+   "placeholder_missing": 0,
+   "status": {
+    "final": 87
+   },
+   "still_incomplete": 0,
+   "suspected_live": 0
+  },
+  "regular": {
+   "abnormal_deviation": 642,
+   "abnormal_price": 776,
+   "abnormal_spread": 96,
+   "abnormal_total": 48,
+   "abnormal_unattributed": 24,
+   "bbref_filled": 0,
+   "book_coverage_pct": {
+    "Caesars Sportsbook": 96.67,
+    "Caesars Sportsbook (Colorado)": 88.21,
+    "Caesars Sportsbook (New Jersey)": 99.84,
+    "Caesars Sportsbook (Pennsylvania)": 99.92,
+    "DraftKings": 99.92,
+    "Holland Casino": 91.54,
+    "MGM": 99.84,
+    "PointsBet": 72.93,
+    "SugarHouse": 97.8,
+    "Titanbets": 99.84,
+    "Unibet": 99.84,
+    "Westgate": 97.64
+   },
+   "books_per_game_median": 12.0,
+   "complete": 1230,
+   "complete_pct": 100.0,
+   "coverage": {
+    "close/ml": {
+     "line_pct": 0.0,
+     "price_pct": 0.0
+    },
+    "close/spread": {
+     "line_pct": 0.0,
+     "price_pct": 0.0
+    },
+    "close/total": {
+     "line_pct": 0.0,
+     "price_pct": 0.0
+    },
+    "current_postgame/ml": {
+     "line_pct": 100.0,
+     "price_pct": 100.0
+    },
+    "current_postgame/spread": {
+     "line_pct": 100.0,
+     "price_pct": 100.0
+    },
+    "current_postgame/total": {
+     "line_pct": 100.0,
+     "price_pct": 100.0
+    },
+    "open/ml": {
+     "line_pct": 0.0,
+     "price_pct": 0.0
+    },
+    "open/spread": {
+     "line_pct": 0.0,
+     "price_pct": 0.0
+    },
+    "open/total": {
+     "line_pct": 0.0,
+     "price_pct": 0.0
+    }
+   },
+   "espn_box_missing": 0,
+   "final": 1230,
+   "flags": {
+    "by_kind": {
+     "line_deviates_from_market": 642,
+     "overround_high": 424,
+     "price_extreme": 352,
+     "spread_deviates_from_market": 96,
+     "spread_ml_direction_conflict": 24,
+     "total_out_of_range": 48
+    },
+    "error": 810,
+    "missing": 0,
+    "warning": 776
+   },
+   "games": 1241,
+   "odds_missing_examples": [],
+   "odds_missing_games": 0,
+   "placeholder_missing": 0,
+   "status": {
+    "final": 1230,
+    "postponed": 11
+   },
+   "still_incomplete": 0,
+   "suspected_live": 228
+  }
+ },
+ "duplicates": [],
+ "expected_regular": 1230,
+ "fetch": {
+  "http_errors": 0,
+  "parse_error_examples": [],
+  "parse_errors": 0,
+  "requests": 3091
+ },
+ "incomplete_examples": [],
+ "label": "2021-22",
+ "live": false,
+ "odds_checks": {
+  "error": 836,
+  "error_rate_pct": 0.3511,
+  "examples": {
+   "line_deviates_from_market": [
+    "401358781/Unibet/current_postgame/total/over: 218.5 vs market median 206.5 (n=12)",
+    "401358781/Unibet/current_postgame/total/under: 218.5 vs market median 206.5 (n=12)",
+    "401359867/Caesars Sportsbook/current_postgame/ml/away: 0.679 vs market median 0.835 (n=11)",
+    "401359867/Caesars Sportsbook/current_postgame/ml/home: 0.679 vs market median 0.835 (n=11)",
+    "401359877/SugarHouse/current_postgame/spread/away: 4.5 vs market median -2.25 (n=12)；比市場更接近實際結果（疑似滾球盤混入）"
+   ],
+   "overround_high": [
+    "401358773/MGM/current_postgame/ml/away: 1.0000",
+    "401358773/MGM/current_postgame/ml/home: 1.0000",
+    "401358777/MGM/current_postgame/ml/away: 1.0000",
+    "401358777/MGM/current_postgame/ml/home: 1.0000",
+    "401358779/MGM/current_postgame/ml/away: 1.0000"
+   ],
+   "price_extreme": [
+    "401358781/Unibet/current_postgame/total/over: over 3.55",
+    "401358781/Unibet/current_postgame/total/under: under 1.298507",
+    "401359877/Unibet/current_postgame/spread/away: away 2.85",
+    "401359877/Unibet/current_postgame/spread/home: home 1.425532",
+    "401359920/Unibet/current_postgame/spread/away: away 1.31746"
+   ],
+   "spread_deviates_from_market": [
+    "401359833/SugarHouse/current_postgame/spread/away: home spread -2.5, peers median 1.5 (n=10), peers home-fav share 0.10",
+    "401359833/SugarHouse/current_postgame/spread/home: home spread -2.5, peers median 1.5 (n=10), peers home-fav share 0.10",
+    "401359833/Unibet/current_postgame/spread/away: home spread -2.5, peers median 1.5 (n=10), peers home-fav share 0.10",
+    "401359833/Unibet/current_postgame/spread/home: home spread -2.5, peers median 1.5 (n=10), peers home-fav share 0.10",
+    "401359877/SugarHouse/current_postgame/spread/away: home spread 4.5, peers median -2.5 (n=10), peers home-fav share 1.00"
+   ],
+   "spread_ml_direction_conflict": [
+    "401360014/Unibet/current_postgame/ml/away: home spread 2.5, peers median 1.0 (n=10), peers home-fav share 0.30",
+    "401360014/Unibet/current_postgame/ml/home: home spread 2.5, peers median 1.0 (n=10), peers home-fav share 0.30",
+    "401360014/Unibet/current_postgame/spread/away: home spread 2.5, peers median 1.0 (n=10), peers home-fav share 0.30",
+    "401360014/Unibet/current_postgame/spread/home: home spread 2.5, peers median 1.0 (n=10), peers home-fav share 0.30",
+    "401360037/PointsBet/current_postgame/ml/away: home spread -3.0, peers median -1.0 (n=10), peers home-fav share 0.90"
+   ],
+   "total_out_of_range": [
+    "401359885/Caesars Sportsbook/current_postgame/total/over: 55.5",
+    "401359885/Caesars Sportsbook/current_postgame/total/under: 55.5",
+    "401360129/Caesars Sportsbook/current_postgame/total/over: 50.5",
+    "401360129/Caesars Sportsbook/current_postgame/total/under: 50.5",
+    "401360133/Caesars Sportsbook/current_postgame/total/over: 56.0"
+   ]
+  },
+  "missing": 0,
+  "n": 238097,
+  "warning": 790
+ },
+ "opening_feed_agreement": {
+  "agree_pct": null,
+  "n": 0
+ },
+ "season": 2022,
+ "skipped_at_listing": {
+  "non-NBA teams (all-star etc.)": 1,
+  "season type 1": 66,
+  "season type 5": 6
+ },
+ "source_label_examples": [],
+ "source_label_problems": 0,
+ "teams": {
+  "expected_range": [
+   82,
+   83
+  ],
+  "max_games": 82,
+  "min_games": 82,
+  "n": 30
+ },
+ "timestamps_available": false,
+ "verdict": "通過",
+ "verdict_ok": true
+}

@@ -97,6 +97,13 @@ docs/
 - 模型輸入以 `check_model_inputs()` 檢查；未登記特徵報錯。
 - Elo：同一美東日期所有比賽都用前一日結束時的評分；game_id 只作同時開賽的排序鍵。
 
+### 2.7.3 資料存取層（第六輪，`nba_quant/data_access.py`）
+
+- 特徵、模型、回測、頁面程式只能透過 `DataAccess(purpose)` 讀資料；直接讀原始資料會被結構測試擋下。
+- 2024-25：只有 data_quality 可讀（模型凍結後，evaluation + 已登記 run_id 依原定規則放行）；2025-26：任何用途都拒絕。
+- 時間（前一美東日期）、範圍（分類表用途欄位）、欄位可用性（2017-18 tov、tov_usable）、盤口隔離、特徵依賴檢查都在這一層強制。
+- 跨球季 fallback：F2 不跳過不可用球季、不足標 missing；F1 先驗改用當時可取得的聯盟平均（見設計文件 3.5）。
+
 ### 2.8 中立場（`data/reference/neutral_sites.csv`）
 
 - 不修改 games.jsonl.gz 的 `neutral` 欄位；ESPN 的 `neutral` 旗標本身不算證據。

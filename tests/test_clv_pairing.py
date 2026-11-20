@@ -120,3 +120,68 @@ class PairingTests(unittest.TestCase):
 
 if __name__ == '__main__':
     unittest.main()
+
+
+def pair_with(market, side, open_line, close_line, open_p, open_o, close_p, close_o):
+    s1 = side
+    s2 = clv.OTHER_SIDE[side]
+    if market == 'spread':
+        ol2, cl2 = -open_line, -close_line
+    elif market == 'total':
+        ol2, cl2 = open_line, close_line
+    else:
+        open_line = close_line = ol2 = cl2 = None
+    qs = [q('open', s1, open_p, market=market, line=open_line), q('open', s2, open_o, market=market, line=ol2),
+          q('close', s1, close_p, market=market, line=close_line), q('close', s2, close_o, market=market, line=cl2)]
+    if market == 'ml':
+        for x in qs:
+            x['line'] = None
+    pairs, excl = clv.pair_open_close(qs, START)
+    return [p for p in pairs if p['side'] == side][0]
+
+
+class LinePriceClvTests(unittest.TestCase):
+    def test_spread_line_clv_orientation(self):
+        self.assertEqual(clv.line_clv(pair_with('spread', 'home', -5.5, -7.5, 1.91, 1.91, 1.91, 1.91)), (2.0, None))
+        self.assertEqual(clv.line_clv(pair_with('spread', 'away', 5.5, 3.5, 1.91, 1.91, 1.91, 1.91)), (2.0, None))
+        self.assertEqual(clv.line_clv(pair_with('spread', 'home', -7.5, -5.5, 1.91, 1.91, 1.91, 1.91)), (-2.0, None))
+        # 主客對稱：同一場線位移動，主隊得 +2 時客隊一定是 −2
+        self.assertEqual(clv.line_clv(pair_with('spread', 'away', 5.5, 7.5, 1.91, 1.91, 1.91, 1.91)), (-2.0, None))
+
+    def test_total_line_clv_orientation(self):
+        self.assertEqual(clv.line_clv(pair_with('total', 'over', 220.0, 223.0, 1.91, 1.91, 1.91, 1.91)), (3.0, None))
+        self.assertEqual(clv.line_clv(pair_with('total', 'under', 223.0, 220.0, 1.91, 1.91, 1.91, 1.91)), (3.0, None))
+        self.assertEqual(clv.line_clv(pair_with('total', 'under', 220.0, 223.0, 1.91, 1.91, 1.91, 1.91)), (-3.0, None))
+
+    def test_moneyline_has_no_line_clv(self):
+        p = pair_with('ml', 'home', None, None, 2.10, 1.80, 1.90, 2.00)
+        self.assertEqual(clv.line_clv(p), (None, clv.NA_ML_LINE))
+        v, why = clv.price_clv(p)
+        self.assertIsNone(why)
+        self.assertGreater(v, 0)          # 主隊從 2.10 縮到 1.90：下注時的價格較好
+
+    def test_line_improvement_does_not_imply_price_advantage(self):
+        """線位變好（+2 分），但線不同 → Price CLV 不可比，不會被當成價格優勢。"""
+        p = pair_with('spread', 'home', -5.5, -7.5, 1.95, 1.87, 1.80, 2.05)
+        self.assertEqual(clv.line_clv(p), (2.0, None))
+        self.assertEqual(clv.price_clv(p), (None, clv.LINE_MOVED))
+        with self.assertRaises(ValueError):
+            clv.clv_prob(p)
+
+    def test_same_line_price_clv_can_be_negative_while_line_is_zero(self):
+        p = pair_with('spread', 'home', -5.5, -5.5, 1.80, 2.05, 1.95, 1.87)   # 線不變，下注時賠率較差
+        self.assertEqual(clv.line_clv(p), (0.0, None))
+        v, _ = clv.price_clv(p)
+        self.assertLess(v, 0)
+
+    def test_metrics_report_keeps_them_separate(self):
+        ps = [pair_with('spread', 'home', -5.5, -7.5, 1.95, 1.87, 1.80, 2.05),
+              pair_with('spread', 'home', -5.5, -5.5, 1.80, 2.05, 1.95, 1.87),
+              pair_with('ml', 'home', None, None, 2.10, 1.80, 1.90, 2.00)]
+        r = clv.clv_metrics_report(ps)
+        self.assertEqual(r['spread']['line_clv']['n'], 2)
+        self.assertEqual(r['spread']['price_clv']['n'], 1)
+        self.assertEqual(r['spread']['not_computed'], {f'price:{clv.LINE_MOVED}': 1})
+        self.assertEqual(r['ml']['line_clv']['n'], 0)
+        self.assertEqual(r['ml']['not_computed'], {f'line:{clv.NA_ML_LINE}': 1})
+        self.assertEqual(r['ml']['price_clv']['n'], 1)

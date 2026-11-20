@@ -206,6 +206,18 @@ CLV 的任何計算都只能使用 `clv.pair_open_close()` 產生的配對：
 7. 去水所需的另一邊價格，也必須是**同一家、同一市場、同一階段**的報價，不得借用其他莊家。
 8. CLV 報告必附 `clv.pairing_report()`：有效配對數、有效場次、排除數、依原因與市場的排除明細、收盤的時間性質（是否經時間戳驗證）。
 
+### Line CLV 與 Price CLV（兩個獨立指標，分開呈現）
+
+| 指標 | 市場 | 定義（正值 = 下注時比收盤更有利）| 不計算的情況 |
+|---|---|---|---|
+| **Line CLV**（分）| 讓分 | 以押注那隊角度：下注線 − 收盤線（押 −5.5、收 −7.5 → +2）| 獨贏：不適用（`not_applicable_moneyline_has_no_line`）|
+| | 總分 | 大分：收盤線 − 下注線；小分：下注線 − 收盤線 | |
+| **Price CLV**（機率）| 全部 | 同一家去水後隱含機率：收盤 − 下注時 | 讓分／總分的下注線 ≠ 收盤線：不可比（`line_moved_price_not_comparable`），不把線位變動混進價格 |
+
+- **不可因為 Line CLV 為正就認定 Price CLV 也為正**：兩者各自報告有效筆數、平均值、正值比例（`clv.clv_metrics_report()`）。
+- **獨贏另外處理**：只有 Price CLV，不套用讓分的線位算法。
+- 舊介面 `clv_prob()` 等同 Price CLV，不可比時直接報錯。
+
 排除原因代碼：`missing_open`、`missing_close`、`open_not_pregame`、`close_not_clv_eligible`、`missing_price`、`flagged_record`、`missing_same_book_other_side_for_devig`。
 
 ## 7. 版本與重現（要求 E）

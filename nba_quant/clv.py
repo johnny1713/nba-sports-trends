@@ -118,11 +118,73 @@ def devig_prob(price, other_price):
     return a / (a + b)
 
 
-def clv_prob(p: dict) -> float:
-    """以同一家的雙邊價格去水：收盤去水機率 − 開盤去水機率（正值 = 開盤下注得到比收盤更好的價格）。"""
+# ---------------------------------------------------------------- Line CLV 與 Price CLV（兩個獨立指標）
+# 2026-11-20 使用者決定：分開計算、分開呈現；盤口線改善不代表賠率也有優勢。正值一律代表「下注時比收盤更有利」。
+NA_ML_LINE = 'not_applicable_moneyline_has_no_line'
+LINE_MOVED = 'line_moved_price_not_comparable'
+
+
+def line_clv(p: dict):
+    """
+    Line CLV（只適用讓分、總分；獨贏回傳 (None, NA_ML_LINE)）。單位：分。
+      讓分：以被押注那隊的角度（負 = 讓分），bet − close。例：押主隊 −5.5，收盤 −7.5 → +2.0（多拿 2 分）。
+                                                      押客隊 +5.5，收盤 +3.5 → +2.0。
+      大分：close − bet（買低）。例：大 220，收盤 223 → +3.0。
+      小分：bet − close（買高）。例：小 223，收盤 220 → +3.0。
+    """
     assert_valid_pair(p)
+    if p['market'] == 'ml':
+        return None, NA_ML_LINE
+    b, c = p['open']['line'], p['close']['line']
+    if p['market'] == 'spread':
+        return b - c, None
+    return ((c - b) if p['side'] == 'over' else (b - c)), None
+
+
+def price_clv(p: dict):
+    """
+    Price CLV：同一家去水後的隱含機率，收盤 − 下注時。正值 = 下注時的價格比收盤更有利。
+    讓分／總分：**只有下注時與收盤的盤口線相同時才可比**；線位不同時回傳 (None, LINE_MOVED)，
+    不把線位變動混進價格比較（線位變動另由 line_clv 呈現）。
+    獨贏：沒有線位，直接比較去水機率。
+    """
+    assert_valid_pair(p)
+    if p['market'] != 'ml':
+        for a, b in ((p['open'], p['close']), (p['open_other'], p['close_other'])):
+            if a['line'] != b['line']:
+                return None, LINE_MOVED
     return (devig_prob(p['close']['price_decimal'], p['close_other']['price_decimal'])
-            - devig_prob(p['open']['price_decimal'], p['open_other']['price_decimal']))
+            - devig_prob(p['open']['price_decimal'], p['open_other']['price_decimal'])), None
+
+
+def clv_prob(p: dict) -> float:
+    """相容舊介面＝price_clv；不可比較時直接報錯，絕不悄悄混入線位變動。"""
+    v, why = price_clv(p)
+    if v is None:
+        raise ValueError(f'price CLV not comparable: {why}')
+    return v
+
+
+def clv_metrics_report(pairs: List[dict]) -> dict:
+    """Line CLV 與 Price CLV 分開彙總（依市場），各自附有效筆數與不適用／不可比筆數。"""
+    out = {}
+    for market in ('spread', 'total', 'ml'):
+        ps = [p for p in pairs if p['market'] == market]
+        lines, prices, why = [], [], Counter()
+        for p in ps:
+            v, r = line_clv(p)
+            (lines.append(v) if v is not None else why.update([f'line:{r}']))
+            v, r = price_clv(p)
+            (prices.append(v) if v is not None else why.update([f'price:{r}']))
+        out[market] = {
+            'pairs': len(ps),
+            'line_clv': {'n': len(lines), 'mean_points': (sum(lines) / len(lines)) if lines else None,
+                         'positive_share': (sum(v > 0 for v in lines) / len(lines)) if lines else None},
+            'price_clv': {'n': len(prices), 'mean_prob': (sum(prices) / len(prices)) if prices else None,
+                          'positive_share': (sum(v > 0 for v in prices) / len(prices)) if prices else None},
+            'not_computed': dict(why),
+        }
+    return out
 
 
 def pairing_report(pairs: List[dict], exclusions: List[dict]) -> dict:

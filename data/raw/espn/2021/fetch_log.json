@@ -1,0 +1,13 @@
+{
+ "http_errors": [],
+ "notes": [],
+ "notes_total": 0,
+ "parse_errors": [],
+ "requests": 2787,
+ "season": 2021,
+ "skipped": {
+  "non-NBA teams (all-star etc.)": 1,
+  "season type 1": 49,
+  "season type 5": 6
+ }
+}

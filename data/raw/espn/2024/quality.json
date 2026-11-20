@@ -1,0 +1,380 @@
+{
+ "anomaly_analysis": {
+  "by_book": [
+   {
+    "book_records": 15648,
+    "error_records": 256,
+    "provider": "ESPN BET",
+    "rate_pct": 1.64
+   },
+   {
+    "book_records": 14908,
+    "error_records": 232,
+    "provider": "Unibet",
+    "rate_pct": 1.56
+   },
+   {
+    "book_records": 14452,
+    "error_records": 140,
+    "provider": "SugarHouse",
+    "rate_pct": 0.97
+   },
+   {
+    "book_records": 14900,
+    "error_records": 52,
+    "provider": "BetfairSportsbook",
+    "rate_pct": 0.35
+   },
+   {
+    "book_records": 14612,
+    "error_records": 52,
+    "provider": "DraftKings",
+    "rate_pct": 0.36
+   },
+   {
+    "book_records": 14760,
+    "error_records": 34,
+    "provider": "Titanbets",
+    "rate_pct": 0.23
+   },
+   {
+    "book_records": 14626,
+    "error_records": 32,
+    "provider": "Caesars Sportsbook (Colorado)",
+    "rate_pct": 0.22
+   },
+   {
+    "book_records": 14664,
+    "error_records": 24,
+    "provider": "Caesars Sportsbook (Tennessee)",
+    "rate_pct": 0.16
+   },
+   {
+    "book_records": 14706,
+    "error_records": 20,
+    "provider": "Caesars Sportsbook (New Jersey)",
+    "rate_pct": 0.14
+   },
+   {
+    "book_records": 14952,
+    "error_records": 12,
+    "provider": "MGM",
+    "rate_pct": 0.08
+   },
+   {
+    "book_records": 4164,
+    "error_records": 4,
+    "provider": "PointsBet",
+    "rate_pct": 0.1
+   },
+   {
+    "book_records": 176,
+    "error_records": 2,
+    "provider": "Caesars Sportsbook",
+    "rate_pct": 1.14
+   }
+  ],
+  "by_kind": {
+   "line_deviates_from_market": 712,
+   "ml_deviates_from_market": 28,
+   "spread_deviates_from_market": 94,
+   "spread_ml_direction_conflict": 20,
+   "total_out_of_range": 6
+  },
+  "by_severity": {
+   "error": 860,
+   "warning": 455
+  },
+  "direction_check_same_book_same_stage": true,
+  "direction_conflict_attribution": {
+   "無法歸因或可比較莊家不足 3 家 → 讓分與獨贏都排除": 5,
+   "獨贏偏離市場 → 只排除該組獨贏盤（兩邊）": 14,
+   "讓分偏離市場 → 只排除該組讓分盤（兩邊）": 47
+  },
+  "error_records": 860,
+  "extreme_spreads": [],
+  "top_book_share_pct": 29.77
+ },
+ "box_issue_examples": [],
+ "box_issues": 0,
+ "by_phase": {
+  "postseason": {
+   "abnormal_deviation": 0,
+   "abnormal_price": 5,
+   "abnormal_spread": 0,
+   "abnormal_total": 2,
+   "abnormal_unattributed": 0,
+   "bbref_filled": 0,
+   "book_coverage_pct": {
+    "BetfairSportsbook": 24.39,
+    "Caesars Sportsbook (Colorado)": 24.39,
+    "Caesars Sportsbook (New Jersey)": 24.39,
+    "Caesars Sportsbook (Tennessee)": 24.39,
+    "DraftKings": 24.39,
+    "ESPN BET": 100.0,
+    "MGM": 24.39,
+    "SugarHouse": 24.39,
+    "Titanbets": 24.39,
+    "Unibet": 24.39
+   },
+   "books_per_game_median": 1.0,
+   "complete": 82,
+   "complete_pct": 100.0,
+   "coverage": {
+    "close/ml": {
+     "line_pct": 100.0,
+     "price_pct": 100.0
+    },
+    "close/spread": {
+     "line_pct": 100.0,
+     "price_pct": 100.0
+    },
+    "close/total": {
+     "line_pct": 100.0,
+     "price_pct": 100.0
+    },
+    "current_postgame/ml": {
+     "line_pct": 0.0,
+     "price_pct": 0.0
+    },
+    "current_postgame/spread": {
+     "line_pct": 0.0,
+     "price_pct": 0.0
+    },
+    "current_postgame/total": {
+     "line_pct": 0.0,
+     "price_pct": 0.0
+    },
+    "open/ml": {
+     "line_pct": 100.0,
+     "price_pct": 100.0
+    },
+    "open/spread": {
+     "line_pct": 100.0,
+     "price_pct": 100.0
+    },
+    "open/total": {
+     "line_pct": 100.0,
+     "price_pct": 100.0
+    }
+   },
+   "espn_box_missing": 0,
+   "final": 82,
+   "flags": {
+    "by_kind": {
+     "price_extreme": 5,
+     "total_out_of_range": 2
+    },
+    "error": 2,
+    "missing": 0,
+    "warning": 5
+   },
+   "games": 82,
+   "line_field_contains_price": 0,
+   "odds_missing_examples": [],
+   "odds_missing_games": 0,
+   "placeholder_missing": 0,
+   "status": {
+    "final": 82
+   },
+   "still_incomplete": 0,
+   "suspected_live": 0
+  },
+  "regular": {
+   "abnormal_deviation": 712,
+   "abnormal_price": 478,
+   "abnormal_spread": 94,
+   "abnormal_total": 4,
+   "abnormal_unattributed": 20,
+   "bbref_filled": 0,
+   "book_coverage_pct": {
+    "BetfairSportsbook": 99.84,
+    "Caesars Sportsbook": 1.46,
+    "Caesars Sportsbook (Colorado)": 98.62,
+    "Caesars Sportsbook (New Jersey)": 98.7,
+    "Caesars Sportsbook (Tennessee)": 98.54,
+    "DraftKings": 99.84,
+    "ESPN BET": 99.68,
+    "MGM": 99.92,
+    "PointsBet": 28.27,
+    "SugarHouse": 96.75,
+    "Titanbets": 98.86,
+    "Unibet": 99.84,
+    "betegy": 1.62
+   },
+   "books_per_game_median": 10,
+   "complete": 1231,
+   "complete_pct": 100.0,
+   "coverage": {
+    "close/ml": {
+     "line_pct": 100.0,
+     "price_pct": 100.0
+    },
+    "close/spread": {
+     "line_pct": 100.0,
+     "price_pct": 100.0
+    },
+    "close/total": {
+     "line_pct": 100.0,
+     "price_pct": 100.0
+    },
+    "current_postgame/ml": {
+     "line_pct": 0.0,
+     "price_pct": 0.0
+    },
+    "current_postgame/spread": {
+     "line_pct": 0.0,
+     "price_pct": 0.0
+    },
+    "current_postgame/total": {
+     "line_pct": 0.0,
+     "price_pct": 0.0
+    },
+    "open/ml": {
+     "line_pct": 99.84,
+     "price_pct": 99.84
+    },
+    "open/spread": {
+     "line_pct": 99.59,
+     "price_pct": 99.59
+    },
+    "open/total": {
+     "line_pct": 99.92,
+     "price_pct": 99.92
+    }
+   },
+   "espn_box_missing": 0,
+   "final": 1231,
+   "flags": {
+    "by_kind": {
+     "line_deviates_from_market": 712,
+     "ml_deviates_from_market": 28,
+     "overround_high": 28,
+     "price_extreme": 422,
+     "spread_deviates_from_market": 94,
+     "spread_ml_direction_conflict": 20,
+     "total_out_of_range": 4
+    },
+    "error": 858,
+    "missing": 0,
+    "warning": 450
+   },
+   "games": 1233,
+   "line_field_contains_price": 0,
+   "odds_missing_examples": [],
+   "odds_missing_games": 0,
+   "placeholder_missing": 0,
+   "status": {
+    "final": 1231,
+    "postponed": 2
+   },
+   "still_incomplete": 0,
+   "suspected_live": 264
+  }
+ },
+ "conditional": null,
+ "conditional_pass": false,
+ "continue_authorization": null,
+ "duplicates": [],
+ "expected_regular": 1230,
+ "fetch": {
+  "http_errors": 0,
+  "parse_error_examples": [],
+  "parse_errors": 0,
+  "requests": 3084
+ },
+ "incomplete_examples": [],
+ "label": "2023-24",
+ "live": false,
+ "odds_checks": {
+  "error": 860,
+  "error_rate_pct": 0.213,
+  "examples": {
+   "line_deviates_from_market": [
+    "401584104/ESPN BET/open/spread/away: -2.5 vs market median 2.5 (n=10)；比市場更接近實際結果（疑似滾球盤混入）",
+    "401584104/ESPN BET/open/spread/home: -2.5 vs market median 2.5 (n=10)；比市場更接近實際結果（疑似滾球盤混入）",
+    "401584104/SugarHouse/close/total/over: 224.5 vs market median 232.5 (n=11)；比市場更接近實際結果（疑似滾球盤混入）",
+    "401584104/SugarHouse/close/total/under: 224.5 vs market median 232.5 (n=11)；比市場更接近實際結果（疑似滾球盤混入）",
+    "401584104/Unibet/close/total/over: 224.5 vs market median 232.5 (n=11)；比市場更接近實際結果（疑似滾球盤混入）"
+   ],
+   "ml_deviates_from_market": [
+    "401584857/Titanbets/open/ml/away: home spread 2.0, peers median 2.0 (n=9), peers home-fav share 0.00",
+    "401584857/Titanbets/open/ml/home: home spread 2.0, peers median 2.0 (n=9), peers home-fav share 0.00",
+    "401584907/Titanbets/open/ml/away: home spread 2.5, peers median 2.25 (n=10), peers home-fav share 0.10",
+    "401584907/Titanbets/open/ml/home: home spread 2.5, peers median 2.25 (n=10), peers home-fav share 0.10",
+    "401585101/Titanbets/open/ml/away: home spread 3.0, peers median 3.0 (n=8), peers home-fav share 0.00"
+   ],
+   "overround_high": [
+    "401584102/MGM/close/ml/away: 1.0000",
+    "401584102/MGM/close/ml/home: 1.0000",
+    "401584699/MGM/close/ml/away: 1.0000",
+    "401584699/MGM/close/ml/home: 1.0000",
+    "401584799/MGM/close/ml/away: 1.0000"
+   ],
+   "price_extreme": [
+    "401584104/SugarHouse/close/total/over: over 1.4",
+    "401584104/SugarHouse/close/total/under: under 2.8",
+    "401584104/Unibet/close/total/over: over 1.4",
+    "401584104/Unibet/close/total/under: under 2.8",
+    "401584106/Unibet/close/total/over: over 2.7"
+   ],
+   "spread_deviates_from_market": [
+    "401584108/ESPN BET/open/spread/away: home spread 2.5, peers median -2.0 (n=9), peers home-fav share 1.00",
+    "401584108/ESPN BET/open/spread/home: home spread 2.5, peers median -2.0 (n=9), peers home-fav share 1.00",
+    "401584113/SugarHouse/close/spread/away: home spread -2.5, peers median 3.0 (n=9), peers home-fav share 0.00",
+    "401584113/SugarHouse/close/spread/home: home spread -2.5, peers median 3.0 (n=9), peers home-fav share 0.00",
+    "401584113/Unibet/close/spread/away: home spread -2.5, peers median 3.0 (n=9), peers home-fav share 0.00"
+   ],
+   "spread_ml_direction_conflict": [
+    "401584819/Unibet/close/ml/away: home spread 2.5, peers median -1.0 (n=10), peers home-fav share 0.60",
+    "401584819/Unibet/close/ml/home: home spread 2.5, peers median -1.0 (n=10), peers home-fav share 0.60",
+    "401584819/Unibet/close/spread/away: home spread 2.5, peers median -1.0 (n=10), peers home-fav share 0.60",
+    "401584819/Unibet/close/spread/home: home spread 2.5, peers median -1.0 (n=10), peers home-fav share 0.60",
+    "401584822/SugarHouse/close/ml/away: home spread 2.5, peers median 1.0 (n=9), peers home-fav share 0.33"
+   ],
+   "total_out_of_range": [
+    "401584944/DraftKings/open/total/over: 29.5",
+    "401584944/DraftKings/open/total/under: 29.5",
+    "401585444/Caesars Sportsbook (Colorado)/open/total/over: 5.0",
+    "401585444/Caesars Sportsbook (Colorado)/open/total/under: 5.0",
+    "401655118/DraftKings/close/total/over: 14.5"
+   ]
+  },
+  "missing": 0,
+  "n": 403698,
+  "warning": 455
+ },
+ "opening_feed_agreement": {
+  "agree_pct": null,
+  "n": 0
+ },
+ "quality_status": "PASS",
+ "season": 2024,
+ "skipped_at_listing": {
+  "non-NBA teams (all-star etc.)": 10,
+  "season type 1": 64,
+  "season type 5": 6
+ },
+ "source_label_examples": [],
+ "source_label_problems": 0,
+ "strict_stage_coverage": {
+  "close/ml": 100.0,
+  "close/spread": 100.0,
+  "close/total": 100.0,
+  "open/ml": 99.85,
+  "open/spread": 99.62,
+  "open/total": 99.92
+ },
+ "teams": {
+  "expected_range": [
+   82,
+   83
+  ],
+  "max_games": 83,
+  "min_games": 82,
+  "n": 30
+ },
+ "timestamps_available": false,
+ "verdict": "通過",
+ "verdict_ok": true
+}

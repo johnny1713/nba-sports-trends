@@ -1,0 +1,13 @@
+{
+ "http_errors": [],
+ "notes": [],
+ "notes_total": 0,
+ "parse_errors": [],
+ "requests": 3084,
+ "season": 2024,
+ "skipped": {
+  "non-NBA teams (all-star etc.)": 10,
+  "season type 1": 64,
+  "season type 5": 6
+ }
+}

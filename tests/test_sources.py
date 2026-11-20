@@ -102,3 +102,23 @@ class PlaysportTests(unittest.TestCase):
 
 if __name__ == '__main__':
     unittest.main()
+
+
+class BbrefTests(unittest.TestCase):
+    def test_bbref_matches_espn_exactly_on_same_game(self):
+        from nba_quant.sources import bbref
+        g = {'game_id': '401585183', 'start_utc': '2024-01-15T18:00:00Z', 'home': '20', 'away': '10'}
+        bb = {b['team']: b for b in bbref.parse_box(load('bbref_box_202401150PHI.gz').decode(), g, T)}
+        es = {b['team']: b for b in espn.parse_boxscore(json.loads(load('summary_s2024_401585183.gz')), g['game_id'], T)}
+        for t in ('10', '20'):
+            for k in ('fgm', 'fga', 'fg3m', 'fg3a', 'ftm', 'fta', 'oreb', 'dreb', 'tov', 'pts', 'overtimes'):
+                self.assertEqual(bb[t][k], es[t][k], (t, k))
+        self.assertEqual(sum(p['starter'] for p in bb['20']['players']), 5)
+        self.assertTrue(all(p['player_id'].startswith('bbref:') for p in bb['20']['players']))
+
+    def test_bbref_fills_espn_gap_2014(self):
+        from nba_quant.sources import bbref
+        g = {'game_id': '400578293', 'start_utc': '2014-10-29T00:00:00Z', 'home': '3', 'away': '19'}
+        self.assertTrue(bbref.box_url(g).endswith('/201410280NOP.html'))      # 美東日期，不是 UTC 日期
+        bx = {b['team']: b['pts'] for b in bbref.parse_box(load('bbref_box_201410280NOP.gz').decode(), g, T)}
+        self.assertEqual(bx, {'3': 101, '19': 84})

@@ -66,6 +66,37 @@ def list_games(f: Fetcher, season: int, today: date = None, log=print):
     return games, skipped
 
 
+def _match(bx, g):
+    pts = {b['team']: b['pts'] for b in bx}
+    return pts.get(g['home']) == g['home_pts'] and pts.get(g['away']) == g['away_pts'], pts
+
+
+def _espn_box(f, g):
+    try:
+        bx = espn.parse_boxscore(f.get_json(espn.summary_url(g['game_id'])), g['game_id'], espn.now_utc())
+    except (FetchError, ValueError, KeyError, TypeError) as e:
+        return None, f'espn boxscore error: {type(e).__name__}: {str(e)[:120]}'
+    ok, pts = _match(bx, g)
+    return (bx, None) if ok else (None, f'espn box points {pts} != scoreboard {g["home_pts"]}-{g["away_pts"]}')
+
+
+_BBREF = None
+
+
+def _bbref_box(g):
+    global _BBREF
+    from .sources import bbref
+    if _BBREF is None:
+        _BBREF = Fetcher(min_interval=3.5)
+    try:
+        html = _BBREF.get_bytes(bbref.box_url(g)).decode('utf-8', 'replace')
+        bx = bbref.parse_box(html, g, espn.now_utc())
+    except (FetchError, ValueError, KeyError, AttributeError, TypeError) as e:
+        return None, f'{type(e).__name__}: {str(e)[:120]}'
+    ok, pts = _match(bx, g)
+    return (bx, None) if ok else (None, f'bbref points {pts} != scoreboard {g["home_pts"]}-{g["away_pts"]}')
+
+
 def _load(path):
     return list(store.read_jsonl_gz(path)) if os.path.exists(path) else []
 
@@ -94,7 +125,7 @@ def run_season(season: int, live: bool = False, log=print):
         final = g['status'] == 'final'
         reuse = (prev and prev.get('complete') and prev.get('odds_final') and final)
         if reuse:
-            g.update({k: prev[k] for k in ('complete', 'complete_reason', 'odds_final', 'odds_books') if k in prev})
+            g.update({k: prev[k] for k in ('complete', 'complete_reason', 'odds_final', 'odds_books', 'box_source') if k in prev})
             boxes[gid] = old_boxes.get(gid, [])
             odds[gid] = old_odds.get(gid, [])
             if gid in old_raw:
@@ -102,17 +133,22 @@ def run_season(season: int, live: bool = False, log=print):
             continue
         g['complete'], g['complete_reason'] = False, None
         if final:
-            try:
-                bx = espn.parse_boxscore(f.get_json(espn.summary_url(gid)), gid, espn.now_utc())
-                pts = {b['team']: b['pts'] for b in bx}
-                if pts.get(g['home']) != g['home_pts'] or pts.get(g['away']) != g['away_pts']:
-                    g['complete_reason'] = f'box points {pts} != scoreboard {g["home_pts"]}-{g["away_pts"]}'
+            bx, why = _espn_box(f, g)
+            g['box_source'] = 'espn'
+            if bx is None:
+                # ESPN 缺 box score（2014-15 有 13.6% 統計全為 0）→ Basketball-Reference 備援，得分必須完全吻合
+                bx2, why2 = _bbref_box(g)
+                if bx2 is not None:
+                    bx, g['box_source'] = bx2, 'bbref'
+                    notes.append(f'{gid}: ESPN box unusable ({why}); used Basketball-Reference')
                 else:
-                    g['complete'] = True
+                    why = f'{why} | bbref: {why2}'
+            if bx is not None:
+                g['complete'] = True
                 boxes[gid] = bx
-            except (FetchError, ValueError, KeyError, TypeError) as e:
-                g['complete_reason'] = f'boxscore error: {type(e).__name__}: {str(e)[:160]}'
-                errors.append({'game_id': gid, 'stage': 'boxscore', 'error': g['complete_reason']})
+            else:
+                g['complete_reason'] = why
+                errors.append({'game_id': gid, 'stage': 'boxscore', 'error': why})
         else:
             g['complete_reason'] = f'status {g["status"]}'
         if not final:

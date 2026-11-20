@@ -178,6 +178,7 @@ def season_report(season: int, live: bool = None) -> dict:
         'completeness': {'final': len(final), 'complete': len(complete), 'complete_pct': _pct(len(complete), len(final)),
                          'incomplete_examples': incomplete[:20], 'box_issues': len(box_issues),
                          'box_issue_examples': box_issues[:20]},
+        'box_sources': dict(Counter(g.get('box_source', 'espn') for g in complete)),
         'teams': {'n': len(per_team), 'min_games': team_counts[0] if team_counts else None,
                   'max_games': team_counts[-1] if team_counts else None},
         'odds': {'final_games_with_any_book_pct': _pct(any_book, len(final_ids)),
@@ -213,6 +214,7 @@ def render_md(r):
              f"| 完賽且資料完整 | {c['complete']} / {c['final']}（{c['complete_pct']}%）|",
              f"| 每隊例行賽場數 | {r['teams']['n']} 隊，{r['teams']['min_games']}～{r['teams']['max_games']} 場 |",
              f"| box score 問題 | {c['box_issues']} |",
+             f"| box score 來源 | {r.get('box_sources')}（bbref = ESPN 缺漏、改用 Basketball-Reference，得分已核對一致）|",
              f"| 重複 game_id | {len(g['duplicates'])} |", '']
     if c['incomplete_examples']:
         lines += ['不完整的比賽（前 20 筆）：', ''] + [f'- `{a}`：{b}' for a, b in c['incomplete_examples']] + ['']

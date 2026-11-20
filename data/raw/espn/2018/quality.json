@@ -255,6 +255,9 @@
    "suspected_live": 142
   }
  },
+ "conditional": null,
+ "conditional_pass": false,
+ "continue_authorization": null,
  "duplicates": [],
  "expected_regular": 1230,
  "fetch": {
@@ -332,6 +335,7 @@
   "agree_pct": null,
   "n": 0
  },
+ "quality_status": "PASS",
  "season": 2018,
  "skipped_at_listing": {
   "non-NBA teams (all-star etc.)": 10,
@@ -339,6 +343,7 @@
  },
  "source_label_examples": [],
  "source_label_problems": 0,
+ "strict_stage_coverage": {},
  "teams": {
   "expected_range": [
    82,

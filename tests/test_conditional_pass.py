@@ -165,6 +165,10 @@ class ContinueAuthorizationTests(unittest.TestCase):
         self.auth(quality_status='PASS')
         self.assertIsNotNone(backfill.require_previous_ok(2024))
 
+    def test_cannot_skip_a_season(self):
+        self.auth()
+        self.assertIsNotNone(backfill.require_previous_ok(2025))   # 2023-24 尚未回補 → 不能直接跑 2024-25
+
     def test_not_inherited_by_later_seasons(self):
         """2023-24 若也不通過，2023 的授權不能讓 2024-25 開跑。"""
         self.auth()

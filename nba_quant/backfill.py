@@ -231,6 +231,7 @@ def run_taiwan(log=print):
 
 
 CONTINUE_AUTH = 'continue_authorization.json'
+FIRST_SEASON = 2015                 # 2014-15：第一季，前面沒有要檢查的球季
 
 
 def continue_authorization(prev_season, next_season):
@@ -260,6 +261,8 @@ def require_previous_ok(season):
     """
     prev = os.path.join(season_dir(season - 1), 'quality.json')
     if not os.path.exists(prev):
+        if season - 1 >= FIRST_SEASON:
+            return f'season {season - 1} has not been backfilled/reviewed yet (seasons must go in order)'
         return None
     q = store.read_json(prev)
     if q.get('verdict_ok') or q.get('conditional_pass'):

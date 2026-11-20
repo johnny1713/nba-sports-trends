@@ -243,70 +243,28 @@
    "suspected_live": 250
   }
  },
- "conditional": {
-  "ack": {
-   "applies_to_other_seasons": false,
-   "code_sha": "5718804a4fb9999342619c7d5942ea035b18ddf6",
-   "correction": "2026-11-20 更正：決策時說明「其他 11 家收盤正常」有誤——2022-23 只有 ESPN BET 有 close 欄位，其他 11 家只有 current_postgame（與 2014-15～2021-22 相同）。驗證程式因此判定放行不成立（同階段無替代來源），待使用者重新決定。",
-   "data_version": {
-    "games.jsonl.gz": "aa38dbe9660a969e59d01ddc33eb63b27cb93729b480b55dbee56b88fc7f296a",
-    "odds.jsonl.gz": "a6244b193f86865e2f660f6fbd925c9b790342a2d676947f1b325d96c9990538"
-   },
-   "decided_at": "2026-11-20T07:00:27+00:00",
-   "decided_by": "使用者（專案擁有者）",
-   "decision": "conditional_pass",
-   "decision_text": "方案 1：有條件放行 2022-23，不修改全域 1% 品質門檻",
-   "exclusion_scope": [
-    {
-     "flag": "line_field_contains_price",
-     "markets": [
-      "spread",
-      "total"
-     ],
-     "provider": "ESPN BET",
-     "stage": "close"
-    }
-   ],
-   "gate_threshold_changed": false,
-   "invalid_if": "資料版本變更、或任何驗證條件不成立（見 nba_quant/quality.py evaluate_conditional_pass）",
-   "kept_note": "ESPN BET 收盤獨贏（價格正常）；其他 11 家莊家所有未被標記的資料（注意：它們只有「賽後 current」，沒有 ESPN 標記的 close 欄位）",
-   "not_used": "不使用 ESPN BET 的 current 欄位補回收盤（可能混入比賽中盤口）",
-   "raw_data_modified": false,
-   "reason": "ESPN 的 2022-23 ESPN BET 收盤（close）讓分與總分欄位，系統性填入賠率（例：主 -110／客 +110、總分 -110），同一筆資料的 current 欄位才是盤口。屬於來源欄位錯誤，不是我們的解析錯誤。",
-   "season": 2023
-  },
-  "adjusted_error_rate_pct": 0.3505,
-  "excluded": [
-   {
-    "flag": "line_field_contains_price",
-    "market": "spread",
-    "other_books_usable_coverage_pct": 0.0,
-    "provider": "ESPN BET",
-    "provider_records": 2602,
-    "records_excluded": 2600,
-    "stage": "close",
-    "systematic_share_pct": 99.92
-   },
-   {
-    "flag": "line_field_contains_price",
-    "market": "total",
-    "other_books_usable_coverage_pct": 0.0,
-    "provider": "ESPN BET",
-    "provider_records": 2628,
-    "records_excluded": 2624,
-    "stage": "close",
-    "systematic_share_pct": 99.85
-   }
-  ],
-  "gate_threshold_pct": 1.0,
-  "invalid_reasons": [
-   "close/spread 其他莊家可用覆蓋率 0.0% < 95.0%（無法交叉驗證、無可替代來源）",
-   "close/total 其他莊家可用覆蓋率 0.0% < 95.0%（無法交叉驗證、無可替代來源）"
-  ],
-  "raw_error_rate_pct": 2.47,
-  "valid": false
- },
+ "conditional": null,
  "conditional_pass": false,
+ "continue_authorization": {
+  "applies_to_other_seasons": false,
+  "authorizes_backfill_of": [
+   2024
+  ],
+  "code_sha": "cc0d494455424e701c7f477be441f6933b3434ef",
+  "data_restrictions": "ESPN BET 收盤讓分、總分：錯誤標記、不進模型；ESPN BET 收盤獨贏：原始資料保留；其他 11 家 current：保留但標記為 POSTGAME_SNAPSHOT，不得用於賽前模型訓練、賽前市場基準、CLV 或賽前回測評估；不使用 ESPN BET 的 current 補回收盤。本季沒有可用的真正收盤讓分／總分。",
+  "data_version": {
+   "games.jsonl.gz": "aa38dbe9660a969e59d01ddc33eb63b27cb93729b480b55dbee56b88fc7f296a",
+   "odds.jsonl.gz": "a6244b193f86865e2f660f6fbd925c9b790342a2d676947f1b325d96c9990538"
+  },
+  "decided_at": "2026-11-20T07:05:58+00:00",
+  "decided_by": "使用者（專案擁有者）",
+  "decision_text": "第三種方式：2022-23 維持不通過（FAILED），允許有條件地繼續 2023-24 回補",
+  "does_not_change_quality_status": true,
+  "invalid_if": "資料版本變更（games／odds sha256）",
+  "quality_status": "FAILED",
+  "reason": "ESPN 的 2022-23 ESPN BET 收盤（close）讓分與總分欄位系統性填入賠率（主 -110／客 +110、總分 -110）；其他 11 家只有賽後快照（POSTGAME_SNAPSHOT），沒有同階段的真正收盤可替代。品質門檻 1% 不修改。",
+  "season": 2023
+ },
  "duplicates": [],
  "expected_regular": 1230,
  "fetch": {
@@ -380,6 +338,7 @@
   "agree_pct": null,
   "n": 0
  },
+ "quality_status": "FAILED",
  "season": 2023,
  "skipped_at_listing": {
   "non-NBA teams (all-star etc.)": 6,
@@ -388,6 +347,7 @@
  },
  "source_label_examples": [],
  "source_label_problems": 0,
+ "strict_stage_coverage": {},
  "teams": {
   "expected_range": [
    82,
@@ -398,6 +358,6 @@
   "n": 30
  },
  "timestamps_available": false,
- "verdict": "不通過：盤口 error 級標記比例 2.47% ≥ 1%（人工放行紀錄不成立：close/spread 其他莊家可用覆蓋率 0.0% < 95.0%（無法交叉驗證、無可替代來源）；close/total 其他莊家可用覆蓋率 0.0% < 95.0%（無法交叉驗證、無可替代來源））",
+ "verdict": "不通過：盤口 error 級標記比例 2.47% ≥ 1%",
  "verdict_ok": false
 }

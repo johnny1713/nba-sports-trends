@@ -243,6 +243,9 @@
    "suspected_live": 60
   }
  },
+ "conditional": null,
+ "conditional_pass": false,
+ "continue_authorization": null,
  "duplicates": [],
  "expected_regular": 1080,
  "fetch": {
@@ -315,6 +318,7 @@
   "agree_pct": null,
   "n": 0
  },
+ "quality_status": "PASS",
  "season": 2021,
  "skipped_at_listing": {
   "non-NBA teams (all-star etc.)": 1,
@@ -323,6 +327,7 @@
  },
  "source_label_examples": [],
  "source_label_problems": 0,
+ "strict_stage_coverage": {},
  "teams": {
   "expected_range": [
    72,

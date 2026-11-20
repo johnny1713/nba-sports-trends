@@ -27,5 +27,6 @@
  "not_used": "不使用 ESPN BET 的 current 欄位補回收盤（可能混入比賽中盤口）",
  "raw_data_modified": false,
  "reason": "ESPN 的 2022-23 ESPN BET 收盤（close）讓分與總分欄位，系統性填入賠率（例：主 -110／客 +110、總分 -110），同一筆資料的 current 欄位才是盤口。屬於來源欄位錯誤，不是我們的解析錯誤。",
- "season": 2023
+ "season": 2023,
+ "superseded": "2026-11-20 使用者改選第三種方式：2022-23 維持 FAILED，不建立 Conditional Pass；改以 continue_authorization.json 授權繼續回補 2023-24。本檔僅保留決策歷史，程式不會讀取。"
 }

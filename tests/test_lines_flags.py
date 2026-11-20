@@ -119,6 +119,14 @@ class FlagTests(unittest.TestCase):
         self.assertIn(('g1', 'BookA', 'close', 'spread', 'home'), kept)        # 同家其他盤口 → 保留
         self.assertIn(('g1', 'BookB', 'close', 'total', 'over'), kept)         # 同場其他莊家 → 保留
 
+    def test_espn_total_placeholder_is_missing_not_error(self):
+        qs = [q('over', -1.0, 1.91, 'total'), q('under', -1.0, 1.91, 'total'),
+              q('over', 217.5, 1.91, 'total', prov='BookB'), q('under', 217.5, 1.91, 'total', prov='BookB')]
+        flags, _ = odds_flags.flag_quotes(qs)
+        self.assertEqual({(f['flag'], f['severity']) for f in flags}, {('total_placeholder_missing', 'missing')})
+        kept = odds_flags.usable_quotes(qs, flags)
+        self.assertEqual({x['provider'] for x in kept}, {'BookB'})                 # 佔位符不進模型，其他莊家保留
+
     def test_every_flag_points_to_one_record(self):
         qs = [q('home', 7.5, 1.91), q('away', -7.5, 1.91), q('home', None, 1.3, 'ml'), q('away', None, 3.6, 'ml')]
         flags, _ = odds_flags.flag_quotes(qs)

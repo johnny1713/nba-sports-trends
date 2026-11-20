@@ -1,4 +1,28 @@
 {
+ "anomaly_analysis": {
+  "by_book": [
+   {
+    "book_records": 12576,
+    "error_records": 12,
+    "provider": "SportsInteraction.com",
+    "rate_pct": 0.1
+   }
+  ],
+  "by_kind": {
+   "spread_ml_direction_conflict": 12
+  },
+  "by_severity": {
+   "error": 12,
+   "warning": 156
+  },
+  "direction_check_same_book_same_stage": true,
+  "direction_conflict_attribution": {
+   "讓分與市場一致、獨贏偏離（錯在獨贏）": 3
+  },
+  "error_records": 12,
+  "extreme_spreads": [],
+  "top_book_share_pct": 100.0
+ },
  "box_issue_examples": [],
  "box_issues": 0,
  "by_phase": {
@@ -66,11 +90,13 @@
      "price_extreme": 12
     },
     "error": 0,
+    "missing": 0,
     "warning": 12
    },
    "games": 79,
    "odds_missing_examples": [],
    "odds_missing_games": 0,
+   "placeholder_missing": 0,
    "status": {
     "final": 79
    },
@@ -141,6 +167,7 @@
      "spread_ml_direction_conflict": 12
     },
     "error": 12,
+    "missing": 0,
     "warning": 144
    },
    "games": 1233,
@@ -157,6 +184,7 @@
     "400899701"
    ],
    "odds_missing_games": 35,
+   "placeholder_missing": 0,
    "status": {
     "final": 1230,
     "postponed": 3
@@ -194,6 +222,7 @@
     "400900168/SportsInteraction.com/current_postgame/ml/away: see spread"
    ]
   },
+  "missing": 0,
   "n": 179593,
   "warning": 156
  },

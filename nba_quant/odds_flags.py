@@ -8,6 +8,7 @@
 - 排除以單筆紀錄為單位：同一場的其他莊家、同一家的其他盤口、同一組的另一邊（若沒問題）全部保留。
   不會因為一筆異常就排除整場比賽。
 - severity:
+    'missing' 缺失值佔位符（ESPN 以總分 -1 表示「沒有總分」）→ 視同沒有這筆盤口；計入盤口缺漏，不計入異常
     'error'   明顯錯誤（總分 2001、讓分兩邊同號、讓分與獨贏熱門方向相反、水位不合理）→ 模型一律排除
     'warning' 合理但極端（例如 -13000 的獨贏）→ 預設排除，人工檢查後才可放行
 - 模型載入盤口時必須呼叫 usable_quotes()。注意：去水需要同一家同一階段的兩邊價格，
@@ -56,11 +57,14 @@ def flag_quotes(quotes):
         if market == 'total':
             lines = {sd[s]['line'] for s in sd}
             n += 1
-            if len(lines) > 1:
+            if len(lines) > 1 and min(lines) > 0:
                 add(key, 'total_lines_differ', 'error', str(sorted(lines)), tuple(sd))
             for s_ in sd:
                 ln = sd[s_]['line']
-                if not (TOTAL_RANGE[0] <= ln <= TOTAL_RANGE[1]):
+                if ln <= 0:
+                    # 缺失值規則：ESPN 用 -1 表示該莊家沒有開總分（2017-18 實測：同場其他莊家都有正常總分）
+                    add(key, 'total_placeholder_missing', 'missing', f'{ln}', (s_,))
+                elif not (TOTAL_RANGE[0] <= ln <= TOTAL_RANGE[1]):
                     add(key, 'total_out_of_range', 'error', f'{ln}', (s_,))
         prices = {s: sd[s]['price_decimal'] for s in sd if sd[s]['price_decimal'] is not None}
         lo, hi = EXTREME_ML if market == 'ml' else EXTREME_SIDE
@@ -101,5 +105,5 @@ def usable_quotes(quotes, flags, allow_warnings=frozenset()):
     給模型用：以**單筆紀錄**為單位剔除有標記的盤口，其餘全部保留。
     allow_warnings：人工檢查後明確放行的單筆紀錄 key (game_id, provider, stage, market, side)。
     """
-    bad = {record_key(f) for f in flags if f['severity'] == 'error' or record_key(f) not in allow_warnings}
+    bad = {record_key(f) for f in flags if f['severity'] in ('error', 'missing') or record_key(f) not in allow_warnings}
     return [q for q in quotes if q.get('provider_type') == 'book' and record_key(q) not in bad]

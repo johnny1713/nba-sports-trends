@@ -1,11 +1,88 @@
 {
+ "anomaly_analysis": {
+  "by_book": [
+   {
+    "book_records": 7872,
+    "error_records": 50,
+    "provider": "Caesars Sportsbook",
+    "rate_pct": 0.64
+   },
+   {
+    "book_records": 7312,
+    "error_records": 16,
+    "provider": "Wynn",
+    "rate_pct": 0.22
+   },
+   {
+    "book_records": 7866,
+    "error_records": 12,
+    "provider": "Unibet",
+    "rate_pct": 0.15
+   },
+   {
+    "book_records": 7872,
+    "error_records": 8,
+    "provider": "Westgate",
+    "rate_pct": 0.1
+   },
+   {
+    "book_records": 7326,
+    "error_records": 4,
+    "provider": "Caesar's",
+    "rate_pct": 0.05
+   }
+  ],
+  "by_kind": {
+   "spread_ml_direction_conflict": 84,
+   "spread_out_of_range": 6
+  },
+  "by_severity": {
+   "error": 90,
+   "missing": 14,
+   "warning": 19
+  },
+  "direction_check_same_book_same_stage": true,
+  "direction_conflict_attribution": {
+   "兩者都偏離或都一致（無法歸因）": 1,
+   "獨贏與市場一致、讓分偏離（錯在讓分）": 16,
+   "讓分與市場一致、獨贏偏離（錯在獨贏）": 4
+  },
+  "error_records": 90,
+  "extreme_spreads": [
+   {
+    "game_id": "400974840",
+    "line": 30.5,
+    "n_peers": 5,
+    "peer_median": 7.5,
+    "provider": "Caesars Sportsbook",
+    "verdict": "與市場矛盾（錯誤）"
+   },
+   {
+    "game_id": "400975579",
+    "line": 27.5,
+    "n_peers": 5,
+    "peer_median": 3.5,
+    "provider": "Caesars Sportsbook",
+    "verdict": "與市場矛盾（錯誤）"
+   },
+   {
+    "game_id": "400975638",
+    "line": -25.5,
+    "n_peers": 5,
+    "peer_median": -4.5,
+    "provider": "Caesars Sportsbook",
+    "verdict": "與市場矛盾（錯誤）"
+   }
+  ],
+  "top_book_share_pct": 55.56
+ },
  "box_issue_examples": [],
  "box_issues": 0,
  "by_phase": {
   "postseason": {
    "abnormal_price": 2,
    "abnormal_spread": 12,
-   "abnormal_total": 6,
+   "abnormal_total": 0,
    "bbref_filled": 9,
    "book_coverage_pct": {
     "CG Technology": 100.0,
@@ -62,14 +139,16 @@
     "by_kind": {
      "price_extreme": 2,
      "spread_ml_direction_conflict": 12,
-     "total_out_of_range": 6
+     "total_placeholder_missing": 6
     },
-    "error": 18,
+    "error": 12,
+    "missing": 6,
     "warning": 2
    },
    "games": 82,
    "odds_missing_examples": [],
    "odds_missing_games": 0,
+   "placeholder_missing": 6,
    "status": {
     "final": 82
    },
@@ -78,7 +157,7 @@
   "regular": {
    "abnormal_price": 17,
    "abnormal_spread": 78,
-   "abnormal_total": 8,
+   "abnormal_total": 0,
    "bbref_filled": 163,
    "book_coverage_pct": {
     "CG Technology": 100.0,
@@ -136,14 +215,16 @@
      "price_extreme": 17,
      "spread_ml_direction_conflict": 72,
      "spread_out_of_range": 6,
-     "total_out_of_range": 8
+     "total_placeholder_missing": 8
     },
-    "error": 86,
+    "error": 78,
+    "missing": 8,
     "warning": 17
    },
    "games": 1231,
    "odds_missing_examples": [],
    "odds_missing_games": 0,
+   "placeholder_missing": 8,
    "status": {
     "final": 1230,
     "postponed": 1
@@ -163,8 +244,8 @@
  "label": "2017-18",
  "live": false,
  "odds_checks": {
-  "error": 104,
-  "error_rate_pct": 0.1048,
+  "error": 90,
+  "error_rate_pct": 0.0907,
   "examples": {
    "price_extreme": [
     "400975033/Unibet/current_postgame/ml/away: away 18.0",
@@ -187,7 +268,7 @@
     "400975579/Caesars Sportsbook/current_postgame/spread/home: home 27.5",
     "400975638/Caesars Sportsbook/current_postgame/spread/away: home -25.5"
    ],
-   "total_out_of_range": [
+   "total_placeholder_missing": [
     "400974772/CG Technology/current_postgame/total/over: -1.0",
     "400974772/CG Technology/current_postgame/total/under: -1.0",
     "400974772/Caesars Sportsbook/current_postgame/total/over: -1.0",
@@ -195,6 +276,7 @@
     "400974772/Westgate/current_postgame/total/over: -1.0"
    ]
   },
+  "missing": 14,
   "n": 99249,
   "warning": 19
  },

@@ -85,10 +85,11 @@ def _phase_block(games, odds_by_game, flags):
         'odds_missing_games': len(no_book), 'odds_missing_examples': no_book[:10],
         'books_per_game_median': median(books_per) if books_per else 0,
         'book_coverage_pct': {p: _pct(c, len(ids)) for p, c in per_book.most_common()},
-        'flags': {'error': sev.get('error', 0), 'warning': sev.get('warning', 0), 'by_kind': dict(kinds)},
+        'flags': {'error': sev.get('error', 0), 'warning': sev.get('warning', 0), 'missing': sev.get('missing', 0), 'by_kind': dict(kinds)},
         'abnormal_price': sum(v for k, v in kinds.items() if k.startswith('price_') or k == 'overround_out_of_range'),
         'abnormal_spread': sum(v for k, v in kinds.items() if k.startswith('spread_')),
-        'abnormal_total': sum(v for k, v in kinds.items() if k.startswith('total_')),
+        'abnormal_total': sum(v for k, v in kinds.items() if k.startswith('total_') and k != 'total_placeholder_missing'),
+        'placeholder_missing': kinds.get('total_placeholder_missing', 0),
         'coverage': stage_cov,
     }
 
@@ -180,8 +181,11 @@ def season_report(season: int, live: bool = None) -> dict:
         'source_label_problems': len(src_problems), 'source_label_examples': src_problems[:10],
         'incomplete_examples': [(g['game_id'], g.get('complete_reason')) for g in games
                                 if g['status'] == 'final' and not g.get('complete')][:20],
-        'odds_checks': {'n': n_checks, 'error': n_err, 'warning': len(flags) - n_err,
+        'odds_checks': {'n': n_checks, 'error': n_err,
+                        'warning': sum(1 for f in flags if f['severity'] == 'warning'),
+                        'missing': sum(1 for f in flags if f['severity'] == 'missing'),
                         'error_rate_pct': round(100 * err_rate, 4), 'examples': _examples(flags)},
+        'anomaly_analysis': anomaly_analysis(odds, flags, final_ids),
         'timestamps_available': False,
         'opening_feed_agreement': _opening_agreement(odds_by_game, final_ids),
         'fetch': {'requests': flog.get('requests'), 'http_errors': len(flog.get('http_errors', [])),
@@ -240,6 +244,7 @@ def render_md(r):
     row('異常賠率（標記數）', lambda b: b['abnormal_price'])
     row('異常讓分（標記數）', lambda b: b['abnormal_spread'])
     row('異常總分（標記數）', lambda b: b['abnormal_total'])
+    row('總分佔位符 -1（視為缺失）', lambda b: b.get('placeholder_missing', 0))
     row('每場莊家數中位數', lambda b: b['books_per_game_median'])
     L += ['', f"- 例行賽預期 {r['expected_regular']} 場；每隊 {r['teams']['min_games']}～{r['teams']['max_games']} 場"
           f"（{r['teams']['n']} 隊，預期 {r['teams']['expected_range'][0]}～{r['teams']['expected_range'][1]}）",
@@ -262,13 +267,104 @@ def render_md(r):
         L.append(f"| {k} | {a['line_pct']} | {a['price_pct']} | {b['line_pct']} | {b['price_pct']} |")
     oc = r['odds_checks']
     L += ['', '## 盤口品質標記（原始資料不動，標記另存 odds_flags.jsonl.gz）', '',
-          f"- 檢核 {oc['n']} 項：被標記的單筆盤口 error {oc['error']}、warning {oc['warning']}，**error 比例 {oc['error_rate_pct']}%**",
+          f"- 檢核 {oc['n']} 項：被標記的單筆盤口 error {oc['error']}、warning {oc['warning']}、缺失值 {oc.get('missing', 0)}，**error 比例 {oc['error_rate_pct']}%**",
+          '- 缺失值規則：ESPN 以總分 ≤ 0（實測為 -1）表示該莊家沒有開總分 → 視同沒有這筆盤口，計入缺漏、不計入異常',
           '- 以**單筆盤口紀錄**為單位排除：error 一律不進模型；warning（極端但可能真實）預設不進模型，需人工放行',
           '- 同一場比賽的其他莊家、其他盤口、同組另一邊（若無問題）全部保留，不會因一筆異常排除整場', '']
     for kind, exs in oc['examples'].items():
         L.append(f'- {kind}：' + '；'.join(f'`{e}`' for e in exs))
+    L += render_anomaly(r.get('anomaly_analysis'))
     fe = r['fetch']
     L += ['', '## 抓取', '', f"- 請求 {fe['requests']} 次，HTTP 失敗 {fe['http_errors']}，解析失敗 {fe['parse_errors']}"]
     for e in fe['parse_error_examples']:
         L.append(f"  - `{e.get('game_id')}` {e.get('stage')}: {e.get('error')}")
     return '\n'.join(L) + '\n'
+
+
+# ---------------------------------------------------------------- 異常盤口分析
+def anomaly_analysis(odds, flags, final_ids, min_peers=3):
+    """
+    1. 依博彩公司：error 筆數 / 該公司全部盤口筆數
+    2. 依異常類型
+    3. 極端讓分與其他莊家共識比較：|自己 − 其他莊家中位數| ≤ 1.5 → 「極端但與市場一致」；否則「與市場矛盾＝錯誤」
+    4. 讓分×獨贏方向矛盾：檢查是否同一家、同一階段；並以其他莊家共識判斷是哪一筆偏離
+    """
+    by_game = defaultdict(list)
+    for q in odds:
+        if q['game_id'] in final_ids and q['provider_type'] == 'book':
+            by_game[q['game_id']].append(q)
+    total_by_book = Counter(q['provider'] for qs in by_game.values() for q in qs)
+    err = [f for f in flags if f['severity'] == 'error']
+    by_book = [{'provider': b, 'error_records': n, 'book_records': total_by_book[b],
+                'rate_pct': _pct(n, total_by_book[b])} for b, n in Counter(f['provider'] for f in err).most_common()]
+    top_share = _pct(by_book[0]['error_records'], len(err)) if by_book else None
+
+    def peers(gid, stage, market, side, prov):
+        return [q['line'] for q in by_game[gid] if q['provider'] != prov and q['stage'] == stage
+                and q['market'] == market and q['side'] == side and q['line'] is not None and q['line'] > 0 - 1e9]
+
+    extremes = []
+    for f in err:
+        if f['flag'] != 'spread_out_of_range' or f['side'] != 'home':
+            continue
+        mine = next(q['line'] for q in by_game[f['game_id']] if q['provider'] == f['provider'] and q['stage'] == f['stage']
+                    and q['market'] == 'spread' and q['side'] == 'home')
+        pl = peers(f['game_id'], f['stage'], 'spread', 'home', f['provider'])
+        cons = median(pl) if len(pl) >= min_peers else None
+        verdict = ('其他莊家不足，無法判斷' if cons is None else
+                   ('極端但與市場一致' if abs(mine - cons) <= 1.5 else '與市場矛盾（錯誤）'))
+        extremes.append({'game_id': f['game_id'], 'provider': f['provider'], 'line': mine,
+                         'peer_median': cons, 'n_peers': len(pl), 'verdict': verdict})
+
+    attrib = Counter()
+    same_book_stage = True
+    for f in err:
+        if f['flag'] != 'spread_ml_direction_conflict' or f['market'] != 'spread' or f['side'] != 'home':
+            continue
+        qs = [q for q in by_game[f['game_id']] if q['provider'] == f['provider'] and q['stage'] == f['stage']]
+        sp = {q['side']: q['line'] for q in qs if q['market'] == 'spread'}
+        ml = {q['side']: q['price_decimal'] for q in qs if q['market'] == 'ml'}
+        same_book_stage &= ('home' in sp and 'home' in ml and 'away' in ml)
+        pl = peers(f['game_id'], f['stage'], 'spread', 'home', f['provider'])
+        mlh = {q['provider']: q['price_decimal'] for q in by_game[f['game_id']] if q['stage'] == f['stage'] and q['market'] == 'ml' and q['side'] == 'home'}
+        mla = {q['provider']: q['price_decimal'] for q in by_game[f['game_id']] if q['stage'] == f['stage'] and q['market'] == 'ml' and q['side'] == 'away'}
+        others_fav = [mlh[p] < mla[p] for p in mlh if p != f['provider'] and p in mla]
+        if len(pl) < min_peers or len(others_fav) < min_peers:
+            attrib['其他莊家不足，無法歸因'] += 1
+            continue
+        cons = median(pl)
+        sp_ok = abs(sp['home'] - cons) <= 1.0
+        ml_ok = (ml['home'] < ml['away']) == (sum(others_fav) > len(others_fav) / 2)
+        if sp_ok and not ml_ok:
+            attrib['讓分與市場一致、獨贏偏離（錯在獨贏）'] += 1
+        elif ml_ok and not sp_ok:
+            attrib['獨贏與市場一致、讓分偏離（錯在讓分）'] += 1
+        else:
+            attrib['兩者都偏離或都一致（無法歸因）'] += 1
+    return {'error_records': len(err), 'by_book': by_book, 'top_book_share_pct': top_share,
+            'by_kind': dict(Counter(f['flag'] for f in err)),
+            'by_severity': dict(Counter(f['severity'] for f in flags)),
+            'extreme_spreads': extremes, 'direction_conflict_attribution': dict(attrib),
+            'direction_check_same_book_same_stage': same_book_stage}
+
+
+def render_anomaly(a):
+    if not a:
+        return []
+    L = ['', '## 異常盤口分析', '',
+         f"- error 級單筆紀錄 {a['error_records']} 筆；最多的一家佔 {a['top_book_share_pct']}%", '',
+         '| 博彩公司 | error 筆數 | 該公司盤口筆數 | 比例 % |', '|---|---|---|---|']
+    for b in a['by_book']:
+        L.append(f"| {b['provider']} | {b['error_records']} | {b['book_records']} | {b['rate_pct']} |")
+    L += ['', f"- 依類型：{a['by_kind'] or '無'}", f"- 依嚴重度（含 warning／缺失值）：{a['by_severity']}"]
+    if a['extreme_spreads']:
+        L += ['', '極端讓分抽查（與同場其他莊家的中位數比較，±1.5 以內視為與市場一致）：', '',
+              '| game_id | 博彩公司 | 主隊讓分 | 其他莊家中位數 | 其他莊家數 | 判定 |', '|---|---|---|---|---|---|']
+        for e in a['extreme_spreads']:
+            L.append(f"| {e['game_id']} | {e['provider']} | {e['line']} | {e['peer_median']} | {e['n_peers']} | {e['verdict']} |")
+    if a['direction_conflict_attribution']:
+        L += ['', f"讓分×獨贏方向矛盾：檢查一律在**同一家、同一階段**內比較（本季全部符合：{a['direction_check_same_book_same_stage']}），"
+              '以主隊讓分 < 0 ⇔ 主隊獨贏賠率較低判定。歸因（與其他莊家共識比較）：']
+        for k, v in a['direction_conflict_attribution'].items():
+            L.append(f'- {k}：{v} 組')
+    return L

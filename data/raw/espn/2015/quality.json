@@ -1,4 +1,16 @@
 {
+ "anomaly_analysis": {
+  "by_book": [],
+  "by_kind": {},
+  "by_severity": {
+   "warning": 74
+  },
+  "direction_check_same_book_same_stage": true,
+  "direction_conflict_attribution": {},
+  "error_records": 0,
+  "extreme_spreads": [],
+  "top_book_share_pct": null
+ },
  "box_issue_examples": [],
  "box_issues": 0,
  "by_phase": {
@@ -62,11 +74,13 @@
      "price_extreme": 28
     },
     "error": 0,
+    "missing": 0,
     "warning": 28
    },
    "games": 81,
    "odds_missing_examples": [],
    "odds_missing_games": 0,
+   "placeholder_missing": 0,
    "status": {
     "final": 81
    },
@@ -132,6 +146,7 @@
      "price_extreme": 46
     },
     "error": 0,
+    "missing": 0,
     "warning": 46
    },
    "games": 1232,
@@ -148,6 +163,7 @@
     "400579292"
    ],
    "odds_missing_games": 40,
+   "placeholder_missing": 0,
    "status": {
     "final": 1230,
     "postponed": 2
@@ -178,6 +194,7 @@
     "400578444/Fantasy911.com/current_postgame/ml/home: home 1.016667"
    ]
   },
+  "missing": 0,
   "n": 97606,
   "warning": 74
  },

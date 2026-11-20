@@ -119,7 +119,7 @@ def main(season):
     nbooks = defaultdict(set)
     for x in book:
         nbooks[(x['game_id'], x['stage'], x['market'])].add(x['provider'])
-    cross = {}
+    cross, cross_counts = {}, {}
     for stage in ('open', 'close'):
         for market, _ in MARKETS:
             c = Counter()
@@ -127,10 +127,23 @@ def main(season):
                 if len(nbooks.get((gid, stage, market), ())) >= 4:
                     c[phase[gid]] += 1
             cross[f'{stage}/{market}'] = {ph: pct(c[ph], n_phase[ph]) for ph in ('regular', 'postseason')}
+            cnt = {ph: Counter() for ph in ('regular', 'postseason')}
+            for gid in final:
+                n = len(nbooks.get((gid, stage, market), ()))
+                ph = phase[gid]
+                cnt[ph]['total'] += 1
+                cnt[ph]['ge4'] += n >= 4
+                cnt[ph]['lt4'] += n < 4
+                cnt[ph]['one'] += n == 1
+                cnt[ph]['zero'] += n == 0
+            cross_counts[f'{stage}/{market}'] = {ph: {**dict(cnt[ph]), 'ge4_pct': pct(cnt[ph]['ge4'], cnt[ph]['total']),
+                                                       'lt4_pct': pct(cnt[ph]['lt4'], cnt[ph]['total'])}
+                                                  for ph in ('regular', 'postseason')}
     books_in_season = sorted({x['provider'] for x in book})
     systematic = [k for k, v in per.items() if v['error_pct'] and v['error_pct'] >= 50]
     out['books_in_season'] = books_in_season
     out['cross_check_possible_pct'] = cross
+    out['cross_check_counts'] = cross_counts
     out['espn_bet'] = {'by_stage_market': per, 'deviation_vs_other_books': per_dev,
                        'systematic_markets_ge_50pct_error': systematic,
                        'verdict': '無系統性錯誤' if not systematic else '有系統性錯誤：' + ', '.join(systematic)}
@@ -220,14 +233,34 @@ def render(o, q):
     for k, v in eb['by_stage_market'].items():
         L.append(f"| {k} | {v['records']} | {v['error_records']} | {v['error_pct']} | {v['kinds']} |")
     L += ['', f"本季出現的博彩公司：{len(o['books_in_season'])} 家（{', '.join(o['books_in_season'])}）", '',
-          '可做多家交叉驗證的場次比例（同場同階段同市場 ≥ 4 家；偏離市場、疑似滾球盤檢查都需要這個條件）：', '',
-          '| 階段/市場 | 例行賽 % | 季後賽 % |', '|---|---|---|']
-    L += [f"| {k} | {v['regular']} | {v['postseason']} |" for k, v in o['cross_check_possible_pct'].items()]
-    low = [f'{k}（{"例行賽" if ph == "regular" else "季後賽"} {v[ph]}%）' for k, v in o['cross_check_possible_pct'].items()
-           for ph in ('regular', 'postseason') if v[ph] is not None and v[ph] < 95]
+          '### 多家交叉驗證可行性（例行賽、季後賽分開）', '',
+          '「可交叉驗證」= 同場、同階段、同市場至少 4 家博彩公司（偏離市場檢查的最低條件）。', '',
+          '| 階段/市場 | 賽段 | 總場數 | ≥4 家（可交叉驗證）| <4 家（無法交叉驗證）| 只有 1 家 | 0 家 |', '|---|---|---|---|---|---|---|']
+    for k, v in o['cross_check_counts'].items():
+        for ph, lab in (('regular', '例行賽'), ('postseason', '季後賽')):
+            c = v[ph]
+            L.append(f"| {k} | {lab} | {c.get('total', 0)} | {c.get('ge4', 0)}（{c.get('ge4_pct')}%）| "
+                     f"{c.get('lt4', 0)}（{c.get('lt4_pct')}%）| {c.get('one', 0)} | {c.get('zero', 0)} |")
+    low = [f'{k}（{"例行賽" if ph == "regular" else "季後賽"} 無法交叉驗證 {v[ph].get("lt4", 0)} 場）'
+           for k, v in o['cross_check_counts'].items() for ph in ('regular', 'postseason') if v[ph].get('lt4')]
+    L += ['', '#### 無法交叉驗證的資料：檢查範圍與使用限制', '',
+          '**無法執行的檢查**（需要同場其他博彩公司）：',
+          '- 盤口偏離市場（`line_deviates_from_market`）——因此**疑似滾球盤混入無法偵測**',
+          '- 讓分×獨贏方向矛盾的歸因（需 ≥ 3 家其他莊家）——發生矛盾時一律保守處理，兩個市場都排除',
+          '- 極端讓分「與市場一致／矛盾」的比對', '',
+          '**仍可透過內部一致性完成的檢查**（只需該家自己的報價）：',
+          '- 讓分兩邊互為相反數（`spread_sign_mismatch`）、盤口欄位填入賠率（`line_field_contains_price`）',
+          '- 讓分／總分超出合理範圍、總分兩邊不同、總分佔位符 -1',
+          '- 賠率無效（≤ 1.0）、極端賠率、抽水分級（同一家同階段雙邊）',
+          '- 同一家同階段的讓分與獨贏熱門方向是否一致（偵測得到，但無法判斷錯在哪一邊）',
+          '- 開盤／收盤欄位的時間性質分類（ESPN 一律為供應商標記、無時間戳）', '',
+          '**是否允許進入後續分析**：依現行規則，未被標記的紀錄仍會被 `usable_quotes()` 放行，可進入後續分析，但有以下限制：',
+          '- 這些紀錄只通過內部一致性檢查，**未經多家市場交叉驗證**；「沒有被標記」不等於「沒有異常」',
+          '- 覆蓋率達標只代表價格存在，**不代表通過多家來源驗證**',
+          '- 後續任何評估（含鎖定測試期）都必須把「可交叉驗證」與「無法交叉驗證」的場次分開報告，不得合併成單一結論',
+          '- 是否在評估中排除無法交叉驗證的場次，屬於使用者的決策；本報告不自行決定']
     if low:
-        L += ['', f"- ⚠️ **以下階段/市場多數場次只有單一（或少數）博彩公司，無法做多家交叉驗證：{', '.join(low)}。"
-              '這些場次的盤口偏離、疑似滾球盤混入**未經多家比對**，不得宣稱已通過多家市場交叉驗證。**']
+        L += ['', '- ⚠️ 本季無法交叉驗證的部分：' + '、'.join(low)]
     L += ['', '與同場同階段其他莊家中位數的差距（只算有 ≥ 3 家其他莊家的場次）：', '',
           '| 階段/市場 | 場次 | 差距中位數（分）| 差 ≤ 1 分比例 % | 差 > 4 分比例 % |', '|---|---|---|---|---|']
     for k, v in eb['deviation_vs_other_books'].items():

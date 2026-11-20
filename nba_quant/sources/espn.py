@@ -84,7 +84,7 @@ def scoreboard_url(d: date):
     return f'{SITE}/scoreboard?dates={d:%Y%m%d}'
 
 
-def parse_scoreboard_event(ev: dict, fetched_at: str):
+def parse_scoreboard_event(ev: dict, fetched_at: str, keep=None):
     """回傳 (Game 或 None, 略過原因)。"""
     st = (ev.get('season') or {}).get('type')
     comp = ev['competitions'][0]
@@ -94,7 +94,7 @@ def parse_scoreboard_event(ev: dict, fetched_at: str):
         return None, 'no home/away'
     if home['team']['id'] not in NBA_TEAM_IDS or away['team']['id'] not in NBA_TEAM_IDS:
         return None, 'non-NBA teams (all-star etc.)'
-    if st not in SEASON_TYPE_KEEP:
+    if st not in (SEASON_TYPE_KEEP if keep is None else keep):    # keep 只給獨立的 play-in 抓取使用
         return None, f'season type {st}'
     stype = comp.get('status', {}).get('type', {})
     name = stype.get('name', '')

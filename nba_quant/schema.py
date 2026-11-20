@@ -10,7 +10,7 @@ from dataclasses import dataclass, field, asdict
 from datetime import datetime
 from typing import Optional
 
-SEASON_TYPES = {2: 'regular', 3: 'postseason'}          # 季前賽不收
+SEASON_TYPES = {2: 'regular', 3: 'postseason', 5: 'play_in'}   # 季前賽不收；play-in 只由獨立抓取使用（正式回補仍只收 2、3）
 GAME_STATUS = {'scheduled', 'final', 'postponed', 'canceled'}
 ODDS_STAGES = {'open', 'close', 'snapshot', 'current_postgame'}
 PREDICTIVE_STAGES = {'open', 'snapshot'}                 # 可用於預測（snapshot 另需時間檢查）

@@ -277,6 +277,9 @@ def require_previous_ok(season):
 def main(season, rest):
     if '--taiwan' in rest:
         return run_taiwan()
+    if '--playin-2020' in rest:
+        from . import playin_fetch
+        return playin_fetch.run()
     if '--source-audit' in rest:
         from . import source_audit
         only = [int(x) for x in rest[rest.index('--only') + 1].split(',')] if '--only' in rest else None

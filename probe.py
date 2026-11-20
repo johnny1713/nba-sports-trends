@@ -1,5 +1,17 @@
 """資料來源探路（大改版 Phase 1）：只印日誌，不寫任何檔案、不 commit。"""
-import json, time, urllib.request, urllib.error, gzip, re
+import json, time, urllib.request, urllib.error, gzip, re, signal, sys, functools
+print = functools.partial(print, flush=True)
+
+
+class Hard(Exception):
+    pass
+
+
+def _alarm(*_):
+    raise Hard('hard timeout 30s')
+
+
+signal.signal(signal.SIGALRM, _alarm)
 
 UA = ('Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 '
       '(KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36')
@@ -7,10 +19,11 @@ NBA_HDR = {'Referer': 'https://www.nba.com/', 'Origin': 'https://www.nba.com',
            'x-nba-stats-origin': 'stats', 'x-nba-stats-token': 'true', 'Accept': 'application/json'}
 
 
-def get(url, hdr=None, timeout=25):
+def get(url, hdr=None, timeout=20):
     h = {'User-Agent': UA, 'Accept-Language': 'en-US,en;q=0.9', 'Accept-Encoding': 'gzip'}
     h.update(hdr or {})
     t0 = time.time()
+    signal.alarm(30)
     try:
         with urllib.request.urlopen(urllib.request.Request(url, headers=h), timeout=timeout) as r:
             b = r.read()
@@ -22,6 +35,7 @@ def get(url, hdr=None, timeout=25):
     except Exception as e:
         return type(e).__name__ + ':' + str(e)[:80], '', time.time() - t0
     finally:
+        signal.alarm(0)
         time.sleep(1.5)
 
 

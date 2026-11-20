@@ -1,0 +1,1433 @@
+{
+ "data_quality_only": [
+  2025
+ ],
+ "locked_seasons": [
+  2026
+ ],
+ "seasons": [
+  {
+   "eval_groups": {
+    "postseason": 81,
+    "regular": 1230
+   },
+   "final_games_by_type": {
+    "POSTSEASON": 81,
+    "REGULAR_SEASON": 1230
+   },
+   "locked_status": "open",
+   "season": 2015,
+   "standings_check": {
+    "expected_team_games": [
+     82,
+     82
+    ],
+    "ok": true
+   },
+   "uses": {
+    "counts_for_standings": {
+     "box_coverage": 1.0,
+     "game_types": {
+      "REGULAR_SEASON": 1230
+     },
+     "games": 1230,
+     "games_sharing_start_time": 459,
+     "games_with_both_boxes": 1230,
+     "team_boxes_by_source": {
+      "bbref": 324,
+      "espn": 2136
+     },
+     "team_boxes_tov_usable": 2460,
+     "team_games_max": 82,
+     "team_games_min": 82,
+     "teams": 30,
+     "tov_definition": {
+      "bbref_team_total": 324,
+      "espn_total_incl_team": 2136
+     }
+    },
+    "train_sample": {
+     "box_coverage": 1.0,
+     "game_types": {
+      "REGULAR_SEASON": 1230
+     },
+     "games": 1230,
+     "games_sharing_start_time": 459,
+     "games_with_both_boxes": 1230,
+     "team_boxes_by_source": {
+      "bbref": 324,
+      "espn": 2136
+     },
+     "team_boxes_tov_usable": 2460,
+     "team_games_max": 82,
+     "team_games_min": 82,
+     "teams": 30,
+     "tov_definition": {
+      "bbref_team_total": 324,
+      "espn_total_incl_team": 2136
+     }
+    },
+    "use_elo": {
+     "box_coverage": 1.0,
+     "game_types": {
+      "POSTSEASON": 81,
+      "REGULAR_SEASON": 1230
+     },
+     "games": 1311,
+     "games_sharing_start_time": 459,
+     "games_with_both_boxes": 1311,
+     "team_boxes_by_source": {
+      "bbref": 356,
+      "espn": 2266
+     },
+     "team_boxes_tov_usable": 2622,
+     "team_games_max": 103,
+     "team_games_min": 82,
+     "teams": 30,
+     "tov_definition": {
+      "bbref_team_total": 356,
+      "espn_total_incl_team": 2266
+     }
+    },
+    "use_fatigue": {
+     "box_coverage": 1.0,
+     "game_types": {
+      "POSTSEASON": 81,
+      "REGULAR_SEASON": 1230
+     },
+     "games": 1311,
+     "games_sharing_start_time": 459,
+     "games_with_both_boxes": 1311,
+     "team_boxes_by_source": {
+      "bbref": 356,
+      "espn": 2266
+     },
+     "team_boxes_tov_usable": 2622,
+     "team_games_max": 103,
+     "team_games_min": 82,
+     "teams": 30,
+     "tov_definition": {
+      "bbref_team_total": 356,
+      "espn_total_incl_team": 2266
+     }
+    },
+    "use_team_stats": {
+     "box_coverage": 1.0,
+     "game_types": {
+      "REGULAR_SEASON": 1230
+     },
+     "games": 1230,
+     "games_sharing_start_time": 459,
+     "games_with_both_boxes": 1230,
+     "team_boxes_by_source": {
+      "bbref": 324,
+      "espn": 2136
+     },
+     "team_boxes_tov_usable": 2460,
+     "team_games_max": 82,
+     "team_games_min": 82,
+     "teams": 30,
+     "tov_definition": {
+      "bbref_team_total": 324,
+      "espn_total_incl_team": 2136
+     }
+    }
+   }
+  },
+  {
+   "eval_groups": {
+    "postseason": 86,
+    "regular": 1230
+   },
+   "final_games_by_type": {
+    "POSTSEASON": 86,
+    "REGULAR_SEASON": 1230
+   },
+   "locked_status": "open",
+   "season": 2016,
+   "standings_check": {
+    "expected_team_games": [
+     82,
+     82
+    ],
+    "ok": true
+   },
+   "uses": {
+    "counts_for_standings": {
+     "box_coverage": 1.0,
+     "game_types": {
+      "REGULAR_SEASON": 1230
+     },
+     "games": 1230,
+     "games_sharing_start_time": 444,
+     "games_with_both_boxes": 1230,
+     "team_boxes_by_source": {
+      "bbref": 322,
+      "espn": 2138
+     },
+     "team_boxes_tov_usable": 2460,
+     "team_games_max": 82,
+     "team_games_min": 82,
+     "teams": 30,
+     "tov_definition": {
+      "bbref_team_total": 322,
+      "espn_total_incl_team": 2138
+     }
+    },
+    "train_sample": {
+     "box_coverage": 1.0,
+     "game_types": {
+      "REGULAR_SEASON": 1230
+     },
+     "games": 1230,
+     "games_sharing_start_time": 444,
+     "games_with_both_boxes": 1230,
+     "team_boxes_by_source": {
+      "bbref": 322,
+      "espn": 2138
+     },
+     "team_boxes_tov_usable": 2460,
+     "team_games_max": 82,
+     "team_games_min": 82,
+     "teams": 30,
+     "tov_definition": {
+      "bbref_team_total": 322,
+      "espn_total_incl_team": 2138
+     }
+    },
+    "use_elo": {
+     "box_coverage": 1.0,
+     "game_types": {
+      "POSTSEASON": 86,
+      "REGULAR_SEASON": 1230
+     },
+     "games": 1316,
+     "games_sharing_start_time": 444,
+     "games_with_both_boxes": 1316,
+     "team_boxes_by_source": {
+      "bbref": 322,
+      "espn": 2310
+     },
+     "team_boxes_tov_usable": 2632,
+     "team_games_max": 106,
+     "team_games_min": 82,
+     "teams": 30,
+     "tov_definition": {
+      "bbref_team_total": 322,
+      "espn_total_incl_team": 2310
+     }
+    },
+    "use_fatigue": {
+     "box_coverage": 1.0,
+     "game_types": {
+      "POSTSEASON": 86,
+      "REGULAR_SEASON": 1230
+     },
+     "games": 1316,
+     "games_sharing_start_time": 444,
+     "games_with_both_boxes": 1316,
+     "team_boxes_by_source": {
+      "bbref": 322,
+      "espn": 2310
+     },
+     "team_boxes_tov_usable": 2632,
+     "team_games_max": 106,
+     "team_games_min": 82,
+     "teams": 30,
+     "tov_definition": {
+      "bbref_team_total": 322,
+      "espn_total_incl_team": 2310
+     }
+    },
+    "use_team_stats": {
+     "box_coverage": 1.0,
+     "game_types": {
+      "REGULAR_SEASON": 1230
+     },
+     "games": 1230,
+     "games_sharing_start_time": 444,
+     "games_with_both_boxes": 1230,
+     "team_boxes_by_source": {
+      "bbref": 322,
+      "espn": 2138
+     },
+     "team_boxes_tov_usable": 2460,
+     "team_games_max": 82,
+     "team_games_min": 82,
+     "teams": 30,
+     "tov_definition": {
+      "bbref_team_total": 322,
+      "espn_total_incl_team": 2138
+     }
+    }
+   }
+  },
+  {
+   "eval_groups": {
+    "postseason": 79,
+    "regular": 1230
+   },
+   "final_games_by_type": {
+    "POSTSEASON": 79,
+    "REGULAR_SEASON": 1230
+   },
+   "locked_status": "open",
+   "season": 2017,
+   "standings_check": {
+    "expected_team_games": [
+     82,
+     82
+    ],
+    "ok": true
+   },
+   "uses": {
+    "counts_for_standings": {
+     "box_coverage": 1.0,
+     "game_types": {
+      "REGULAR_SEASON": 1230
+     },
+     "games": 1230,
+     "games_sharing_start_time": 460,
+     "games_with_both_boxes": 1230,
+     "team_boxes_by_source": {
+      "bbref": 326,
+      "espn": 2134
+     },
+     "team_boxes_tov_usable": 2460,
+     "team_games_max": 82,
+     "team_games_min": 82,
+     "teams": 30,
+     "tov_definition": {
+      "bbref_team_total": 326,
+      "espn_total_incl_team": 2134
+     }
+    },
+    "train_sample": {
+     "box_coverage": 1.0,
+     "game_types": {
+      "REGULAR_SEASON": 1230
+     },
+     "games": 1230,
+     "games_sharing_start_time": 460,
+     "games_with_both_boxes": 1230,
+     "team_boxes_by_source": {
+      "bbref": 326,
+      "espn": 2134
+     },
+     "team_boxes_tov_usable": 2460,
+     "team_games_max": 82,
+     "team_games_min": 82,
+     "teams": 30,
+     "tov_definition": {
+      "bbref_team_total": 326,
+      "espn_total_incl_team": 2134
+     }
+    },
+    "use_elo": {
+     "box_coverage": 1.0,
+     "game_types": {
+      "POSTSEASON": 79,
+      "REGULAR_SEASON": 1230
+     },
+     "games": 1309,
+     "games_sharing_start_time": 460,
+     "games_with_both_boxes": 1309,
+     "team_boxes_by_source": {
+      "bbref": 336,
+      "espn": 2282
+     },
+     "team_boxes_tov_usable": 2618,
+     "team_games_max": 100,
+     "team_games_min": 82,
+     "teams": 30,
+     "tov_definition": {
+      "bbref_team_total": 336,
+      "espn_total_incl_team": 2282
+     }
+    },
+    "use_fatigue": {
+     "box_coverage": 1.0,
+     "game_types": {
+      "POSTSEASON": 79,
+      "REGULAR_SEASON": 1230
+     },
+     "games": 1309,
+     "games_sharing_start_time": 460,
+     "games_with_both_boxes": 1309,
+     "team_boxes_by_source": {
+      "bbref": 336,
+      "espn": 2282
+     },
+     "team_boxes_tov_usable": 2618,
+     "team_games_max": 100,
+     "team_games_min": 82,
+     "teams": 30,
+     "tov_definition": {
+      "bbref_team_total": 336,
+      "espn_total_incl_team": 2282
+     }
+    },
+    "use_team_stats": {
+     "box_coverage": 1.0,
+     "game_types": {
+      "REGULAR_SEASON": 1230
+     },
+     "games": 1230,
+     "games_sharing_start_time": 460,
+     "games_with_both_boxes": 1230,
+     "team_boxes_by_source": {
+      "bbref": 326,
+      "espn": 2134
+     },
+     "team_boxes_tov_usable": 2460,
+     "team_games_max": 82,
+     "team_games_min": 82,
+     "teams": 30,
+     "tov_definition": {
+      "bbref_team_total": 326,
+      "espn_total_incl_team": 2134
+     }
+    }
+   }
+  },
+  {
+   "eval_groups": {
+    "postseason": 82,
+    "regular": 1230
+   },
+   "final_games_by_type": {
+    "POSTSEASON": 82,
+    "REGULAR_SEASON": 1230
+   },
+   "locked_status": "open",
+   "season": 2018,
+   "standings_check": {
+    "expected_team_games": [
+     82,
+     82
+    ],
+    "ok": true
+   },
+   "uses": {
+    "counts_for_standings": {
+     "box_coverage": 1.0,
+     "game_types": {
+      "REGULAR_SEASON": 1230
+     },
+     "games": 1230,
+     "games_sharing_start_time": 435,
+     "games_with_both_boxes": 1230,
+     "team_boxes_by_source": {
+      "bbref": 326,
+      "espn": 2134
+     },
+     "team_boxes_tov_usable": 0,
+     "team_games_max": 82,
+     "team_games_min": 82,
+     "teams": 30,
+     "tov_definition": {
+      "bbref_team_total_season_disabled": 326,
+      "espn_2017_18_field_shift": 2134
+     }
+    },
+    "train_sample": {
+     "box_coverage": 1.0,
+     "game_types": {
+      "REGULAR_SEASON": 1230
+     },
+     "games": 1230,
+     "games_sharing_start_time": 435,
+     "games_with_both_boxes": 1230,
+     "team_boxes_by_source": {
+      "bbref": 326,
+      "espn": 2134
+     },
+     "team_boxes_tov_usable": 0,
+     "team_games_max": 82,
+     "team_games_min": 82,
+     "teams": 30,
+     "tov_definition": {
+      "bbref_team_total_season_disabled": 326,
+      "espn_2017_18_field_shift": 2134
+     }
+    },
+    "use_elo": {
+     "box_coverage": 1.0,
+     "game_types": {
+      "POSTSEASON": 82,
+      "REGULAR_SEASON": 1230
+     },
+     "games": 1312,
+     "games_sharing_start_time": 437,
+     "games_with_both_boxes": 1312,
+     "team_boxes_by_source": {
+      "bbref": 344,
+      "espn": 2280
+     },
+     "team_boxes_tov_usable": 0,
+     "team_games_max": 104,
+     "team_games_min": 82,
+     "teams": 30,
+     "tov_definition": {
+      "bbref_team_total_season_disabled": 344,
+      "espn_2017_18_field_shift": 2280
+     }
+    },
+    "use_fatigue": {
+     "box_coverage": 1.0,
+     "game_types": {
+      "POSTSEASON": 82,
+      "REGULAR_SEASON": 1230
+     },
+     "games": 1312,
+     "games_sharing_start_time": 437,
+     "games_with_both_boxes": 1312,
+     "team_boxes_by_source": {
+      "bbref": 344,
+      "espn": 2280
+     },
+     "team_boxes_tov_usable": 0,
+     "team_games_max": 104,
+     "team_games_min": 82,
+     "teams": 30,
+     "tov_definition": {
+      "bbref_team_total_season_disabled": 344,
+      "espn_2017_18_field_shift": 2280
+     }
+    },
+    "use_team_stats": {
+     "box_coverage": 1.0,
+     "game_types": {
+      "REGULAR_SEASON": 1230
+     },
+     "games": 1230,
+     "games_sharing_start_time": 435,
+     "games_with_both_boxes": 1230,
+     "team_boxes_by_source": {
+      "bbref": 326,
+      "espn": 2134
+     },
+     "team_boxes_tov_usable": 0,
+     "team_games_max": 82,
+     "team_games_min": 82,
+     "teams": 30,
+     "tov_definition": {
+      "bbref_team_total_season_disabled": 326,
+      "espn_2017_18_field_shift": 2134
+     }
+    }
+   }
+  },
+  {
+   "eval_groups": {
+    "postseason": 82,
+    "regular": 1230
+   },
+   "final_games_by_type": {
+    "POSTSEASON": 82,
+    "REGULAR_SEASON": 1230
+   },
+   "locked_status": "open",
+   "season": 2019,
+   "standings_check": {
+    "expected_team_games": [
+     82,
+     82
+    ],
+    "ok": true
+   },
+   "uses": {
+    "counts_for_standings": {
+     "box_coverage": 1.0,
+     "game_types": {
+      "REGULAR_SEASON": 1230
+     },
+     "games": 1230,
+     "games_sharing_start_time": 430,
+     "games_with_both_boxes": 1230,
+     "team_boxes_by_source": {
+      "espn": 2460
+     },
+     "team_boxes_tov_usable": 2460,
+     "team_games_max": 82,
+     "team_games_min": 82,
+     "teams": 30,
+     "tov_definition": {
+      "espn_total_incl_team": 2460
+     }
+    },
+    "train_sample": {
+     "box_coverage": 1.0,
+     "game_types": {
+      "REGULAR_SEASON": 1230
+     },
+     "games": 1230,
+     "games_sharing_start_time": 430,
+     "games_with_both_boxes": 1230,
+     "team_boxes_by_source": {
+      "espn": 2460
+     },
+     "team_boxes_tov_usable": 2460,
+     "team_games_max": 82,
+     "team_games_min": 82,
+     "teams": 30,
+     "tov_definition": {
+      "espn_total_incl_team": 2460
+     }
+    },
+    "use_elo": {
+     "box_coverage": 1.0,
+     "game_types": {
+      "POSTSEASON": 82,
+      "REGULAR_SEASON": 1230
+     },
+     "games": 1312,
+     "games_sharing_start_time": 430,
+     "games_with_both_boxes": 1312,
+     "team_boxes_by_source": {
+      "espn": 2624
+     },
+     "team_boxes_tov_usable": 2624,
+     "team_games_max": 106,
+     "team_games_min": 82,
+     "teams": 30,
+     "tov_definition": {
+      "espn_total_incl_team": 2624
+     }
+    },
+    "use_fatigue": {
+     "box_coverage": 1.0,
+     "game_types": {
+      "POSTSEASON": 82,
+      "REGULAR_SEASON": 1230
+     },
+     "games": 1312,
+     "games_sharing_start_time": 430,
+     "games_with_both_boxes": 1312,
+     "team_boxes_by_source": {
+      "espn": 2624
+     },
+     "team_boxes_tov_usable": 2624,
+     "team_games_max": 106,
+     "team_games_min": 82,
+     "teams": 30,
+     "tov_definition": {
+      "espn_total_incl_team": 2624
+     }
+    },
+    "use_team_stats": {
+     "box_coverage": 1.0,
+     "game_types": {
+      "REGULAR_SEASON": 1230
+     },
+     "games": 1230,
+     "games_sharing_start_time": 430,
+     "games_with_both_boxes": 1230,
+     "team_boxes_by_source": {
+      "espn": 2460
+     },
+     "team_boxes_tov_usable": 2460,
+     "team_games_max": 82,
+     "team_games_min": 82,
+     "teams": 30,
+     "tov_definition": {
+      "espn_total_incl_team": 2460
+     }
+    }
+   }
+  },
+  {
+   "eval_groups": {
+    "play_in": 1,
+    "postseason": 83,
+    "regular": 1059
+   },
+   "final_games_by_type": {
+    "PLAY_IN": 1,
+    "POSTSEASON": 83,
+    "REGULAR_SEASON": 1059
+   },
+   "locked_status": "open",
+   "season": 2020,
+   "standings_check": {
+    "expected_team_games": [
+     63,
+     75
+    ],
+    "ok": true
+   },
+   "uses": {
+    "counts_for_standings": {
+     "box_coverage": 1.0,
+     "game_types": {
+      "REGULAR_SEASON": 1059
+     },
+     "games": 1059,
+     "games_sharing_start_time": 335,
+     "games_with_both_boxes": 1059,
+     "team_boxes_by_source": {
+      "espn": 2118
+     },
+     "team_boxes_tov_usable": 2118,
+     "team_games_max": 75,
+     "team_games_min": 64,
+     "teams": 30,
+     "tov_definition": {
+      "espn_total_incl_team": 2118
+     }
+    },
+    "train_sample": {
+     "box_coverage": 1.0,
+     "game_types": {
+      "REGULAR_SEASON": 1059
+     },
+     "games": 1059,
+     "games_sharing_start_time": 335,
+     "games_with_both_boxes": 1059,
+     "team_boxes_by_source": {
+      "espn": 2118
+     },
+     "team_boxes_tov_usable": 2118,
+     "team_games_max": 75,
+     "team_games_min": 64,
+     "teams": 30,
+     "tov_definition": {
+      "espn_total_incl_team": 2118
+     }
+    },
+    "use_elo": {
+     "box_coverage": 1.0,
+     "game_types": {
+      "PLAY_IN": 1,
+      "POSTSEASON": 83,
+      "REGULAR_SEASON": 1059
+     },
+     "games": 1143,
+     "games_sharing_start_time": 335,
+     "games_with_both_boxes": 1143,
+     "team_boxes_by_source": {
+      "espn": 2286
+     },
+     "team_boxes_tov_usable": 2286,
+     "team_games_max": 94,
+     "team_games_min": 64,
+     "teams": 30,
+     "tov_definition": {
+      "espn_total_incl_team": 2286
+     }
+    },
+    "use_fatigue": {
+     "box_coverage": 1.0,
+     "game_types": {
+      "PLAY_IN": 1,
+      "POSTSEASON": 83,
+      "REGULAR_SEASON": 1059
+     },
+     "games": 1143,
+     "games_sharing_start_time": 335,
+     "games_with_both_boxes": 1143,
+     "team_boxes_by_source": {
+      "espn": 2286
+     },
+     "team_boxes_tov_usable": 2286,
+     "team_games_max": 94,
+     "team_games_min": 64,
+     "teams": 30,
+     "tov_definition": {
+      "espn_total_incl_team": 2286
+     }
+    },
+    "use_team_stats": {
+     "box_coverage": 1.0,
+     "game_types": {
+      "REGULAR_SEASON": 1059
+     },
+     "games": 1059,
+     "games_sharing_start_time": 335,
+     "games_with_both_boxes": 1059,
+     "team_boxes_by_source": {
+      "espn": 2118
+     },
+     "team_boxes_tov_usable": 2118,
+     "team_games_max": 75,
+     "team_games_min": 64,
+     "teams": 30,
+     "tov_definition": {
+      "espn_total_incl_team": 2118
+     }
+    }
+   }
+  },
+  {
+   "eval_groups": {
+    "play_in": 6,
+    "postseason": 85,
+    "regular": 1080
+   },
+   "final_games_by_type": {
+    "PLAY_IN": 6,
+    "POSTSEASON": 85,
+    "REGULAR_SEASON": 1080
+   },
+   "locked_status": "open",
+   "season": 2021,
+   "standings_check": {
+    "expected_team_games": [
+     72,
+     72
+    ],
+    "ok": true
+   },
+   "uses": {
+    "counts_for_standings": {
+     "box_coverage": 1.0,
+     "game_types": {
+      "REGULAR_SEASON": 1080
+     },
+     "games": 1080,
+     "games_sharing_start_time": 449,
+     "games_with_both_boxes": 1080,
+     "team_boxes_by_source": {
+      "espn": 2160
+     },
+     "team_boxes_tov_usable": 2160,
+     "team_games_max": 72,
+     "team_games_min": 72,
+     "teams": 30,
+     "tov_definition": {
+      "espn_total_incl_team": 2160
+     }
+    },
+    "train_sample": {
+     "box_coverage": 1.0,
+     "game_types": {
+      "REGULAR_SEASON": 1080
+     },
+     "games": 1080,
+     "games_sharing_start_time": 449,
+     "games_with_both_boxes": 1080,
+     "team_boxes_by_source": {
+      "espn": 2160
+     },
+     "team_boxes_tov_usable": 2160,
+     "team_games_max": 72,
+     "team_games_min": 72,
+     "teams": 30,
+     "tov_definition": {
+      "espn_total_incl_team": 2160
+     }
+    },
+    "use_elo": {
+     "box_coverage": 1.0,
+     "game_types": {
+      "PLAY_IN": 6,
+      "POSTSEASON": 85,
+      "REGULAR_SEASON": 1080
+     },
+     "games": 1171,
+     "games_sharing_start_time": 449,
+     "games_with_both_boxes": 1171,
+     "team_boxes_by_source": {
+      "bbref": 12,
+      "espn": 2330
+     },
+     "team_boxes_tov_usable": 2330,
+     "team_games_max": 95,
+     "team_games_min": 72,
+     "teams": 30,
+     "tov_definition": {
+      "bbref_player_only": 12,
+      "espn_total_incl_team": 2330
+     }
+    },
+    "use_fatigue": {
+     "box_coverage": 1.0,
+     "game_types": {
+      "PLAY_IN": 6,
+      "POSTSEASON": 85,
+      "REGULAR_SEASON": 1080
+     },
+     "games": 1171,
+     "games_sharing_start_time": 449,
+     "games_with_both_boxes": 1171,
+     "team_boxes_by_source": {
+      "bbref": 12,
+      "espn": 2330
+     },
+     "team_boxes_tov_usable": 2330,
+     "team_games_max": 95,
+     "team_games_min": 72,
+     "teams": 30,
+     "tov_definition": {
+      "bbref_player_only": 12,
+      "espn_total_incl_team": 2330
+     }
+    },
+    "use_team_stats": {
+     "box_coverage": 1.0,
+     "game_types": {
+      "REGULAR_SEASON": 1080
+     },
+     "games": 1080,
+     "games_sharing_start_time": 449,
+     "games_with_both_boxes": 1080,
+     "team_boxes_by_source": {
+      "espn": 2160
+     },
+     "team_boxes_tov_usable": 2160,
+     "team_games_max": 72,
+     "team_games_min": 72,
+     "teams": 30,
+     "tov_definition": {
+      "espn_total_incl_team": 2160
+     }
+    }
+   }
+  },
+  {
+   "eval_groups": {
+    "play_in": 6,
+    "postseason": 87,
+    "regular": 1230
+   },
+   "final_games_by_type": {
+    "PLAY_IN": 6,
+    "POSTSEASON": 87,
+    "REGULAR_SEASON": 1230
+   },
+   "locked_status": "open",
+   "season": 2022,
+   "standings_check": {
+    "expected_team_games": [
+     82,
+     82
+    ],
+    "ok": true
+   },
+   "uses": {
+    "counts_for_standings": {
+     "box_coverage": 1.0,
+     "game_types": {
+      "REGULAR_SEASON": 1230
+     },
+     "games": 1230,
+     "games_sharing_start_time": 467,
+     "games_with_both_boxes": 1230,
+     "team_boxes_by_source": {
+      "espn": 2460
+     },
+     "team_boxes_tov_usable": 2460,
+     "team_games_max": 82,
+     "team_games_min": 82,
+     "teams": 30,
+     "tov_definition": {
+      "espn_total_incl_team": 2460
+     }
+    },
+    "train_sample": {
+     "box_coverage": 1.0,
+     "game_types": {
+      "REGULAR_SEASON": 1230
+     },
+     "games": 1230,
+     "games_sharing_start_time": 467,
+     "games_with_both_boxes": 1230,
+     "team_boxes_by_source": {
+      "espn": 2460
+     },
+     "team_boxes_tov_usable": 2460,
+     "team_games_max": 82,
+     "team_games_min": 82,
+     "teams": 30,
+     "tov_definition": {
+      "espn_total_incl_team": 2460
+     }
+    },
+    "use_elo": {
+     "box_coverage": 1.0,
+     "game_types": {
+      "PLAY_IN": 6,
+      "POSTSEASON": 87,
+      "REGULAR_SEASON": 1230
+     },
+     "games": 1323,
+     "games_sharing_start_time": 467,
+     "games_with_both_boxes": 1323,
+     "team_boxes_by_source": {
+      "espn": 2646
+     },
+     "team_boxes_tov_usable": 2646,
+     "team_games_max": 106,
+     "team_games_min": 82,
+     "teams": 30,
+     "tov_definition": {
+      "espn_total_incl_team": 2646
+     }
+    },
+    "use_fatigue": {
+     "box_coverage": 1.0,
+     "game_types": {
+      "PLAY_IN": 6,
+      "POSTSEASON": 87,
+      "REGULAR_SEASON": 1230
+     },
+     "games": 1323,
+     "games_sharing_start_time": 467,
+     "games_with_both_boxes": 1323,
+     "team_boxes_by_source": {
+      "espn": 2646
+     },
+     "team_boxes_tov_usable": 2646,
+     "team_games_max": 106,
+     "team_games_min": 82,
+     "teams": 30,
+     "tov_definition": {
+      "espn_total_incl_team": 2646
+     }
+    },
+    "use_team_stats": {
+     "box_coverage": 1.0,
+     "game_types": {
+      "REGULAR_SEASON": 1230
+     },
+     "games": 1230,
+     "games_sharing_start_time": 467,
+     "games_with_both_boxes": 1230,
+     "team_boxes_by_source": {
+      "espn": 2460
+     },
+     "team_boxes_tov_usable": 2460,
+     "team_games_max": 82,
+     "team_games_min": 82,
+     "teams": 30,
+     "tov_definition": {
+      "espn_total_incl_team": 2460
+     }
+    }
+   }
+  },
+  {
+   "eval_groups": {
+    "play_in": 6,
+    "postseason": 84,
+    "regular": 1230
+   },
+   "final_games_by_type": {
+    "PLAY_IN": 6,
+    "POSTSEASON": 84,
+    "REGULAR_SEASON": 1230
+   },
+   "locked_status": "open",
+   "season": 2023,
+   "standings_check": {
+    "expected_team_games": [
+     82,
+     82
+    ],
+    "ok": true
+   },
+   "uses": {
+    "counts_for_standings": {
+     "box_coverage": 1.0,
+     "game_types": {
+      "REGULAR_SEASON": 1230
+     },
+     "games": 1230,
+     "games_sharing_start_time": 452,
+     "games_with_both_boxes": 1230,
+     "team_boxes_by_source": {
+      "espn": 2460
+     },
+     "team_boxes_tov_usable": 2460,
+     "team_games_max": 82,
+     "team_games_min": 82,
+     "teams": 30,
+     "tov_definition": {
+      "espn_total_incl_team": 2460
+     }
+    },
+    "train_sample": {
+     "box_coverage": 1.0,
+     "game_types": {
+      "REGULAR_SEASON": 1230
+     },
+     "games": 1230,
+     "games_sharing_start_time": 452,
+     "games_with_both_boxes": 1230,
+     "team_boxes_by_source": {
+      "espn": 2460
+     },
+     "team_boxes_tov_usable": 2460,
+     "team_games_max": 82,
+     "team_games_min": 82,
+     "teams": 30,
+     "tov_definition": {
+      "espn_total_incl_team": 2460
+     }
+    },
+    "use_elo": {
+     "box_coverage": 1.0,
+     "game_types": {
+      "PLAY_IN": 6,
+      "POSTSEASON": 84,
+      "REGULAR_SEASON": 1230
+     },
+     "games": 1320,
+     "games_sharing_start_time": 452,
+     "games_with_both_boxes": 1320,
+     "team_boxes_by_source": {
+      "espn": 2640
+     },
+     "team_boxes_tov_usable": 2640,
+     "team_games_max": 107,
+     "team_games_min": 82,
+     "teams": 30,
+     "tov_definition": {
+      "espn_total_incl_team": 2640
+     }
+    },
+    "use_fatigue": {
+     "box_coverage": 1.0,
+     "game_types": {
+      "PLAY_IN": 6,
+      "POSTSEASON": 84,
+      "REGULAR_SEASON": 1230
+     },
+     "games": 1320,
+     "games_sharing_start_time": 452,
+     "games_with_both_boxes": 1320,
+     "team_boxes_by_source": {
+      "espn": 2640
+     },
+     "team_boxes_tov_usable": 2640,
+     "team_games_max": 107,
+     "team_games_min": 82,
+     "teams": 30,
+     "tov_definition": {
+      "espn_total_incl_team": 2640
+     }
+    },
+    "use_team_stats": {
+     "box_coverage": 1.0,
+     "game_types": {
+      "REGULAR_SEASON": 1230
+     },
+     "games": 1230,
+     "games_sharing_start_time": 452,
+     "games_with_both_boxes": 1230,
+     "team_boxes_by_source": {
+      "espn": 2460
+     },
+     "team_boxes_tov_usable": 2460,
+     "team_games_max": 82,
+     "team_games_min": 82,
+     "teams": 30,
+     "tov_definition": {
+      "espn_total_incl_team": 2460
+     }
+    }
+   }
+  },
+  {
+   "eval_groups": {
+    "play_in": 6,
+    "postseason": 82,
+    "regular": 1231
+   },
+   "final_games_by_type": {
+    "CUP_FINAL": 1,
+    "CUP_GROUP": 60,
+    "CUP_QUARTERFINAL": 4,
+    "CUP_SEMIFINAL": 2,
+    "PLAY_IN": 6,
+    "POSTSEASON": 82,
+    "REGULAR_SEASON": 1164
+   },
+   "locked_status": "open",
+   "season": 2024,
+   "standings_check": {
+    "expected_team_games": [
+     82,
+     82
+    ],
+    "ok": true
+   },
+   "uses": {
+    "counts_for_standings": {
+     "box_coverage": 1.0,
+     "game_types": {
+      "CUP_GROUP": 60,
+      "CUP_QUARTERFINAL": 4,
+      "CUP_SEMIFINAL": 2,
+      "REGULAR_SEASON": 1164
+     },
+     "games": 1230,
+     "games_sharing_start_time": 493,
+     "games_with_both_boxes": 1230,
+     "team_boxes_by_source": {
+      "espn": 2460
+     },
+     "team_boxes_tov_usable": 2460,
+     "team_games_max": 82,
+     "team_games_min": 82,
+     "teams": 30,
+     "tov_definition": {
+      "espn_total_incl_team": 2460
+     }
+    },
+    "train_sample": {
+     "box_coverage": 1.0,
+     "game_types": {
+      "CUP_FINAL": 1,
+      "CUP_GROUP": 60,
+      "CUP_QUARTERFINAL": 4,
+      "CUP_SEMIFINAL": 2,
+      "REGULAR_SEASON": 1164
+     },
+     "games": 1231,
+     "games_sharing_start_time": 493,
+     "games_with_both_boxes": 1231,
+     "team_boxes_by_source": {
+      "espn": 2462
+     },
+     "team_boxes_tov_usable": 2462,
+     "team_games_max": 83,
+     "team_games_min": 82,
+     "teams": 30,
+     "tov_definition": {
+      "espn_total_incl_team": 2462
+     }
+    },
+    "use_elo": {
+     "box_coverage": 1.0,
+     "game_types": {
+      "CUP_FINAL": 1,
+      "CUP_GROUP": 60,
+      "CUP_QUARTERFINAL": 4,
+      "CUP_SEMIFINAL": 2,
+      "PLAY_IN": 6,
+      "POSTSEASON": 82,
+      "REGULAR_SEASON": 1164
+     },
+     "games": 1319,
+     "games_sharing_start_time": 493,
+     "games_with_both_boxes": 1319,
+     "team_boxes_by_source": {
+      "espn": 2638
+     },
+     "team_boxes_tov_usable": 2638,
+     "team_games_max": 104,
+     "team_games_min": 82,
+     "teams": 30,
+     "tov_definition": {
+      "espn_total_incl_team": 2638
+     }
+    },
+    "use_fatigue": {
+     "box_coverage": 1.0,
+     "game_types": {
+      "CUP_FINAL": 1,
+      "CUP_GROUP": 60,
+      "CUP_QUARTERFINAL": 4,
+      "CUP_SEMIFINAL": 2,
+      "PLAY_IN": 6,
+      "POSTSEASON": 82,
+      "REGULAR_SEASON": 1164
+     },
+     "games": 1319,
+     "games_sharing_start_time": 493,
+     "games_with_both_boxes": 1319,
+     "team_boxes_by_source": {
+      "espn": 2638
+     },
+     "team_boxes_tov_usable": 2638,
+     "team_games_max": 104,
+     "team_games_min": 82,
+     "teams": 30,
+     "tov_definition": {
+      "espn_total_incl_team": 2638
+     }
+    },
+    "use_team_stats": {
+     "box_coverage": 1.0,
+     "game_types": {
+      "CUP_FINAL": 1,
+      "CUP_GROUP": 60,
+      "CUP_QUARTERFINAL": 4,
+      "CUP_SEMIFINAL": 2,
+      "REGULAR_SEASON": 1164
+     },
+     "games": 1231,
+     "games_sharing_start_time": 493,
+     "games_with_both_boxes": 1231,
+     "team_boxes_by_source": {
+      "espn": 2462
+     },
+     "team_boxes_tov_usable": 2462,
+     "team_games_max": 83,
+     "team_games_min": 82,
+     "teams": 30,
+     "tov_definition": {
+      "espn_total_incl_team": 2462
+     }
+    }
+   }
+  },
+  {
+   "eval_groups": {
+    "play_in": 6,
+    "postseason": 84,
+    "regular": 1231
+   },
+   "final_games_by_type": {
+    "CUP_FINAL": 1,
+    "CUP_GROUP": 60,
+    "CUP_QUARTERFINAL": 4,
+    "CUP_SEMIFINAL": 2,
+    "PLAY_IN": 6,
+    "POSTSEASON": 84,
+    "REGULAR_SEASON": 1164
+   },
+   "locked_status": "data_quality_only",
+   "season": 2025,
+   "standings_check": {
+    "expected_team_games": [
+     82,
+     82
+    ],
+    "ok": true
+   },
+   "uses": {
+    "counts_for_standings": {
+     "box_coverage": 1.0,
+     "game_types": {
+      "CUP_GROUP": 60,
+      "CUP_QUARTERFINAL": 4,
+      "CUP_SEMIFINAL": 2,
+      "REGULAR_SEASON": 1164
+     },
+     "games": 1230,
+     "games_sharing_start_time": 464,
+     "games_with_both_boxes": 1230,
+     "team_boxes_by_source": {
+      "bbref": 2,
+      "espn": 2458
+     },
+     "team_boxes_tov_usable": 2460,
+     "team_games_max": 82,
+     "team_games_min": 82,
+     "teams": 30,
+     "tov_definition": {
+      "bbref_team_total": 2,
+      "espn_total_incl_team": 2458
+     }
+    },
+    "train_sample": {
+     "box_coverage": 1.0,
+     "game_types": {
+      "CUP_FINAL": 1,
+      "CUP_GROUP": 60,
+      "CUP_QUARTERFINAL": 4,
+      "CUP_SEMIFINAL": 2,
+      "REGULAR_SEASON": 1164
+     },
+     "games": 1231,
+     "games_sharing_start_time": 464,
+     "games_with_both_boxes": 1231,
+     "team_boxes_by_source": {
+      "bbref": 2,
+      "espn": 2460
+     },
+     "team_boxes_tov_usable": 2462,
+     "team_games_max": 83,
+     "team_games_min": 82,
+     "teams": 30,
+     "tov_definition": {
+      "bbref_team_total": 2,
+      "espn_total_incl_team": 2460
+     }
+    },
+    "use_elo": {
+     "box_coverage": 1.0,
+     "game_types": {
+      "CUP_FINAL": 1,
+      "CUP_GROUP": 60,
+      "CUP_QUARTERFINAL": 4,
+      "CUP_SEMIFINAL": 2,
+      "PLAY_IN": 6,
+      "POSTSEASON": 84,
+      "REGULAR_SEASON": 1164
+     },
+     "games": 1321,
+     "games_sharing_start_time": 464,
+     "games_with_both_boxes": 1321,
+     "team_boxes_by_source": {
+      "bbref": 2,
+      "espn": 2640
+     },
+     "team_boxes_tov_usable": 2642,
+     "team_games_max": 106,
+     "team_games_min": 82,
+     "teams": 30,
+     "tov_definition": {
+      "bbref_team_total": 2,
+      "espn_total_incl_team": 2640
+     }
+    },
+    "use_fatigue": {
+     "box_coverage": 1.0,
+     "game_types": {
+      "CUP_FINAL": 1,
+      "CUP_GROUP": 60,
+      "CUP_QUARTERFINAL": 4,
+      "CUP_SEMIFINAL": 2,
+      "PLAY_IN": 6,
+      "POSTSEASON": 84,
+      "REGULAR_SEASON": 1164
+     },
+     "games": 1321,
+     "games_sharing_start_time": 464,
+     "games_with_both_boxes": 1321,
+     "team_boxes_by_source": {
+      "bbref": 2,
+      "espn": 2640
+     },
+     "team_boxes_tov_usable": 2642,
+     "team_games_max": 106,
+     "team_games_min": 82,
+     "teams": 30,
+     "tov_definition": {
+      "bbref_team_total": 2,
+      "espn_total_incl_team": 2640
+     }
+    },
+    "use_team_stats": {
+     "box_coverage": 1.0,
+     "game_types": {
+      "CUP_FINAL": 1,
+      "CUP_GROUP": 60,
+      "CUP_QUARTERFINAL": 4,
+      "CUP_SEMIFINAL": 2,
+      "REGULAR_SEASON": 1164
+     },
+     "games": 1231,
+     "games_sharing_start_time": 464,
+     "games_with_both_boxes": 1231,
+     "team_boxes_by_source": {
+      "bbref": 2,
+      "espn": 2460
+     },
+     "team_boxes_tov_usable": 2462,
+     "team_games_max": 83,
+     "team_games_min": 82,
+     "teams": 30,
+     "tov_definition": {
+      "bbref_team_total": 2,
+      "espn_total_incl_team": 2460
+     }
+    }
+   }
+  }
+ ],
+ "version": "v1"
+}

@@ -219,19 +219,19 @@ class UsageRules(unittest.TestCase):
 
     def test_usage_matrix(self):
         from nba_quant import game_class as C
-        exp = {  # game_type: (standings, fatigue, elo, train, eval)
-            'REGULAR_SEASON': (True, True, True, True, 'regular'),
-            'CUP_GROUP': (True, True, True, True, 'regular'),
-            'CUP_QUARTERFINAL': (True, True, True, True, 'regular'),
-            'CUP_SEMIFINAL': (True, True, True, True, 'regular'),
-            'CUP_FINAL': (False, True, True, True, 'regular'),
-            'PLAY_IN': (False, True, True, False, 'play_in'),
-            'POSTSEASON': (False, True, True, False, 'postseason')}
+        exp = {  # game_type: (standings, F1/F2 team stats, F5 fatigue, elo, train, eval) — 使用者 2026-11-20 第四輪
+            'REGULAR_SEASON': (True, True, True, True, True, 'regular'),
+            'CUP_GROUP': (True, True, True, True, True, 'regular'),
+            'CUP_QUARTERFINAL': (True, True, True, True, True, 'regular'),
+            'CUP_SEMIFINAL': (True, True, True, True, True, 'regular'),
+            'CUP_FINAL': (False, True, True, True, True, 'regular'),
+            'PLAY_IN': (False, False, True, True, False, 'play_in'),
+            'POSTSEASON': (False, False, True, True, False, 'postseason')}
         self.assertEqual(set(exp), set(C.COUNTS))
-        for gt, (st, fa, el, tr, ev) in exp.items():
+        for gt, (st, ts, fa, el, tr, ev) in exp.items():
             u = C.uses(gt)
-            self.assertEqual((C.COUNTS[gt], u['use_fatigue'], u['use_elo'], u['train_sample'], u['eval_group']),
-                             (st, fa, el, tr, ev), gt)
+            self.assertEqual((C.COUNTS[gt], u['use_team_stats'], u['use_fatigue'], u['use_elo'], u['train_sample'],
+                              u['eval_group']), (st, ts, fa, el, tr, ev), gt)
 
     def test_elo_inclusion_does_not_imply_training(self):
         from nba_quant import game_class as C

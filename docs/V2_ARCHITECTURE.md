@@ -30,7 +30,7 @@ data/
   raw/espn/<季>/        # 歷史原始資料（每季一組 .jsonl.gz，完成的球季不再變動）
   raw/espn_playin/<季>/ # 附加賽（Play-In）獨立存放：原始回應 + 解析 + 來源紀錄；不混入 raw/espn/（2020～2025；2026 鎖定）
   reference/            # 分類表（不修改原始資料）：neutral_sites.csv、game_classification.csv
-  audit/                # 唯讀稽核輸出：source_compare/（ESPN vs BBRef）、box_quality/v1/
+  audit/                # 唯讀稽核輸出：source_compare/（ESPN vs BBRef）、box_quality/v1/、model_data/v1/
   derived/              # 經使用者核准的修正版（目前沒有；2017-18 失誤修正版未核准）
   snapshots/<日期>/     # 每次預測當下的輸入快照（重現用）
   predictions/<日期>.json
@@ -64,7 +64,8 @@ docs/
 |---|---|
 | `game_type` | REGULAR_SEASON／CUP_GROUP／CUP_QUARTERFINAL／CUP_SEMIFINAL／CUP_FINAL／PLAY_IN／POSTSEASON |
 | `counts_for_standings` | **只**表示是否計入官方例行賽勝敗紀錄。CUP_FINAL、PLAY_IN、POSTSEASON 為 False |
-| `use_fatigue` | 賽程疲勞特徵（休息天數、背靠背、四天三賽）：所有實際出賽皆 True |
+| `use_team_stats` | F1 球季累計效率、F2 近期狀態：一般例行賽＋盃賽冠軍戰 True；PLAY_IN、POSTSEASON False |
+| `use_fatigue` | F5 賽程疲勞特徵（休息天數、背靠背、四天三賽）：所有實際出賽皆 True |
 | `use_elo` | Elo 歷史更新：所有比賽皆 True，依開賽時間順序 |
 | `train_sample` | 第一版訓練樣本：例行賽（含盃賽各階段與冠軍戰）True；PLAY_IN、POSTSEASON False |
 | `eval_group` | regular / play_in / postseason |
@@ -77,6 +78,16 @@ docs/
 - 盃賽冠軍戰的比賽數據可用於效率、近期狀態、模型訓練；Elo 可納入但必須保留 `game_type`。
 - PLAY_IN 不混入例行賽訓練資料；保留完整 box score 供獨立分析。
 - 用途矩陣見 `docs/V2_MODEL_STAGE1_DESIGN.md` 3.2。
+
+### 2.7.1 品質統計的兩套程式（2026-11-20 第四輪，方案 A）
+
+| 程式 | 用途 | 狀態 |
+|---|---|---|
+| `nba_quant/quality.py` | 盤口品質 v1（PASS／FAILED、盤口覆蓋率）| **凍結**：不修改；既有報告不重新產生（含 .md 同分列順序不固定的既有問題）|
+| `nba_quant/model_data_stats.py` | 模型資料統計 v1：依分類表計算各用途場數、box 覆蓋率、失誤可用性 | 新增；輸出到 `data/audit/model_data/v1/`、`docs/reports/model_data/v1/` |
+
+- 新產生的報告一律使用固定的次要排序鍵（例如 game_id、provider 名稱），相同資料重跑輸出位元組相同。
+- 失誤可用性：`tov_definition` 與 `tov_usable` 由 model_data_stats 判定；2017-18 整季與 2020-21 附加賽（BBRef 不含全隊失誤）不可用於需要總失誤的特徵。
 
 ### 2.8 中立場（`data/reference/neutral_sites.csv`）
 

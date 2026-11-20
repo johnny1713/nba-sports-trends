@@ -89,6 +89,14 @@ docs/
 - 新產生的報告一律使用固定的次要排序鍵（例如 game_id、provider 名稱），相同資料重跑輸出位元組相同。
 - 失誤可用性：`tov_definition` 與 `tov_usable` 由 model_data_stats 判定；2017-18 整季與 2020-21 附加賽（BBRef 不含全隊失誤）不可用於需要總失誤的特徵。
 
+### 2.7.2 特徵依賴與可用性（第五輪，`nba_quant/feature_deps.py`）
+
+- 每個特徵登記依賴（基礎欄位 → 中間量 → 特徵）與跨球季方式（prior／window）；可用性只由這裡判定，沿依賴鏈遞迴傳遞。
+- 2017-18 `tov` 整季不可用 → 回合數、Pace、ORtg／DRtg／淨值、失誤率不可用；eFG%、進攻籃板率、罰球率、比分類特徵可用。
+- 2018-19 依賴上季先驗或季初視窗的特徵不得使用 2017-18 的值或比賽。
+- 模型輸入以 `check_model_inputs()` 檢查；未登記特徵報錯。
+- Elo：同一美東日期所有比賽都用前一日結束時的評分；game_id 只作同時開賽的排序鍵。
+
 ### 2.8 中立場（`data/reference/neutral_sites.csv`）
 
 - 不修改 games.jsonl.gz 的 `neutral` 欄位；ESPN 的 `neutral` 旗標本身不算證據。

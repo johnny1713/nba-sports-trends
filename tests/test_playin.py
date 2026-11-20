@@ -50,3 +50,25 @@ class PlayIn(unittest.TestCase):
         self.assertTrue(v['teams']['H']['all_fields_match_bbref'])
         self.assertFalse(v['teams']['A']['all_fields_match_bbref'])
         self.assertTrue(all(x['pts_eq_scoreboard'] and x['pts_identity_ok'] for x in v['teams'].values()))
+
+
+class PlayInSeasons(unittest.TestCase):
+    def test_locked_season_refused(self):
+        with self.assertRaises(PermissionError):
+            P.run((2026,))
+
+    def test_existing_season_not_refetched(self):
+        if not os.path.exists(os.path.join(P.out_dir(2020), 'provenance.json')):
+            self.skipTest('no 2020 play-in data')
+        msgs = []
+        P.run((2020,), log=msgs.append)          # 已存在 → 不連網、不覆寫
+        self.assertIn('已存在', msgs[0])
+
+    def test_candidate_dates_cover_gap_between_phases(self):
+        if not os.path.exists(os.path.join('data', 'raw', 'espn', '2024', 'games.jsonl.gz')):
+            self.skipTest('no data')
+        d = P.candidate_dates(2024)
+        self.assertEqual((d[0].isoformat(), d[-1].isoformat(), len(d)), ('2024-04-14', '2024-04-20', 7))
+
+    def test_out_dir_separate(self):
+        self.assertEqual(P.out_dir(2022), os.path.join('data', 'raw', 'espn_playin', '2022'))

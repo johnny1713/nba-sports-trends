@@ -2,6 +2,7 @@
 2019-20 泡泡區附加賽（Play-In）獨立抓取（使用者 2026-11-20 核准）。
 
     python -m nba_quant.jobs backfill --playin-2020
+    python -m nba_quant.jobs backfill --playin 2021,2022,2023,2024,2025
 
 - 只抓 2020-08-15（美東）ESPN 賽事類型 5 的比賽（POR vs MEM）。
 - 獨立存放在 data/raw/espn_playin/2020/，不寫入 data/raw/espn/2020/，不混入例行賽或季後賽資料。
@@ -44,25 +45,60 @@ def _sha(b: bytes):
     return hashlib.sha256(b).hexdigest()
 
 
-def run(log=print):
-    if os.path.exists(os.path.join(OUT, 'provenance.json')):
-        log(f'{OUT} 已存在，不重抓、不覆寫')
-        return 0
+def out_dir(season):
+    return os.path.join('data', 'raw', 'espn_playin', str(season))
+
+
+def candidate_dates(season):
+    """附加賽的候選美東日期：該季最後一個例行賽日 ~ 第一個季後賽日（含兩端），從既有 games.jsonl.gz 推得，不寫死日期。"""
+    from datetime import timedelta
+    from . import asof
+    g = [x for x in store.read_jsonl_gz(os.path.join('data', 'raw', 'espn', str(season), 'games.jsonl.gz')) if x['status'] == 'final']
+    lo = max(asof.et_date(x['start_utc']) for x in g if x['season_type'] == 2)
+    hi = min(asof.et_date(x['start_utc']) for x in g if x['season_type'] == 3)
+    return [lo + timedelta(days=i) for i in range((hi - lo).days + 1)]
+
+
+EXPECTED = {2020: 1}            # 2019-20 泡泡區只有 1 場；2020-21 起每季 6 場（東西區各 3 場）
+EXPECTED_DEFAULT = 6
+LOCKED = (2026,)                # 2025-26 鎖定測試期：模型凍結前不抓、不讀
+
+
+def run(seasons=(2020,), log=print):
+    for season in seasons:
+        if season in LOCKED:
+            raise PermissionError(f'{season} 為鎖定測試期，模型凍結前不抓取')
+        run_season(season, log)
+    return 0
+
+
+def run_season(season, log=print):
+    out = out_dir(season)
+    if os.path.exists(os.path.join(out, 'provenance.json')):
+        log(f'{out} 已存在，不重抓、不覆寫')
+        return
     f_espn, f_bb = Fetcher(min_interval=0.4), Fetcher(min_interval=3.5)
-    prov = {'purpose': '2019-20 Play-In（使用者 2026-11-20 核准獨立補抓）', 'files': {}}
-    sb_url = espn.scoreboard_url(DAY)
-    sb_raw = f_espn.get_bytes(sb_url)
-    fetched = espn.now_utc()
-    _write_raw(os.path.join(OUT, 'raw', 'espn_scoreboard_20200815.json.gz'), sb_raw)
-    prov['files']['raw/espn_scoreboard_20200815.json.gz'] = {'url': sb_url, 'fetched_at': fetched, 'sha256_uncompressed': _sha(sb_raw)}
+    prov = {'purpose': f'{season - 1}-{str(season)[2:]} Play-In（使用者 2026-11-20 核准獨立補抓）', 'season': season, 'files': {}}
+    days = [DAY] if season == 2020 else candidate_dates(season)
+    prov['scanned_et_dates'] = [d.isoformat() for d in days]
     games, skipped = [], []
-    for ev in json.loads(sb_raw).get('events', []):
-        g, why = espn.parse_scoreboard_event(ev, fetched, keep={PLAY_IN_TYPE})
-        if g is None:
-            skipped.append({'event_id': ev.get('id'), 'reason': why})
-            continue
-        games.append(g)
-    log(f'play-in games found: {len(games)}; other events on that date skipped: {len(skipped)}')
+    for d in days:
+        sb_url = espn.scoreboard_url(d)
+        sb_raw = f_espn.get_bytes(sb_url)
+        fetched = espn.now_utc()
+        name = f'raw/espn_scoreboard_{d:%Y%m%d}.json.gz'
+        _write_raw(os.path.join(out, name), sb_raw)
+        prov['files'][name] = {'url': sb_url, 'fetched_at': fetched, 'sha256_uncompressed': _sha(sb_raw)}
+        for ev in json.loads(sb_raw).get('events', []):
+            g, why = espn.parse_scoreboard_event(ev, fetched, keep={PLAY_IN_TYPE})
+            if g is None:
+                skipped.append({'date': d.isoformat(), 'event_id': ev.get('id'), 'reason': why})
+                continue
+            if g['season'] != season:
+                skipped.append({'date': d.isoformat(), 'event_id': ev.get('id'), 'reason': f"season {g['season']}"})
+                continue
+            games.append(g)
+    log(f'{season}: play-in games found {len(games)} (expected {EXPECTED.get(season, EXPECTED_DEFAULT)}); skipped {len(skipped)}')
     teamboxes, checks = [], []
     for g in games:
         g['game_type'] = 'PLAY_IN'
@@ -72,28 +108,33 @@ def run(log=print):
         sm_raw = f_espn.get_bytes(sm_url)
         t = espn.now_utc()
         name = f"raw/espn_summary_{g['game_id']}.json.gz"
-        _write_raw(os.path.join(OUT, name), sm_raw)
-        prov['files'][name] = {'url': sm_url, 'fetched_at': t, 'sha256_uncompressed': _sha(sm_raw)}
-        bx = espn.parse_boxscore(json.loads(sm_raw), g['game_id'], t)
-        bx = [b.__dict__ if hasattr(b, '__dict__') else b for b in bx]
+        _write_raw(os.path.join(out, name), sm_raw)
+        prov['files'][name] = {'url': sm_url, 'fetched_at': t, 'sha256_uncompressed': _sha(sm_raw), 'game_id': g['game_id']}
+        try:
+            bx = espn.parse_boxscore(json.loads(sm_raw), g['game_id'], t)
+        except (ValueError, KeyError, TypeError) as e:
+            checks.append({'game_id': g['game_id'], 'error': f'espn box: {type(e).__name__}: {e}'})
+            continue
         teamboxes += bx
         bb_url = bbref.box_url(g)
-        bb_raw = f_bb.get_bytes(bb_url)
+        try:
+            bb_raw = f_bb.get_bytes(bb_url)
+        except Exception as e:  # noqa: BLE001 — 記錄後繼續，驗證結果會標示缺 BBRef
+            checks.append(dict(verify(g, bx, {}), bbref_error=f'{type(e).__name__}: {str(e)[:120]}'))
+            continue
         t = espn.now_utc()
         name = f"raw/bbref_box_{g['game_id']}.html.gz"
-        _write_raw(os.path.join(OUT, name), bb_raw)
-        prov['files'][name] = {'url': bb_url, 'fetched_at': t, 'sha256_uncompressed': _sha(bb_raw)}
-        bbx = bbref.parse_box(bb_raw.decode('utf-8', 'replace'), g, t)
-        bbx = {(b.__dict__ if hasattr(b, '__dict__') else b)['team']: (b.__dict__ if hasattr(b, '__dict__') else b) for b in bbx}
+        _write_raw(os.path.join(out, name), bb_raw)
+        prov['files'][name] = {'url': bb_url, 'fetched_at': t, 'sha256_uncompressed': _sha(bb_raw), 'game_id': g['game_id']}
+        bbx = {b['team']: b for b in bbref.parse_box(bb_raw.decode('utf-8', 'replace'), g, t)}
         checks.append(verify(g, bx, bbx))
-    store.write_jsonl_gz(os.path.join(OUT, 'games.jsonl.gz'), games)
-    store.write_jsonl_gz(os.path.join(OUT, 'teambox.jsonl.gz'), teamboxes)
-    store.write_json(os.path.join(OUT, 'verification.json'), {'games': checks, 'skipped_events': skipped})
+    store.write_jsonl_gz(os.path.join(out, 'games.jsonl.gz'), games)
+    store.write_jsonl_gz(os.path.join(out, 'teambox.jsonl.gz'), teamboxes)
+    store.write_json(os.path.join(out, 'verification.json'), {'season': season, 'expected_games': EXPECTED.get(season, EXPECTED_DEFAULT),
+                                                              'games_found': len(games), 'games': checks, 'skipped_events': skipped})
     prov['parsed'] = {'games.jsonl.gz': 'espn.parse_scoreboard_event(keep={5})，加上 game_type=PLAY_IN、counts_for_standings=False',
                       'teambox.jsonl.gz': 'espn.parse_boxscore（與正式回補相同的解析器）'}
-    store.write_json(os.path.join(OUT, 'provenance.json'), prov)
-    log(json.dumps(checks, ensure_ascii=False)[:2000])
-    return 0
+    store.write_json(os.path.join(out, 'provenance.json'), prov)
 
 
 FIELDS = ('pts', 'fgm', 'fga', 'fg3m', 'fg3a', 'ftm', 'fta', 'oreb', 'dreb', 'tov')

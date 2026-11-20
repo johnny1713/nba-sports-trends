@@ -6,10 +6,11 @@
 
 判定規則（使用者 2026-11-20 指定）：
 1. 2019-20 泡泡區例行賽：美東日期 2020-07-30 ~ 2020-08-14 的例行賽，全部 neutral（規則判定）。
-2. 2019-20 泡泡區季後賽：另列 category=bubble_postseason、phase=postseason，不與例行賽混淆。
+2. 2019-20 泡泡區季後賽與附加賽：venue_category = bubble，以 game_type（POSTSEASON / PLAY_IN）區分，不與例行賽混淆。
+   （2026-11-20 第三輪：賽事類型只由 game_classification 的 game_type 表示，本表不再自設 bubble_regular 等名稱。）
 3. 2023-24 季中錦標賽拉斯維加斯兩場準決賽：neutral（使用者指定）。
 4. ESPN 標記 neutral 且**無任何備註**的 6 場（使用者 2026-11-20 修訂）：ESPN 場館與 BBRef 場館兩個獨立來源都確認位於
-   倫敦或墨西哥城才判 neutral（category = international_no_espn_note，與有備註的國際賽分開計數）；證據不足維持 unknown。
+   倫敦或墨西哥城才判 neutral（venue_category = international_no_espn_note，與有備註的國際賽分開計數）；證據不足維持 unknown。
 4b. 盃賽淘汰賽另外 4 場（2023-24 冠軍戰、2024-25 準決賽 ×2 與冠軍戰）：使用者 2026-11-20 核准為 neutral。
 5. 其他 ESPN 標記 neutral 且有賽事備註（倫敦／墨西哥城／巴黎、盃賽淘汰賽）：
    需 ESPN 備註 + BBRef 場館兩個獨立來源一致才判 neutral；只有 ESPN 時為 unknown（BBRef 不能單獨作判定依據，
@@ -21,7 +22,7 @@ from __future__ import annotations
 import csv
 import os
 import re
-from . import asof, store
+from . import asof, game_class, store
 
 RAW = os.path.join('data', 'raw', 'espn')
 AUDIT = os.path.join('data', 'audit', 'source_compare')
@@ -33,7 +34,7 @@ NO_NOTE_UNKNOWN = {'400578409', '400578877', '400828169', '400900010', '40090001
 CUP_KNOCKOUT_USER = {'401607495', '401734906', '401734907', '401734908'}   # 使用者 2026-11-20 核准為 neutral
 NO_NOTE_CITIES = ('London', 'Mexico City')
 INTL_WORDS = ('LONDON', 'MEXICO', 'PARIS')
-FIELDS = ('game_id', 'season', 'phase', 'date_et', 'start_utc', 'away', 'home', 'status', 'category',
+FIELDS = ('game_id', 'season', 'game_type', 'date_et', 'start_utc', 'away', 'home', 'status', 'venue_category',
           'espn_neutral_flag', 'espn_note', 'espn_venue_current_name', 'bbref_venue', 'evidence_sources', 'reason')
 
 
@@ -68,13 +69,13 @@ def classify(g, espn_venue, bbref_venue):
     gid, notes = g['game_id'], ' '.join(g.get('notes') or [])
     d = et_date(g['start_utc'])
     if g['season'] == 2020 and g['season_type'] == 2 and BUBBLE_FROM <= d <= BUBBLE_TO:
-        return 'neutral', 'bubble_regular', 'rule', '2019-20 泡泡區例行賽（使用者指定日期 2020-07-30~08-14）'
+        return 'neutral', 'bubble', 'rule', '2019-20 泡泡區例行賽（使用者指定日期 2020-07-30~08-14）'
     if g['season'] == 2020 and g['season_type'] == 3 and d >= BUBBLE_FROM:
-        return 'neutral', 'bubble_postseason', 'rule', '2019-20 泡泡區季後賽（與例行賽分開標記）'
+        return 'neutral', 'bubble', 'rule', '2019-20 泡泡區季後賽（與例行賽分開標記）'
     if gid in IST_2024_SEMIS:
-        return 'neutral', 'ist_knockout', 'user_specified;espn_note', '2023-24 季中錦標賽拉斯維加斯準決賽（使用者指定）'
+        return 'neutral', 'cup_las_vegas', 'user_specified;espn_note', '2023-24 季中錦標賽拉斯維加斯準決賽（使用者指定）'
     if gid in CUP_KNOCKOUT_USER:
-        return ('neutral', 'cup_knockout', 'user_approved;espn_note;espn_venue;bbref_venue',
+        return ('neutral', 'cup_las_vegas', 'user_approved;espn_note;espn_venue;bbref_venue',
                 f'使用者 2026-11-20 核准；ESPN 備註「{notes}」、ESPN 場館「{espn_venue}」、BBRef 場館「{bbref_venue}」')
     if gid in NO_NOTE_UNKNOWN:
         return no_note_rule(espn_venue, bbref_venue)
@@ -125,9 +126,9 @@ def build():
             if not c:
                 continue
             status, cat, evid, why = c
-            rows.append({'game_id': g['game_id'], 'season': s, 'phase': 'regular' if g['season_type'] == 2 else 'postseason',
+            rows.append({'game_id': g['game_id'], 'season': s, 'game_type': game_class.classify(g)[0],
                          'date_et': et_date(g['start_utc']), 'start_utc': g['start_utc'], 'away': g.get('away_abbr'),
-                         'home': g.get('home_abbr'), 'status': status, 'category': cat,
+                         'home': g.get('home_abbr'), 'status': status, 'venue_category': cat,
                          'espn_neutral_flag': bool(g.get('neutral')), 'espn_note': ' '.join(g.get('notes') or []),
                          'espn_venue_current_name': ev or '', 'bbref_venue': bv or '', 'evidence_sources': evid,
                          'reason': why})
@@ -141,7 +142,7 @@ PLAYIN = os.path.join('data', 'raw', 'espn_playin', '2020')
 
 def playin_rows():
     """2019-20 泡泡區附加賽（獨立存放）：ESPN 場館與 BBRef 場館兩個獨立來源都在佛州 Walt Disney World 泡泡區
-    （Lake Buena Vista / Bay Lake）才判 neutral；category 獨立為 bubble_play_in，不與泡泡區例行賽或季後賽合併。"""
+    （Lake Buena Vista / Bay Lake）才判 neutral；venue_category = bubble；賽事類型由 game_type = PLAY_IN 表示（不另設 bubble_play_in）。"""
     p = os.path.join(PLAYIN, 'games.jsonl.gz')
     if not os.path.exists(p):
         return []
@@ -156,9 +157,10 @@ def playin_rows():
         html = gzip.open(os.path.join(PLAYIN, 'raw', f"bbref_box_{g['game_id']}.html.gz")).read().decode('utf-8', 'replace')
         bv = bbref_venue(bbref_fields(html, g)[2]['raw_meta'])
         ok = bool(ev and bv and ('Lake Buena Vista' in ev or 'Bay Lake' in ev) and 'Bay Lake' in bv)
-        out.append({'game_id': g['game_id'], 'season': g['season'], 'phase': 'play_in', 'date_et': et_date(g['start_utc']),
+        out.append({'game_id': g['game_id'], 'season': g['season'], 'game_type': game_class.classify(g)[0],
+                    'date_et': et_date(g['start_utc']),
                     'start_utc': g['start_utc'], 'away': g.get('away_abbr'), 'home': g.get('home_abbr'),
-                    'status': 'neutral' if ok else 'unknown', 'category': 'bubble_play_in',
+                    'status': 'neutral' if ok else 'unknown', 'venue_category': 'bubble',
                     'espn_neutral_flag': bool(g.get('neutral')), 'espn_note': ' '.join(g.get('notes') or []),
                     'espn_venue_current_name': ev, 'bbref_venue': bv or '', 'evidence_sources': 'espn_venue;bbref_venue',
                     'reason': (f'ESPN 場館「{ev}」與 BBRef 場館「{bv}」兩個獨立來源皆在佛州泡泡區；ESPN neutral 旗標為 False（同泡泡區其他比賽）'
@@ -174,21 +176,21 @@ def main():
         w.writeheader()
         w.writerows(rows)
     from collections import Counter
-    c = Counter((r['category'], r['phase'], r['status']) for r in rows)
+    c = Counter((r['venue_category'], r['game_type'], r['status']) for r in rows)
     L = ['# 中立場資料表（獨立檔案 `data/reference/neutral_sites.csv`）', '',
          '不改 `games.jsonl.gz` 的 `neutral` 欄位。未列入的比賽沿用 ESPN 主客場。', '',
-         '| 類別 | 賽段 | 狀態 | 場數 |', '|---|---|---|---|']
+         '| venue_category | game_type（來自 game_classification）| 狀態 | 場數 |', '|---|---|---|---|']
     for (cat, ph, st), n in sorted(c.items()):
         L.append(f'| {cat} | {ph} | {st} | {n} |')
-    L += ['', '## 非泡泡區明細', '', '| game_id | 美東日期 | 對戰 | 狀態 | 類別 | ESPN 場館（現名） | BBRef 場館 | 判定理由 |',
+    L += ['', '## 非泡泡區明細', '', '| game_id | 美東日期 | 對戰 | 狀態 | venue_category / game_type | ESPN 場館（現名） | BBRef 場館 | 判定理由 |',
           '|---|---|---|---|---|---|---|---|']
     for r in rows:
-        if r['category'] in ('bubble_regular', 'bubble_postseason'):
+        if r['venue_category'] == 'bubble' and r['game_type'] != 'PLAY_IN':
             continue
-        L.append(f"| {r['game_id']} | {r['date_et']} | {r['away']} @ {r['home']} | {r['status']} | {r['category']} | "
+        L.append(f"| {r['game_id']} | {r['date_et']} | {r['away']} @ {r['home']} | {r['status']} | {r['venue_category']} / {r['game_type']} | "
                  f"{r['espn_venue_current_name']} | {r['bbref_venue']} | {r['reason']} |")
     six = [r for r in rows if r['game_id'] in NO_NOTE_UNKNOWN]
-    intl = {r['game_id'] for r in rows if r['category'] == 'international'}
+    intl = {r['game_id'] for r in rows if r['venue_category'] == 'international'}
     L += ['', '## ESPN 標記中立場但無備註的 6 場（逐場）', '',
           '| Game ID | 美東日期 | 客隊 | 主隊 | ESPN venue（現名）| BBRef venue | ESPN flag | ESPN note | 狀態 | 判定理由 |',
           '|---|---|---|---|---|---|---|---|---|---|']

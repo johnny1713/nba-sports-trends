@@ -84,14 +84,14 @@ class NeutralRules(unittest.TestCase):
         return g
 
     def test_bubble_window_by_et_date(self):
-        self.assertEqual(N.classify(self.g(), None, None)[:2], ('neutral', 'bubble_regular'))
+        self.assertEqual(N.classify(self.g(), None, None)[:2], ('neutral', 'bubble'))
         # 8/15 01:00 UTC = 8/14 美東晚上 → 仍在泡泡區例行賽內
-        self.assertEqual(N.classify(self.g(start_utc='2020-08-15T01:00:00Z'), None, None)[1], 'bubble_regular')
+        self.assertEqual(N.classify(self.g(start_utc='2020-08-15T01:00:00Z'), None, None)[1], 'bubble')
         self.assertIsNone(N.classify(self.g(start_utc='2020-07-29T23:00:00Z'), None, None))
         self.assertIsNone(N.classify(self.g(start_utc='2020-03-01T23:00:00Z'), None, None))
 
     def test_bubble_postseason_separate(self):
-        self.assertEqual(N.classify(self.g(season_type=3, start_utc='2020-08-17T17:30:00Z'), None, None)[1], 'bubble_postseason')
+        self.assertEqual(N.classify(self.g(season_type=3, start_utc='2020-08-17T17:30:00Z'), None, None)[1], 'bubble')
 
     def test_flag_only_games_unknown_with_bbref_venue_alone(self):
         # 2026-11-20 修訂：BBRef 單一來源仍不足以判定（需 ESPN 場館 + BBRef 場館兩源）
@@ -110,7 +110,7 @@ class NeutralRules(unittest.TestCase):
 
     def test_ist_semis_user_specified(self):
         r = N.classify(self.g(game_id='401607494', season=2024, start_utc='2023-12-07T22:00:00Z'), None, None)
-        self.assertEqual(r[:2], ('neutral', 'ist_knockout'))
+        self.assertEqual(r[:2], ('neutral', 'cup_las_vegas'))
 
 
 class NoAutoCorrection(unittest.TestCase):
@@ -151,7 +151,7 @@ class NeutralDecisions20261120(unittest.TestCase):
         for gid in ('401607495', '401734906', '401734907', '401734908'):
             r = N.classify({'game_id': gid, 'season': 2025, 'season_type': 2, 'start_utc': '2024-12-14T21:30:00Z',
                             'neutral': True, 'notes': ['NBA Cup - Semifinals']}, 'T-Mobile Arena', 'T-Mobile Arena, Las Vegas, Nevada')
-            self.assertEqual(r[:2], ('neutral', 'cup_knockout'))
+            self.assertEqual(r[:2], ('neutral', 'cup_las_vegas'))
             self.assertIn('使用者 2026-11-20 核准', r[3])
 
 
@@ -192,3 +192,55 @@ class GameClassification(unittest.TestCase):
                     c[g['home']] += 1
                     c[g['away']] += 1
             self.assertEqual(set(c.values()), {82}, season)
+
+
+class ClassificationConsistency(unittest.TestCase):
+    """第三輪：賽事類型只有一個來源（game_classification）；中立場表的 game_type 必須與分類表一致，
+    且不得再出現 bubble_play_in 之類自設的賽事類型名稱。"""
+
+    def test_neutral_table_game_type_matches_classification(self):
+        import csv
+        import os
+        p, q = os.path.join('data', 'reference', 'neutral_sites.csv'), os.path.join('data', 'reference', 'game_classification.csv')
+        if not (os.path.exists(p) and os.path.exists(q)):
+            self.skipTest('no reference tables')
+        gc = {r['game_id']: r['game_type'] for r in csv.DictReader(open(q, encoding='utf-8'))}
+        rows = list(csv.DictReader(open(p, encoding='utf-8')))
+        self.assertTrue(rows)
+        for r in rows:
+            self.assertEqual(r['game_type'], gc[r['game_id']], r['game_id'])
+            self.assertNotIn(r['venue_category'], ('bubble_play_in', 'bubble_regular', 'bubble_postseason'))
+        self.assertEqual({r['venue_category'] for r in rows} - {'bubble', 'international', 'international_no_espn_note',
+                                                                'cup_las_vegas'}, set())
+
+
+class UsageRules(unittest.TestCase):
+    """第三輪：counts_for_standings 只管戰績；其他用途各自獨立。"""
+
+    def test_usage_matrix(self):
+        from nba_quant import game_class as C
+        exp = {  # game_type: (standings, fatigue, elo, train, eval)
+            'REGULAR_SEASON': (True, True, True, True, 'regular'),
+            'CUP_GROUP': (True, True, True, True, 'regular'),
+            'CUP_QUARTERFINAL': (True, True, True, True, 'regular'),
+            'CUP_SEMIFINAL': (True, True, True, True, 'regular'),
+            'CUP_FINAL': (False, True, True, True, 'regular'),
+            'PLAY_IN': (False, True, True, False, 'play_in'),
+            'POSTSEASON': (False, True, True, False, 'postseason')}
+        self.assertEqual(set(exp), set(C.COUNTS))
+        for gt, (st, fa, el, tr, ev) in exp.items():
+            u = C.uses(gt)
+            self.assertEqual((C.COUNTS[gt], u['use_fatigue'], u['use_elo'], u['train_sample'], u['eval_group']),
+                             (st, fa, el, tr, ev), gt)
+
+    def test_elo_inclusion_does_not_imply_training(self):
+        from nba_quant import game_class as C
+        for gt in ('PLAY_IN', 'POSTSEASON'):
+            self.assertTrue(C.uses(gt)['use_elo'])
+            self.assertFalse(C.uses(gt)['train_sample'])
+
+    def test_standings_flag_not_used_as_feature_gate(self):
+        from nba_quant import game_class as C
+        # 戰績不計但其他用途納入的例子：冠軍戰、附加賽、季後賽
+        self.assertFalse(C.COUNTS['CUP_FINAL'])
+        self.assertTrue(C.uses('CUP_FINAL')['train_sample'] and C.uses('CUP_FINAL')['use_fatigue'])

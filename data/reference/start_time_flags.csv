@@ -1,0 +1,5 @@
+game_id,season,start_utc_recorded,et_time_recorded,matchup,flag,reason,leakage_risk
+401161490,2020,2020-02-24T12:00:00Z,07:00,DET @ POR,implausible_start_time,ESPN 開賽時間落在美東 06:00～08:30（NBA 不在此時段開賽）；實際應為記錄日或前一日的美東晚間,無：記錄的美東日期 ≥ 實際日期，只會比實際更晚被使用
+401161528,2020,2020-02-29T13:30:00Z,08:30,DEN @ LAC,implausible_start_time,同上,無：同上
+401161530,2020,2020-03-01T11:00:00Z,06:00,POR @ ATL,implausible_start_time,同上,無：同上
+401161536,2020,2020-03-01T12:30:00Z,07:30,GS @ PHX,implausible_start_time;same_team_two_games_same_et_date,同上；且 GS 同一美東日期（2020-03-01）另有 401161543 WSH @ GS,無：WSH @ GS 的預測評分不含本場結果（較保守）；Elo 依開賽時間序更新歷史，順序仍為本場在前

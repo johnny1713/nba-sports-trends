@@ -167,6 +167,14 @@ class DataAccess:
                          'fields': sorted(fields), 'as_of': as_of, 'returned': len(out), 'excluded': excluded})
         return out
 
+    def neutral_status(self, game_ids):
+        """中立場狀態（data/reference/neutral_sites.csv）：'neutral' / 'unknown' / 'home'（未列入 = 一般主場）。"""
+        if not hasattr(self, '_neutral'):
+            p = self._path('data', 'reference', 'neutral_sites.csv')
+            self._neutral = ({r['game_id']: r['status'] for r in csv.DictReader(open(p, encoding='utf-8'))}
+                             if os.path.exists(p) else {})
+        return {g: self._neutral.get(g, 'home') for g in game_ids}
+
     def require_features(self, features, season):
         """模型輸入檢查：未登記 → KeyError；不可用 → FeatureRejected；回傳每個特徵的狀態。"""
         self.check_season(season)

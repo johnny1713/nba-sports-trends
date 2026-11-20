@@ -1,0 +1,147 @@
+{
+ "box_sources": {
+  "bbref": 168,
+  "espn": 1141
+ },
+ "checks": {
+  "by_kind": {
+   "ml_spread_direction_conflict": 3
+  },
+  "error_rate_pct": 0.002,
+  "examples": {
+   "ml_spread_direction_conflict": [
+    "400900598/SportsInteraction.com/current_postgame",
+    "400900168/SportsInteraction.com/current_postgame",
+    "400900076/SportsInteraction.com/current_postgame"
+   ]
+  },
+  "fails": 3,
+  "n": 179593
+ },
+ "completeness": {
+  "box_issue_examples": [],
+  "box_issues": 0,
+  "complete": 1309,
+  "complete_pct": 100.0,
+  "final": 1309,
+  "incomplete_examples": []
+ },
+ "fetch": {
+  "http_errors": 0,
+  "notes_total": 168,
+  "parse_error_examples": [],
+  "parse_errors": 0,
+  "requests": 3075
+ },
+ "games": {
+  "duplicates": [],
+  "expected_regular": 1230,
+  "postseason": 79,
+  "regular": 1233,
+  "regular_final": 1230,
+  "skipped_at_listing": {
+   "non-NBA teams (all-star etc.)": 6,
+   "season type 1": 97
+  },
+  "status": {
+   "final": 1309,
+   "postponed": 3
+  },
+  "total": 1312
+ },
+ "label": "2016-17",
+ "live": false,
+ "odds": {
+  "books": [
+   [
+    "5Dimes.eu",
+    2533
+   ],
+   [
+    "BETNOW.eu",
+    2533
+   ],
+   [
+    "BETONLINE.ag",
+    2527
+   ],
+   [
+    "SportsBetting.ag",
+    2527
+   ],
+   [
+    "Sportsbook.com",
+    2523
+   ],
+   [
+    "Westgate",
+    2519
+   ],
+   [
+    "BetUS.COM",
+    2513
+   ],
+   [
+    "SportsInteraction.com",
+    2503
+   ],
+   [
+    "BOVADA.lv",
+    2473
+   ]
+  ],
+  "books_per_game_median": 9,
+  "coverage": {
+   "close/ml": {
+    "line_pct": 0.0,
+    "price_pct": 0.0
+   },
+   "close/spread": {
+    "line_pct": 0.0,
+    "price_pct": 0.0
+   },
+   "close/total": {
+    "line_pct": 0.0,
+    "price_pct": 0.0
+   },
+   "current_postgame/ml": {
+    "line_pct": 96.64,
+    "price_pct": 96.64
+   },
+   "current_postgame/spread": {
+    "line_pct": 97.33,
+    "price_pct": 97.33
+   },
+   "current_postgame/total": {
+    "line_pct": 97.33,
+    "price_pct": 97.33
+   },
+   "open/ml": {
+    "line_pct": 0.0,
+    "price_pct": 0.0
+   },
+   "open/spread": {
+    "line_pct": 97.33,
+    "price_pct": 0.0
+   },
+   "open/total": {
+    "line_pct": 97.33,
+    "price_pct": 0.0
+   }
+  },
+  "final_games_with_any_book_pct": 97.33,
+  "opening_feed_agreement": {
+   "agree_pct": 100.0,
+   "n": 1232
+  },
+  "timestamps_available": false
+ },
+ "season": 2017,
+ "teams": {
+  "max_games": 82,
+  "min_games": 82,
+  "n": 30
+ },
+ "verdict": "通過",
+ "verdict_ok": true
+}

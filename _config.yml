@@ -5,3 +5,9 @@ exclude:
   - "*.py"
   - CLAUDE.md
   - scores.json
+  - nba_quant
+  - tests
+  - data
+  - docs
+  - models_store
+  - "requirements*.txt"

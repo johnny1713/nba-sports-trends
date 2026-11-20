@@ -193,6 +193,21 @@ ROI、命中率、平均賠率、總投注、總獲利、平均 EV、Brier、Log
 校準曲線（分箱）、依賠率區間的績效、依市場與推薦等級的績效。
 **每張報表都附 M0（市場基準）的同期數字。** 期間：全季、近 30／60／90 天。
 
+## 6.1 CLV 規範（2026-11-20 使用者決定，`nba_quant/clv.py`）
+
+CLV 的任何計算都只能使用 `clv.pair_open_close()` 產生的配對：
+
+1. 同一場比賽的開盤與收盤，必須來自**同一家**博彩公司。
+2. 必須是**相同市場**（讓分／總分／獨贏）且**相同方向**（主／客、大／小）。
+3. 不允許跨博彩公司、跨市場、跨方向配對：配對鍵是 (game_id, provider, market, side)，結構上無法混配；計算入口另有 `assert_valid_pair()` 逐筆檢查。
+4. 缺開盤或缺收盤時，該筆不計入 CLV；**不得**用賽後快照、其他莊家或其他階段的價格補值。
+5. 開盤須為 PROVIDER_LABELED_OPEN／TIMESTAMP_VERIFIED_OPEN；收盤須為 PROVIDER_LABELED_CLOSE／TIMESTAMP_VERIFIED_CLOSE。
+6. 被品質標記排除的單筆紀錄不參與配對。
+7. 去水所需的另一邊價格，也必須是**同一家、同一市場、同一階段**的報價，不得借用其他莊家。
+8. CLV 報告必附 `clv.pairing_report()`：有效配對數、有效場次、排除數、依原因與市場的排除明細、收盤的時間性質（是否經時間戳驗證）。
+
+排除原因代碼：`missing_open`、`missing_close`、`open_not_pregame`、`close_not_clv_eligible`、`missing_price`、`flagged_record`、`missing_same_book_other_side_for_devig`。
+
 ## 7. 版本與重現（要求 E）
 
 - 模型版本 `v2.<major>.<minor>+<git sha>`；參數存 JSON（`models_store/<版本>/params.json`）。

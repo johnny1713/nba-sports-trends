@@ -1,107 +1,127 @@
-"""
-探路用：抓 Odds Shark 的 NBA 頁面，確認它的趨勢有沒有「星期幾」這類條件、句型長什麼樣。
-雲端 session 的 proxy 擋外部網站，所以只能在 GitHub Actions 上跑（probe.yml）。
-結果存到 samples/oddsshark/，並把摘要印在日誌。
-
-（covers 的探路版本見 git 歷史 7ca3852）
-"""
-import os
-import re
-import time
-import urllib.request
+"""資料來源探路（大改版 Phase 1）：只印日誌，不寫任何檔案、不 commit。"""
+import json, time, urllib.request, urllib.error, gzip, re
 
 UA = ('Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 '
       '(KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36')
-OUT = 'samples/oddsshark'
-BASE = 'https://www.oddsshark.com'
-WEEKDAY = re.compile(r'\b(Monday|Tuesday|Wednesday|Thursday|Friday|Saturday|Sunday)s?\b')
+NBA_HDR = {'Referer': 'https://www.nba.com/', 'Origin': 'https://www.nba.com',
+           'x-nba-stats-origin': 'stats', 'x-nba-stats-token': 'true', 'Accept': 'application/json'}
 
 
-def fetch(url):
-    req = urllib.request.Request(url, headers={'User-Agent': UA, 'Accept-Language': 'en-US,en;q=0.9'})
+def get(url, hdr=None, timeout=25):
+    h = {'User-Agent': UA, 'Accept-Language': 'en-US,en;q=0.9', 'Accept-Encoding': 'gzip'}
+    h.update(hdr or {})
+    t0 = time.time()
     try:
-        with urllib.request.urlopen(req, timeout=30) as r:
-            return r.geturl(), r.read().decode('utf-8', errors='replace')
+        with urllib.request.urlopen(urllib.request.Request(url, headers=h), timeout=timeout) as r:
+            b = r.read()
+            if r.headers.get('Content-Encoding') == 'gzip':
+                b = gzip.decompress(b)
+            return r.status, b.decode('utf-8', 'replace'), time.time() - t0
+    except urllib.error.HTTPError as e:
+        return e.code, '', time.time() - t0
     except Exception as e:
-        print(f'  [失敗] {url}: {e}')
-        return None, None
+        return type(e).__name__ + ':' + str(e)[:80], '', time.time() - t0
     finally:
-        time.sleep(2)
+        time.sleep(1.5)
 
 
-def text(s):
-    return re.sub(r'\s+', ' ', re.sub(r'<[^>]+>', ' ', s)).strip()
+def probe(name, url, hdr=None, show=None):
+    st, body, dt = get(url, hdr)
+    print(f'\n### {name}\n  {url}\n  status={st} size={len(body)} {dt:.1f}s')
+    if body and show:
+        try:
+            show(body)
+        except Exception as e:
+            print('  [show error]', e)
+    return body
 
 
-def save(name, body):
-    with open(os.path.join(OUT, name), 'w', encoding='utf-8') as f:
-        f.write(body)
+def j(b):
+    return json.loads(b)
 
 
-def summarize(name, body):
-    plain = text(re.sub(r'<script.*?</script>|<style.*?</style>', ' ', body, flags=re.S))
-    # 趨勢句通常長這樣："The Cavaliers are 6-14 ATS in their last 20 games played on a Tuesday."
-    sents = set(re.findall(r'[A-Z][^.]{0,160}?\b\d+-\d+(?:-\d+)?\b[^.]{0,160}\.', plain))
-    trendish = [s for s in sents if re.search(r'\b(ATS|SU|OVER|UNDER|Over|Under|last \d+)\b', s)]
-    wk = [s for s in trendish if WEEKDAY.search(s)]
-    print(f'  {name}: {len(body)} 字元，像趨勢的句子 {len(trendish)} 條，含星期幾 {len(wk)} 條')
-    for s in sorted(trendish)[:15]:
-        print('     ', s[:200])
-    for s in wk[:15]:
-        print('   [星期]', s[:200])
-    return trendish, wk
+def sb_show(b):
+    d = j(b)
+    ev = d.get('events', [])
+    print(f'  events={len(ev)}')
+    for e in ev[:2]:
+        c = e['competitions'][0]
+        print('  ', e['id'], e['name'], e['date'], 'odds:', json.dumps(c.get('odds', [])[:1])[:600])
+    return ev
 
 
 def main():
-    os.makedirs(OUT, exist_ok=True)
-    pages = {}
-    for path in ('/nba/odds', '/nba/scores', '/nba/trends', '/nba/computer-picks', '/nba/consensus-picks'):
-        url, body = fetch(BASE + path)
-        if body:
-            name = path.strip('/').replace('/', '_') + '.html'
-            save(name, body)
-            pages[name] = body
-            print(f'[{path}] → {url}，{len(body)} 字元')
-            summarize(name, body)
+    # ---------- ESPN ----------
+    today = time.strftime('%Y%m%d', time.gmtime(time.time() - 6 * 3600))
+    b = probe('ESPN scoreboard today', f'https://site.api.espn.com/apis/site/v2/sports/basketball/nba/scoreboard?dates={today}', show=sb_show)
+    ev_today = j(b)['events'] if b else []
+    past = {}
+    for d in ('20251110', '20250115', '20240115', '20230115', '20200115', '20150115'):
+        b = probe(f'ESPN scoreboard {d}', f'https://site.api.espn.com/apis/site/v2/sports/basketball/nba/scoreboard?dates={d}', show=sb_show)
+        if b:
+            try:
+                past[d] = j(b)['events'][0]['id']
+            except Exception:
+                pass
+    ids = ([ev_today[0]['id']] if ev_today else []) + list(past.values())
+    for eid in ids:
+        def odds_show(b):
+            d = j(b)
+            print('  count', d.get('count'))
+            for it in d.get('items', [])[:3]:
+                print('   provider', it.get('provider', {}).get('name'), '| spread', it.get('spread'), '| OU', it.get('overUnder'),
+                      '| keys', [k for k in it if k in ('open', 'close', 'current', 'homeTeamOdds', 'awayTeamOdds')])
+                for k in ('open', 'close', 'current'):
+                    if k in it:
+                        print('     ', k, json.dumps(it[k])[:300])
+                ht = it.get('homeTeamOdds', {})
+                print('      homeTeamOdds', json.dumps({x: ht.get(x) for x in ('moneyLine', 'spreadOdds', 'open', 'close', 'current')})[:500])
+        probe(f'ESPN core odds event {eid}', f'https://sports.core.api.espn.com/v2/sports/basketball/leagues/nba/events/{eid}/competitions/{eid}/odds', show=odds_show)
+    if ids:
+        def summ(b):
+            d = j(b)
+            print('  keys', list(d.keys()))
+            print('  pickcenter', json.dumps(d.get('pickcenter', []))[:600])
+            print('  injuries', json.dumps(d.get('injuries', []))[:500])
+            bx = d.get('boxscore', {}).get('teams', [])
+            if bx:
+                print('  team box stats', [s.get('name') for s in bx[0].get('statistics', [])][:30])
+        probe('ESPN summary (today)', f'https://site.api.espn.com/apis/site/v2/sports/basketball/nba/summary?event={ids[0]}', show=summ)
+        if len(ids) > 1:
+            probe('ESPN summary (past)', f'https://site.api.espn.com/apis/site/v2/sports/basketball/nba/summary?event={ids[1]}', show=summ)
+    probe('ESPN injuries', 'https://site.api.espn.com/apis/site/v2/sports/basketball/nba/injuries',
+          show=lambda b: print('  teams', len(j(b).get('injuries', [])), json.dumps(j(b).get('injuries', [])[:1])[:700]))
 
-    # 從列表頁找單場頁連結（Odds Shark 的單場網址通常是 /nba/<客>-<主>-odds-<月>-<日>-<年>-<id>）
-    links = set()
-    for body in pages.values():
-        for href in re.findall(r'href="(/nba/[a-z0-9-]+-odds-[a-z]+-\d+-\d{4}-\d+)"', body):
-            links.add(href)
-        for href in re.findall(r'href="(https://www\.oddsshark\.com/nba/[a-z0-9-]+-odds-[a-z]+-\d+-\d{4}-\d+)"', body):
-            links.add(href.replace(BASE, ''))
-    print(f'找到單場連結 {len(links)} 個:', sorted(links)[:10])
-    if not links:
-        # 沒有就把頁面裡所有 /nba/ 開頭的連結印出來，方便下一輪調整
-        allnba = set()
-        for body in pages.values():
-            allnba.update(re.findall(r'href="((?:https://www\.oddsshark\.com)?/nba/[^"#?]+)"', body))
-        print('頁面上的 /nba/ 連結樣本:', sorted(allnba)[:60])
+    # ---------- NBA official ----------
+    probe('NBA cdn schedule', 'https://cdn.nba.com/static/json/staticData/scheduleLeagueV2.json',
+          show=lambda b: print('  gameDates', len(j(b)['leagueSchedule']['gameDates'])))
+    probe('NBA cdn today scoreboard', 'https://cdn.nba.com/static/json/liveData/scoreboard/todaysScoreboard_00.json',
+          show=lambda b: print('  games', len(j(b)['scoreboard']['games'])))
+    for name, url in [
+        ('stats.nba.com team advanced', 'https://stats.nba.com/stats/leaguedashteamstats?MeasureType=Advanced&PerMode=PerGame&Season=2024-25&SeasonType=Regular%20Season&LeagueID=00&LastNGames=0&Month=0&OpponentTeamID=0&PaceAdjust=N&Period=0&PlusMinus=N&Rank=N&DateFrom=&DateTo=&GameScope=&GameSegment=&Location=&Outcome=&PORound=0&PlayerExperience=&PlayerPosition=&SeasonSegment=&ShotClockRange=&StarterBench=&TeamID=0&TwoWay=0&VsConference=&VsDivision=&Conference=&Division='),
+        ('stats.nba.com team gamelog', 'https://stats.nba.com/stats/leaguegamelog?Counter=0&Direction=ASC&LeagueID=00&PlayerOrTeam=T&Season=2024-25&SeasonType=Regular%20Season&Sorter=DATE'),
+    ]:
+        probe(name, url, hdr=NBA_HDR, show=lambda b: print('  ', b[:300]))
+    probe('NBA injury report page', 'https://official.nba.com/nba-injury-report-2025-26-season/',
+          show=lambda b: print('  pdf links', len(re.findall(r'Injury-Report_[^"]+\.pdf', b)), re.findall(r'https?://[^"]+Injury-Report_[^"]+\.pdf', b)[-2:]))
 
-    total_wk = 0
-    for href in sorted(links)[:4]:
-        for suffix in ('', '/trends'):
-            url, body = fetch(BASE + href + suffix)
-            if not body:
-                continue
-            name = 'game_' + href.strip('/').split('/')[-1][-40:] + suffix.replace('/', '_') + '.html'
-            save(name, body)
-            _, wk = summarize(name, body)
-            total_wk += len(wk)
-    print(f'=== 單場頁含星期幾的趨勢合計 {total_wk} 條 ===')
+    # ---------- Basketball Reference ----------
+    probe('BBRef 2025 season', 'https://www.basketball-reference.com/leagues/NBA_2025.html',
+          show=lambda b: print('  has advanced table', 'advanced-team' in b))
+    probe('BBRef games 2025 Jan', 'https://www.basketball-reference.com/leagues/NBA_2025_games-january.html',
+          show=lambda b: print('  rows', b.count('data-stat="visitor_team_name"')))
+
+    # ---------- Odds ----------
+    probe('The Odds API (no key)', 'https://api.the-odds-api.com/v4/sports')
+    probe('SBR archive index', 'https://www.sportsbookreviewsonline.com/scoresoddsarchives/nba/nbaoddsarchives.htm',
+          show=lambda b: print('  links', re.findall(r'href="([^"]*nba[^"]*\.(?:xlsx?|htm))"', b)[:20]))
+    probe('Taiwan sportslottery home', 'https://www.sportslottery.com.tw/',
+          show=lambda b: print('  title', re.findall(r'<title>(.*?)</title>', b, re.S)[:1]))
+    probe('Taiwan sportslottery blob', 'https://blob.sportslottery.com.tw/apidata/Pre/ListByLeague.json',
+          show=lambda b: print('  ', b[:300]))
+    probe('playsport NBA', 'https://www.playsport.cc/predict/games?allianceid=3',
+          show=lambda b: print('  title', re.findall(r'<title>(.*?)</title>', b, re.S)[:1]))
 
 
 if __name__ == '__main__':
     main()
-
-
-# 開幕日前驗證：用明天（美東 10/20）的真實頁面完整跑一次正式爬蟲，產出放 samples/ 帶回來檢查。
-# 只在 runner 上跑，history.json/scores.json 不會被 commit（probe.yml 只 add samples）。
-if __name__ == '__main__':
-    import subprocess, sys
-    r = subprocess.run([sys.executable, 'scrape.py', '--date', '2026-10-20', '--out', 'samples/preview_1020.html'],
-                       capture_output=True, text=True)
-    with open('samples/preview_1020.log', 'w', encoding='utf-8') as f:
-        f.write(r.stdout + '\n--- stderr ---\n' + r.stderr)
-    print(r.stdout[-4000:], r.stderr[-2000:])

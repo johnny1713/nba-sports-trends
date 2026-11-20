@@ -72,3 +72,18 @@ class PlayInSeasons(unittest.TestCase):
 
     def test_out_dir_separate(self):
         self.assertEqual(P.out_dir(2022), os.path.join('data', 'raw', 'espn_playin', '2022'))
+
+
+class SingleSourceVerify(unittest.TestCase):
+    def test_bbref_only_checks_against_espn_scoreboard(self):
+        g = {'game_id': 'g', 'home': 'H', 'away': 'A', 'home_abbr': 'IND', 'away_abbr': 'CHA', 'home_pts': 144, 'away_pts': 117}
+        b = lambda t, pts: {'team': t, 'pts': pts, 'fgm': 40, 'fga': 90, 'fg3m': 10, 'fg3a': 30, 'ftm': pts - 90,
+                            'fta': 40, 'oreb': 10, 'dreb': 35, 'tov': 12, 'players': [{}] * 10}
+        v = P.verify_single_source(g, [b('H', 144), b('A', 116)])
+        self.assertTrue(v['teams']['H']['pts_eq_espn_scoreboard'])
+        self.assertFalse(v['teams']['A']['pts_eq_espn_scoreboard'])
+        self.assertEqual(v['box_source'], 'bbref')
+
+    def test_fallback_refuses_locked(self):
+        with self.assertRaises(PermissionError):
+            P.bbref_fallback(2026)

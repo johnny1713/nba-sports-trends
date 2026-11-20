@@ -280,6 +280,9 @@ def main(season, rest):
     if '--playin-2020' in rest:
         from . import playin_fetch
         return playin_fetch.run((2020,))
+    if '--playin-bbref-fallback' in rest:
+        from . import playin_fetch
+        return playin_fetch.bbref_fallback(int(rest[rest.index('--playin-bbref-fallback') + 1]))
     if '--playin' in rest:
         from . import playin_fetch
         return playin_fetch.run(tuple(int(x) for x in rest[rest.index('--playin') + 1].split(',')))

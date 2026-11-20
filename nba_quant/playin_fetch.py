@@ -154,3 +154,55 @@ def verify(g, espn_boxes, bbref_boxes):
             'players': len(b.get('players') or [])}
     out['both_teams_present'] = len(out['teams']) == 2
     return out
+
+
+def bbref_fallback(season, log=print):
+    """ESPN box score 不可用（球隊統計空白、球員數字全 0）的附加賽，改抓 BBRef（使用者 2026-11-20 第三輪；
+    與正式回補的 BBRef 補值規則相同：BBRef 得分必須等於 ESPN 計分板比分）。
+    只新增檔案，不改既有 games/teambox/verification/provenance：
+        raw/bbref_box_<gid>.html.gz、teambox_bbref.jsonl.gz、verification_bbref.json、provenance_bbref.json
+    """
+    out = out_dir(season)
+    if season in LOCKED:
+        raise PermissionError(f'{season} 為鎖定測試期')
+    if os.path.exists(os.path.join(out, 'provenance_bbref.json')):
+        log(f'{out}/provenance_bbref.json 已存在，不重抓')
+        return 0
+    ver = store.read_json(os.path.join(out, 'verification.json'))
+    failed = {c['game_id'] for c in ver['games'] if 'error' in c}
+    games = [g for g in store.read_jsonl_gz(os.path.join(out, 'games.jsonl.gz')) if g['game_id'] in failed]
+    f_bb = Fetcher(min_interval=3.5)
+    prov = {'purpose': 'ESPN box score 不可用的附加賽改用 BBRef（使用者 2026-11-20 第三輪）', 'season': season, 'files': {}}
+    boxes, checks = [], []
+    for g in games:
+        url = bbref.box_url(g)
+        raw = f_bb.get_bytes(url)
+        t = espn.now_utc()
+        name = f"raw/bbref_box_{g['game_id']}.html.gz"
+        _write_raw(os.path.join(out, name), raw)
+        prov['files'][name] = {'url': url, 'fetched_at': t, 'sha256_uncompressed': _sha(raw), 'game_id': g['game_id']}
+        bx = bbref.parse_box(raw.decode('utf-8', 'replace'), g, t)
+        for b in bx:
+            b['box_source'] = 'bbref'
+        boxes += bx
+        checks.append(verify_single_source(g, bx))
+    store.write_jsonl_gz(os.path.join(out, 'teambox_bbref.jsonl.gz'), boxes)
+    store.write_json(os.path.join(out, 'verification_bbref.json'), {'season': season, 'games': checks,
+                     'note': 'ESPN 球隊統計空白、球員數字全為 0，無法做 ESPN/BBRef 同場比對；只能驗證 BBRef 得分 = ESPN 計分板比分與 BBRef 內部恆等式'})
+    store.write_json(os.path.join(out, 'provenance_bbref.json'), prov)
+    log(json.dumps(checks, ensure_ascii=False)[:1500])
+    return 0
+
+
+def verify_single_source(g, boxes):
+    """單一來源（BBRef）時能做的驗證：兩隊都有、得分恆等式、得分 = ESPN 計分板（獨立來源）。"""
+    out = {'game_id': g['game_id'], 'matchup': f"{g['away_abbr']} @ {g['home_abbr']}", 'score': [g['away_pts'], g['home_pts']],
+           'box_source': 'bbref', 'teams': {}}
+    for b in boxes:
+        score = g['home_pts'] if b['team'] == g['home'] else g['away_pts']
+        out['teams'][b['team']] = {'pts_identity_ok': 2 * b['fgm'] + b['fg3m'] + b['ftm'] == b['pts'],
+                                   'pts_eq_espn_scoreboard': b['pts'] == score,
+                                   'fields_present': all(b.get(k) is not None for k in FIELDS),
+                                   'players': len(b.get('players') or [])}
+    out['both_teams_present'] = len(out['teams']) == 2
+    return out

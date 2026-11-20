@@ -146,7 +146,9 @@ def run_season(season: int, live: bool = False, log=print):
     from . import quality
     q = quality.season_report(season)
     log(f'   quality: {q["verdict"]}')
-    return 0 if q['verdict_ok'] else 1
+    # 品質不通過時仍回傳 0：資料與報告必須 commit 才看得到問題（workflow 在失敗時不會 commit）。
+    # 「不通過就不進下一季」由人工看報告把關，並由 require_previous_ok() 在下一季開跑前強制檢查。
+    return 0
 
 
 def run_taiwan(log=print):
@@ -188,6 +190,20 @@ def run_taiwan(log=print):
     return rc
 
 
+def require_previous_ok(season):
+    """下一季開跑前，前一季（若已回補）的品質報告必須通過，或有人工放行紀錄（quality_ack.json）。"""
+    prev = os.path.join(season_dir(season - 1), 'quality.json')
+    if not os.path.exists(prev):
+        return None
+    q = store.read_json(prev)
+    if q.get('verdict_ok'):
+        return None
+    ack = store.read_json(os.path.join(season_dir(season - 1), 'quality_ack.json'))
+    if ack and ack.get('accepted'):
+        return None
+    return f'season {season - 1} quality not ok and not acknowledged: {q.get("verdict")}'
+
+
 def main(season, rest):
     if '--taiwan' in rest:
         return run_taiwan()
@@ -195,4 +211,8 @@ def main(season, rest):
         print('need --season or --taiwan', file=sys.stderr)
         return 2
     from .config import LIVE_SEASON
+    block = require_previous_ok(season) if '--force' not in rest else None
+    if block:
+        print('REFUSED:', block, file=sys.stderr)
+        return 3
     return run_season(season, live=(season == LIVE_SEASON))

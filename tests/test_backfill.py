@@ -34,6 +34,7 @@ class BackfillSmoke(unittest.TestCase):
                 os.chdir(d)
                 backfill.Fetcher = FakeFetcher
                 rc = backfill.run_season(2024, log=lambda *a: None)
+                blocked = backfill.require_previous_ok(2025)
                 q = json.load(open('data/raw/espn/2024/quality.json'))
                 games = [json.loads(x) for x in gzip.open('data/raw/espn/2024/games.jsonl.gz').read().decode().splitlines()]
                 odds = [json.loads(x) for x in gzip.open('data/raw/espn/2024/odds.jsonl.gz').read().decode().splitlines()]
@@ -42,7 +43,8 @@ class BackfillSmoke(unittest.TestCase):
             finally:
                 backfill.Fetcher = old_f
                 os.chdir(old_cwd)
-        self.assertEqual(rc, 1)                                   # 只有 1/11 場完整 → 品質不通過，必須擋下
+        self.assertEqual(rc, 0)                                   # 不通過也要 commit，才看得到報告
+        self.assertIsNotNone(blocked)                             # 但下一季會被擋下
         self.assertFalse(q['verdict_ok'])
         ok = [g for g in games if g['complete']]
         self.assertEqual([g['game_id'] for g in ok], ['401585183'])

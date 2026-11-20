@@ -231,17 +231,18 @@ def run_taiwan(log=print):
 
 
 def require_previous_ok(season):
-    """下一季開跑前，前一季（若已回補）的品質報告必須通過，或有人工放行紀錄（quality_ack.json）。"""
+    """
+    下一季開跑前，前一季（若已回補）的品質報告必須「通過」或「有條件通過」。
+    有條件通過由 quality.evaluate_conditional_pass() 逐條驗證（資料版本、系統性、可交叉驗證、門檻），
+    單純存在放行檔案不算數。
+    """
     prev = os.path.join(season_dir(season - 1), 'quality.json')
     if not os.path.exists(prev):
         return None
     q = store.read_json(prev)
-    if q.get('verdict_ok'):
+    if q.get('verdict_ok') or q.get('conditional_pass'):
         return None
-    ack = store.read_json(os.path.join(season_dir(season - 1), 'quality_ack.json'))
-    if ack and ack.get('accepted'):
-        return None
-    return f'season {season - 1} quality not ok and not acknowledged: {q.get("verdict")}'
+    return f'season {season - 1} quality not ok: {q.get("verdict")}'
 
 
 def main(season, rest):

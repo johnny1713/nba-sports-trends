@@ -181,6 +181,15 @@ def season_report(season: int, live: bool = None) -> dict:
     if dup:
         reasons.append(f'重複 game_id {len(dup)} 個')
 
+    conditional = evaluate_conditional_pass(season, reasons, flags, n_checks, n_err, odds_by_game, final_ids)
+    if reasons and conditional and conditional['valid']:
+        verdict = ('有條件通過（Conditional Pass）：' + '；'.join(reasons)
+                   + f"——排除已確認的來源欄位錯誤後錯誤率 {conditional['adjusted_error_rate_pct']}%（門檻仍為 1%）")
+    else:
+        verdict = '通過' if not reasons else '不通過：' + '；'.join(reasons)
+        if reasons and conditional and not conditional['valid']:
+            verdict += '（人工放行紀錄不成立：' + '；'.join(conditional['invalid_reasons']) + '）'
+
     rep = {
         'season': season, 'label': f'{season - 1}-{str(season)[2:]}', 'live': live,
         'expected_regular': expected, 'by_phase': by_phase,
@@ -202,7 +211,9 @@ def season_report(season: int, live: bool = None) -> dict:
                   'parse_errors': len(flog.get('parse_errors', [])),
                   'parse_error_examples': flog.get('parse_errors', [])[:10]},
         'verdict_ok': not reasons,
-        'verdict': '通過' if not reasons else '不通過：' + '；'.join(reasons),
+        'conditional_pass': bool(reasons and conditional and conditional['valid']),
+        'conditional': conditional,
+        'verdict': verdict,
     }
     store.write_json(os.path.join(RAW, str(season), 'quality.json'), rep)
     os.makedirs(REPORT_DIR, exist_ok=True)
@@ -286,6 +297,7 @@ def render_md(r):
           '- 同一場比賽的其他莊家、其他盤口、同組另一邊（若無問題）全部保留，不會因一筆異常排除整場', '']
     for kind, exs in oc['examples'].items():
         L.append(f'- {kind}：' + '；'.join(f'`{e}`' for e in exs))
+    L += render_conditional(r.get('conditional'))
     L += render_anomaly(r.get('anomaly_analysis'))
     fe = r['fetch']
     L += ['', '## 抓取', '', f"- 請求 {fe['requests']} 次，HTTP 失敗 {fe['http_errors']}，解析失敗 {fe['parse_errors']}"]
@@ -365,4 +377,104 @@ def render_anomaly(a):
               '再以同場同階段其他至少 3 家有效莊家的共識歸因（讓分中位數 ±1 分、獨贏熱門方向 ≥ 2/3 一致）：']
         for k, v in a['direction_conflict_attribution'].items():
             L.append(f'- {k}：{v} 組')
+    return L
+
+
+# ---------------------------------------------------------------- 人工有條件放行（Conditional Pass）
+ACK_FILE = 'quality_ack.json'
+ACK_MIN_SYSTEMATIC_SHARE = 0.90     # 被排除的範圍內，該莊家的紀錄至少 90% 被同一種錯誤標記 → 才算「系統性」
+ACK_MIN_OTHER_COVERAGE = 95.0       # 被排除的市場，其他莊家仍須覆蓋 ≥ 95% 完賽比賽 → 才算「可交叉驗證、可替代」
+GATE_ERROR_RATE = 0.01              # 全域門檻不變
+
+
+def data_version(season):
+    d = os.path.join(RAW, str(season))
+    return {name: store.sha256_file(os.path.join(d, name)) for name in ('games.jsonl.gz', 'odds.jsonl.gz')
+            if os.path.exists(os.path.join(d, name))}
+
+
+def evaluate_conditional_pass(season, reasons, flags, n_checks, n_err, odds_by_game, final_ids):
+    """
+    人工放行只在下列條件**全部**成立時有效（2026-11-20 使用者決定）；任何一條不成立就維持不通過：
+      1. 紀錄的球季就是本季（不會延用到其他球季）
+      2. 資料版本（games／odds 的 sha256）與放行時相同——資料一變，放行自動失效
+      3. 不通過的原因只有「盤口錯誤率」一項
+      4. 排除範圍內，該莊家的紀錄 ≥ 90% 被同一種錯誤標記（確認是系統性來源錯誤，不是拿放行掩蓋零星錯誤）
+      5. 被排除的市場，其他莊家的可用紀錄仍覆蓋 ≥ 95% 完賽比賽（有其他莊家可交叉驗證、可替代）
+         → 2024-25 起若唯一的莊家出錯，這條必然不成立，維持不通過
+      6. 排除範圍後的錯誤率 < 1%（全域門檻不變）
+    """
+    ack = store.read_json(os.path.join(RAW, str(season), ACK_FILE))
+    if not ack:
+        return None
+    invalid = []
+    if ack.get('season') != season or ack.get('decision') != 'conditional_pass':
+        invalid.append('紀錄的球季或決策類型不符')
+    if ack.get('data_version') != data_version(season):
+        invalid.append('資料版本已變更')
+    other_reasons = [r for r in reasons if not r.startswith('盤口 error 級標記比例')]
+    if other_reasons:
+        invalid.append('還有盤口錯誤率以外的不通過原因：' + '；'.join(other_reasons))
+    scope = ack.get('exclusion_scope', [])
+
+    def in_scope(f):
+        return any(f['provider'] == sc['provider'] and f['stage'] == sc['stage'] and f['market'] in sc['markets']
+                   and f['flag'] == sc['flag'] for sc in scope)
+
+    scoped = [f for f in flags if f['severity'] == 'error' and in_scope(f)]
+    excluded = []
+    for sc in scope:
+        for m in sc['markets']:
+            total = sum(1 for g in final_ids for q in odds_by_game.get(g, [])
+                        if q['provider'] == sc['provider'] and q['stage'] == sc['stage'] and q['market'] == m)
+            hit = sum(1 for f in scoped if f['provider'] == sc['provider'] and f['stage'] == sc['stage'] and f['market'] == m)
+            share = hit / total if total else 0.0
+            if share < ACK_MIN_SYSTEMATIC_SHARE:
+                invalid.append(f"{sc['provider']} {sc['stage']}/{m} 只有 {share:.0%} 紀錄有此錯誤，不構成系統性錯誤")
+            # 其他莊家的可用覆蓋率（同階段、同市場、雙邊都在且未被 error／missing 標記）
+            bad = {(f['game_id'], f['provider'], f['stage'], f['market'], f['side'])
+                   for f in flags if f['severity'] in ('error', 'missing')}
+            sides = ('over', 'under') if m == 'total' else ('home', 'away')
+            covered = 0
+            for g in final_ids:
+                provs = defaultdict(set)
+                for q in odds_by_game.get(g, []):
+                    if (q['provider_type'] == 'book' and q['provider'] != sc['provider'] and q['stage'] == sc['stage']
+                            and q['market'] == m and (g, q['provider'], q['stage'], m, q['side']) not in bad):
+                        provs[q['provider']].add(q['side'])
+                covered += any(set(sides) <= v for v in provs.values())
+            cov = _pct(covered, len(final_ids))
+            if cov is None or cov < ACK_MIN_OTHER_COVERAGE:
+                invalid.append(f"{sc['stage']}/{m} 其他莊家可用覆蓋率 {cov}% < {ACK_MIN_OTHER_COVERAGE}%（無法交叉驗證、無可替代來源）")
+            excluded.append({'provider': sc['provider'], 'stage': sc['stage'], 'market': m, 'flag': sc['flag'],
+                             'records_excluded': hit, 'provider_records': total, 'systematic_share_pct': _pct(hit, total),
+                             'other_books_usable_coverage_pct': cov})
+    adjusted = (n_err - len(scoped)) / n_checks if n_checks else 0.0
+    if adjusted >= GATE_ERROR_RATE:
+        invalid.append(f'排除範圍後錯誤率 {adjusted:.2%} 仍 ≥ 1%')
+    return {'valid': not invalid, 'invalid_reasons': invalid, 'ack': ack,
+            'raw_error_rate_pct': round(100 * n_err / n_checks, 4) if n_checks else 0.0,
+            'adjusted_error_rate_pct': round(100 * adjusted, 4), 'excluded': excluded,
+            'gate_threshold_pct': 100 * GATE_ERROR_RATE}
+
+
+def render_conditional(c):
+    if not c:
+        return []
+    a = c['ack']
+    L = ['', '## 人工有條件放行（Conditional Pass）', '',
+         f"- 放行紀錄是否成立：**{'成立' if c['valid'] else '不成立'}**" + ('' if c['valid'] else '：' + '；'.join(c['invalid_reasons'])),
+         f"- 原始錯誤率：{c['raw_error_rate_pct']}%；排除已確認的來源欄位錯誤後：**{c['adjusted_error_rate_pct']}%**（門檻仍為 {c['gate_threshold_pct']:g}%，未修改）",
+         f"- 決策：{a.get('decision_text')}（{a.get('decided_by')}，{a.get('decided_at')}）",
+         f"- 原因：{a.get('reason')}",
+         f"- 資料版本：{a.get('data_version')}",
+         f"- 程式版本：{a.get('code_sha')}",
+         f"- 適用範圍：只限本季；資料版本一變即失效；不構成其他球季的通行規則", '',
+         '| 排除的莊家 | 階段 | 市場 | 錯誤類型 | 排除筆數 / 該莊家筆數 | 系統性比例 | 其他莊家可用覆蓋率 |', '|---|---|---|---|---|---|---|']
+    for e in c['excluded']:
+        L.append(f"| {e['provider']} | {e['stage']} | {e['market']} | {e['flag']} | {e['records_excluded']} / {e['provider_records']} "
+                 f"| {e['systematic_share_pct']}% | {e['other_books_usable_coverage_pct']}% |")
+    keep = a.get('kept_note')
+    if keep:
+        L += ['', f'- 保留使用：{keep}']
     return L

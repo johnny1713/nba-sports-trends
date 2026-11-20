@@ -42,9 +42,9 @@ def save(name, url):
 
 def main():
     os.makedirs(OUT, exist_ok=True)
-    SUM = 'https://site.api.espn.com/apis/site/v2/sports/basketball/nba/summary?event='
-    for gid in ('400578293', '400578302', '400578446'):
-        save(f'summary_bad2015_{gid}', SUM + gid)
+    save('bbref_box_201410280NOP', 'https://www.basketball-reference.com/boxscores/201410280NOP.html')
+    time.sleep(4)
+    save('bbref_box_202401150PHI', 'https://www.basketball-reference.com/boxscores/202401150PHI.html')
 
 
 if __name__ == '__main__':

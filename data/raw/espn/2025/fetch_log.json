@@ -1,0 +1,15 @@
+{
+ "http_errors": [],
+ "notes": [
+  "401704652: ESPN box unusable (espn box points {'3': 97, '22': 91} != scoreboard 103-105); used Basketball-Reference"
+ ],
+ "notes_total": 1,
+ "parse_errors": [],
+ "requests": 3087,
+ "season": 2025,
+ "skipped": {
+  "non-NBA teams (all-star etc.)": 7,
+  "season type 1": 70,
+  "season type 5": 6
+ }
+}

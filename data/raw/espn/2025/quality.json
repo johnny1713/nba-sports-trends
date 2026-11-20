@@ -1,0 +1,252 @@
+{
+ "anomaly_analysis": {
+  "by_book": [
+   {
+    "book_records": 15776,
+    "error_records": 80,
+    "provider": "ESPN BET",
+    "rate_pct": 0.51
+   }
+  ],
+  "by_kind": {
+   "spread_ml_direction_conflict": 80
+  },
+  "by_severity": {
+   "error": 80,
+   "warning": 222
+  },
+  "direction_check_same_book_same_stage": true,
+  "direction_conflict_attribution": {
+   "無法歸因或可比較莊家不足 3 家 → 讓分與獨贏都排除": 20
+  },
+  "error_records": 80,
+  "extreme_spreads": [],
+  "top_book_share_pct": 100.0
+ },
+ "box_issue_examples": [],
+ "box_issues": 0,
+ "by_phase": {
+  "postseason": {
+   "abnormal_deviation": 0,
+   "abnormal_price": 0,
+   "abnormal_spread": 0,
+   "abnormal_total": 0,
+   "abnormal_unattributed": 0,
+   "bbref_filled": 0,
+   "book_coverage_pct": {
+    "ESPN BET": 100.0
+   },
+   "books_per_game_median": 1.0,
+   "complete": 84,
+   "complete_pct": 100.0,
+   "coverage": {
+    "close/ml": {
+     "line_pct": 100.0,
+     "price_pct": 100.0
+    },
+    "close/spread": {
+     "line_pct": 100.0,
+     "price_pct": 100.0
+    },
+    "close/total": {
+     "line_pct": 100.0,
+     "price_pct": 100.0
+    },
+    "current_postgame/ml": {
+     "line_pct": 0.0,
+     "price_pct": 0.0
+    },
+    "current_postgame/spread": {
+     "line_pct": 0.0,
+     "price_pct": 0.0
+    },
+    "current_postgame/total": {
+     "line_pct": 0.0,
+     "price_pct": 0.0
+    },
+    "open/ml": {
+     "line_pct": 100.0,
+     "price_pct": 100.0
+    },
+    "open/spread": {
+     "line_pct": 100.0,
+     "price_pct": 100.0
+    },
+    "open/total": {
+     "line_pct": 100.0,
+     "price_pct": 100.0
+    }
+   },
+   "espn_box_missing": 0,
+   "final": 84,
+   "flags": {
+    "by_kind": {},
+    "error": 0,
+    "missing": 0,
+    "warning": 0
+   },
+   "games": 84,
+   "line_field_contains_price": 0,
+   "odds_missing_examples": [],
+   "odds_missing_games": 0,
+   "placeholder_missing": 0,
+   "status": {
+    "final": 84
+   },
+   "still_incomplete": 0,
+   "suspected_live": 0
+  },
+  "regular": {
+   "abnormal_deviation": 0,
+   "abnormal_price": 222,
+   "abnormal_spread": 0,
+   "abnormal_total": 0,
+   "abnormal_unattributed": 80,
+   "bbref_filled": 1,
+   "book_coverage_pct": {
+    "ESPN BET": 100.0
+   },
+   "books_per_game_median": 1,
+   "complete": 1231,
+   "complete_pct": 100.0,
+   "coverage": {
+    "close/ml": {
+     "line_pct": 100.0,
+     "price_pct": 100.0
+    },
+    "close/spread": {
+     "line_pct": 99.92,
+     "price_pct": 99.92
+    },
+    "close/total": {
+     "line_pct": 100.0,
+     "price_pct": 100.0
+    },
+    "current_postgame/ml": {
+     "line_pct": 0.0,
+     "price_pct": 0.0
+    },
+    "current_postgame/spread": {
+     "line_pct": 0.0,
+     "price_pct": 0.0
+    },
+    "current_postgame/total": {
+     "line_pct": 0.0,
+     "price_pct": 0.0
+    },
+    "open/ml": {
+     "line_pct": 100.0,
+     "price_pct": 100.0
+    },
+    "open/spread": {
+     "line_pct": 99.92,
+     "price_pct": 99.92
+    },
+    "open/total": {
+     "line_pct": 100.0,
+     "price_pct": 100.0
+    }
+   },
+   "espn_box_missing": 1,
+   "final": 1231,
+   "flags": {
+    "by_kind": {
+     "price_extreme": 222,
+     "spread_ml_direction_conflict": 80
+    },
+    "error": 80,
+    "missing": 0,
+    "warning": 222
+   },
+   "games": 1236,
+   "line_field_contains_price": 0,
+   "odds_missing_examples": [],
+   "odds_missing_games": 0,
+   "placeholder_missing": 0,
+   "status": {
+    "final": 1231,
+    "postponed": 5
+   },
+   "still_incomplete": 0,
+   "suspected_live": 0
+  }
+ },
+ "conditional": null,
+ "conditional_pass": false,
+ "continue_authorization": null,
+ "duplicates": [],
+ "expected_regular": 1230,
+ "fetch": {
+  "http_errors": 0,
+  "parse_error_examples": [],
+  "parse_errors": 0,
+  "requests": 3087
+ },
+ "incomplete_examples": [],
+ "label": "2024-25",
+ "live": false,
+ "odds_checks": {
+  "error": 80,
+  "error_rate_pct": 0.2362,
+  "examples": {
+   "price_extreme": [
+    "401703374/ESPN BET/open/spread/away: away 1.47619",
+    "401703383/ESPN BET/open/total/over: over 1.25",
+    "401703383/ESPN BET/open/total/under: under 3.75",
+    "401703385/ESPN BET/open/total/over: over 1.350877",
+    "401703385/ESPN BET/open/total/under: under 3.2"
+   ],
+   "spread_ml_direction_conflict": [
+    "401703391/ESPN BET/open/ml/away: home spread -12.5; only 0 comparable books (< 3)",
+    "401703391/ESPN BET/open/ml/home: home spread -12.5; only 0 comparable books (< 3)",
+    "401703391/ESPN BET/open/spread/away: home spread -12.5; only 0 comparable books (< 3)",
+    "401703391/ESPN BET/open/spread/home: home spread -12.5; only 0 comparable books (< 3)",
+    "401703406/ESPN BET/open/ml/away: home spread 10.5; only 0 comparable books (< 3)"
+   ]
+  },
+  "missing": 0,
+  "n": 33871,
+  "warning": 222
+ },
+ "opening_feed_agreement": {
+  "agree_pct": null,
+  "n": 0
+ },
+ "price_time_classes": {
+  "close_records": 7888,
+  "close_timestamp_verified_pct": 0.0,
+  "counts": {
+   "PROVIDER_LABELED_CLOSE": 7888,
+   "PROVIDER_LABELED_OPEN": 7888
+  }
+ },
+ "quality_status": "PASS",
+ "season": 2025,
+ "skipped_at_listing": {
+  "non-NBA teams (all-star etc.)": 7,
+  "season type 1": 70,
+  "season type 5": 6
+ },
+ "source_label_examples": [],
+ "source_label_problems": 0,
+ "strict_stage_coverage": {
+  "close/ml": 100.0,
+  "close/spread": 99.92,
+  "close/total": 100.0,
+  "open/ml": 98.48,
+  "open/spread": 98.4,
+  "open/total": 100.0
+ },
+ "teams": {
+  "expected_range": [
+   82,
+   83
+  ],
+  "max_games": 83,
+  "min_games": 82,
+  "n": 30
+ },
+ "timestamps_available": false,
+ "verdict": "通過",
+ "verdict_ok": true
+}

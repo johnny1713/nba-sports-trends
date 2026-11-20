@@ -89,7 +89,7 @@ class FlagTests(unittest.TestCase):
               q('home', -5.5, 1.91, prov='C'), q('away', -5.5, 1.91, prov='C')]                                    # 兩邊同號
         flags, _ = odds_flags.flag_quotes(qs)
         kinds = {(f['provider'], f['flag']) for f in flags}
-        self.assertIn(('BookA', 'spread_ml_direction_conflict'), kinds)
+        self.assertIn(('BookA', 'spread_ml_direction_conflict'), kinds)      # 沒有其他莊家可比 → 保守兩市場都標
         self.assertIn(('B', 'total_out_of_range'), kinds)
         self.assertIn(('C', 'spread_sign_mismatch'), kinds)
         self.assertTrue(all(f['severity'] == 'error' for f in flags))
@@ -141,3 +141,109 @@ class FlagTests(unittest.TestCase):
 
 if __name__ == '__main__':
     unittest.main()
+
+
+def market(prov, home_line, ml_home, ml_away, gid='g1', stage='close'):
+    return [q('home', home_line, 1.91, prov=prov, gid=gid, stage=stage), q('away', -home_line, 1.91, prov=prov, gid=gid, stage=stage),
+            q('home', None, ml_home, 'ml', prov=prov, gid=gid, stage=stage), q('away', None, ml_away, 'ml', prov=prov, gid=gid, stage=stage)]
+
+
+PEERS = market('P1', -7.5, 1.30, 3.60) + market('P2', -7.0, 1.31, 3.50) + market('P3', -7.5, 1.29, 3.70)
+
+
+class ConflictAttributionTests(unittest.TestCase):
+    def kept(self, qs):
+        flags, _ = odds_flags.flag_quotes(qs)
+        return flags, {odds_flags.record_key(x) for x in odds_flags.usable_quotes(qs, flags)}
+
+    def test_spread_sign_flipped_excludes_only_spread_both_sides(self):
+        qs = PEERS + market('BAD', +7.5, 1.30, 3.60)           # 讓分寫反，獨贏正確
+        flags, kept = self.kept(qs)
+        self.assertEqual({(f['market'], f['side'], f['flag']) for f in flags if f['provider'] == 'BAD'},
+                         {('spread', 'home', 'spread_deviates_from_market'), ('spread', 'away', 'spread_deviates_from_market')})
+        self.assertIn(('g1', 'BAD', 'close', 'ml', 'home'), kept)                # 正確的獨贏保留
+        self.assertIn(('g1', 'BAD', 'close', 'ml', 'away'), kept)
+        self.assertNotIn(('g1', 'BAD', 'close', 'spread', 'home'), kept)        # 讓分線是兩隊共用：兩邊都不留
+        self.assertNotIn(('g1', 'BAD', 'close', 'spread', 'away'), kept)
+        for p in ('P1', 'P2', 'P3'):                                             # 其他莊家完全不受影響
+            self.assertTrue(all(k in kept for k in [('g1', p, 'close', m, s) for m in ('spread', 'ml') for s in ('home', 'away')]))
+
+    def test_ml_swapped_excludes_only_ml(self):
+        qs = PEERS + market('BAD', -7.5, 3.60, 1.30)           # 讓分正確，獨贏主客對調
+        flags, kept = self.kept(qs)
+        self.assertEqual({(f['market'], f['flag']) for f in flags if f['provider'] == 'BAD'},
+                         {('ml', 'ml_deviates_from_market')})
+        self.assertIn(('g1', 'BAD', 'close', 'spread', 'home'), kept)
+        self.assertIn(('g1', 'BAD', 'close', 'spread', 'away'), kept)
+        self.assertNotIn(('g1', 'BAD', 'close', 'ml', 'home'), kept)
+
+    def test_fewer_than_three_peers_is_conservative(self):
+        qs = market('P1', -7.5, 1.30, 3.60) + market('P2', -7.0, 1.31, 3.50) + market('BAD', +7.5, 1.30, 3.60)
+        flags, kept = self.kept(qs)
+        self.assertEqual({f['market'] for f in flags if f['provider'] == 'BAD'}, {'spread', 'ml'})
+        self.assertFalse(any(k[1] == 'BAD' for k in kept))
+
+    def test_split_market_is_unattributable(self):
+        # 其他莊家對熱門方向沒有 2/3 共識 → 不歸因，兩市場都標
+        qs = (market('P1', -2.5, 1.70, 2.20) + market('P2', -2.5, 2.20, 1.70) + market('P3', -2.5, 1.95, 1.90)
+              + market('BAD', -2.5, 2.30, 1.65))
+        flags, _ = self.kept(qs)
+        self.assertEqual({f['flag'] for f in flags if f['provider'] == 'BAD'}, {'spread_ml_direction_conflict'})
+
+    def test_both_deviate_is_unattributable(self):
+        qs = PEERS + market('BAD', +12.5, 3.60, 1.30)          # 讓分與獨贏都和市場相反（但彼此一致→本身不矛盾）
+        flags, _ = self.kept(qs)
+        self.assertEqual([f for f in flags if f['provider'] == 'BAD'], [])       # 不是方向矛盾，這條規則不處理
+
+    def test_conflicting_books_are_not_used_as_peers(self):
+        # 兩家都寫反讓分：互相不能當比較基準；P1~P3 仍足夠 → 兩家都歸因為讓分錯
+        qs = PEERS + market('BAD1', +7.5, 1.30, 3.60) + market('BAD2', +7.0, 1.31, 3.50)
+        flags, _ = self.kept(qs)
+        self.assertEqual({(f['provider'], f['flag']) for f in flags},
+                         {('BAD1', 'spread_deviates_from_market'), ('BAD2', 'spread_deviates_from_market')})
+
+    def test_no_kept_spread_settles_against_its_own_moneyline(self):
+        """不變式：保留下來的同家同階段讓分＋獨贏，熱門方向一定一致（不會留下無法正確結算的錯誤讓分）。"""
+        cases = [PEERS + market('BAD', +7.5, 1.30, 3.60), PEERS + market('BAD', -7.5, 3.60, 1.30),
+                 market('P1', -7.5, 1.30, 3.60) + market('BAD', +7.5, 1.30, 3.60)]
+        for qs in cases:
+            flags, _ = odds_flags.flag_quotes(qs)
+            kept = odds_flags.usable_quotes(qs, flags)
+            grp = odds_flags.group_quotes(kept)
+            for (g, p, st, m), sd in grp.items():
+                if m != 'spread':
+                    continue
+                self.assertEqual(set(sd), {'home', 'away'})                       # 讓分不會只剩一邊
+                ml = grp.get((g, p, st, 'ml'), {})
+                if len(ml) == 2 and abs(sd['home']['line']) >= 2:
+                    self.assertEqual(sd['home']['line'] < 0, ml['home']['price_decimal'] < ml['away']['price_decimal'], p)
+
+
+class OverroundTierTests(unittest.TestCase):
+    def ml_pair(self, a, b):
+        return [q('home', None, a, 'ml'), q('away', None, b, 'ml')]
+
+    def tier(self, a, b):
+        flags, _ = odds_flags.flag_quotes(self.ml_pair(a, b))
+        return {(f['flag'], f['severity']) for f in flags if f['flag'].startswith('overround')}
+
+    def test_normal(self):
+        self.assertEqual(self.tier(1.91, 1.91), set())                       # 1.047
+        self.assertEqual(odds_flags.overround_tier(1.10), None)
+
+    def test_high_but_plausible_is_warning_not_error(self):
+        self.assertEqual(odds_flags.overround_tier(1.1515), 'warning')
+        self.assertEqual(odds_flags.overround_tier(1.1859), 'warning')
+        self.assertEqual(odds_flags.overround_tier(0.99), 'warning')
+
+    def test_clearly_wrong_is_error(self):
+        self.assertEqual(odds_flags.overround_tier(1.4615), 'error')
+        self.assertEqual(odds_flags.overround_tier(0.95), 'error')
+
+    def test_uses_same_book_same_stage_pair_only(self):
+        # 兩家各自正常；若錯把不同家的價格配在一起會算出異常 → 不應出現任何抽水標記
+        qs = [q('home', None, 1.30, 'ml', prov='A'), q('away', None, 3.60, 'ml', prov='A'),
+              q('home', None, 1.10, 'ml', prov='B'), q('away', None, 7.00, 'ml', prov='B'),
+              q('home', None, 1.30, 'ml', prov='A', stage='open'), q('away', None, 3.50, 'ml', prov='A', stage='open')]
+        flags, _ = odds_flags.flag_quotes(qs)
+        self.assertFalse([f for f in flags if f['flag'].startswith('overround')])

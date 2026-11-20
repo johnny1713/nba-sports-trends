@@ -3,21 +3,15 @@
   "by_book": [
    {
     "book_records": 7835,
-    "error_records": 86,
+    "error_records": 46,
     "provider": "Caesars Sportsbook",
-    "rate_pct": 1.1
+    "rate_pct": 0.59
    },
    {
     "book_records": 7872,
-    "error_records": 12,
+    "error_records": 8,
     "provider": "Unibet",
-    "rate_pct": 0.15
-   },
-   {
-    "book_records": 7798,
-    "error_records": 10,
-    "provider": "Westgate",
-    "rate_pct": 0.13
+    "rate_pct": 0.1
    },
    {
     "book_records": 810,
@@ -26,28 +20,36 @@
     "rate_pct": 0.49
    },
    {
-    "book_records": 7034,
+    "book_records": 7798,
     "error_records": 4,
+    "provider": "Westgate",
+    "rate_pct": 0.05
+   },
+   {
+    "book_records": 7034,
+    "error_records": 2,
     "provider": "Wynn",
-    "rate_pct": 0.06
+    "rate_pct": 0.03
    }
   ],
   "by_kind": {
-   "overround_out_of_range": 6,
-   "spread_ml_direction_conflict": 108,
+   "ml_deviates_from_market": 22,
+   "overround_out_of_range": 2,
+   "spread_deviates_from_market": 26,
+   "spread_ml_direction_conflict": 12,
    "spread_out_of_range": 2
   },
   "by_severity": {
-   "error": 116,
-   "warning": 57
+   "error": 64,
+   "warning": 65
   },
   "direction_check_same_book_same_stage": true,
   "direction_conflict_attribution": {
-   "其他莊家不足，無法歸因": 1,
-   "獨贏與市場一致、讓分偏離（錯在讓分）": 15,
-   "讓分與市場一致、獨贏偏離（錯在獨贏）": 11
+   "無法歸因或可比較莊家不足 3 家 → 讓分與獨贏都排除": 3,
+   "獨贏偏離市場 → 只排除該組獨贏盤（兩邊）": 11,
+   "讓分偏離市場 → 只排除該組讓分盤（兩邊）": 13
   },
-  "error_records": 116,
+  "error_records": 64,
   "extreme_spreads": [
    {
     "game_id": "401071219",
@@ -58,7 +60,7 @@
     "verdict": "與市場矛盾（錯誤）"
    }
   ],
-  "top_book_share_pct": 74.14
+  "top_book_share_pct": 71.88
  },
  "box_issue_examples": [
   [
@@ -145,9 +147,10 @@
  "box_issues": 25,
  "by_phase": {
   "postseason": {
-   "abnormal_price": 11,
-   "abnormal_spread": 12,
+   "abnormal_price": 21,
+   "abnormal_spread": 0,
    "abnormal_total": 0,
+   "abnormal_unattributed": 0,
    "bbref_filled": 0,
    "book_coverage_pct": {
     "Betradar": 100.0,
@@ -203,13 +206,14 @@
    "final": 82,
    "flags": {
     "by_kind": {
-     "overround_out_of_range": 6,
-     "price_extreme": 5,
-     "spread_ml_direction_conflict": 12
+     "ml_deviates_from_market": 6,
+     "overround_high": 8,
+     "overround_out_of_range": 2,
+     "price_extreme": 5
     },
-    "error": 18,
+    "error": 8,
     "missing": 0,
-    "warning": 5
+    "warning": 13
    },
    "games": 82,
    "odds_missing_examples": [],
@@ -221,9 +225,10 @@
    "still_incomplete": 0
   },
   "regular": {
-   "abnormal_price": 52,
-   "abnormal_spread": 98,
+   "abnormal_price": 68,
+   "abnormal_spread": 28,
    "abnormal_total": 0,
+   "abnormal_unattributed": 12,
    "bbref_filled": 0,
    "book_coverage_pct": {
     "Betradar": 4.39,
@@ -279,11 +284,13 @@
    "final": 1230,
    "flags": {
     "by_kind": {
+     "ml_deviates_from_market": 16,
      "price_extreme": 52,
-     "spread_ml_direction_conflict": 96,
+     "spread_deviates_from_market": 26,
+     "spread_ml_direction_conflict": 12,
      "spread_out_of_range": 2
     },
-    "error": 98,
+    "error": 56,
     "missing": 0,
     "warning": 52
    },
@@ -309,15 +316,26 @@
  "label": "2018-19",
  "live": false,
  "odds_checks": {
-  "error": 116,
-  "error_rate_pct": 0.1147,
+  "error": 64,
+  "error_rate_pct": 0.0633,
   "examples": {
-   "overround_out_of_range": [
+   "ml_deviates_from_market": [
+    "401071709/Caesars Sportsbook/current_postgame/ml/away: home spread -4.0, peers median -4.5 (n=5), peers home-fav share 1.00",
+    "401071709/Caesars Sportsbook/current_postgame/ml/home: home spread -4.0, peers median -4.5 (n=5), peers home-fav share 1.00",
+    "401071723/Caesars Sportsbook/current_postgame/ml/away: home spread 7.0, peers median 6.5 (n=5), peers home-fav share 0.00",
+    "401071723/Caesars Sportsbook/current_postgame/ml/home: home spread 7.0, peers median 6.5 (n=5), peers home-fav share 0.00",
+    "401071725/Caesars Sportsbook/current_postgame/ml/away: home spread -4.0, peers median -4.5 (n=5), peers home-fav share 1.00"
+   ],
+   "overround_high": [
     "401129105/Westgate/current_postgame/ml/away: 1.1859",
     "401129105/Westgate/current_postgame/ml/home: 1.1859",
-    "401129113/Westgate/current_postgame/ml/away: 1.4615",
-    "401129113/Westgate/current_postgame/ml/home: 1.4615",
+    "401129363/Betradar/current_postgame/ml/away: 1.0000",
+    "401129363/Betradar/current_postgame/ml/home: 1.0000",
     "401129363/Westgate/current_postgame/ml/away: 1.1515"
+   ],
+   "overround_out_of_range": [
+    "401129113/Westgate/current_postgame/ml/away: 1.4615",
+    "401129113/Westgate/current_postgame/ml/home: 1.4615"
    ],
    "price_extreme": [
     "401070719/Unibet/current_postgame/total/over: over 1.45045",
@@ -326,12 +344,19 @@
     "401070762/Unibet/current_postgame/total/under: under 3.5",
     "401070780/Unibet/current_postgame/spread/away: away 3.85"
    ],
+   "spread_deviates_from_market": [
+    "401070967/Caesars Sportsbook/current_postgame/spread/away: home spread 3.5, peers median -7.5 (n=5), peers home-fav share 1.00",
+    "401070967/Caesars Sportsbook/current_postgame/spread/home: home spread 3.5, peers median -7.5 (n=5), peers home-fav share 1.00",
+    "401070972/Caesars Sportsbook/current_postgame/spread/away: home spread 3.5, peers median -8.5 (n=5), peers home-fav share 1.00",
+    "401070972/Caesars Sportsbook/current_postgame/spread/home: home spread 3.5, peers median -8.5 (n=5), peers home-fav share 1.00",
+    "401070977/Unibet/current_postgame/spread/away: home spread 2.5, peers median -1.5 (n=4), peers home-fav share 1.00"
+   ],
    "spread_ml_direction_conflict": [
-    "401070967/Caesars Sportsbook/current_postgame/ml/away: see spread",
-    "401070967/Caesars Sportsbook/current_postgame/ml/home: see spread",
-    "401070967/Caesars Sportsbook/current_postgame/spread/away: home spread 3.5 but ML home 1.277778 away 4.0",
-    "401070967/Caesars Sportsbook/current_postgame/spread/home: home spread 3.5 but ML home 1.277778 away 4.0",
-    "401070972/Caesars Sportsbook/current_postgame/ml/away: see spread"
+    "401071171/Caesars Sportsbook/current_postgame/ml/away: home spread 19.5; only 2 comparable books (< 3)",
+    "401071171/Caesars Sportsbook/current_postgame/ml/home: home spread 19.5; only 2 comparable books (< 3)",
+    "401071171/Caesars Sportsbook/current_postgame/spread/away: home spread 19.5; only 2 comparable books (< 3)",
+    "401071171/Caesars Sportsbook/current_postgame/spread/home: home spread 19.5; only 2 comparable books (< 3)",
+    "401071873/Betradar/current_postgame/ml/away: home spread -2.5; only 1 comparable books (< 3)"
    ],
    "spread_out_of_range": [
     "401071219/Caesars Sportsbook/current_postgame/spread/away: home -25.5",
@@ -340,7 +365,7 @@
   },
   "missing": 0,
   "n": 101149,
-  "warning": 57
+  "warning": 65
  },
  "opening_feed_agreement": {
   "agree_pct": null,

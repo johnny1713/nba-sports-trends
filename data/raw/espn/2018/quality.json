@@ -3,51 +3,53 @@
   "by_book": [
    {
     "book_records": 7872,
-    "error_records": 50,
+    "error_records": 30,
     "provider": "Caesars Sportsbook",
-    "rate_pct": 0.64
-   },
-   {
-    "book_records": 7312,
-    "error_records": 16,
-    "provider": "Wynn",
-    "rate_pct": 0.22
+    "rate_pct": 0.38
    },
    {
     "book_records": 7866,
-    "error_records": 12,
-    "provider": "Unibet",
-    "rate_pct": 0.15
-   },
-   {
-    "book_records": 7872,
     "error_records": 8,
-    "provider": "Westgate",
+    "provider": "Unibet",
     "rate_pct": 0.1
    },
    {
+    "book_records": 7312,
+    "error_records": 8,
+    "provider": "Wynn",
+    "rate_pct": 0.11
+   },
+   {
+    "book_records": 7872,
+    "error_records": 6,
+    "provider": "Westgate",
+    "rate_pct": 0.08
+   },
+   {
     "book_records": 7326,
-    "error_records": 4,
+    "error_records": 2,
     "provider": "Caesar's",
-    "rate_pct": 0.05
+    "rate_pct": 0.03
    }
   ],
   "by_kind": {
-   "spread_ml_direction_conflict": 84,
+   "ml_deviates_from_market": 8,
+   "spread_deviates_from_market": 28,
+   "spread_ml_direction_conflict": 12,
    "spread_out_of_range": 6
   },
   "by_severity": {
-   "error": 90,
+   "error": 54,
    "missing": 14,
-   "warning": 19
+   "warning": 21
   },
   "direction_check_same_book_same_stage": true,
   "direction_conflict_attribution": {
-   "兩者都偏離或都一致（無法歸因）": 1,
-   "獨贏與市場一致、讓分偏離（錯在讓分）": 16,
-   "讓分與市場一致、獨贏偏離（錯在獨贏）": 4
+   "無法歸因或可比較莊家不足 3 家 → 讓分與獨贏都排除": 3,
+   "獨贏偏離市場 → 只排除該組獨贏盤（兩邊）": 4,
+   "讓分偏離市場 → 只排除該組讓分盤（兩邊）": 14
   },
-  "error_records": 90,
+  "error_records": 54,
   "extreme_spreads": [
    {
     "game_id": "400974840",
@@ -80,9 +82,10 @@
  "box_issues": 0,
  "by_phase": {
   "postseason": {
-   "abnormal_price": 2,
-   "abnormal_spread": 12,
+   "abnormal_price": 4,
+   "abnormal_spread": 4,
    "abnormal_total": 0,
+   "abnormal_unattributed": 4,
    "bbref_filled": 9,
    "book_coverage_pct": {
     "CG Technology": 100.0,
@@ -137,13 +140,15 @@
    "final": 82,
    "flags": {
     "by_kind": {
+     "overround_high": 2,
      "price_extreme": 2,
-     "spread_ml_direction_conflict": 12,
+     "spread_deviates_from_market": 4,
+     "spread_ml_direction_conflict": 4,
      "total_placeholder_missing": 6
     },
-    "error": 12,
+    "error": 8,
     "missing": 6,
-    "warning": 2
+    "warning": 4
    },
    "games": 82,
    "odds_missing_examples": [],
@@ -155,9 +160,10 @@
    "still_incomplete": 0
   },
   "regular": {
-   "abnormal_price": 17,
-   "abnormal_spread": 78,
+   "abnormal_price": 25,
+   "abnormal_spread": 30,
    "abnormal_total": 0,
+   "abnormal_unattributed": 8,
    "bbref_filled": 163,
    "book_coverage_pct": {
     "CG Technology": 100.0,
@@ -212,12 +218,14 @@
    "final": 1230,
    "flags": {
     "by_kind": {
+     "ml_deviates_from_market": 8,
      "price_extreme": 17,
-     "spread_ml_direction_conflict": 72,
+     "spread_deviates_from_market": 24,
+     "spread_ml_direction_conflict": 8,
      "spread_out_of_range": 6,
      "total_placeholder_missing": 8
     },
-    "error": 78,
+    "error": 46,
     "missing": 8,
     "warning": 17
    },
@@ -244,9 +252,20 @@
  "label": "2017-18",
  "live": false,
  "odds_checks": {
-  "error": 90,
-  "error_rate_pct": 0.0907,
+  "error": 54,
+  "error_rate_pct": 0.0544,
   "examples": {
+   "ml_deviates_from_market": [
+    "400974820/Wynn/current_postgame/ml/away: home spread -2.0, peers median -1.0 (n=5), peers home-fav share 0.80",
+    "400974820/Wynn/current_postgame/ml/home: home spread -2.0, peers median -1.0 (n=5), peers home-fav share 0.80",
+    "400975085/Wynn/current_postgame/ml/away: home spread 2.5, peers median 2.5 (n=5), peers home-fav share 0.00",
+    "400975085/Wynn/current_postgame/ml/home: home spread 2.5, peers median 2.5 (n=5), peers home-fav share 0.00",
+    "400975232/Wynn/current_postgame/ml/away: home spread -4.5, peers median -5.0 (n=5), peers home-fav share 1.00"
+   ],
+   "overround_high": [
+    "401029434/Caesars Sportsbook/current_postgame/ml/away: 1.1292",
+    "401029434/Caesars Sportsbook/current_postgame/ml/home: 1.1292"
+   ],
    "price_extreme": [
     "400975033/Unibet/current_postgame/ml/away: away 18.0",
     "400975045/Caesars Sportsbook/current_postgame/ml/away: away 16.0",
@@ -254,12 +273,19 @@
     "400975535/Caesars Sportsbook/current_postgame/ml/home: home 17.0",
     "400975582/Caesars Sportsbook/current_postgame/ml/away: away 17.0"
    ],
+   "spread_deviates_from_market": [
+    "400974445/Unibet/current_postgame/spread/away: home spread -2.5, peers median 1.0 (n=5), peers home-fav share 0.20",
+    "400974445/Unibet/current_postgame/spread/home: home spread -2.5, peers median 1.0 (n=5), peers home-fav share 0.20",
+    "400974882/Caesars Sportsbook/current_postgame/spread/away: home spread 7.5, peers median -5.5 (n=5), peers home-fav share 1.00",
+    "400974882/Caesars Sportsbook/current_postgame/spread/home: home spread 7.5, peers median -5.5 (n=5), peers home-fav share 1.00",
+    "400974986/Caesars Sportsbook/current_postgame/spread/away: home spread 21.5, peers median -5.5 (n=5), peers home-fav share 1.00"
+   ],
    "spread_ml_direction_conflict": [
-    "400974445/Unibet/current_postgame/ml/away: see spread",
-    "400974445/Unibet/current_postgame/ml/home: see spread",
-    "400974445/Unibet/current_postgame/spread/away: home spread -2.5 but ML home 2.02 away 1.833333",
-    "400974445/Unibet/current_postgame/spread/home: home spread -2.5 but ML home 2.02 away 1.833333",
-    "400974820/Wynn/current_postgame/ml/away: see spread"
+    "400975562/Unibet/current_postgame/ml/away: home spread 3.5, peers median -1.5 (n=5), peers home-fav share 0.60",
+    "400975562/Unibet/current_postgame/ml/home: home spread 3.5, peers median -1.5 (n=5), peers home-fav share 0.60",
+    "400975562/Unibet/current_postgame/spread/away: home spread 3.5, peers median -1.5 (n=5), peers home-fav share 0.60",
+    "400975562/Unibet/current_postgame/spread/home: home spread 3.5, peers median -1.5 (n=5), peers home-fav share 0.60",
+    "400975891/Caesars Sportsbook/current_postgame/ml/away: home spread -14.5, peers median 0.0 (n=4), peers home-fav share 0.50"
    ],
    "spread_out_of_range": [
     "400974840/Caesars Sportsbook/current_postgame/spread/away: home 30.5",
@@ -278,7 +304,7 @@
   },
   "missing": 14,
   "n": 99249,
-  "warning": 19
+  "warning": 21
  },
  "opening_feed_agreement": {
   "agree_pct": null,

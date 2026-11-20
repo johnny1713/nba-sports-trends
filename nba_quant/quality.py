@@ -25,6 +25,9 @@ from .odds_flags import flag_quotes
 RAW = os.path.join('data', 'raw', 'espn')
 REPORT_DIR = os.path.join('docs', 'reports', 'data_quality')
 PHASES = {2: 'regular', 3: 'postseason'}
+# 異常分類（單筆紀錄數）
+ABN_PRICE = ('price_invalid', 'price_extreme', 'overround_high', 'overround_out_of_range', 'ml_deviates_from_market')
+ABN_SPREAD = ('spread_sign_mismatch', 'spread_out_of_range', 'spread_deviates_from_market')
 
 # 例行賽預期場數：2019-20 停賽後含泡泡種子賽共 1059 場；2020-21 縮短為 72 場 → 1080
 EXPECTED_REG = {2020: 1059, 2021: 1080}
@@ -86,8 +89,9 @@ def _phase_block(games, odds_by_game, flags):
         'books_per_game_median': median(books_per) if books_per else 0,
         'book_coverage_pct': {p: _pct(c, len(ids)) for p, c in per_book.most_common()},
         'flags': {'error': sev.get('error', 0), 'warning': sev.get('warning', 0), 'missing': sev.get('missing', 0), 'by_kind': dict(kinds)},
-        'abnormal_price': sum(v for k, v in kinds.items() if k.startswith('price_') or k == 'overround_out_of_range'),
-        'abnormal_spread': sum(v for k, v in kinds.items() if k.startswith('spread_')),
+        'abnormal_price': sum(kinds.get(k, 0) for k in ABN_PRICE),
+        'abnormal_spread': sum(kinds.get(k, 0) for k in ABN_SPREAD),
+        'abnormal_unattributed': kinds.get('spread_ml_direction_conflict', 0),
         'abnormal_total': sum(v for k, v in kinds.items() if k.startswith('total_') and k != 'total_placeholder_missing'),
         'placeholder_missing': kinds.get('total_placeholder_missing', 0),
         'coverage': stage_cov,
@@ -244,6 +248,7 @@ def render_md(r):
     row('異常賠率（標記數）', lambda b: b['abnormal_price'])
     row('異常讓分（標記數）', lambda b: b['abnormal_spread'])
     row('異常總分（標記數）', lambda b: b['abnormal_total'])
+    row('讓分×獨贏矛盾且無法歸因（兩市場都標）', lambda b: b.get('abnormal_unattributed', 0))
     row('總分佔位符 -1（視為缺失）', lambda b: b.get('placeholder_missing', 0))
     row('每場莊家數中位數', lambda b: b['books_per_game_median'])
     L += ['', f"- 例行賽預期 {r['expected_regular']} 場；每隊 {r['teams']['min_games']}～{r['teams']['max_games']} 場"
@@ -316,31 +321,16 @@ def anomaly_analysis(odds, flags, final_ids, min_peers=3):
         extremes.append({'game_id': f['game_id'], 'provider': f['provider'], 'line': mine,
                          'peer_median': cons, 'n_peers': len(pl), 'verdict': verdict})
 
-    attrib = Counter()
+    # 方向矛盾的處理結果（odds_flags 已依其他莊家共識歸因）：每組讓分 2 筆／獨贏 2 筆
+    kinds = Counter(f['flag'] for f in err)
+    attrib = {}
+    if kinds.get('spread_deviates_from_market'):
+        attrib['讓分偏離市場 → 只排除該組讓分盤（兩邊）'] = kinds['spread_deviates_from_market'] // 2
+    if kinds.get('ml_deviates_from_market'):
+        attrib['獨贏偏離市場 → 只排除該組獨贏盤（兩邊）'] = kinds['ml_deviates_from_market'] // 2
+    if kinds.get('spread_ml_direction_conflict'):
+        attrib['無法歸因或可比較莊家不足 3 家 → 讓分與獨贏都排除'] = kinds['spread_ml_direction_conflict'] // 4
     same_book_stage = True
-    for f in err:
-        if f['flag'] != 'spread_ml_direction_conflict' or f['market'] != 'spread' or f['side'] != 'home':
-            continue
-        qs = [q for q in by_game[f['game_id']] if q['provider'] == f['provider'] and q['stage'] == f['stage']]
-        sp = {q['side']: q['line'] for q in qs if q['market'] == 'spread'}
-        ml = {q['side']: q['price_decimal'] for q in qs if q['market'] == 'ml'}
-        same_book_stage &= ('home' in sp and 'home' in ml and 'away' in ml)
-        pl = peers(f['game_id'], f['stage'], 'spread', 'home', f['provider'])
-        mlh = {q['provider']: q['price_decimal'] for q in by_game[f['game_id']] if q['stage'] == f['stage'] and q['market'] == 'ml' and q['side'] == 'home'}
-        mla = {q['provider']: q['price_decimal'] for q in by_game[f['game_id']] if q['stage'] == f['stage'] and q['market'] == 'ml' and q['side'] == 'away'}
-        others_fav = [mlh[p] < mla[p] for p in mlh if p != f['provider'] and p in mla]
-        if len(pl) < min_peers or len(others_fav) < min_peers:
-            attrib['其他莊家不足，無法歸因'] += 1
-            continue
-        cons = median(pl)
-        sp_ok = abs(sp['home'] - cons) <= 1.0
-        ml_ok = (ml['home'] < ml['away']) == (sum(others_fav) > len(others_fav) / 2)
-        if sp_ok and not ml_ok:
-            attrib['讓分與市場一致、獨贏偏離（錯在獨贏）'] += 1
-        elif ml_ok and not sp_ok:
-            attrib['獨贏與市場一致、讓分偏離（錯在讓分）'] += 1
-        else:
-            attrib['兩者都偏離或都一致（無法歸因）'] += 1
     return {'error_records': len(err), 'by_book': by_book, 'top_book_share_pct': top_share,
             'by_kind': dict(Counter(f['flag'] for f in err)),
             'by_severity': dict(Counter(f['severity'] for f in flags)),
@@ -363,8 +353,8 @@ def render_anomaly(a):
         for e in a['extreme_spreads']:
             L.append(f"| {e['game_id']} | {e['provider']} | {e['line']} | {e['peer_median']} | {e['n_peers']} | {e['verdict']} |")
     if a['direction_conflict_attribution']:
-        L += ['', f"讓分×獨贏方向矛盾：檢查一律在**同一家、同一階段**內比較（本季全部符合：{a['direction_check_same_book_same_stage']}），"
-              '以主隊讓分 < 0 ⇔ 主隊獨贏賠率較低判定。歸因（與其他莊家共識比較）：']
+        L += ['', '讓分×獨贏方向矛盾：一律在**同一家、同一階段**內比較，以主隊讓分 < 0 ⇔ 主隊獨贏賠率較低判定；'
+              '再以同場同階段其他至少 3 家有效莊家的共識歸因（讓分中位數 ±1 分、獨贏熱門方向 ≥ 2/3 一致）：']
         for k, v in a['direction_conflict_attribution'].items():
             L.append(f'- {k}：{v} 組')
     return L

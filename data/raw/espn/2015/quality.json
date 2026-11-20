@@ -18,6 +18,7 @@
    "abnormal_price": 28,
    "abnormal_spread": 0,
    "abnormal_total": 0,
+   "abnormal_unattributed": 0,
    "bbref_filled": 16,
    "book_coverage_pct": {
     "5Dimes.eu": 100.0,
@@ -90,6 +91,7 @@
    "abnormal_price": 46,
    "abnormal_spread": 0,
    "abnormal_total": 0,
+   "abnormal_unattributed": 0,
    "bbref_filled": 162,
    "book_coverage_pct": {
     "5Dimes.eu": 95.04,

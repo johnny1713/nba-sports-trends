@@ -1,0 +1,674 @@
+{
+ "books_in_season": [
+  "ESPN BET"
+ ],
+ "clv": {
+  "checks": {
+   "devig_uses_same_book_opposite_side": true,
+   "every_pair_same_book": true,
+   "every_pair_same_market_and_side": true,
+   "ml_has_no_line_clv": true,
+   "no_flagged_record_in_any_pair": true,
+   "no_postgame_snapshot_in_any_pair": true,
+   "price_clv_not_computed_when_lines_differ": true,
+   "trace_samples_found_in_raw": true
+  },
+  "metrics": {
+   "ml": {
+    "line_clv": {
+     "mean_points": null,
+     "n": 0,
+     "positive_share": null
+    },
+    "not_computed": {
+     "line:not_applicable_moneyline_has_no_line": 2580
+    },
+    "pairs": 2580,
+    "price_clv": {
+     "mean_prob": -9.251858538542971e-19,
+     "n": 2580,
+     "positive_share": 0.4662790697674419
+    }
+   },
+   "spread": {
+    "line_clv": {
+     "mean_points": 0.0,
+     "n": 2516,
+     "positive_share": 0.3815580286168522
+    },
+    "not_computed": {
+     "price:line_moved_price_not_comparable": 1920
+    },
+    "pairs": 2516,
+    "price_clv": {
+     "mean_prob": 9.313951548868763e-20,
+     "n": 596,
+     "positive_share": 0.3808724832214765
+    }
+   },
+   "total": {
+    "line_clv": {
+     "mean_points": 0.0,
+     "n": 2516,
+     "positive_share": 0.4463434022257552
+    },
+    "not_computed": {
+     "price:line_moved_price_not_comparable": 2246
+    },
+    "pairs": 2516,
+    "price_clv": {
+     "mean_prob": -2.0559685641206603e-19,
+     "n": 270,
+     "positive_share": 0.2814814814814815
+    }
+   }
+  },
+  "pairing": {
+   "close_time_classes": {
+    "PROVIDER_LABELED_CLOSE": 7612
+   },
+   "excluded": 276,
+   "excluded_by_market_reason": {
+    "ml/flagged_record": 46,
+    "ml/missing_same_book_other_side_for_devig": 4,
+    "spread/flagged_record": 111,
+    "spread/missing_same_book_other_side_for_devig": 1,
+    "total/flagged_record": 111,
+    "total/missing_same_book_other_side_for_devig": 3
+   },
+   "excluded_by_reason": {
+    "flagged_record": 268,
+    "missing_same_book_other_side_for_devig": 8
+   },
+   "games_considered": 1315,
+   "games_without_any_valid_pair": 1,
+   "valid_by_market": {
+    "ml": 2580,
+    "spread": 2516,
+    "total": 2516
+   },
+   "valid_games": 1314,
+   "valid_pairs": 7612
+  },
+  "trace_samples": [
+   {
+    "game_id": "401703370",
+    "market": "ml",
+    "normalized_close": [
+     null,
+     9.0
+    ],
+    "normalized_open": [
+     null,
+     5.75
+    ],
+    "provider": "ESPN BET",
+    "raw_close": {
+     "moneyLine": {
+      "alternateDisplayValue": "+800",
+      "american": "+800",
+      "decimal": 9.0,
+      "displayValue": "8/1",
+      "fraction": "8/1",
+      "value": 9.0
+     },
+     "pointSpread": {
+      "alternateDisplayValue": "+15.5",
+      "american": "+15.5"
+     },
+     "spread": {
+      "alternateDisplayValue": "-105",
+      "american": "-105",
+      "decimal": 1.952,
+      "displayValue": "20/21",
+      "fraction": "20/21",
+      "value": 1.952
+     }
+    },
+    "raw_open": {
+     "favorite": false,
+     "moneyLine": {
+      "alternateDisplayValue": "+475",
+      "american": "+475",
+      "decimal": 5.75,
+      "displayValue": "19/4",
+      "fraction": "19/4",
+      "value": 5.75
+     },
+     "pointSpread": {
+      "alternateDisplayValue": "+12.5",
+      "american": "+12.5"
+     },
+     "spread": {
+      "alternateDisplayValue": "-115",
+      "american": "-115",
+      "decimal": 1.87,
+      "displayValue": "20/23",
+      "fraction": "20/23",
+      "value": 1.87
+     }
+    },
+    "side": "away"
+   },
+   {
+    "game_id": "401704859",
+    "market": "spread",
+    "normalized_close": [
+     7.5,
+     1.9524
+    ],
+    "normalized_open": [
+     7.5,
+     1.9091
+    ],
+    "provider": "ESPN BET",
+    "raw_close": {
+     "moneyLine": {
+      "alternateDisplayValue": "+250",
+      "american": "+250",
+      "decimal": 3.5,
+      "displayValue": "5/2",
+      "fraction": "5/2",
+      "value": 3.5
+     },
+     "pointSpread": {
+      "alternateDisplayValue": "+7.5",
+      "american": "+7.5"
+     },
+     "spread": {
+      "alternateDisplayValue": "-105",
+      "american": "-105",
+      "decimal": 1.952,
+      "displayValue": "20/21",
+      "fraction": "20/21",
+      "value": 1.952
+     }
+    },
+    "raw_open": {
+     "favorite": false,
+     "moneyLine": {
+      "alternateDisplayValue": "+270",
+      "american": "+270",
+      "decimal": 3.7,
+      "displayValue": "27/10",
+      "fraction": "27/10",
+      "value": 3.7
+     },
+     "pointSpread": {
+      "alternateDisplayValue": "+7.5",
+      "american": "+7.5"
+     },
+     "spread": {
+      "alternateDisplayValue": "-110",
+      "american": "-110",
+      "decimal": 1.909,
+      "displayValue": "10/11",
+      "fraction": "10/11",
+      "value": 1.909
+     }
+    },
+    "side": "away"
+   },
+   {
+    "game_id": "401705122",
+    "market": "ml",
+    "normalized_close": [
+     null,
+     1.7407
+    ],
+    "normalized_open": [
+     null,
+     1.7692
+    ],
+    "provider": "ESPN BET",
+    "raw_close": {
+     "moneyLine": {
+      "alternateDisplayValue": "-135",
+      "american": "-135",
+      "decimal": 1.741,
+      "displayValue": "20/27",
+      "fraction": "20/27",
+      "value": 1.741
+     },
+     "pointSpread": {
+      "alternateDisplayValue": "-2.5",
+      "american": "-2.5"
+     },
+     "spread": {
+      "alternateDisplayValue": "-105",
+      "american": "-105",
+      "decimal": 1.952,
+      "displayValue": "20/21",
+      "fraction": "20/21",
+      "value": 1.952
+     }
+    },
+    "raw_open": {
+     "favorite": true,
+     "moneyLine": {
+      "alternateDisplayValue": "-130",
+      "american": "-130",
+      "decimal": 1.769,
+      "displayValue": "10/13",
+      "fraction": "10/13",
+      "value": 1.769
+     },
+     "pointSpread": {
+      "alternateDisplayValue": "-1.5",
+      "american": "-1.5"
+     },
+     "spread": {
+      "alternateDisplayValue": "-120",
+      "american": "-120",
+      "decimal": 1.833,
+      "displayValue": "5/6",
+      "fraction": "5/6",
+      "value": 1.833
+     }
+    },
+    "side": "away"
+   },
+   {
+    "game_id": "401705376",
+    "market": "total",
+    "normalized_close": [
+     227.5,
+     1.9091
+    ],
+    "normalized_open": [
+     219.5,
+     1.9091
+    ],
+    "provider": "ESPN BET",
+    "raw_close": {
+     "over": {
+      "alternateDisplayValue": "-110",
+      "american": "-110",
+      "decimal": 1.909,
+      "displayValue": "10/11",
+      "fraction": "10/11",
+      "value": 1.909
+     },
+     "total": {
+      "alternateDisplayValue": "227.5",
+      "american": "227.5"
+     },
+     "under": {
+      "alternateDisplayValue": "-110",
+      "american": "-110",
+      "decimal": 1.909,
+      "displayValue": "10/11",
+      "fraction": "10/11",
+      "value": 1.909
+     }
+    },
+    "raw_open": {
+     "over": {
+      "alternateDisplayValue": "-110",
+      "american": "-110",
+      "decimal": 1.909,
+      "displayValue": "10/11",
+      "fraction": "10/11",
+      "value": 1.909
+     },
+     "total": {
+      "alternateDisplayValue": "219.5",
+      "american": "219.5",
+      "decimal": 1.909,
+      "displayValue": "10/11",
+      "fraction": "10/11",
+      "value": 1.909
+     },
+     "under": {
+      "alternateDisplayValue": "-110",
+      "american": "-110",
+      "decimal": 1.909,
+      "displayValue": "10/11",
+      "fraction": "10/11",
+      "value": 1.909
+     }
+    },
+    "side": "over"
+   },
+   {
+    "game_id": "401705630",
+    "market": "spread",
+    "normalized_close": [
+     10.5,
+     1.8696
+    ],
+    "normalized_open": [
+     10.5,
+     1.9091
+    ],
+    "provider": "ESPN BET",
+    "raw_close": {
+     "moneyLine": {
+      "alternateDisplayValue": "+380",
+      "american": "+380",
+      "decimal": 4.8,
+      "displayValue": "19/5",
+      "fraction": "19/5",
+      "value": 4.8
+     },
+     "pointSpread": {
+      "alternateDisplayValue": "+10.5",
+      "american": "+10.5"
+     },
+     "spread": {
+      "alternateDisplayValue": "-115",
+      "american": "-115",
+      "decimal": 1.87,
+      "displayValue": "20/23",
+      "fraction": "20/23",
+      "value": 1.87
+     }
+    },
+    "raw_open": {
+     "favorite": false,
+     "moneyLine": {
+      "alternateDisplayValue": "+380",
+      "american": "+380",
+      "decimal": 4.8,
+      "displayValue": "19/5",
+      "fraction": "19/5",
+      "value": 4.8
+     },
+     "pointSpread": {
+      "alternateDisplayValue": "+10.5",
+      "american": "+10.5"
+     },
+     "spread": {
+      "alternateDisplayValue": "-110",
+      "american": "-110",
+      "decimal": 1.909,
+      "displayValue": "10/11",
+      "fraction": "10/11",
+      "value": 1.909
+     }
+    },
+    "side": "away"
+   }
+  ],
+  "valid_pair_games_by_phase": {
+   "postseason": 84,
+   "regular": 1230
+  }
+ },
+ "code_sha": "7fe767d8fc9326fa0d2001d0ffafc892c2f5b31b",
+ "cross_check_counts": {
+  "close/ml": {
+   "postseason": {
+    "ge4": 0,
+    "ge4_pct": 0.0,
+    "lt4": 84,
+    "lt4_pct": 100.0,
+    "one": 84,
+    "total": 84,
+    "zero": 0
+   },
+   "regular": {
+    "ge4": 0,
+    "ge4_pct": 0.0,
+    "lt4": 1231,
+    "lt4_pct": 100.0,
+    "one": 1231,
+    "total": 1231,
+    "zero": 0
+   }
+  },
+  "close/spread": {
+   "postseason": {
+    "ge4": 0,
+    "ge4_pct": 0.0,
+    "lt4": 84,
+    "lt4_pct": 100.0,
+    "one": 84,
+    "total": 84,
+    "zero": 0
+   },
+   "regular": {
+    "ge4": 0,
+    "ge4_pct": 0.0,
+    "lt4": 1231,
+    "lt4_pct": 100.0,
+    "one": 1230,
+    "total": 1231,
+    "zero": 1
+   }
+  },
+  "close/total": {
+   "postseason": {
+    "ge4": 0,
+    "ge4_pct": 0.0,
+    "lt4": 84,
+    "lt4_pct": 100.0,
+    "one": 84,
+    "total": 84,
+    "zero": 0
+   },
+   "regular": {
+    "ge4": 0,
+    "ge4_pct": 0.0,
+    "lt4": 1231,
+    "lt4_pct": 100.0,
+    "one": 1231,
+    "total": 1231,
+    "zero": 0
+   }
+  },
+  "open/ml": {
+   "postseason": {
+    "ge4": 0,
+    "ge4_pct": 0.0,
+    "lt4": 84,
+    "lt4_pct": 100.0,
+    "one": 84,
+    "total": 84,
+    "zero": 0
+   },
+   "regular": {
+    "ge4": 0,
+    "ge4_pct": 0.0,
+    "lt4": 1231,
+    "lt4_pct": 100.0,
+    "one": 1231,
+    "total": 1231,
+    "zero": 0
+   }
+  },
+  "open/spread": {
+   "postseason": {
+    "ge4": 0,
+    "ge4_pct": 0.0,
+    "lt4": 84,
+    "lt4_pct": 100.0,
+    "one": 84,
+    "total": 84,
+    "zero": 0
+   },
+   "regular": {
+    "ge4": 0,
+    "ge4_pct": 0.0,
+    "lt4": 1231,
+    "lt4_pct": 100.0,
+    "one": 1230,
+    "total": 1231,
+    "zero": 1
+   }
+  },
+  "open/total": {
+   "postseason": {
+    "ge4": 0,
+    "ge4_pct": 0.0,
+    "lt4": 84,
+    "lt4_pct": 100.0,
+    "one": 84,
+    "total": 84,
+    "zero": 0
+   },
+   "regular": {
+    "ge4": 0,
+    "ge4_pct": 0.0,
+    "lt4": 1231,
+    "lt4_pct": 100.0,
+    "one": 1231,
+    "total": 1231,
+    "zero": 0
+   }
+  }
+ },
+ "cross_check_possible_pct": {
+  "close/ml": {
+   "postseason": 0.0,
+   "regular": 0.0
+  },
+  "close/spread": {
+   "postseason": 0.0,
+   "regular": 0.0
+  },
+  "close/total": {
+   "postseason": 0.0,
+   "regular": 0.0
+  },
+  "open/ml": {
+   "postseason": 0.0,
+   "regular": 0.0
+  },
+  "open/spread": {
+   "postseason": 0.0,
+   "regular": 0.0
+  },
+  "open/total": {
+   "postseason": 0.0,
+   "regular": 0.0
+  }
+ },
+ "espn_bet": {
+  "by_stage_market": {
+   "close/ml": {
+    "error_pct": 0.0,
+    "error_records": 0,
+    "kinds": {},
+    "records": 2630
+   },
+   "close/spread": {
+    "error_pct": 0.0,
+    "error_records": 0,
+    "kinds": {},
+    "records": 2628
+   },
+   "close/total": {
+    "error_pct": 0.0,
+    "error_records": 0,
+    "kinds": {},
+    "records": 2630
+   },
+   "open/ml": {
+    "error_pct": 1.52,
+    "error_records": 40,
+    "kinds": {
+     "spread_ml_direction_conflict": 40
+    },
+    "records": 2630
+   },
+   "open/spread": {
+    "error_pct": 1.52,
+    "error_records": 40,
+    "kinds": {
+     "spread_ml_direction_conflict": 40
+    },
+    "records": 2628
+   },
+   "open/total": {
+    "error_pct": 0.0,
+    "error_records": 0,
+    "kinds": {},
+    "records": 2630
+   }
+  },
+  "deviation_vs_other_books": {},
+  "systematic_markets_ge_50pct_error": [],
+  "verdict": "無系統性錯誤"
+ },
+ "flags_by_market_kind": {
+  "ml/price_extreme/warning": 8,
+  "ml/spread_ml_direction_conflict/error": 40,
+  "spread/price_extreme/warning": 103,
+  "spread/spread_ml_direction_conflict/error": 40,
+  "total/price_extreme/warning": 111
+ },
+ "inputs_sha256": {
+  "games.jsonl.gz": "630bb32349863baeef631f2d61847d312d716974b9d1b06ec1e3472ec2963133",
+  "odds.jsonl.gz": "2a7df816e6df1a4cf6221ac44797605d1dd638f469776f3a5835d0ac63fcce42",
+  "odds_flags.jsonl.gz": "67380bd704107200b0deee3512c3c0f4a9d5054ee693a219ca81609a96c40031",
+  "odds_raw.jsonl.gz": "5f690c0602a4c398f61d09478885b75652ed7d964ed2be8141b0f456a8650d45",
+  "teambox.jsonl.gz": "b83e5ee825eff2a4557e33abd20d11e2356cf0c1e3005987ac1f36e23e119c54"
+ },
+ "per_book_coverage_pct": {
+  "ESPN BET": {
+   "close/ml": {
+    "postseason": 100.0,
+    "regular": 100.0
+   },
+   "close/spread": {
+    "postseason": 100.0,
+    "regular": 99.92
+   },
+   "close/total": {
+    "postseason": 100.0,
+    "regular": 100.0
+   },
+   "open/ml": {
+    "postseason": 100.0,
+    "regular": 100.0
+   },
+   "open/spread": {
+    "postseason": 100.0,
+    "regular": 99.92
+   },
+   "open/total": {
+    "postseason": 100.0,
+    "regular": 100.0
+   }
+  }
+ },
+ "postgame_snapshot_records": 0,
+ "quality_status": "PASS",
+ "quality_verdict": "通過",
+ "season": 2025,
+ "stage_counts": {
+  "close": 7888,
+  "open": 7888
+ },
+ "time_classes": {
+  "PROVIDER_LABELED_CLOSE": 7888,
+  "PROVIDER_LABELED_OPEN": 7888
+ },
+ "usable_coverage_pct": {
+  "close/ml": {
+   "postseason": 100.0,
+   "regular": 99.92
+  },
+  "close/spread": {
+   "postseason": 100.0,
+   "regular": 99.92
+  },
+  "close/total": {
+   "postseason": 100.0,
+   "regular": 100.0
+  },
+  "open/ml": {
+   "postseason": 100.0,
+   "regular": 97.97
+  },
+  "open/spread": {
+   "postseason": 100.0,
+   "regular": 95.37
+  },
+  "open/total": {
+   "postseason": 100.0,
+   "regular": 95.37
+  }
+ }
+}

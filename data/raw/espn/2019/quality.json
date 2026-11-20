@@ -1,0 +1,302 @@
+{
+ "box_issue_examples": [
+  [
+   "401070216",
+   "team 21 minutes 274.0 vs 240"
+  ],
+  [
+   "401070716",
+   "team 21 minutes 271.0 vs 240"
+  ],
+  [
+   "401070728",
+   "team 21 minutes 266.0 vs 240"
+  ],
+  [
+   "401070741",
+   "team 21 minutes 267.0 vs 240"
+  ],
+  [
+   "401070761",
+   "team 21 minutes 271.0 vs 240"
+  ],
+  [
+   "401070766",
+   "team 21 minutes 248.0 vs 240"
+  ],
+  [
+   "401070804",
+   "team 21 minutes 273.0 vs 240"
+  ],
+  [
+   "401070818",
+   "team 21 minutes 271.0 vs 240"
+  ],
+  [
+   "401070832",
+   "team 21 minutes 276.0 vs 240"
+  ],
+  [
+   "401070845",
+   "team 21 minutes 308.0 vs 265"
+  ],
+  [
+   "401070877",
+   "team 21 minutes 263.0 vs 240"
+  ],
+  [
+   "401070892",
+   "team 21 minutes 272.0 vs 240"
+  ],
+  [
+   "401070914",
+   "team 21 minutes 264.0 vs 240"
+  ],
+  [
+   "401070923",
+   "team 21 minutes 260.0 vs 240"
+  ],
+  [
+   "401070956",
+   "team 21 minutes 257.0 vs 240"
+  ],
+  [
+   "401070968",
+   "team 21 minutes 260.0 vs 240"
+  ],
+  [
+   "401070986",
+   "team 21 minutes 261.0 vs 240"
+  ],
+  [
+   "401071328",
+   "team 20 minutes 248.0 vs 240"
+  ],
+  [
+   "401070239",
+   "team 20 minutes 274.0 vs 240"
+  ],
+  [
+   "401071384",
+   "team 20 minutes 267.0 vs 240"
+  ]
+ ],
+ "box_issues": 25,
+ "by_phase": {
+  "postseason": {
+   "abnormal_price": 11,
+   "abnormal_spread": 12,
+   "abnormal_total": 0,
+   "bbref_filled": 0,
+   "book_coverage_pct": {
+    "Betradar": 100.0,
+    "Caesar's": 100.0,
+    "Caesars": 100.0,
+    "Caesars Sportsbook": 100.0,
+    "Unibet": 100.0,
+    "Westgate": 100.0,
+    "Wynn": 100.0
+   },
+   "books_per_game_median": 7.0,
+   "complete": 82,
+   "complete_pct": 100.0,
+   "coverage": {
+    "close/ml": {
+     "line_pct": 0.0,
+     "price_pct": 0.0
+    },
+    "close/spread": {
+     "line_pct": 0.0,
+     "price_pct": 0.0
+    },
+    "close/total": {
+     "line_pct": 0.0,
+     "price_pct": 0.0
+    },
+    "current_postgame/ml": {
+     "line_pct": 100.0,
+     "price_pct": 100.0
+    },
+    "current_postgame/spread": {
+     "line_pct": 100.0,
+     "price_pct": 100.0
+    },
+    "current_postgame/total": {
+     "line_pct": 100.0,
+     "price_pct": 100.0
+    },
+    "open/ml": {
+     "line_pct": 0.0,
+     "price_pct": 0.0
+    },
+    "open/spread": {
+     "line_pct": 0.0,
+     "price_pct": 0.0
+    },
+    "open/total": {
+     "line_pct": 0.0,
+     "price_pct": 0.0
+    }
+   },
+   "espn_box_missing": 0,
+   "final": 82,
+   "flags": {
+    "by_kind": {
+     "overround_out_of_range": 6,
+     "price_extreme": 5,
+     "spread_ml_direction_conflict": 12
+    },
+    "error": 18,
+    "warning": 5
+   },
+   "games": 82,
+   "odds_missing_examples": [],
+   "odds_missing_games": 0,
+   "status": {
+    "final": 82
+   },
+   "still_incomplete": 0
+  },
+  "regular": {
+   "abnormal_price": 52,
+   "abnormal_spread": 98,
+   "abnormal_total": 0,
+   "bbref_filled": 0,
+   "book_coverage_pct": {
+    "Betradar": 4.39,
+    "Caesar's": 100.0,
+    "Caesars": 100.0,
+    "Caesars Sportsbook": 100.0,
+    "Unibet": 100.0,
+    "Westgate": 100.0,
+    "Wynn": 100.0
+   },
+   "books_per_game_median": 6.0,
+   "complete": 1230,
+   "complete_pct": 100.0,
+   "coverage": {
+    "close/ml": {
+     "line_pct": 0.0,
+     "price_pct": 0.0
+    },
+    "close/spread": {
+     "line_pct": 0.0,
+     "price_pct": 0.0
+    },
+    "close/total": {
+     "line_pct": 0.0,
+     "price_pct": 0.0
+    },
+    "current_postgame/ml": {
+     "line_pct": 100.0,
+     "price_pct": 100.0
+    },
+    "current_postgame/spread": {
+     "line_pct": 100.0,
+     "price_pct": 100.0
+    },
+    "current_postgame/total": {
+     "line_pct": 100.0,
+     "price_pct": 100.0
+    },
+    "open/ml": {
+     "line_pct": 0.0,
+     "price_pct": 0.0
+    },
+    "open/spread": {
+     "line_pct": 0.0,
+     "price_pct": 0.0
+    },
+    "open/total": {
+     "line_pct": 0.0,
+     "price_pct": 0.0
+    }
+   },
+   "espn_box_missing": 0,
+   "final": 1230,
+   "flags": {
+    "by_kind": {
+     "price_extreme": 52,
+     "spread_ml_direction_conflict": 96,
+     "spread_out_of_range": 2
+    },
+    "error": 98,
+    "warning": 52
+   },
+   "games": 1230,
+   "odds_missing_examples": [],
+   "odds_missing_games": 0,
+   "status": {
+    "final": 1230
+   },
+   "still_incomplete": 0
+  }
+ },
+ "duplicates": [],
+ "expected_regular": 1230,
+ "fetch": {
+  "http_errors": 0,
+  "parse_error_examples": [],
+  "parse_errors": 0,
+  "requests": 3081
+ },
+ "incomplete_examples": [],
+ "label": "2018-19",
+ "live": false,
+ "odds_checks": {
+  "error": 116,
+  "error_rate_pct": 0.1147,
+  "examples": {
+   "overround_out_of_range": [
+    "401129105/Westgate/current_postgame/ml/away: 1.1859",
+    "401129105/Westgate/current_postgame/ml/home: 1.1859",
+    "401129113/Westgate/current_postgame/ml/away: 1.4615",
+    "401129113/Westgate/current_postgame/ml/home: 1.4615",
+    "401129363/Westgate/current_postgame/ml/away: 1.1515"
+   ],
+   "price_extreme": [
+    "401070719/Unibet/current_postgame/total/over: over 1.45045",
+    "401070719/Unibet/current_postgame/total/under: under 2.8",
+    "401070762/Unibet/current_postgame/total/over: over 1.320513",
+    "401070762/Unibet/current_postgame/total/under: under 3.5",
+    "401070780/Unibet/current_postgame/spread/away: away 3.85"
+   ],
+   "spread_ml_direction_conflict": [
+    "401070967/Caesars Sportsbook/current_postgame/ml/away: see spread",
+    "401070967/Caesars Sportsbook/current_postgame/ml/home: see spread",
+    "401070967/Caesars Sportsbook/current_postgame/spread/away: home spread 3.5 but ML home 1.277778 away 4.0",
+    "401070967/Caesars Sportsbook/current_postgame/spread/home: home spread 3.5 but ML home 1.277778 away 4.0",
+    "401070972/Caesars Sportsbook/current_postgame/ml/away: see spread"
+   ],
+   "spread_out_of_range": [
+    "401071219/Caesars Sportsbook/current_postgame/spread/away: home -25.5",
+    "401071219/Caesars Sportsbook/current_postgame/spread/home: home -25.5"
+   ]
+  },
+  "n": 101149,
+  "warning": 57
+ },
+ "opening_feed_agreement": {
+  "agree_pct": null,
+  "n": 0
+ },
+ "season": 2019,
+ "skipped_at_listing": {
+  "non-NBA teams (all-star etc.)": 15,
+  "season type 1": 66
+ },
+ "source_label_examples": [],
+ "source_label_problems": 0,
+ "teams": {
+  "expected_range": [
+   82,
+   83
+  ],
+  "max_games": 82,
+  "min_games": 82,
+  "n": 30
+ },
+ "timestamps_available": false,
+ "verdict": "通過",
+ "verdict_ok": true
+}

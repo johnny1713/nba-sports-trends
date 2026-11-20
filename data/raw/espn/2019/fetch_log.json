@@ -1,0 +1,12 @@
+{
+ "http_errors": [],
+ "notes": [],
+ "notes_total": 0,
+ "parse_errors": [],
+ "requests": 3081,
+ "season": 2019,
+ "skipped": {
+  "non-NBA teams (all-star etc.)": 15,
+  "season type 1": 66
+ }
+}

@@ -25,12 +25,13 @@ from . import store
 
 # ---- 基礎欄位：本隊 box、對手 box、比分、賽程
 BOX_FIELDS = ('pts', 'fgm', 'fga', 'fg3m', 'fg3a', 'ftm', 'fta', 'oreb', 'dreb', 'tov')
-BASE = set(BOX_FIELDS) | {f'opp_{f}' for f in BOX_FIELDS} | {'score', 'opp_score', 'game_date', 'game_result'}
+GAME_BOX_FIELDS = ('overtimes',)        # 比賽長度（兩隊相同；Pace 換算每 48 分鐘用）
+BASE = set(BOX_FIELDS) | {f'opp_{f}' for f in BOX_FIELDS} | set(GAME_BOX_FIELDS) | {'score', 'opp_score', 'game_date', 'game_result'}
 
 # ---- 中間量（衍生欄位）
 DERIVED = {
     'possessions': ('fga', 'oreb', 'tov', 'fta', 'opp_fga', 'opp_oreb', 'opp_tov', 'opp_fta'),   # 兩隊平均
-    'pace': ('possessions',),
+    'pace': ('possessions', 'overtimes'),
     'ortg': ('pts', 'possessions'),
     'drtg': ('opp_pts', 'possessions'),
     'net_rating': ('ortg', 'drtg'),

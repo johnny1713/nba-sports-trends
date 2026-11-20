@@ -190,7 +190,7 @@ class DataAccess:
         bad = set(fields) & feature_deps.unavailable_bases(season)
         if bad:
             raise FieldUnavailable(f'{season}: 欄位 {sorted(bad)} 整季不可用（不補值、不以 BBRef 覆蓋）')
-        unknown = set(fields) - set(feature_deps.BOX_FIELDS)
+        unknown = set(fields) - set(feature_deps.BOX_FIELDS) - set(feature_deps.GAME_BOX_FIELDS)
         if unknown:
             raise ValueError(f'未知的 box 欄位：{sorted(unknown)}')
         games = self.games(season, scope, as_of)
@@ -273,15 +273,20 @@ class DataAccess:
         if feature_deps.availability(feature, season)[0] == 'unavailable':
             return {'feature': feature, 'status': 'unavailable'}
         prev = season - 1
-        if prev not in feature_deps.SEASON_UNAVAILABLE or not (feature_deps.closure(feature) & feature_deps.unavailable_bases(prev)):
+        prev_ok = not (feature_deps.closure(feature) & feature_deps.unavailable_bases(prev))
+        if prev_ok:
             gs = [g for g in self.games(prev, 'use_team_stats') if team in (g['home'], g['away'])]
-            return {'feature': feature, 'team': team, 'as_of': as_of, 'source': 'team_previous_season', 'seasons': [prev],
-                    'n_games': len(gs), 'period': [gs[0]['start_utc'][:10], gs[-1]['start_utc'][:10]] if gs else None}
+            if gs:
+                return {'feature': feature, 'team': team, 'as_of': as_of, 'source': 'team_previous_season', 'seasons': [prev],
+                        'n_games': len(gs), 'period': [gs[0]['start_utc'][:10], gs[-1]['start_utc'][:10]]}
         cur = self.games(season, 'use_team_stats', as_of)
         if len(cur) >= MIN_LEAGUE_GAMES_F1:
             return {'feature': feature, 'team': team, 'as_of': as_of, 'source': 'league_average_current_season_to_date',
                     'seasons': [season], 'n_games': len(cur), 'period': [cur[0]['start_utc'][:10], cur[-1]['start_utc'][:10]],
-                    'excluded_seasons': [prev]}
+                    'excluded_seasons': [] if prev_ok else [prev]}
+        if prev_ok:                                   # 上季可用但沒有資料（2014-15 的上一季）：不補值
+            return {'feature': feature, 'team': team, 'as_of': as_of, 'source': 'missing', 'seasons': [],
+                    'n_games': 0, 'period': None, 'current_season_games_to_date': len(cur)}
         s = prev - 1
         while s in feature_deps.SEASON_UNAVAILABLE and feature_deps.closure(feature) & feature_deps.unavailable_bases(s):
             s -= 1

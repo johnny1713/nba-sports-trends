@@ -7,8 +7,8 @@ import os
 import subprocess
 from datetime import datetime, timezone
 
-WARMUP_SEASONS = (2015,)                                   # 2014-15：只累積數據
-DEV_SEASONS = tuple(range(2016, 2024))                     # 2015-16～2022-23：只有收盤
+WARMUP_SEASONS = (2015,)                                   # 2014-15：只累積數據（盤口只有賽後快照）
+DEV_SEASONS = tuple(range(2016, 2024))                     # 2015-16～2022-23：沒有可用的賽前市場價格（只有賽後快照＋無價格開盤線）
 TUNE_SEASONS = (2024,)                                     # 2023-24：開盤＋收盤，多家莊家
 HOLDOUT_SEASONS = (2025, 2026)                             # 2024-25、2025-26：鎖定
 LIVE_SEASON = 2027                                         # 2026-27

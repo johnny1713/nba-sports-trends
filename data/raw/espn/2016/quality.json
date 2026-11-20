@@ -1,0 +1,161 @@
+{
+ "box_sources": {
+  "bbref": 161,
+  "espn": 1155
+ },
+ "checks": {
+  "by_kind": {
+   "price_out_of_range": 5,
+   "total_out_of_range": 1
+  },
+  "error_rate_pct": 0.005,
+  "examples": {
+   "price_out_of_range": [
+    "400828981/PinnacleSports.com/current_postgame/ml 1.007616",
+    "400828981/Sportsbook.com/current_postgame/ml 1.006667",
+    "400828284/Westgate/current_postgame/ml 1.01",
+    "400874374/Westgate/current_postgame/ml 1.01",
+    "400874376/Westgate/current_postgame/ml 1.01"
+   ],
+   "total_out_of_range": [
+    "400828531/5Dimes.eu/current_postgame/total 2001.0"
+   ]
+  },
+  "fails": 6,
+  "n": 125842
+ },
+ "completeness": {
+  "box_issue_examples": [],
+  "box_issues": 0,
+  "complete": 1316,
+  "complete_pct": 100.0,
+  "final": 1316,
+  "incomplete_examples": []
+ },
+ "fetch": {
+  "http_errors": 0,
+  "notes_total": 161,
+  "parse_error_examples": [],
+  "parse_errors": 0,
+  "requests": 3090
+ },
+ "games": {
+  "duplicates": [],
+  "expected_regular": 1230,
+  "postseason": 86,
+  "regular": 1232,
+  "regular_final": 1230,
+  "skipped_at_listing": {
+   "non-NBA teams (all-star etc.)": 10,
+   "season type 1": 100
+  },
+  "status": {
+   "final": 1316,
+   "postponed": 2
+  },
+  "total": 1318
+ },
+ "label": "2015-16",
+ "live": false,
+ "odds": {
+  "books": [
+   [
+    "BOVADA.lv",
+    2863
+   ],
+   [
+    "5Dimes.eu",
+    2623
+   ],
+   [
+    "BETONLINE.ag",
+    2621
+   ],
+   [
+    "SportsBetting.ag",
+    2143
+   ],
+   [
+    "Westgate",
+    2138
+   ],
+   [
+    "PinnacleSports.com",
+    1862
+   ],
+   [
+    "Sportsbook.com",
+    626
+   ],
+   [
+    "BetUS.COM",
+    613
+   ],
+   [
+    "SportsInteraction.com",
+    603
+   ],
+   [
+    "Fantasy911.com",
+    313
+   ],
+   [
+    "BETNOW.eu",
+    102
+   ]
+  ],
+  "books_per_game_median": 6.0,
+  "coverage": {
+   "close/ml": {
+    "line_pct": 0.0,
+    "price_pct": 0.0
+   },
+   "close/spread": {
+    "line_pct": 0.0,
+    "price_pct": 0.0
+   },
+   "close/total": {
+    "line_pct": 0.0,
+    "price_pct": 0.0
+   },
+   "current_postgame/ml": {
+    "line_pct": 100.0,
+    "price_pct": 100.0
+   },
+   "current_postgame/spread": {
+    "line_pct": 100.0,
+    "price_pct": 100.0
+   },
+   "current_postgame/total": {
+    "line_pct": 100.0,
+    "price_pct": 100.0
+   },
+   "open/ml": {
+    "line_pct": 0.0,
+    "price_pct": 0.0
+   },
+   "open/spread": {
+    "line_pct": 100.0,
+    "price_pct": 0.0
+   },
+   "open/total": {
+    "line_pct": 100.0,
+    "price_pct": 0.0
+   }
+  },
+  "final_games_with_any_book_pct": 100.0,
+  "opening_feed_agreement": {
+   "agree_pct": 100.0,
+   "n": 1268
+  },
+  "timestamps_available": false
+ },
+ "season": 2016,
+ "teams": {
+  "max_games": 82,
+  "min_games": 82,
+  "n": 30
+ },
+ "verdict": "通過",
+ "verdict_ok": true
+}

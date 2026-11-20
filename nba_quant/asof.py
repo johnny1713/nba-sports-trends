@@ -26,9 +26,14 @@ def et_date(start_utc: str):
 
 
 def games_before(games: Iterable[dict], game_start_utc: str) -> List[dict]:
-    """只回傳**前一個美東日期（含）以前**、且已完賽的比賽。同一天較早的場次也排除。"""
+    """
+    只回傳**前一個美東日期（含）以前**、已完賽**且資料完整**的比賽。同一天較早的場次也排除。
+    資料完整（complete=True）由 backfill 判定：完賽、兩隊 box score 通過驗證、box 得分與比分一致。
+    當季（2026-27）進行中、延賽、box score 缺漏的比賽一律不進特徵。
+    """
     cutoff = et_date(game_start_utc)
-    return [g for g in games if g.get('status') == 'final' and et_date(g['start_utc']) < cutoff]
+    return [g for g in games
+            if g.get('status') == 'final' and g.get('complete') is True and et_date(g['start_utc']) < cutoff]
 
 
 def quotes_for_prediction(quotes: Iterable[dict], as_of: datetime) -> List[dict]:

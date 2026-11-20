@@ -55,11 +55,15 @@ class SchemaTests(unittest.TestCase):
 
 class AsofTests(unittest.TestCase):
     def test_games_before_excludes_same_et_day_and_future(self):
-        gs = [vars(game('a', '2026-11-18T00:30:00Z')),       # 美東 11/17 晚上
-              vars(game('b', '2026-11-18T17:00:00Z')),       # 美東 11/18 中午（同一天較早）
-              vars(game('c', '2026-11-19T01:00:00Z')),       # 美東 11/18 晚上（目標場次本身）
-              vars(game('d', '2026-11-20T01:00:00Z')),       # 未來
-              vars(game('e', '2026-11-17T01:00:00Z', status='postponed'))]
+        def c(g, ok=True):
+            d = vars(g).copy(); d['complete'] = ok; return d
+        gs = [c(game('a', '2026-11-18T00:30:00Z')),
+              c(game('f', '2026-11-17T00:30:00Z'), ok=False),      # 完賽但 box score 不完整
+              vars(game('g', '2026-11-16T00:30:00Z')),             # 沒有 complete 欄位 → 不採用       # 美東 11/17 晚上
+              c(game('b', '2026-11-18T17:00:00Z')),          # 美東 11/18 中午（同一天較早）
+              c(game('c', '2026-11-19T01:00:00Z')),          # 美東 11/18 晚上（目標場次本身）
+              c(game('d', '2026-11-20T01:00:00Z')),          # 未來
+              c(game('e', '2026-11-17T01:00:00Z', status='postponed'))]
         got = [g['game_id'] for g in asof.games_before(gs, '2026-11-19T01:00:00Z')]
         self.assertEqual(got, ['a'])
 

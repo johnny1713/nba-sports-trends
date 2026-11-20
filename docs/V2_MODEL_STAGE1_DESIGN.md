@@ -280,6 +280,9 @@ game_result ──────────────────────�
 | 用途 | 每次存取宣告用途：data_quality、feature_computation、training、feature_selection、tuning、model_selection、evaluation、backtest |
 | 模型凍結前 | 2024-25 只有 data_quality 可讀；2025-26 任何用途都拒絕（含 data_quality）|
 | 模型凍結後（第七輪）| `config.freeze_model()` 登記凍結 → 每季**分別** `holdout_begin([季], 'final_evaluation', …)`；每季一生只能登記一次；兩季都只能以 `final_evaluation` 用途、帶**該季**未出結果的 run_id 讀取 |
+| **2023-24 驗證期（第八輪）** | 凍結前只能 data_quality；凍結後 `config.validation_begin(model_version, feature_version, params, data_version)` 登記**一次**（記錄凍結時間、程式版本），只能以 `validation` + run_id 讀取與輸出指標；完成後不得重跑；看過結果後再凍結模型 → `validation_independence()` 永久 False |
+| **歷史特徵生成 `history_features`（第八輪）** | 不是自由讀整季的權限：必須給 as_of，只回傳 as_of 美東日期之前已完賽的比賽；不得讀目標球季之後的球季；**目標球季本身須已授權**（開發期放行；2023-24 須驗證 run；2024-25／2025-26 須該季正式最終測試 run），所以凍結前讀不到任何 2023-24 以後的資料；永遠不得輸出評估指標 |
+| 評估指標 | 輸出前呼叫 `assert_metrics_allowed(seasons)`：2023-24 只能在驗證 run、2024-25／2025-26 只能在該季正式測試 run |
 | 永遠不能讀鎖定期的用途 | training、feature_computation、feature_selection、tuning、model_selection、evaluation（開發期 walk-forward）、backtest |
 | 結果 | 自動標上該季、分開保存（`holdout_results()` 依季回傳，不提供合併平均；結果含 combined／pooled 會被拒絕）|
 | 獨立性 | 看過任一季結果後再凍結任何模型，或另一季用不同模型版本登記 → `holdout_independence()` 永久回傳 independent = False，報告必須揭露 |

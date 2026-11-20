@@ -29,7 +29,9 @@ from . import asof, config, feature_deps, store
 from .model_data_stats import tov_definition
 
 PURPOSES = ('data_quality', 'feature_computation', 'training', 'feature_selection', 'tuning', 'model_selection',
-            'evaluation', 'backtest', 'final_evaluation')
+            'evaluation', 'backtest', 'final_evaluation', 'validation', 'history_features')
+VALIDATION = tuple(config.VALIDATION_SEASONS)   # 2023-24
+NO_METRICS = ('history_features',)
 DATA_QUALITY_ONLY = (2025,)          # 2024-25
 FULLY_LOCKED = (2026,)               # 2025-26
 SCOPES = ('use_team_stats', 'use_fatigue', 'use_elo', 'counts_for_standings', 'train_sample')
@@ -62,7 +64,15 @@ class DataAccess:
         self.log = []          # 每次存取的紀錄（用途、球季、範圍、as_of、回傳筆數、排除原因）
 
     # ------------------------------------------------------------ 鎖定
-    def check_season(self, season):
+    def check_season(self, season, as_of=None):
+        if self.purpose == 'history_features':
+            return self._check_history(season, as_of)
+        if self.purpose == 'validation':
+            if season in config.HOLDOUT_SEASONS:
+                raise config.HoldoutLocked('validation 不得讀取 2024-25、2025-26')
+            if season in VALIDATION:
+                config.check_validation(self.run_id)          # 凍結後、已登記、尚未完成的唯一一次驗證
+            return
         if self.purpose == 'final_evaluation':
             if season not in config.HOLDOUT_SEASONS:
                 raise config.HoldoutLocked('final_evaluation 只用於鎖定測試期的正式最終評估')
@@ -75,6 +85,43 @@ class DataAccess:
         if season in DATA_QUALITY_ONLY and self.purpose != 'data_quality':
             raise config.HoldoutLocked(f'{season}（2024-25）鎖定測試期：用途 {self.purpose} 不得讀取，只允許 data_quality'
                                        '（模型凍結後的正式評估須用 final_evaluation + run_id）')
+        if season in VALIDATION and self.purpose != 'data_quality':
+            raise config.HoldoutLocked(f'{season}（2023-24）驗證期：用途 {self.purpose} 不得讀取，只允許 data_quality'
+                                       '（模型凍結後以 validation + run_id 驗證一次）')
+
+    def _check_history(self, season, as_of):
+        """歷史特徵生成（第八輪）：不是自由讀整季的權限。
+        - 必須給 as_of（預測場次的開賽時間），只回傳 as_of 美東日期之前已完賽的比賽。
+        - 不得讀取預測目標球季之後的球季。
+        - 預測目標球季本身必須已被授權：開發期 → 放行；2023-24 → 已登記的驗證 run；2024-25／2025-26 → 該季已登記的
+          正式最終測試 run；之後的球季尚未定義 → 拒絕。所以凍結前，任何 2023-24 以後的歷史都讀不到。
+        - 不得輸出評估指標（assert_metrics_allowed）。"""
+        if not as_of:
+            raise config.HoldoutLocked('history_features 必須指定 as_of（預測時間點）')
+        target = self._season_of(as_of)
+        if season > target:
+            raise config.HoldoutLocked(f'history_features：不得讀取預測目標球季 {target} 之後的 {season}')
+        if target in VALIDATION:
+            config.check_validation(self.run_id)
+        elif target in config.HOLDOUT_SEASONS:
+            config.check_seasons([target], self.run_id)
+        elif target >= config.LIVE_SEASON:
+            raise config.HoldoutLocked(f'{target} 的歷史特徵規則尚未定義')
+
+    def assert_metrics_allowed(self, seasons):
+        """輸出整體評估指標前必須呼叫：歷史特徵用途永遠不能輸出指標；2023-24 只能在登記的驗證 run、
+        2024-25／2025-26 只能在該季登記的正式最終測試 run 中輸出。"""
+        if self.purpose in NO_METRICS:
+            raise config.HoldoutLocked('history_features 用途不得輸出任何評估指標')
+        for s in seasons:
+            if s in VALIDATION:
+                if self.purpose != 'validation':
+                    raise config.HoldoutLocked(f'{s}（2023-24）的評估指標只能在正式驗證中輸出')
+                config.check_validation(self.run_id)
+            elif s in config.HOLDOUT_SEASONS:
+                if self.purpose != 'final_evaluation':
+                    raise config.HoldoutLocked(f'{s} 的評估指標只能在正式最終測試中輸出')
+                config.check_seasons([s], self.run_id)
 
     # ------------------------------------------------------------ 讀檔（只在這裡）
     def _path(self, *p):
@@ -107,7 +154,7 @@ class DataAccess:
     # ------------------------------------------------------------ 公開介面
     def games(self, season, scope, as_of=None):
         """完賽、資料完整、在 scope 內、且（若給 as_of）在 as_of 的美東日期之前的比賽。"""
-        self.check_season(season)
+        self.check_season(season, as_of)
         if scope not in SCOPES:
             raise ValueError(f'未知的資料範圍：{scope}（允許：{SCOPES}）')
         cls = self._classification()
@@ -175,9 +222,9 @@ class DataAccess:
                              if os.path.exists(p) else {})
         return {g: self._neutral.get(g, 'home') for g in game_ids}
 
-    def require_features(self, features, season):
+    def require_features(self, features, season, as_of=None):
         """模型輸入檢查：未登記 → KeyError；不可用 → FeatureRejected；回傳每個特徵的狀態。"""
-        self.check_season(season)
+        self.check_season(season, as_of)
         res = feature_deps.check_model_inputs(features, season)
         bad = {f: why for f, (st, why) in res.items() if st == 'unavailable'}
         if bad:

@@ -13,6 +13,8 @@ TUNE_SEASONS = (2024,)                                     # 2023-24：開盤＋
 HOLDOUT_SEASONS = (2025, 2026)                             # 2024-25、2025-26：鎖定
 LIVE_SEASON = 2027                                         # 2026-27
 
+VALIDATION_SEASONS = TUNE_SEASONS                          # 2023-24：模型凍結後只驗證一次（2026-11-20 第八輪）
+
 HOLDOUT_LOG = os.path.join('data', 'ops', 'holdout_log.jsonl')
 
 # 鎖定測試期的評估流程（要求 D + Phase 3 前補充要求 1；2026-11-20 第七輪修訂）：
@@ -179,6 +181,57 @@ def holdout_independence():
                 why.append(f"看過結果後以不同模型版本 {r['model_version']} 登記 {r['seasons']}")
         elif r['type'] == 'freeze' and seen:
             why.append(f"看過結果後又凍結模型 {r['model_version']}")
+    return {'independent': not why, 'reasons': why}
+
+
+# ---------------------------------------------------------------- 2023-24 驗證期（第八輪）
+VALIDATION_PURPOSE = 'validation'
+
+
+def validation_begin(model_version, feature_version, params, data_version, require_clean=True):
+    """模型凍結後登記 2023-24 正式驗證；一生只能登記一次。記錄模型版本、特徵版本、參數、凍結時間、資料版本。"""
+    recs = verify_holdout_log()
+    freezes = [r for r in recs if r['type'] == 'freeze' and r['model_version'] == model_version]
+    if not freezes:
+        raise HoldoutLocked(f'模型 {model_version} 尚未凍結（freeze_model），不能登記 2023-24 驗證')
+    if any(r['type'] == 'validation_begin' for r in recs):
+        raise HoldoutLocked('2023-24 已登記過正式驗證；不得重新執行第二次獨立驗證')
+    sha, clean = git_state()
+    if require_clean and (not sha or not clean):
+        raise HoldoutLocked('validation requires a committed, clean working tree')
+    run_id = hashlib.sha256(f'{datetime.now(timezone.utc).isoformat()}{sha}validation'.encode()).hexdigest()[:16]
+    _append({'type': 'validation_begin', 'run_id': run_id, 'at': _now(), 'seasons': list(VALIDATION_SEASONS),
+             'purpose': VALIDATION_PURPOSE, 'model_version': model_version, 'feature_version': feature_version,
+             'params': params, 'freeze_at': freezes[-1]['at'], 'data_version': data_version, 'code_sha': sha})
+    return run_id
+
+
+def check_validation(run_id):
+    if not run_id:
+        raise HoldoutLocked('2023-24 只能以已登記的正式驗證 run_id 讀取（模型凍結後 validation_begin）')
+    recs = verify_holdout_log()
+    if not any(r['type'] == 'validation_begin' and r['run_id'] == run_id for r in recs):
+        raise HoldoutLocked(f'驗證 run {run_id} 未登記')
+    if any(r['type'] == 'validation_result' and r['run_id'] == run_id for r in recs):
+        raise HoldoutLocked(f'驗證 run {run_id} 已完成；不得再次讀取或重跑')
+
+
+def validation_finish(run_id, results):
+    check_validation(run_id)
+    if not isinstance(results, dict):
+        raise HoldoutLocked('驗證結果必須是 dict')
+    return _append({'type': 'validation_result', 'run_id': run_id, 'at': _now(), 'seasons': list(VALIDATION_SEASONS),
+                    'results': results})
+
+
+def validation_independence():
+    """看過 2023-24 驗證結果後若再凍結任何模型 → 2023-24 不再是獨立驗證集（永久）。"""
+    seen, why = False, []
+    for r in verify_holdout_log():
+        if r['type'] == 'validation_result':
+            seen = True
+        elif r['type'] == 'freeze' and seen:
+            why.append(f"看過 2023-24 驗證結果後又凍結模型 {r['model_version']}")
     return {'independent': not why, 'reasons': why}
 
 

@@ -215,8 +215,9 @@ class T13_T19_T30_RealData(unittest.TestCase):
         self.assertFalse(types(2021, 'use_team_stats') & {'PLAY_IN', 'POSTSEASON'})
         self.assertTrue({'PLAY_IN', 'POSTSEASON'} <= types(2021, 'use_fatigue'))
         self.assertTrue({'PLAY_IN', 'POSTSEASON'} <= types(2021, 'use_elo'))
-        self.assertIn('CUP_FINAL', types(2024, 'use_team_stats'))
-        self.assertNotIn('CUP_FINAL', types(2024, 'counts_for_standings'))
+        dq = lambda s, sc: {g['game_type'] for g in DA.DataAccess('data_quality').games(s, sc)}   # 2023-24 第八輪起只限 data_quality
+        self.assertIn('CUP_FINAL', dq(2024, 'use_team_stats'))
+        self.assertNotIn('CUP_FINAL', dq(2024, 'counts_for_standings'))
         self.assertFalse(types(2021, 'train_sample') & {'PLAY_IN', 'POSTSEASON'})
         with self.assertRaises(ValueError):
             self.da.games(2021, 'regular_season')

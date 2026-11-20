@@ -6,7 +6,7 @@
   只影響單邊的問題只標那一邊；本質上是整個市場的問題（讓分線兩邊共用、水位、方向矛盾）整個市場兩邊都標。
 - 排除以單筆紀錄為單位：同一場的其他莊家、同一家的其他盤口全部保留，不會因一筆異常排除整場。
 - severity:
-    'missing' 缺失值佔位符（ESPN 以總分 -1 表示「沒有總分」）→ 視同沒有這筆盤口；計入缺漏、不計入異常
+    'missing' 缺失值佔位符（ESPN 以總分 **剛好 -1** 表示「沒有總分」；其他負數不是佔位符）→ 視同沒有這筆盤口；計入缺漏、不計入異常
     'error'   明顯錯誤 → 模型一律排除
     'warning' 偏高／極端但可能合理 → 預設排除，人工確認後才可放行
 - 模型載入盤口時必須呼叫 usable_quotes()。去水需要同一家同一階段的兩邊價格，
@@ -85,6 +85,11 @@ def flag_quotes(quotes, results=None):
         if market == 'spread' and 'home' in sd and 'away' in sd:
             h, a = sd['home']['line'], sd['away']['line']
             n += 2
+            if abs(h) >= 100 and abs(a) >= 100:
+                # ESPN 把賠率填進盤口欄位（2022-23 ESPN BET 的 close 實測：主 -110 / 客 +110）
+                add(key, 'line_field_contains_price', 'error', f'home {h} away {a}', ('home', 'away'))
+                structural_bad.add(key)
+                continue
             if abs(h + a) > 1e-9:
                 add(key, 'spread_sign_mismatch', 'error', f'home {h} away {a}', ('home', 'away'))
                 structural_bad.add(key)
@@ -94,13 +99,17 @@ def flag_quotes(quotes, results=None):
         if market == 'total':
             lines = {sd[s]['line'] for s in sd}
             n += 1
-            if len(lines) > 1 and min(lines) > 0:
+            if len(lines) > 1 and min(lines) > 100:
                 add(key, 'total_lines_differ', 'error', str(sorted(lines)), tuple(sd))
             for s_ in sd:
                 ln = sd[s_]['line']
-                if ln <= 0:
+                if ln == -1.0:
                     # 缺失值規則：ESPN 用 -1 表示該莊家沒有開總分（2017-18 實測：同場其他莊家都有正常總分）
                     add(key, 'total_placeholder_missing', 'missing', f'{ln}', (s_,))
+                    structural_bad.add(key)
+                elif ln <= -100 or (ln >= 100 and ln == sd[s_].get('price_american')):
+                    add(key, 'line_field_contains_price', 'error', f'{ln}', (s_,))
+                    structural_bad.add(key)
                 elif not (TOTAL_RANGE[0] <= ln <= TOTAL_RANGE[1]):
                     add(key, 'total_out_of_range', 'error', f'{ln}', (s_,))
         prices = {s: sd[s]['price_decimal'] for s in sd if sd[s]['price_decimal'] is not None}
@@ -130,7 +139,7 @@ def flag_quotes(quotes, results=None):
             return sd['home']['line'] if 'home' in sd else None
         if m == 'total':
             ln = next(iter(sd.values()))['line']
-            return ln if ln > 0 else None
+            return ln if ln > 100 else None
         hp, ap = (sd.get('home') or {}).get('price_decimal'), (sd.get('away') or {}).get('price_decimal')
         return (1 / hp) / (1 / hp + 1 / ap) if hp and ap else None
 
@@ -185,6 +194,8 @@ def flag_quotes(quotes, results=None):
         by_gs[(gid, stage)].add(prov)
     for (gid, stage), provs in by_gs.items():
         for prov in provs:
+            if (gid, prov, stage, 'spread') in structural_bad or (gid, prov, stage, 'ml') in structural_bad:
+                continue
             x = info(gid, prov, stage)
             if x and abs(x[0]) >= CONFLICT_MIN_SPREAD:
                 n += 1

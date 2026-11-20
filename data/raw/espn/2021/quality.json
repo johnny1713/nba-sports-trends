@@ -3,9 +3,9 @@
   "by_book": [
    {
     "book_records": 6750,
-    "error_records": 176,
+    "error_records": 118,
     "provider": "Caesars Sportsbook",
-    "rate_pct": 2.61
+    "rate_pct": 1.75
    },
    {
     "book_records": 6852,
@@ -39,14 +39,14 @@
    }
   ],
   "by_kind": {
-   "line_deviates_from_market": 188,
+   "line_deviates_from_market": 130,
    "ml_deviates_from_market": 4,
    "spread_deviates_from_market": 34,
    "spread_ml_direction_conflict": 12,
    "total_out_of_range": 58
   },
   "by_severity": {
-   "error": 296,
+   "error": 238,
    "warning": 524
   },
   "direction_check_same_book_same_stage": true,
@@ -55,9 +55,9 @@
    "獨贏偏離市場 → 只排除該組獨贏盤（兩邊）": 2,
    "讓分偏離市場 → 只排除該組讓分盤（兩邊）": 17
   },
-  "error_records": 296,
+  "error_records": 238,
   "extreme_spreads": [],
-  "top_book_share_pct": 59.46
+  "top_book_share_pct": 49.58
  },
  "box_issue_examples": [
   [
@@ -143,6 +143,7 @@
     "warning": 58
    },
    "games": 85,
+   "line_field_contains_price": 0,
    "odds_missing_examples": [],
    "odds_missing_games": 0,
    "placeholder_missing": 0,
@@ -153,7 +154,7 @@
    "suspected_live": 4
   },
   "regular": {
-   "abnormal_deviation": 182,
+   "abnormal_deviation": 124,
    "abnormal_price": 468,
    "abnormal_spread": 30,
    "abnormal_total": 58,
@@ -217,7 +218,7 @@
    "final": 1080,
    "flags": {
     "by_kind": {
-     "line_deviates_from_market": 182,
+     "line_deviates_from_market": 124,
      "ml_deviates_from_market": 2,
      "overround_high": 412,
      "price_extreme": 54,
@@ -225,11 +226,12 @@
      "spread_ml_direction_conflict": 12,
      "total_out_of_range": 58
     },
-    "error": 284,
+    "error": 226,
     "missing": 0,
     "warning": 466
    },
    "games": 1112,
+   "line_field_contains_price": 0,
    "odds_missing_examples": [],
    "odds_missing_games": 0,
    "placeholder_missing": 0,
@@ -253,15 +255,15 @@
  "label": "2020-21",
  "live": false,
  "odds_checks": {
-  "error": 296,
-  "error_rate_pct": 0.1625,
+  "error": 238,
+  "error_rate_pct": 0.1307,
   "examples": {
    "line_deviates_from_market": [
-    "401267150/Caesars Sportsbook/current_postgame/total/over: 55 vs market median 217 (n=7)",
-    "401267150/Caesars Sportsbook/current_postgame/total/under: 55 vs market median 217 (n=7)",
     "401267203/Caesars Sportsbook/current_postgame/spread/away: 2.5 vs market median 9 (n=8)；比市場更接近實際結果（疑似滾球盤混入）",
     "401267203/Caesars Sportsbook/current_postgame/spread/home: 2.5 vs market median 9 (n=8)；比市場更接近實際結果（疑似滾球盤混入）",
-    "401267203/Caesars Sportsbook/current_postgame/total/over: 54.5 vs market median 218 (n=8)"
+    "401267205/Caesars Sportsbook (New Jersey)/current_postgame/spread/away: -1.5 vs market median -6 (n=8)；比市場更接近實際結果（疑似滾球盤混入）",
+    "401267205/Caesars Sportsbook (New Jersey)/current_postgame/spread/home: -1.5 vs market median -6 (n=8)；比市場更接近實際結果（疑似滾球盤混入）",
+    "401267216/Caesars Sportsbook/current_postgame/spread/away: -2 vs market median -7 (n=8)"
    ],
    "ml_deviates_from_market": [
     "401267449/MGM/current_postgame/ml/away: home spread 6.5, peers median 7.0 (n=9), peers home-fav share 0.00",
@@ -306,7 +308,7 @@
    ]
   },
   "missing": 0,
-  "n": 182139,
+  "n": 182110,
   "warning": 524
  },
  "opening_feed_agreement": {

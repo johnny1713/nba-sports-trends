@@ -115,6 +115,7 @@
     "warning": 21
    },
    "games": 86,
+   "line_field_contains_price": 0,
    "odds_missing_examples": [],
    "odds_missing_games": 0,
    "placeholder_missing": 0,
@@ -197,6 +198,7 @@
     "warning": 150
    },
    "games": 1232,
+   "line_field_contains_price": 0,
    "odds_missing_examples": [],
    "odds_missing_games": 0,
    "placeholder_missing": 0,

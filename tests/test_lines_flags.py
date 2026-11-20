@@ -283,3 +283,23 @@ class DeviationTests(unittest.TestCase):
         self.assertIn(('spread', 'home'), live)
         self.assertIn(('spread', 'away'), live)
         self.assertIn(('ml', 'home'), live)
+
+
+class LineFieldTests(unittest.TestCase):
+    def test_price_in_line_field_is_error_not_placeholder(self):
+        """2022-23 ESPN BET 收盤：讓分欄位是 -110/+110、總分欄位是 -110（ESPN 把賠率填進盤口欄位）。"""
+        qs = [q('home', -110.0, 1.91), q('away', 110.0, 1.91),
+              q('over', -110.0, 1.91, 'total'), q('under', -110.0, 1.91, 'total'),
+              q('home', None, 1.71, 'ml'), q('away', None, 2.15, 'ml')]
+        flags, _ = odds_flags.flag_quotes(qs)
+        kinds = {(f['market'], f['flag'], f['severity']) for f in flags}
+        self.assertIn(('spread', 'line_field_contains_price', 'error'), kinds)
+        self.assertIn(('total', 'line_field_contains_price', 'error'), kinds)
+        self.assertNotIn('total_placeholder_missing', {f['flag'] for f in flags})
+        self.assertNotIn('spread_ml_direction_conflict', {f['flag'] for f in flags})   # 不重複判方向
+        kept = {(x['market'], x['side']) for x in odds_flags.usable_quotes(qs, flags)}
+        self.assertEqual(kept, {('ml', 'home'), ('ml', 'away')})                        # 正常的獨贏保留
+
+    def test_only_exact_minus_one_is_placeholder(self):
+        flags, _ = odds_flags.flag_quotes([q('over', -1.0, 1.91, 'total'), q('under', -1.0, 1.91, 'total')])
+        self.assertEqual({f['severity'] for f in flags}, {'missing'})

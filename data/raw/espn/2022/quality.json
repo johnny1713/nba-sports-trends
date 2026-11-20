@@ -15,9 +15,9 @@
    },
    {
     "book_records": 7640,
-    "error_records": 210,
+    "error_records": 158,
     "provider": "Caesars Sportsbook",
-    "rate_pct": 2.75
+    "rate_pct": 2.07
    },
    {
     "book_records": 6992,
@@ -51,13 +51,13 @@
    }
   ],
   "by_kind": {
-   "line_deviates_from_market": 660,
+   "line_deviates_from_market": 608,
    "spread_deviates_from_market": 100,
    "spread_ml_direction_conflict": 24,
    "total_out_of_range": 52
   },
   "by_severity": {
-   "error": 836,
+   "error": 784,
    "warning": 790
   },
   "direction_check_same_book_same_stage": true,
@@ -65,15 +65,15 @@
    "無法歸因或可比較莊家不足 3 家 → 讓分與獨贏都排除": 6,
    "讓分偏離市場 → 只排除該組讓分盤（兩邊）": 50
   },
-  "error_records": 836,
+  "error_records": 784,
   "extreme_spreads": [],
-  "top_book_share_pct": 41.39
+  "top_book_share_pct": 44.13
  },
  "box_issue_examples": [],
  "box_issues": 0,
  "by_phase": {
   "postseason": {
-   "abnormal_deviation": 18,
+   "abnormal_deviation": 14,
    "abnormal_price": 14,
    "abnormal_spread": 4,
    "abnormal_total": 4,
@@ -139,17 +139,18 @@
    "final": 87,
    "flags": {
     "by_kind": {
-     "line_deviates_from_market": 18,
+     "line_deviates_from_market": 14,
      "overround_high": 4,
      "price_extreme": 10,
      "spread_deviates_from_market": 4,
      "total_out_of_range": 4
     },
-    "error": 26,
+    "error": 22,
     "missing": 0,
     "warning": 14
    },
    "games": 87,
+   "line_field_contains_price": 0,
    "odds_missing_examples": [],
    "odds_missing_games": 0,
    "placeholder_missing": 0,
@@ -160,7 +161,7 @@
    "suspected_live": 0
   },
   "regular": {
-   "abnormal_deviation": 642,
+   "abnormal_deviation": 594,
    "abnormal_price": 776,
    "abnormal_spread": 96,
    "abnormal_total": 48,
@@ -225,18 +226,19 @@
    "final": 1230,
    "flags": {
     "by_kind": {
-     "line_deviates_from_market": 642,
+     "line_deviates_from_market": 594,
      "overround_high": 424,
      "price_extreme": 352,
      "spread_deviates_from_market": 96,
      "spread_ml_direction_conflict": 24,
      "total_out_of_range": 48
     },
-    "error": 810,
+    "error": 762,
     "missing": 0,
     "warning": 776
    },
    "games": 1241,
+   "line_field_contains_price": 0,
    "odds_missing_examples": [],
    "odds_missing_games": 0,
    "placeholder_missing": 0,
@@ -260,8 +262,8 @@
  "label": "2021-22",
  "live": false,
  "odds_checks": {
-  "error": 836,
-  "error_rate_pct": 0.3511,
+  "error": 784,
+  "error_rate_pct": 0.3293,
   "examples": {
    "line_deviates_from_market": [
     "401358781/Unibet/current_postgame/total/over: 218.5 vs market median 206.5 (n=12)",
@@ -307,7 +309,7 @@
    ]
   },
   "missing": 0,
-  "n": 238097,
+  "n": 238071,
   "warning": 790
  },
  "opening_feed_agreement": {

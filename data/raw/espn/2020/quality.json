@@ -3,27 +3,27 @@
   "by_book": [
    {
     "book_records": 6728,
-    "error_records": 296,
+    "error_records": 196,
     "provider": "Caesars Sportsbook",
-    "rate_pct": 4.4
+    "rate_pct": 2.91
    },
    {
     "book_records": 6810,
-    "error_records": 154,
+    "error_records": 156,
     "provider": "DraftKings",
-    "rate_pct": 2.26
+    "rate_pct": 2.29
    },
    {
     "book_records": 6736,
-    "error_records": 144,
+    "error_records": 142,
     "provider": "SugarHouse",
-    "rate_pct": 2.14
+    "rate_pct": 2.11
    },
    {
     "book_records": 6840,
-    "error_records": 26,
+    "error_records": 28,
     "provider": "Unibet",
-    "rate_pct": 0.38
+    "rate_pct": 0.41
    },
    {
     "book_records": 86,
@@ -63,7 +63,7 @@
    }
   ],
   "by_kind": {
-   "line_deviates_from_market": 456,
+   "line_deviates_from_market": 358,
    "ml_deviates_from_market": 40,
    "overround_out_of_range": 8,
    "spread_deviates_from_market": 10,
@@ -71,7 +71,7 @@
    "total_out_of_range": 102
   },
   "by_severity": {
-   "error": 660,
+   "error": 562,
    "warning": 102
   },
   "direction_check_same_book_same_stage": true,
@@ -80,9 +80,9 @@
    "獨贏偏離市場 → 只排除該組獨贏盤（兩邊）": 20,
    "讓分偏離市場 → 只排除該組讓分盤（兩邊）": 5
   },
-  "error_records": 660,
+  "error_records": 562,
   "extreme_spreads": [],
-  "top_book_share_pct": 44.85
+  "top_book_share_pct": 34.88
  },
  "box_issue_examples": [
   [
@@ -93,7 +93,7 @@
  "box_issues": 1,
  "by_phase": {
   "postseason": {
-   "abnormal_deviation": 14,
+   "abnormal_deviation": 10,
    "abnormal_price": 2,
    "abnormal_spread": 0,
    "abnormal_total": 4,
@@ -154,16 +154,17 @@
    "final": 83,
    "flags": {
     "by_kind": {
-     "line_deviates_from_market": 14,
+     "line_deviates_from_market": 10,
      "price_extreme": 2,
      "spread_ml_direction_conflict": 12,
      "total_out_of_range": 4
     },
-    "error": 30,
+    "error": 26,
     "missing": 0,
     "warning": 2
    },
    "games": 92,
+   "line_field_contains_price": 0,
    "odds_missing_examples": [],
    "odds_missing_games": 0,
    "placeholder_missing": 0,
@@ -175,7 +176,7 @@
    "suspected_live": 2
   },
   "regular": {
-   "abnormal_deviation": 442,
+   "abnormal_deviation": 348,
    "abnormal_price": 148,
    "abnormal_spread": 10,
    "abnormal_total": 98,
@@ -239,7 +240,7 @@
    "final": 1059,
    "flags": {
     "by_kind": {
-     "line_deviates_from_market": 442,
+     "line_deviates_from_market": 348,
      "ml_deviates_from_market": 40,
      "overround_high": 12,
      "overround_out_of_range": 8,
@@ -248,11 +249,12 @@
      "spread_ml_direction_conflict": 32,
      "total_out_of_range": 98
     },
-    "error": 630,
+    "error": 536,
     "missing": 0,
     "warning": 100
    },
    "games": 1062,
+   "line_field_contains_price": 0,
    "odds_missing_examples": [],
    "odds_missing_games": 0,
    "placeholder_missing": 0,
@@ -261,7 +263,7 @@
     "postponed": 3
    },
    "still_incomplete": 0,
-   "suspected_live": 158
+   "suspected_live": 156
   }
  },
  "duplicates": [],
@@ -276,15 +278,15 @@
  "label": "2019-20",
  "live": false,
  "odds_checks": {
-  "error": 660,
-  "error_rate_pct": 0.5429,
+  "error": 562,
+  "error_rate_pct": 0.4625,
   "examples": {
    "line_deviates_from_market": [
     "401160623/DraftKings/current_postgame/total/over: 263 vs market median 231 (n=8)；比市場更接近實際結果（疑似滾球盤混入）",
     "401160623/DraftKings/current_postgame/total/under: 263 vs market median 231 (n=8)；比市場更接近實際結果（疑似滾球盤混入）",
     "401160624/SugarHouse/current_postgame/ml/away: 0.602 vs market median 0.397 (n=7)",
     "401160624/SugarHouse/current_postgame/ml/home: 0.602 vs market median 0.397 (n=7)",
-    "401160625/Caesars Sportsbook/current_postgame/total/over: 52.5 vs market median 218.5 (n=10)"
+    "401160625/DraftKings/current_postgame/total/over: 252.5 vs market median 218.5 (n=9)；比市場更接近實際結果（疑似滾球盤混入）"
    ],
    "ml_deviates_from_market": [
     "401160624/DraftKings/current_postgame/ml/away: home spread 3.5, peers median 3.5 (n=5), peers home-fav share 0.00",
@@ -337,7 +339,7 @@
    ]
   },
   "missing": 0,
-  "n": 121566,
+  "n": 121513,
   "warning": 102
  },
  "opening_feed_agreement": {

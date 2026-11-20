@@ -28,6 +28,7 @@ PHASES = {2: 'regular', 3: 'postseason'}
 # 異常分類（單筆紀錄數）
 ABN_PRICE = ('price_invalid', 'price_extreme', 'overround_high', 'overround_out_of_range', 'ml_deviates_from_market')
 ABN_SPREAD = ('spread_sign_mismatch', 'spread_out_of_range', 'spread_deviates_from_market')
+ABN_LINE_FIELD = ('line_field_contains_price',)
 ABN_DEVIATION = ('line_deviates_from_market',)
 
 # 例行賽預期場數：2019-20 停賽後含泡泡種子賽共 1059 場；2020-21 縮短為 72 場 → 1080
@@ -94,6 +95,7 @@ def _phase_block(games, odds_by_game, flags):
         'abnormal_spread': sum(kinds.get(k, 0) for k in ABN_SPREAD),
         'abnormal_unattributed': kinds.get('spread_ml_direction_conflict', 0),
         'abnormal_deviation': kinds.get('line_deviates_from_market', 0),
+        'line_field_contains_price': kinds.get('line_field_contains_price', 0),
         'suspected_live': sum(1 for f in fl if f['flag'] == 'line_deviates_from_market' and '滾球' in f['detail']),
         'abnormal_total': sum(v for k, v in kinds.items() if k.startswith('total_') and k != 'total_placeholder_missing'),
         'placeholder_missing': kinds.get('total_placeholder_missing', 0),
@@ -255,6 +257,7 @@ def render_md(r):
     row('讓分×獨贏矛盾且無法歸因（兩市場都標）', lambda b: b.get('abnormal_unattributed', 0))
     row('盤口偏離市場（其中疑似滾球盤混入）', lambda b: f"{b.get('abnormal_deviation', 0)}（{b.get('suspected_live', 0)}）")
     row('總分佔位符 -1（視為缺失）', lambda b: b.get('placeholder_missing', 0))
+    row('盤口欄位填入賠率（ESPN 資料錯誤）', lambda b: b.get('line_field_contains_price', 0))
     row('每場莊家數中位數', lambda b: b['books_per_game_median'])
     L += ['', f"- 例行賽預期 {r['expected_regular']} 場；每隊 {r['teams']['min_games']}～{r['teams']['max_games']} 場"
           f"（{r['teams']['n']} 隊，預期 {r['teams']['expected_range'][0]}～{r['teams']['expected_range'][1]}）",

@@ -160,6 +160,7 @@
     "warning": 4
    },
    "games": 82,
+   "line_field_contains_price": 0,
    "odds_missing_examples": [],
    "odds_missing_games": 0,
    "placeholder_missing": 6,
@@ -242,6 +243,7 @@
     "warning": 17
    },
    "games": 1231,
+   "line_field_contains_price": 0,
    "odds_missing_examples": [],
    "odds_missing_games": 0,
    "placeholder_missing": 8,
@@ -323,7 +325,7 @@
    ]
   },
   "missing": 14,
-  "n": 122285,
+  "n": 122282,
   "warning": 21
  },
  "opening_feed_agreement": {

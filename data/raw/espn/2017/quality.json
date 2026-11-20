@@ -109,6 +109,7 @@
     "warning": 12
    },
    "games": 79,
+   "line_field_contains_price": 0,
    "odds_missing_examples": [],
    "odds_missing_games": 0,
    "placeholder_missing": 0,
@@ -190,6 +191,7 @@
     "warning": 144
    },
    "games": 1233,
+   "line_field_contains_price": 0,
    "odds_missing_examples": [
     "400899645",
     "400899648",

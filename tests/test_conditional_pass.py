@@ -114,3 +114,113 @@ class NextSeasonGateTests(unittest.TestCase):
 
 if __name__ == '__main__':
     unittest.main()
+
+
+class ContinueAuthorizationTests(unittest.TestCase):
+    """人工繼續回補授權：只放行指定的下一季、不改變前一季 FAILED、資料一變就失效。"""
+
+    def setUp(self):
+        self.d = tempfile.TemporaryDirectory()
+        self.cwd = os.getcwd()
+        os.chdir(self.d.name)
+        self.sd = backfill.season_dir(2023)
+        os.makedirs(self.sd)
+        for name in ('games.jsonl.gz', 'odds.jsonl.gz'):
+            store.write_jsonl_gz(os.path.join(self.sd, name), [{'x': name}])
+        store.write_json(os.path.join(self.sd, 'quality.json'),
+                         {'verdict_ok': False, 'conditional_pass': False, 'quality_status': 'FAILED', 'verdict': '不通過'})
+
+    def tearDown(self):
+        os.chdir(self.cwd)
+        self.d.cleanup()
+
+    def auth(self, **over):
+        a = {'season': 2023, 'quality_status': 'FAILED', 'authorizes_backfill_of': [2024],
+             'data_version': quality.data_version(2023)}
+        a.update(over)
+        store.write_json(os.path.join(self.sd, backfill.CONTINUE_AUTH), a)
+
+    def test_blocked_without_authorization(self):
+        self.assertIsNotNone(backfill.require_previous_ok(2024))
+
+    def test_authorizes_only_named_next_season(self):
+        self.auth()
+        self.assertIsNone(backfill.require_previous_ok(2024))
+        ok, _ = backfill.continue_authorization(2023, 2025)
+        self.assertFalse(ok)
+
+    def test_does_not_change_quality_status(self):
+        self.auth()
+        backfill.require_previous_ok(2024)
+        q = store.read_json(os.path.join(self.sd, 'quality.json'))
+        self.assertEqual(q['quality_status'], 'FAILED')
+        self.assertFalse(q['verdict_ok'] or q['conditional_pass'])
+
+    def test_data_change_invalidates(self):
+        self.auth()
+        store.write_jsonl_gz(os.path.join(self.sd, 'odds.jsonl.gz'), [{'x': 'changed'}])
+        self.assertIsNotNone(backfill.require_previous_ok(2024))
+
+    def test_authorization_must_state_failed(self):
+        self.auth(quality_status='PASS')
+        self.assertIsNotNone(backfill.require_previous_ok(2024))
+
+    def test_not_inherited_by_later_seasons(self):
+        """2023-24 若也不通過，2023 的授權不能讓 2024-25 開跑。"""
+        self.auth()
+        sd24 = backfill.season_dir(2024)
+        os.makedirs(sd24)
+        store.write_json(os.path.join(sd24, 'quality.json'), {'verdict_ok': False, 'conditional_pass': False, 'verdict': '不通過'})
+        self.assertIsNotNone(backfill.require_previous_ok(2025))
+
+
+class StrictStageCoverageTests(unittest.TestCase):
+    def test_constants(self):
+        self.assertEqual(quality.STRICT_STAGE_FROM, 2024)
+        self.assertEqual(quality.STRICT_STAGE_MIN_COVERAGE, 95.0)
+        self.assertEqual(quality.ACK_MIN_OTHER_COVERAGE, 95.0)       # 單一莊家出錯 → 有條件通過不可能成立
+
+
+class SoleBookSeasonEndToEnd(unittest.TestCase):
+    """2024-25 起的情境：只有 ESPN BET 一家，收盤讓分欄位系統性錯誤 → 必須 FAILED，放行紀錄也救不了。"""
+
+    def test_sole_book_close_error_stays_failed_even_with_ack(self):
+        cwd = os.getcwd()
+        with tempfile.TemporaryDirectory() as d:
+            try:
+                os.chdir(d)
+                sd = os.path.join('data', 'raw', 'espn', '2025')
+                games, boxes, odds = [], [], []
+                for i in range(40):
+                    gid = f'g{i}'
+                    games.append({'game_id': gid, 'season': 2025, 'season_type': 2, 'start_utc': '2025-01-01T00:00:00Z',
+                                  'home': '1', 'away': '2', 'status': 'final', 'home_pts': 110, 'away_pts': 100,
+                                  'complete': True, 'box_source': 'espn'})
+                    for t in ('1', '2'):
+                        boxes.append({'game_id': gid, 'team': t, 'source': 'espn:summary', 'overtimes': 0, 'players': []})
+                    for stage in ('open', 'close'):
+                        bad = stage == 'close'
+                        for side, line, price in (('home', -110.0 if bad else -5.5, 1.91), ('away', 110.0 if bad else 5.5, 1.91)):
+                            odds.append({'game_id': gid, 'provider': 'ESPN BET', 'provider_type': 'book', 'stage': stage,
+                                         'market': 'spread', 'side': side, 'line': line, 'price_decimal': price})
+                        for side in ('over', 'under'):
+                            odds.append({'game_id': gid, 'provider': 'ESPN BET', 'provider_type': 'book', 'stage': stage,
+                                         'market': 'total', 'side': side, 'line': 221.5, 'price_decimal': 1.91})
+                        for side, price in (('home', 1.45), ('away', 2.8)):
+                            odds.append({'game_id': gid, 'provider': 'ESPN BET', 'provider_type': 'book', 'stage': stage,
+                                         'market': 'ml', 'side': side, 'line': None, 'price_decimal': price})
+                store.write_jsonl_gz(os.path.join(sd, 'games.jsonl.gz'), games)
+                store.write_jsonl_gz(os.path.join(sd, 'teambox.jsonl.gz'), boxes)
+                store.write_jsonl_gz(os.path.join(sd, 'odds.jsonl.gz'), odds)
+                store.write_json(os.path.join(sd, quality.ACK_FILE), {
+                    'season': 2025, 'decision': 'conditional_pass', 'data_version': quality.data_version(2025),
+                    'exclusion_scope': [{'provider': 'ESPN BET', 'stage': 'close', 'markets': ['spread'],
+                                         'flag': 'line_field_contains_price'}]})
+                r = quality.season_report(2025, live=True)
+            finally:
+                os.chdir(cwd)
+        self.assertEqual(r['quality_status'], 'FAILED')
+        self.assertFalse(r['conditional_pass'])
+        self.assertLess(r['strict_stage_coverage']['close/spread'], 95.0)
+        self.assertEqual(r['strict_stage_coverage']['open/spread'], 100.0)
+        self.assertFalse(r['conditional']['valid'])

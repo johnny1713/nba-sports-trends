@@ -14,7 +14,13 @@ SEASON_TYPES = {2: 'regular', 3: 'postseason'}          # 季前賽不收
 GAME_STATUS = {'scheduled', 'final', 'postponed', 'canceled'}
 ODDS_STAGES = {'open', 'close', 'snapshot', 'current_postgame'}
 PREDICTIVE_STAGES = {'open', 'snapshot'}                 # 可用於預測（snapshot 另需時間檢查）
-EVAL_ONLY_STAGES = {'close', 'current_postgame'}         # 只能用於評估／CLV
+CLOSING_STAGES = {'close'}                               # 真正的收盤：只能用於 CLV／賽前市場基準的評估
+POSTGAME_STAGES = {'current_postgame'}                   # 賽後才抓到的快照：不是收盤（可能混入比賽中盤口）
+EVAL_ONLY_STAGES = CLOSING_STAGES | POSTGAME_STAGES      # 兩者都不能進預測
+# 時間性質標籤（2026-11-20 使用者決定）：current_postgame 一律稱 POSTGAME_SNAPSHOT，不得稱為 CLOSING。
+# POSTGAME_SNAPSHOT 不得用於賽前模型訓練、賽前市場基準、CLV 或任何需要賽前資訊的回測評估。
+STAGE_TIME_CLASS = {'open': 'OPENING', 'snapshot': 'PREGAME_SNAPSHOT', 'close': 'CLOSING',
+                    'current_postgame': 'POSTGAME_SNAPSHOT'}
 MARKETS = {'ml', 'spread', 'total'}
 SIDES = {'ml': {'home', 'away'}, 'spread': {'home', 'away'}, 'total': {'over', 'under'}}
 INJURY_STATUS = {'Out', 'Doubtful', 'Questionable', 'Probable', 'Day-To-Day', 'Available'}

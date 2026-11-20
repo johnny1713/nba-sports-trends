@@ -75,11 +75,24 @@ class AsofTests(unittest.TestCase):
         got = asof.quotes_for_prediction(quotes, T)
         self.assertEqual([x['stage'] for x in got], ['open', 'snapshot'])
         self.assertEqual(got[1]['observed_at'], '2026-11-19T11:00:00Z')   # 剛好等於 T 的不放行
-        self.assertEqual(len(asof.quotes_for_evaluation(quotes)), 2)
+        self.assertEqual([x['stage'] for x in asof.closing_quotes(quotes)], ['close'])          # 賽後快照不算收盤
+        self.assertEqual([x['stage'] for x in asof.postgame_snapshots_for_audit(quotes)], ['current_postgame'])
+        with self.assertRaises(asof.LeakageError):
+            asof.assert_no_postgame(quotes)
+        asof.assert_no_postgame(asof.closing_quotes(quotes))
         with self.assertRaises(asof.LeakageError):
             asof.assert_no_eval_stage(quotes)
         with self.assertRaises(asof.LeakageError):
             asof.quotes_for_prediction(quotes, datetime(2026, 11, 19))
+
+
+class StageLabelTests(unittest.TestCase):
+    def test_postgame_is_never_labeled_closing(self):
+        from nba_quant.schema import STAGE_TIME_CLASS, CLOSING_STAGES, POSTGAME_STAGES
+        self.assertEqual(STAGE_TIME_CLASS['current_postgame'], 'POSTGAME_SNAPSHOT')
+        self.assertEqual(STAGE_TIME_CLASS['close'], 'CLOSING')
+        self.assertFalse(CLOSING_STAGES & POSTGAME_STAGES)
+        self.assertFalse(hasattr(asof, 'quotes_for_evaluation'))     # 舊的混用介面已移除
 
 
 class StoreTests(unittest.TestCase):

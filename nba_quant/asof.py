@@ -3,14 +3,17 @@
 
 特徵工程與模型**只能**透過這裡拿資料。規則：
 - 球隊比賽紀錄：只放行比賽日（美東）早於預測比賽日的場次。
-- 盤口：預測用途只放行 open 與 observed_at < T 的 snapshot；close 只能走 quotes_for_evaluation。
+- 盤口：預測用途只放行 open 與 observed_at < T 的 snapshot。
+- 真正的收盤（CLOSING）只能走 closing_quotes()，用於 CLV 與賽前市場基準的評估。
+- 賽後快照（POSTGAME_SNAPSHOT，stage=current_postgame）**不是收盤**：不得用於賽前模型訓練、賽前市場基準、
+  CLV 或任何需要賽前資訊的回測評估。只能透過 postgame_snapshots_for_audit() 取得，用途限資料品質稽核。
 """
 from __future__ import annotations
 
 from datetime import datetime, timedelta, timezone
 from typing import Iterable, List
 
-from .schema import EVAL_ONLY_STAGES, parse_utc
+from .schema import CLOSING_STAGES, EVAL_ONLY_STAGES, POSTGAME_STAGES, parse_utc
 
 
 class LeakageError(RuntimeError):
@@ -55,9 +58,21 @@ def quotes_for_prediction(quotes: Iterable[dict], as_of: datetime) -> List[dict]
     return out
 
 
-def quotes_for_evaluation(quotes: Iterable[dict]) -> List[dict]:
-    """收盤盤口：只給 CLV 與評估用。"""
-    return [q for q in quotes if q['stage'] in EVAL_ONLY_STAGES]
+def closing_quotes(quotes: Iterable[dict]) -> List[dict]:
+    """真正的收盤（ESPN 明確標記的 close）：只給 CLV 與賽前市場基準的評估用。不含賽後快照。"""
+    return [q for q in quotes if q['stage'] in CLOSING_STAGES]
+
+
+def postgame_snapshots_for_audit(quotes: Iterable[dict]) -> List[dict]:
+    """賽後快照（POSTGAME_SNAPSHOT）：只供資料品質稽核。不得當收盤、不得算 CLV、不得當市場基準。"""
+    return [q for q in quotes if q['stage'] in POSTGAME_STAGES]
+
+
+def assert_no_postgame(quotes: Iterable[dict]):
+    """放在 CLV／市場基準／回測評估函式入口：混進賽後快照就直接報錯。"""
+    bad = [q for q in quotes if q.get('stage') in POSTGAME_STAGES]
+    if bad:
+        raise LeakageError(f'{len(bad)} POSTGAME_SNAPSHOT quotes passed to a pre-game evaluation (not closing lines)')
 
 
 def assert_no_eval_stage(quotes: Iterable[dict]):

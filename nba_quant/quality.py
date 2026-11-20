@@ -180,6 +180,25 @@ def season_report(season: int, live: bool = None) -> dict:
         reasons.append(f'盤口 error 級標記比例 {err_rate:.2%} ≥ 1%')
     if dup:
         reasons.append(f'重複 game_id {len(dup)} 個')
+    # 2023-24 起 ESPN 提供明確的開盤／收盤：每個市場的「可用」開盤與收盤（未被 error／missing 標記、雙邊齊全）
+    # 都必須覆蓋 ≥ 95% 完賽比賽；賽後快照不能替代。單一莊家年份出錯時沒有替代來源 → 直接不通過。
+    stage_strict = {}
+    if season >= STRICT_STAGE_FROM:
+        bad = {(f['game_id'], f['provider'], f['stage'], f['market'], f['side']) for f in flags if f['severity'] in ('error', 'missing')}
+        for stage in ('open', 'close'):
+            for m, sides in (('spread', ('home', 'away')), ('total', ('over', 'under')), ('ml', ('home', 'away'))):
+                cov = 0
+                for gid in final_ids:
+                    provs = defaultdict(set)
+                    for q in odds_by_game.get(gid, []):
+                        if (q['provider_type'] == 'book' and q['stage'] == stage and q['market'] == m and q['price_decimal']
+                                and (gid, q['provider'], stage, m, q['side']) not in bad):
+                            provs[q['provider']].add(q['side'])
+                    cov += any(set(sides) <= v for v in provs.values())
+                pct = _pct(cov, len(final_ids))
+                stage_strict[f'{stage}/{m}'] = pct
+                if pct is None or pct < STRICT_STAGE_MIN_COVERAGE:
+                    reasons.append(f'可用{"開盤" if stage == "open" else "收盤"} {m} 覆蓋率 {pct}% < {STRICT_STAGE_MIN_COVERAGE}%')
 
     conditional = evaluate_conditional_pass(season, reasons, flags, n_checks, n_err, odds_by_game, final_ids)
     if reasons and conditional and conditional['valid']:
@@ -212,6 +231,9 @@ def season_report(season: int, live: bool = None) -> dict:
                   'parse_error_examples': flog.get('parse_errors', [])[:10]},
         'verdict_ok': not reasons,
         'conditional_pass': bool(reasons and conditional and conditional['valid']),
+        'quality_status': 'PASS' if not reasons else ('CONDITIONAL_PASS' if (conditional and conditional['valid']) else 'FAILED'),
+        'strict_stage_coverage': stage_strict,
+        'continue_authorization': store.read_json(os.path.join(RAW, str(season), 'continue_authorization.json')),
         'conditional': conditional,
         'verdict': verdict,
     }
@@ -247,7 +269,8 @@ def _opening_agreement(odds_by_game, final_ids):
 def render_md(r):
     P = r['by_phase']
     cols = ['regular', 'postseason']
-    L = [f"# 資料品質報告：{r['label']}（ESPN season {r['season']}）", '', f"**判定：{r['verdict']}**", '',
+    L = [f"# 資料品質報告：{r['label']}（ESPN season {r['season']}）", '',
+         f"**品質狀態：{r.get('quality_status')}**", '', f"判定：{r['verdict']}", '',
          '## 場次、完整度與缺漏（例行賽、季後賽分開）', '',
          '| 項目 | 例行賽 | 季後賽 |', '|---|---|---|']
 
@@ -288,7 +311,9 @@ def render_md(r):
           '| 階段/市場 | 例行賽 有盤口% | 例行賽 雙邊賠率% | 季後賽 有盤口% | 季後賽 雙邊賠率% |', '|---|---|---|---|---|']
     for k in P['regular']['coverage']:
         a, b = P['regular']['coverage'][k], P['postseason']['coverage'][k]
-        L.append(f"| {k} | {a['line_pct']} | {a['price_pct']} | {b['line_pct']} | {b['price_pct']} |")
+        label = k.replace('current_postgame/', 'POSTGAME_SNAPSHOT（賽後快照，非收盤）/').replace('close/', 'CLOSING/').replace('open/', 'OPENING/')
+        L.append(f"| {label} | {a['line_pct']} | {a['price_pct']} | {b['line_pct']} | {b['price_pct']} |")
+    L += ['', '- **POSTGAME_SNAPSHOT 不是收盤**：賽後才抓到，可能混入比賽中盤口；不得用於賽前模型、賽前市場基準、CLV 或賽前回測評估。']
     oc = r['odds_checks']
     L += ['', '## 盤口品質標記（原始資料不動，標記另存 odds_flags.jsonl.gz）', '',
           f"- 檢核 {oc['n']} 項：被標記的單筆盤口 error {oc['error']}、warning {oc['warning']}、缺失值 {oc.get('missing', 0)}，**error 比例 {oc['error_rate_pct']}%**",
@@ -298,6 +323,18 @@ def render_md(r):
     for kind, exs in oc['examples'].items():
         L.append(f'- {kind}：' + '；'.join(f'`{e}`' for e in exs))
     L += render_conditional(r.get('conditional'))
+    if r.get('strict_stage_coverage'):
+        L += ['', '## 開盤／收盤嚴格覆蓋（2023-24 起；可用 = 未被標記、雙邊齊全、有價格）', '',
+              '| 階段/市場 | 可用覆蓋率 % |', '|---|---|'] + [f'| {k} | {v} |' for k, v in r['strict_stage_coverage'].items()]
+    ca = r.get('continue_authorization')
+    if ca:
+        L += ['', '## 人工繼續回補授權（不改變本季品質狀態）', '',
+              f"- **本季品質狀態：{r.get('quality_status')}**（授權不會改變它）",
+              f"- 授權繼續回補：{ca.get('authorizes_backfill_of')}（只限這些球季，不自動套用到其他球季）",
+              f"- 決策：{ca.get('decision_text')}（{ca.get('decided_by')}，{ca.get('decided_at')}）",
+              f"- 原因：{ca.get('reason')}",
+              f"- 本季資料限制：{ca.get('data_restrictions')}",
+              f"- 資料版本：{ca.get('data_version')}；程式版本：{ca.get('code_sha')}"]
     L += render_anomaly(r.get('anomaly_analysis'))
     fe = r['fetch']
     L += ['', '## 抓取', '', f"- 請求 {fe['requests']} 次，HTTP 失敗 {fe['http_errors']}，解析失敗 {fe['parse_errors']}"]
@@ -382,6 +419,8 @@ def render_anomaly(a):
 
 # ---------------------------------------------------------------- 人工有條件放行（Conditional Pass）
 ACK_FILE = 'quality_ack.json'
+STRICT_STAGE_FROM = 2024            # 2023-24 起：開盤／收盤嚴格覆蓋檢查
+STRICT_STAGE_MIN_COVERAGE = 95.0
 ACK_MIN_SYSTEMATIC_SHARE = 0.90     # 被排除的範圍內，該莊家的紀錄至少 90% 被同一種錯誤標記 → 才算「系統性」
 ACK_MIN_OTHER_COVERAGE = 95.0       # 被排除的市場，其他莊家仍須覆蓋 ≥ 95% 完賽比賽 → 才算「可交叉驗證、可替代」
 GATE_ERROR_RATE = 0.01              # 全域門檻不變

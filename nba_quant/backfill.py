@@ -230,17 +230,43 @@ def run_taiwan(log=print):
     return rc
 
 
+CONTINUE_AUTH = 'continue_authorization.json'
+
+
+def continue_authorization(prev_season, next_season):
+    """
+    人工「繼續回補」授權（2026-11-20 使用者決定，用於 2022-23）：
+    - 只允許回補**指定的下一季**；不改變前一季的品質狀態（仍是 FAILED），也不套用到其他球季。
+    - 資料版本（games／odds sha256）與授權時相同才有效。
+    回傳 (是否有效, 原因)。
+    """
+    from . import quality
+    auth = store.read_json(os.path.join(season_dir(prev_season), CONTINUE_AUTH))
+    if not auth:
+        return False, 'no authorization'
+    if auth.get('season') != prev_season or auth.get('quality_status') != 'FAILED':
+        return False, 'authorization season/status mismatch'
+    if next_season not in auth.get('authorizes_backfill_of', []):
+        return False, f'authorization does not cover season {next_season}'
+    if auth.get('data_version') != quality.data_version(prev_season):
+        return False, 'data version changed since authorization'
+    return True, 'continue authorization valid (quality status remains FAILED)'
+
+
 def require_previous_ok(season):
     """
-    下一季開跑前，前一季（若已回補）的品質報告必須「通過」或「有條件通過」。
-    有條件通過由 quality.evaluate_conditional_pass() 逐條驗證（資料版本、系統性、可交叉驗證、門檻），
-    單純存在放行檔案不算數。
+    下一季開跑前，前一季（若已回補）必須：品質「通過」、或經驗證成立的「有條件通過」、
+    或有一份**只針對這一季**的人工繼續回補授權（前一季仍維持 FAILED）。單純存在放行檔案不算數。
     """
     prev = os.path.join(season_dir(season - 1), 'quality.json')
     if not os.path.exists(prev):
         return None
     q = store.read_json(prev)
     if q.get('verdict_ok') or q.get('conditional_pass'):
+        return None
+    ok, why = continue_authorization(season - 1, season)
+    if ok:
+        print(f'[gate] season {season - 1} is FAILED; continuing to {season} under manual authorization')
         return None
     return f'season {season - 1} quality not ok: {q.get("verdict")}'
 

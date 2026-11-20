@@ -15,10 +15,15 @@ LIVE_SEASON = 2027                                         # 2026-27
 
 HOLDOUT_LOG = os.path.join('data', 'ops', 'holdout_log.jsonl')
 
-# 鎖定測試期的評估流程（要求 D + Phase 3 前補充要求 1）：
-#   run_id = holdout_begin(...)   → 寫入一筆 begin（時間、程式 git sha、模型版本、資料版本）
-#   check_seasons(seasons, run_id) → 只有已登記的 run 才能碰鎖定球季
-#   holdout_finish(run_id, results)→ 寫入一筆 result（測試結果摘要）
+# 鎖定測試期的評估流程（要求 D + Phase 3 前補充要求 1；2026-11-20 第七輪修訂）：
+#   freeze_model(model_version)    → 寫入一筆 freeze（模型凍結；之後才能登記正式測試）
+#   run_id = holdout_begin([季], 'final_evaluation', model_version, data_version)
+#                                  → 每季分別登記；每季一生只能登記一次；必須是已凍結的模型版本
+#   check_seasons([季], run_id)    → 只有已登記、尚未出結果的 run 才能碰該季
+#   holdout_finish(run_id, results)→ 寫入一筆 result（結果自動標上該季，兩季分開保存，不提供合併平均）
+#   holdout_independence()         → 看過任何一季結果後若再凍結新模型（或另一季用不同模型版本），
+#                                    兩季都不再是獨立測試，永久標記
+# 模型凍結前：2024-25 只能做資料品質檢查、2025-26 完全禁止讀取（data_access.py 強制）。
 # 紀錄檔是 append-only 的雜湊鏈：每筆帶前一筆的 sha256，改動或刪除任何一筆，
 # verify_holdout_log() 都會失敗（測試與 workflow 每次都會驗證）。
 # 限制要講清楚：git 歷史理論上可被強制改寫，雜湊鏈讓「偷偷改」一定留下痕跡，但無法阻止「整檔重建」；
@@ -84,10 +89,35 @@ def git_state():
         return None, False
 
 
+FINAL_PURPOSE = 'final_evaluation'
+
+
+def freeze_model(model_version, manifest_sha, require_clean=True):
+    """登記模型凍結。之後才能登記正式最終測試；看過結果後再凍結任何模型 → 鎖定測試期失去獨立性。"""
+    sha, clean = git_state()
+    if require_clean and (not sha or not clean):
+        raise HoldoutLocked('model freeze requires a committed, clean working tree')
+    return _append({'type': 'freeze', 'run_id': f'freeze:{model_version}', 'at': _now(), 'model_version': model_version,
+                    'manifest_sha': manifest_sha, 'code_sha': sha})
+
+
+def frozen_versions():
+    return {r['model_version'] for r in verify_holdout_log() if r['type'] == 'freeze'}
+
+
 def holdout_begin(seasons, purpose, model_version, data_version, require_clean=True):
     touched = sorted(set(seasons) & set(HOLDOUT_SEASONS))
     if not touched:
         raise ValueError('holdout_begin called without any holdout season')
+    if len(set(seasons)) != 1 or len(touched) != 1:
+        raise HoldoutLocked('每一季必須分別登記正式最終測試（一次只能登記一季）')
+    if purpose != FINAL_PURPOSE:
+        raise HoldoutLocked(f'鎖定測試期只允許 {FINAL_PURPOSE}；不允許訓練、特徵選擇、調參、選模或回測')
+    recs = verify_holdout_log()
+    if model_version not in {r['model_version'] for r in recs if r['type'] == 'freeze'}:
+        raise HoldoutLocked(f'模型 {model_version} 尚未凍結（freeze_model），不能登記正式最終測試')
+    if any(r['type'] == 'begin' and touched[0] in r['seasons'] for r in recs):
+        raise HoldoutLocked(f'{touched[0]} 已登記過正式最終測試；每季只能評估一次')
     sha, clean = git_state()
     if require_clean and (not sha or not clean):
         raise HoldoutLocked('locked holdout requires a committed, clean working tree (code version must be reproducible)')
@@ -103,7 +133,10 @@ def holdout_finish(run_id, results):
         raise HoldoutLocked(f'unknown holdout run {run_id}')
     if any(r['type'] == 'result' and r['run_id'] == run_id for r in recs):
         raise HoldoutLocked(f'holdout run {run_id} already has a result (results are write-once)')
-    return _append({'type': 'result', 'run_id': run_id, 'at': _now(), 'results': results})
+    if not isinstance(results, dict) or any(k in results for k in ('combined', 'pooled', 'average_over_seasons')):
+        raise HoldoutLocked('結果必須是單季的 dict；兩季結果分開保存，不可合併平均')
+    season = next(r for r in recs if r['type'] == 'begin' and r['run_id'] == run_id)['seasons']
+    return _append({'type': 'result', 'run_id': run_id, 'at': _now(), 'seasons': season, 'results': results})
 
 
 def check_seasons(seasons, run_id=None):
@@ -119,6 +152,34 @@ def check_seasons(seasons, run_id=None):
         raise HoldoutLocked(f'run {run_id} was not registered for seasons {touched}')
     if any(r['type'] == 'result' and r['run_id'] == run_id for r in recs):
         raise HoldoutLocked(f'run {run_id} already finished; start a new logged run')
+
+
+def holdout_results():
+    """每季的正式結果，分開回傳 {season: [results]}；刻意不提供合併平均。"""
+    out = {}
+    for r in verify_holdout_log():
+        if r['type'] == 'result':
+            for s in r['seasons']:
+                out.setdefault(s, []).append(r['results'])
+    return out
+
+
+def holdout_independence():
+    """看過任何一季的正式結果之後，若再凍結任何模型，或另一季的正式測試用了不同的模型版本，
+    鎖定測試期就不再是獨立測試（永久，因為紀錄是 append-only）。"""
+    recs = verify_holdout_log()
+    seen, first_version, why = False, None, []
+    for r in recs:
+        if r['type'] == 'result':
+            seen = True
+        elif r['type'] == 'begin':
+            if first_version is None:
+                first_version = r['model_version']
+            elif seen and r['model_version'] != first_version:
+                why.append(f"看過結果後以不同模型版本 {r['model_version']} 登記 {r['seasons']}")
+        elif r['type'] == 'freeze' and seen:
+            why.append(f"看過結果後又凍結模型 {r['model_version']}")
+    return {'independent': not why, 'reasons': why}
 
 
 def holdout_views():

@@ -126,22 +126,47 @@ class T4_T29_Locks(unittest.TestCase):
         gs = DA.DataAccess('data_quality').games(2025, 'use_fatigue')
         self.assertEqual(sum(1 for g in gs if g['game_type'] == 'PLAY_IN'), 6)
 
-    def test_T29_registered_final_run_only_for_evaluation_and_never_2025_26(self):
-        with tempfile.TemporaryDirectory() as d:
-            old = config.HOLDOUT_LOG
-            config.HOLDOUT_LOG = os.path.join(d, 'ops', 'holdout_log.jsonl')
-            try:
-                rid = config.holdout_begin([2025, 2026], 'final', 'v2.0.0', 'data', require_clean=False)
-                DA.DataAccess('evaluation', run_id=rid).check_season(2025)          # 原定鎖定測試規則：放行
-                for p in ('tuning', 'model_selection', 'feature_selection', 'backtest'):
-                    with self.assertRaises(config.HoldoutLocked):
-                        DA.DataAccess(p, run_id=rid).check_season(2025)
-                with self.assertRaises(config.HoldoutLocked):                     # 2025-26 仍完全鎖定
-                    DA.DataAccess('evaluation', run_id=rid).check_season(2026)
-                with self.assertRaises(config.HoldoutLocked):                     # 未登記的 run_id
-                    DA.DataAccess('evaluation', run_id='made-up').check_season(2025)
-            finally:
-                config.HOLDOUT_LOG = old
+    def _with_log(self):
+        d = tempfile.TemporaryDirectory()
+        old = config.HOLDOUT_LOG
+        config.HOLDOUT_LOG = os.path.join(d.name, 'ops', 'holdout_log.jsonl')
+        self.addCleanup(lambda: (setattr(config, 'HOLDOUT_LOG', old), d.cleanup()))
+
+    def test_T29_before_freeze_no_final_evaluation_possible(self):
+        self._with_log()
+        for s in (2025, 2026):
+            with self.assertRaises(config.HoldoutLocked):
+                DA.DataAccess('final_evaluation').check_season(s)
+            with self.assertRaises(config.HoldoutLocked):
+                DA.DataAccess('final_evaluation', run_id='made-up').check_season(s)
+        with self.assertRaises(config.HoldoutLocked):                   # 未凍結就不能登記
+            config.holdout_begin([2025], config.FINAL_PURPOSE, 'v-unfrozen', 'd', require_clean=False)
+
+    def test_T29_after_freeze_each_season_separately_final_evaluation_only(self):
+        self._with_log()
+        config.freeze_model('v1', 'manifest', require_clean=False)
+        r25 = config.holdout_begin([2025], config.FINAL_PURPOSE, 'v1', 'd', require_clean=False)
+        DA.DataAccess('final_evaluation', run_id=r25).check_season(2025)          # 放行
+        with self.assertRaises(config.HoldoutLocked):                              # 2025 的 run 不能讀 2026
+            DA.DataAccess('final_evaluation', run_id=r25).check_season(2026)
+        for p in DA.PURPOSES:
+            if p in ('final_evaluation', 'data_quality'):
+                continue
+            with self.assertRaises(config.HoldoutLocked):                          # 其他用途帶 run_id 也不行
+                DA.DataAccess(p, run_id=r25).check_season(2025)
+        with self.assertRaises(config.HoldoutLocked):                              # 2026 仍需自己的登記
+            DA.DataAccess('data_quality').check_season(2026)
+        r26 = config.holdout_begin([2026], config.FINAL_PURPOSE, 'v1', 'd', require_clean=False)
+        DA.DataAccess('final_evaluation', run_id=r26).check_season(2026)
+        config.holdout_finish(r25, {'brier': 0.2})
+        with self.assertRaises(config.HoldoutLocked):                              # 出結果後不能再讀
+            DA.DataAccess('final_evaluation', run_id=r25).check_season(2025)
+        with self.assertRaises(config.HoldoutLocked):                              # 每季只能評估一次
+            config.holdout_begin([2025], config.FINAL_PURPOSE, 'v1', 'd', require_clean=False)
+
+    def test_T29_final_evaluation_not_for_development_seasons(self):
+        with self.assertRaises(config.HoldoutLocked):
+            DA.DataAccess('final_evaluation', run_id='x').check_season(2020)
 
     def test_unknown_purpose_rejected(self):
         with self.assertRaises(ValueError):
@@ -253,6 +278,16 @@ class Fallback2018_19(unittest.TestCase):
         g = [x for x in self.da.games(2020, 'use_team_stats') if self.team in (x['home'], x['away'])][0]
         p = self.da.f1_prior_source(self.team, g['start_utc'])
         self.assertEqual((p['source'], p['seasons']), ('team_previous_season', [2019]))
+
+    def test_partial_window_is_never_marked_complete(self):
+        w = self.da.f2_window(self.team, self.g[3]['start_utc'], 5, 'F2.last5_net_rating')
+        self.assertEqual((w['n_used'], w['status'], w['complete']), (3, 'partial', False))
+        w = self.da.f2_window(self.team, self.g[10]['start_utc'], 5, 'F2.last5_net_rating')
+        self.assertEqual((w['n_used'], w['status'], w['complete']), (5, 'ok', True))
+
+    def test_thresholds_are_preregistered_values(self):
+        """門檻是預先登記的資料可用性規則；改動須經核准（只能用開發期資料評估）。"""
+        self.assertEqual((DA.MIN_SAMPLE_F2, DA.MIN_LEAGUE_GAMES_F1), (3, 100))
 
     def test_records_games_and_period(self):
         w = self.da.f2_window(self.team, self.g[10]['start_utc'], 10, 'F2.last10_net_rating')

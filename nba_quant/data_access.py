@@ -3,11 +3,14 @@
 
 所有特徵、模型、回測程式**只能**透過這裡讀資料；不得直接讀 data/raw（有結構測試）。這一層強制：
 
-1. 用途（purpose）：每次存取都要宣告用途。
-   - 鎖定測試期 2024-25：只有 data_quality 可讀。feature_selection、tuning、model_selection、evaluation、backtest、
-     training、feature_computation 一律拒絕；唯一例外是依原定鎖定測試規則（模型凍結後、經 config.holdout_begin 登記的
-     run_id）以 evaluation 用途讀取。
-   - 2025-26：任何用途都拒絕（FULLY_LOCKED；解除須使用者核准）。
+1. 用途（purpose）：每次存取都要宣告用途。（2026-11-20 第七輪修訂）
+   模型凍結前：
+   - 2024-25：只有 data_quality 可讀；其他所有用途拒絕。
+   - 2025-26：任何用途都拒絕（包含 data_quality）。
+   模型凍結後（config.freeze_model → 每季分別 holdout_begin）：
+   - 兩季都只能以 final_evaluation 用途、帶著**該季**已登記且尚未出結果的 run_id 讀取；每季一次。
+   - training、feature_computation、feature_selection、tuning、model_selection、evaluation（開發期 walk-forward）、
+     backtest 永遠不能讀這兩季。
 2. 時間：as_of（預測場次的開賽時間）之前的**前一個美東日期（含）以前**已完賽的比賽才回傳；同日較早場次也不回傳。
 3. 範圍：依分類表的用途欄位（use_team_stats、use_fatigue、use_elo、counts_for_standings、train_sample）篩選。
 4. 欄位：要求某季不可用的基礎欄位（2017-18 tov）直接報錯；需要 tov 時排除 tov_usable = False 的 box（2020-21 附加賽）。
@@ -26,12 +29,14 @@ from . import asof, config, feature_deps, store
 from .model_data_stats import tov_definition
 
 PURPOSES = ('data_quality', 'feature_computation', 'training', 'feature_selection', 'tuning', 'model_selection',
-            'evaluation', 'backtest')
+            'evaluation', 'backtest', 'final_evaluation')
 DATA_QUALITY_ONLY = (2025,)          # 2024-25
 FULLY_LOCKED = (2026,)               # 2025-26
 SCOPES = ('use_team_stats', 'use_fatigue', 'use_elo', 'counts_for_standings', 'train_sample')
 GAME_FIELDS = ('game_id', 'season', 'start_utc', 'home', 'away', 'home_abbr', 'away_abbr', 'home_pts', 'away_pts',
                'game_type', 'box_source')
+# 預先登記的資料可用性門檻（使用者 2026-11-20 第七輪接受）。不是模型最佳化結果；
+# 未來若要調整，只能用開發期資料評估，不得查看鎖定測試期結果（有測試鎖住數值，改動會讓測試失敗、需經核准）。
 MIN_SAMPLE_F2 = 3                    # F2 近 N 場：可用場次少於此數 → missing（不補值）
 MIN_LEAGUE_GAMES_F1 = 100            # F1 先驗用「當季至今聯盟平均」所需的最少場次；不足時退回最近的可用球季
 
@@ -58,13 +63,18 @@ class DataAccess:
 
     # ------------------------------------------------------------ 鎖定
     def check_season(self, season):
+        if self.purpose == 'final_evaluation':
+            if season not in config.HOLDOUT_SEASONS:
+                raise config.HoldoutLocked('final_evaluation 只用於鎖定測試期的正式最終評估')
+            if not self.run_id:
+                raise config.HoldoutLocked('final_evaluation 必須帶著該季已登記的 run_id（模型凍結後 holdout_begin）')
+            config.check_seasons([season], self.run_id)       # 該季已登記、尚未出結果
+            return
         if season in FULLY_LOCKED:
-            raise config.HoldoutLocked(f'{season}（2025-26）完全鎖定：任何用途都不得讀取（用途 {self.purpose}）')
+            raise config.HoldoutLocked(f'{season}（2025-26）模型凍結前完全鎖定：任何用途都不得讀取（用途 {self.purpose}）')
         if season in DATA_QUALITY_ONLY and self.purpose != 'data_quality':
-            if self.purpose == 'evaluation' and self.run_id:
-                config.check_seasons([season], self.run_id)       # 原定鎖定測試規則：須為已登記、未出結果的 run
-                return
-            raise config.HoldoutLocked(f'{season}（2024-25）鎖定測試期：用途 {self.purpose} 不得讀取，只允許 data_quality')
+            raise config.HoldoutLocked(f'{season}（2024-25）鎖定測試期：用途 {self.purpose} 不得讀取，只允許 data_quality'
+                                       '（模型凍結後的正式評估須用 final_evaluation + run_id）')
 
     # ------------------------------------------------------------ 讀檔（只在這裡）
     def _path(self, *p):
@@ -194,7 +204,9 @@ class DataAccess:
             s -= 1
         n_used = len(picked)
         status = 'ok' if n_used == n else ('partial' if n_used >= MIN_SAMPLE_F2 else 'missing')
+        # complete = 真的湊滿 N 場；partial 的平均只能以「近 n_used 場」使用，不可當成完整近 N 場
         return {'feature': feature, 'team': team, 'as_of': as_of, 'n_requested': n, 'n_used': n_used, 'status': status,
+                'complete': n_used == n,
                 'seasons': seasons, 'games': [g['game_id'] for g in picked],
                 'period': [picked[-1]['start_utc'][:10], picked[0]['start_utc'][:10]] if picked else None,
                 'stopped': stopped}

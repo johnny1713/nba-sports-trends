@@ -278,8 +278,11 @@ game_result ──────────────────────�
 | 防護 | 規則 |
 |---|---|
 | 用途 | 每次存取宣告用途：data_quality、feature_computation、training、feature_selection、tuning、model_selection、evaluation、backtest |
-| 2024-25 | 只有 data_quality 可讀；其他用途一律 `HoldoutLocked`。唯一例外：模型凍結後，以 evaluation 用途帶著經 `config.holdout_begin` 登記、尚未出結果的 run_id（原定鎖定測試規則）|
-| 2025-26 | **任何用途都拒絕**，有 run_id 也一樣（解除須使用者核准）|
+| 模型凍結前 | 2024-25 只有 data_quality 可讀；2025-26 任何用途都拒絕（含 data_quality）|
+| 模型凍結後（第七輪）| `config.freeze_model()` 登記凍結 → 每季**分別** `holdout_begin([季], 'final_evaluation', …)`；每季一生只能登記一次；兩季都只能以 `final_evaluation` 用途、帶**該季**未出結果的 run_id 讀取 |
+| 永遠不能讀鎖定期的用途 | training、feature_computation、feature_selection、tuning、model_selection、evaluation（開發期 walk-forward）、backtest |
+| 結果 | 自動標上該季、分開保存（`holdout_results()` 依季回傳，不提供合併平均；結果含 combined／pooled 會被拒絕）|
+| 獨立性 | 看過任一季結果後再凍結任何模型，或另一季用不同模型版本登記 → `holdout_independence()` 永久回傳 independent = False，報告必須揭露 |
 | 時間 | 只回傳 as_of 的美東日期**之前**已完賽且資料完整的比賽；同日較早場次不回傳 |
 | 範圍 | 依分類表的用途欄位篩選；未知範圍報錯 |
 | 欄位 | 要求整季不可用的欄位（2017-18 tov）直接 `FieldUnavailable`；要求 tov 時排除 `tov_usable` = False 的 box 並記錄 |
@@ -289,9 +292,12 @@ game_result ──────────────────────�
 
 **跨球季 fallback（只選資料，不算數值）**
 
+- 門檻是**預先登記的資料可用性門檻**（使用者第七輪接受）：`MIN_SAMPLE_F2` = 3、`MIN_LEAGUE_GAMES_F1` = 100。不是模型最佳化結果；
+  未來若要調整，只能用開發期資料評估、不得查看鎖定測試期結果；數值由測試鎖住，改動須經核准。
 - **F2 近 N 場**（`f2_window`）：只用 `use_team_stats` 範圍內、預測日前已完賽的比賽，由近到遠取。當季不足時，**只有上一季同一特徵可用才往回數**；
   遇到不可用的球季（2017-18）就停止，**不跳過它去湊 N 場**。可用場次 ≥ N → ok；3（`MIN_SAMPLE_F2`）≤ 場次 < N → partial（用目前可用樣本）；
-  < 3 → missing（明確標記缺失，不補值）。每次回傳實際使用的場次清單、場數、球季、資料期間、停止原因。
+  < 3 → missing（明確標記缺失，不補值）。每次回傳實際使用的場次清單、場數、球季、資料期間、停止原因與 `complete`（只有真的湊滿 N 場才是 True）。
+  partial 的平均只能以「近 n_used 場」使用並帶完整性標記，**不可當成完整的近 5／近 10 場平均**。
 - **F1 收縮先驗**（`f1_prior_source`）：上一季同一特徵可用 → 該隊上季值。不可用（2018-19）→ **當時可取得的聯盟平均**：
   當季至今 ≥ 100 場（`MIN_LEAGUE_GAMES_F1`）用當季至今的聯盟平均，否則用最近一個可用的完整球季（2016-17）的聯盟平均；
   2017-18 一律排除並記錄。

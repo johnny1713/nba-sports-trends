@@ -100,7 +100,7 @@ docs/
 ### 2.7.3 資料存取層（第六輪，`nba_quant/data_access.py`）
 
 - 特徵、模型、回測、頁面程式只能透過 `DataAccess(purpose)` 讀資料；直接讀原始資料會被結構測試擋下。
-- 2024-25：只有 data_quality 可讀（模型凍結後，evaluation + 已登記 run_id 依原定規則放行）；2025-26：任何用途都拒絕。
+- 模型凍結前：2024-25 只有 data_quality 可讀；2025-26 任何用途都拒絕。模型凍結後：每季分別登記、每季一次、只限 final_evaluation，結果分開保存；看過結果後改模型 → 永久標記失去獨立性（`config.holdout_independence()`）。
 - 時間（前一美東日期）、範圍（分類表用途欄位）、欄位可用性（2017-18 tov、tov_usable）、盤口隔離、特徵依賴檢查都在這一層強制。
 - 跨球季 fallback：F2 不跳過不可用球季、不足標 missing；F1 先驗改用當時可取得的聯盟平均（見設計文件 3.5）。
 

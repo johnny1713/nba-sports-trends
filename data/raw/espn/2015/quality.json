@@ -1,0 +1,251 @@
+{
+ "checks": {
+  "by_kind": {},
+  "error_rate_pct": 0.0,
+  "examples": {},
+  "fails": 0,
+  "n": 97606
+ },
+ "completeness": {
+  "box_issue_examples": [],
+  "box_issues": 0,
+  "complete": 1133,
+  "complete_pct": 86.42,
+  "final": 1311,
+  "incomplete_examples": [
+   [
+    "400578293",
+    "boxscore error: KeyError: 'fieldGoalsMade-fieldGoalsAttempted'"
+   ],
+   [
+    "400578302",
+    "boxscore error: KeyError: 'fieldGoalsMade-fieldGoalsAttempted'"
+   ],
+   [
+    "400578314",
+    "boxscore error: KeyError: 'fieldGoalsMade-fieldGoalsAttempted'"
+   ],
+   [
+    "400578319",
+    "boxscore error: KeyError: 'fieldGoalsMade-fieldGoalsAttempted'"
+   ],
+   [
+    "400578327",
+    "boxscore error: KeyError: 'fieldGoalsMade-fieldGoalsAttempted'"
+   ],
+   [
+    "400578337",
+    "boxscore error: KeyError: 'fieldGoalsMade-fieldGoalsAttempted'"
+   ],
+   [
+    "400578345",
+    "boxscore error: KeyError: 'fieldGoalsMade-fieldGoalsAttempted'"
+   ],
+   [
+    "400578346",
+    "boxscore error: KeyError: 'fieldGoalsMade-fieldGoalsAttempted'"
+   ],
+   [
+    "400578354",
+    "boxscore error: KeyError: 'fieldGoalsMade-fieldGoalsAttempted'"
+   ],
+   [
+    "400578365",
+    "boxscore error: KeyError: 'fieldGoalsMade-fieldGoalsAttempted'"
+   ],
+   [
+    "400578378",
+    "boxscore error: KeyError: 'fieldGoalsMade-fieldGoalsAttempted'"
+   ],
+   [
+    "400578381",
+    "boxscore error: KeyError: 'fieldGoalsMade-fieldGoalsAttempted'"
+   ],
+   [
+    "400578390",
+    "boxscore error: KeyError: 'fieldGoalsMade-fieldGoalsAttempted'"
+   ],
+   [
+    "400578393",
+    "boxscore error: KeyError: 'fieldGoalsMade-fieldGoalsAttempted'"
+   ],
+   [
+    "400578406",
+    "boxscore error: KeyError: 'fieldGoalsMade-fieldGoalsAttempted'"
+   ],
+   [
+    "400578411",
+    "boxscore error: KeyError: 'fieldGoalsMade-fieldGoalsAttempted'"
+   ],
+   [
+    "400578420",
+    "boxscore error: KeyError: 'fieldGoalsMade-fieldGoalsAttempted'"
+   ],
+   [
+    "400578427",
+    "boxscore error: KeyError: 'fieldGoalsMade-fieldGoalsAttempted'"
+   ],
+   [
+    "400578445",
+    "boxscore error: KeyError: 'fieldGoalsMade-fieldGoalsAttempted'"
+   ],
+   [
+    "400578446",
+    "boxscore error: KeyError: 'fieldGoalsMade-fieldGoalsAttempted'"
+   ]
+  ]
+ },
+ "fetch": {
+  "http_errors": 0,
+  "notes_total": 0,
+  "parse_error_examples": [
+   {
+    "error": "boxscore error: KeyError: 'fieldGoalsMade-fieldGoalsAttempted'",
+    "game_id": "400578293",
+    "stage": "boxscore"
+   },
+   {
+    "error": "boxscore error: KeyError: 'fieldGoalsMade-fieldGoalsAttempted'",
+    "game_id": "400578302",
+    "stage": "boxscore"
+   },
+   {
+    "error": "boxscore error: KeyError: 'fieldGoalsMade-fieldGoalsAttempted'",
+    "game_id": "400578314",
+    "stage": "boxscore"
+   },
+   {
+    "error": "boxscore error: KeyError: 'fieldGoalsMade-fieldGoalsAttempted'",
+    "game_id": "400578319",
+    "stage": "boxscore"
+   },
+   {
+    "error": "boxscore error: KeyError: 'fieldGoalsMade-fieldGoalsAttempted'",
+    "game_id": "400578327",
+    "stage": "boxscore"
+   },
+   {
+    "error": "boxscore error: KeyError: 'fieldGoalsMade-fieldGoalsAttempted'",
+    "game_id": "400578337",
+    "stage": "boxscore"
+   },
+   {
+    "error": "boxscore error: KeyError: 'fieldGoalsMade-fieldGoalsAttempted'",
+    "game_id": "400578345",
+    "stage": "boxscore"
+   },
+   {
+    "error": "boxscore error: KeyError: 'fieldGoalsMade-fieldGoalsAttempted'",
+    "game_id": "400578346",
+    "stage": "boxscore"
+   },
+   {
+    "error": "boxscore error: KeyError: 'fieldGoalsMade-fieldGoalsAttempted'",
+    "game_id": "400578354",
+    "stage": "boxscore"
+   },
+   {
+    "error": "boxscore error: KeyError: 'fieldGoalsMade-fieldGoalsAttempted'",
+    "game_id": "400578365",
+    "stage": "boxscore"
+   }
+  ],
+  "parse_errors": 178,
+  "requests": 3079
+ },
+ "games": {
+  "duplicates": [],
+  "expected_regular": 1230,
+  "postseason": 81,
+  "regular": 1232,
+  "regular_final": 1230,
+  "skipped_at_listing": {
+   "non-NBA teams (all-star etc.)": 12,
+   "season type 1": 107
+  },
+  "status": {
+   "final": 1311,
+   "postponed": 2
+  },
+  "total": 1313
+ },
+ "label": "2014-15",
+ "live": false,
+ "odds": {
+  "books": [
+   [
+    "BETONLINE.ag",
+    2528
+   ],
+   [
+    "SportsBetting.ag",
+    2528
+   ],
+   [
+    "Fantasy911.com",
+    2500
+   ],
+   [
+    "5Dimes.eu",
+    2497
+   ],
+   [
+    "BOVADA.lv",
+    2480
+   ]
+  ],
+  "books_per_game_median": 5,
+  "coverage": {
+   "close/ml": {
+    "line_pct": 0.0,
+    "price_pct": 0.0
+   },
+   "close/spread": {
+    "line_pct": 0.0,
+    "price_pct": 0.0
+   },
+   "close/total": {
+    "line_pct": 0.0,
+    "price_pct": 0.0
+   },
+   "current_postgame/ml": {
+    "line_pct": 94.43,
+    "price_pct": 94.43
+   },
+   "current_postgame/spread": {
+    "line_pct": 96.8,
+    "price_pct": 96.8
+   },
+   "current_postgame/total": {
+    "line_pct": 96.64,
+    "price_pct": 96.64
+   },
+   "open/ml": {
+    "line_pct": 0.0,
+    "price_pct": 0.0
+   },
+   "open/spread": {
+    "line_pct": 96.95,
+    "price_pct": 0.0
+   },
+   "open/total": {
+    "line_pct": 96.64,
+    "price_pct": 0.0
+   }
+  },
+  "final_games_with_any_book_pct": 96.95,
+  "opening_feed_agreement": {
+   "agree_pct": 100.0,
+   "n": 1244
+  },
+  "timestamps_available": false
+ },
+ "season": 2015,
+ "teams": {
+  "max_games": 82,
+  "min_games": 82,
+  "n": 30
+ },
+ "verdict": "不通過：完賽比賽資料完整率 86.4% < 99%",
+ "verdict_ok": false
+}

@@ -1,0 +1,203 @@
+{
+ "date_tw": "2026-11-20",
+ "fetched_at": "2026-11-20T02:41:15Z",
+ "games": [
+  {
+   "away": "12",
+   "away_zh": "快艇",
+   "date_tw": "2026-11-20",
+   "game_no": "308",
+   "home": "24",
+   "home_zh": "馬刺",
+   "playsport_gameid": "2026112031001",
+   "quotes": [
+    {
+     "away": "12",
+     "date_tw": "2026-11-20",
+     "home": "24",
+     "line": 15.5,
+     "market": "spread",
+     "note": "game_no=308",
+     "observed_at": "2026-11-20T02:41:15Z",
+     "price_decimal": 1.72,
+     "side": "away",
+     "source": "playsport"
+    },
+    {
+     "away": "12",
+     "date_tw": "2026-11-20",
+     "home": "24",
+     "line": -15.5,
+     "market": "spread",
+     "note": "game_no=308",
+     "observed_at": "2026-11-20T02:41:15Z",
+     "price_decimal": 1.72,
+     "side": "home",
+     "source": "playsport"
+    },
+    {
+     "away": "12",
+     "date_tw": "2026-11-20",
+     "home": "24",
+     "line": null,
+     "market": "ml",
+     "note": "game_no=308",
+     "observed_at": "2026-11-20T02:41:15Z",
+     "price_decimal": 4.5,
+     "side": "away",
+     "source": "playsport"
+    },
+    {
+     "away": "12",
+     "date_tw": "2026-11-20",
+     "home": "24",
+     "line": null,
+     "market": "ml",
+     "note": "game_no=308",
+     "observed_at": "2026-11-20T02:41:15Z",
+     "price_decimal": 1.04,
+     "side": "home",
+     "source": "playsport"
+    },
+    {
+     "away": "12",
+     "date_tw": "2026-11-20",
+     "home": "24",
+     "line": 224.5,
+     "market": "total",
+     "note": "game_no=308",
+     "observed_at": "2026-11-20T02:41:15Z",
+     "price_decimal": 1.73,
+     "side": "over",
+     "source": "playsport"
+    },
+    {
+     "away": "12",
+     "date_tw": "2026-11-20",
+     "home": "24",
+     "line": 224.5,
+     "market": "total",
+     "note": "game_no=308",
+     "observed_at": "2026-11-20T02:41:15Z",
+     "price_decimal": 1.7,
+     "side": "under",
+     "source": "playsport"
+    }
+   ],
+   "raw_cells": {
+    "away": {
+     "bet01": "客 +15.5 , 1.72",
+     "bet02": "大 224.5 , 1.73",
+     "bet03": "客 4.5"
+    },
+    "home": {
+     "bet01": "主 -15.5 , 1.72",
+     "bet02": "小 224.5 , 1.7",
+     "bet03": "主 1.04"
+    }
+   },
+   "start_tw": "2026-11-20T09:00:00+08:00",
+   "verified": false
+  },
+  {
+   "away": "18",
+   "away_zh": "尼克",
+   "date_tw": "2026-11-20",
+   "game_no": "319",
+   "home": "16",
+   "home_zh": "灰狼",
+   "playsport_gameid": "2026112031003",
+   "quotes": [
+    {
+     "away": "18",
+     "date_tw": "2026-11-20",
+     "home": "16",
+     "line": -1.5,
+     "market": "spread",
+     "note": "game_no=319",
+     "observed_at": "2026-11-20T02:41:15Z",
+     "price_decimal": 1.75,
+     "side": "away",
+     "source": "playsport"
+    },
+    {
+     "away": "18",
+     "date_tw": "2026-11-20",
+     "home": "16",
+     "line": 1.5,
+     "market": "spread",
+     "note": "game_no=319",
+     "observed_at": "2026-11-20T02:41:15Z",
+     "price_decimal": 1.68,
+     "side": "home",
+     "source": "playsport"
+    },
+    {
+     "away": "18",
+     "date_tw": "2026-11-20",
+     "home": "16",
+     "line": null,
+     "market": "ml",
+     "note": "game_no=319",
+     "observed_at": "2026-11-20T02:41:15Z",
+     "price_decimal": 1.66,
+     "side": "away",
+     "source": "playsport"
+    },
+    {
+     "away": "18",
+     "date_tw": "2026-11-20",
+     "home": "16",
+     "line": null,
+     "market": "ml",
+     "note": "game_no=319",
+     "observed_at": "2026-11-20T02:41:15Z",
+     "price_decimal": 1.76,
+     "side": "home",
+     "source": "playsport"
+    },
+    {
+     "away": "18",
+     "date_tw": "2026-11-20",
+     "home": "16",
+     "line": 216.5,
+     "market": "total",
+     "note": "game_no=319",
+     "observed_at": "2026-11-20T02:41:15Z",
+     "price_decimal": 1.68,
+     "side": "over",
+     "source": "playsport"
+    },
+    {
+     "away": "18",
+     "date_tw": "2026-11-20",
+     "home": "16",
+     "line": 216.5,
+     "market": "total",
+     "note": "game_no=319",
+     "observed_at": "2026-11-20T02:41:15Z",
+     "price_decimal": 1.75,
+     "side": "under",
+     "source": "playsport"
+    }
+   ],
+   "raw_cells": {
+    "away": {
+     "bet01": "客 -1.5 , 1.75",
+     "bet02": "大 216.5 , 1.68",
+     "bet03": "客 1.66"
+    },
+    "home": {
+     "bet01": "主 +1.5 , 1.68",
+     "bet02": "小 216.5 , 1.75",
+     "bet03": "主 1.76"
+    }
+   },
+   "start_tw": "2026-11-20T09:00:00+08:00",
+   "verified": false
+  }
+ ],
+ "problems": [],
+ "raw_html": "data/taiwan/raw/2026-11-20/20261120T024115Z.html.gz",
+ "raw_sha256": "d033ca679d4337646e5555e48e5da14f85e1a4ee953c96743861bd22bbe165e0"
+}

@@ -1,0 +1,238 @@
+{
+ "box_issue_examples": [
+  [
+   "401160790",
+   "team 14 minutes 247.0 vs 240"
+  ]
+ ],
+ "box_issues": 1,
+ "by_phase": {
+  "postseason": {
+   "abnormal_price": 2,
+   "abnormal_spread": 12,
+   "abnormal_total": 4,
+   "bbref_filled": 0,
+   "book_coverage_pct": {
+    "Caesars": 97.59,
+    "Caesars Sportsbook": 100.0,
+    "Caesars Sportsbook (New Jersey)": 10.84,
+    "Caesars Sportsbook (Pennsylvania)": 97.59,
+    "DraftKings": 93.98,
+    "SugarHouse": 90.36,
+    "Unibet": 100.0,
+    "Westgate": 80.72
+   },
+   "books_per_game_median": 7,
+   "complete": 83,
+   "complete_pct": 100.0,
+   "coverage": {
+    "close/ml": {
+     "line_pct": 0.0,
+     "price_pct": 0.0
+    },
+    "close/spread": {
+     "line_pct": 0.0,
+     "price_pct": 0.0
+    },
+    "close/total": {
+     "line_pct": 0.0,
+     "price_pct": 0.0
+    },
+    "current_postgame/ml": {
+     "line_pct": 100.0,
+     "price_pct": 100.0
+    },
+    "current_postgame/spread": {
+     "line_pct": 100.0,
+     "price_pct": 100.0
+    },
+    "current_postgame/total": {
+     "line_pct": 100.0,
+     "price_pct": 100.0
+    },
+    "open/ml": {
+     "line_pct": 0.0,
+     "price_pct": 0.0
+    },
+    "open/spread": {
+     "line_pct": 0.0,
+     "price_pct": 0.0
+    },
+    "open/total": {
+     "line_pct": 0.0,
+     "price_pct": 0.0
+    }
+   },
+   "espn_box_missing": 0,
+   "final": 83,
+   "flags": {
+    "by_kind": {
+     "price_extreme": 2,
+     "spread_ml_direction_conflict": 12,
+     "total_out_of_range": 4
+    },
+    "error": 16,
+    "warning": 2
+   },
+   "games": 92,
+   "odds_missing_examples": [],
+   "odds_missing_games": 0,
+   "status": {
+    "final": 83,
+    "postponed": 9
+   },
+   "still_incomplete": 0
+  },
+  "regular": {
+   "abnormal_price": 104,
+   "abnormal_spread": 132,
+   "abnormal_total": 98,
+   "bbref_filled": 0,
+   "book_coverage_pct": {
+    "BetStars": 1.51,
+    "Betradar": 1.42,
+    "CG Technology": 66.29,
+    "Caesars": 100.0,
+    "Caesars Sportsbook": 98.49,
+    "Caesars Sportsbook (Pennsylvania)": 6.52,
+    "DraftKings": 99.81,
+    "SugarHouse": 98.96,
+    "Unibet": 99.81,
+    "Westgate": 98.58,
+    "Wynn": 1.89
+   },
+   "books_per_game_median": 7,
+   "complete": 1059,
+   "complete_pct": 100.0,
+   "coverage": {
+    "close/ml": {
+     "line_pct": 0.0,
+     "price_pct": 0.0
+    },
+    "close/spread": {
+     "line_pct": 0.0,
+     "price_pct": 0.0
+    },
+    "close/total": {
+     "line_pct": 0.0,
+     "price_pct": 0.0
+    },
+    "current_postgame/ml": {
+     "line_pct": 100.0,
+     "price_pct": 100.0
+    },
+    "current_postgame/spread": {
+     "line_pct": 100.0,
+     "price_pct": 100.0
+    },
+    "current_postgame/total": {
+     "line_pct": 100.0,
+     "price_pct": 100.0
+    },
+    "open/ml": {
+     "line_pct": 0.0,
+     "price_pct": 0.0
+    },
+    "open/spread": {
+     "line_pct": 0.0,
+     "price_pct": 0.0
+    },
+    "open/total": {
+     "line_pct": 0.0,
+     "price_pct": 0.0
+    }
+   },
+   "espn_box_missing": 0,
+   "final": 1059,
+   "flags": {
+    "by_kind": {
+     "overround_out_of_range": 16,
+     "price_extreme": 88,
+     "spread_ml_direction_conflict": 132,
+     "total_out_of_range": 98
+    },
+    "error": 246,
+    "warning": 88
+   },
+   "games": 1062,
+   "odds_missing_examples": [],
+   "odds_missing_games": 0,
+   "status": {
+    "final": 1059,
+    "postponed": 3
+   },
+   "still_incomplete": 0
+  }
+ },
+ "duplicates": [],
+ "expected_regular": 1059,
+ "fetch": {
+  "http_errors": 0,
+  "parse_error_examples": [],
+  "parse_errors": 0,
+  "requests": 2742
+ },
+ "incomplete_examples": [],
+ "label": "2019-20",
+ "live": false,
+ "odds_checks": {
+  "error": 262,
+  "error_rate_pct": 0.2657,
+  "examples": {
+   "overround_out_of_range": [
+    "401160624/BetStars/current_postgame/ml/away: 0.9798",
+    "401160624/BetStars/current_postgame/ml/home: 0.9798",
+    "401160625/BetStars/current_postgame/ml/away: 0.9811",
+    "401160625/BetStars/current_postgame/ml/home: 0.9811",
+    "401160628/BetStars/current_postgame/ml/away: 0.9790"
+   ],
+   "price_extreme": [
+    "401160627/DraftKings/current_postgame/total/under: under 1.469484",
+    "401160628/DraftKings/current_postgame/total/over: over 1.460829",
+    "401160629/DraftKings/current_postgame/total/over: over 1.440529",
+    "401160629/DraftKings/current_postgame/total/under: under 2.65",
+    "401160631/DraftKings/current_postgame/total/under: under 1.469484"
+   ],
+   "spread_ml_direction_conflict": [
+    "401160624/DraftKings/current_postgame/ml/away: see spread",
+    "401160624/DraftKings/current_postgame/ml/home: see spread",
+    "401160624/DraftKings/current_postgame/spread/away: home spread 3.5 but ML home 1.877193 away 1.900901",
+    "401160624/DraftKings/current_postgame/spread/home: home spread 3.5 but ML home 1.877193 away 1.900901",
+    "401160624/SugarHouse/current_postgame/ml/away: see spread"
+   ],
+   "total_out_of_range": [
+    "401160625/Caesars Sportsbook/current_postgame/total/over: 52.5",
+    "401160625/Caesars Sportsbook/current_postgame/total/under: 52.5",
+    "401160626/Caesars Sportsbook/current_postgame/total/over: 54.0",
+    "401160626/Caesars Sportsbook/current_postgame/total/under: 54.0",
+    "401160627/Caesars Sportsbook/current_postgame/total/over: 53.0"
+   ]
+  },
+  "n": 98602,
+  "warning": 90
+ },
+ "opening_feed_agreement": {
+  "agree_pct": null,
+  "n": 0
+ },
+ "season": 2020,
+ "skipped_at_listing": {
+  "non-NBA teams (all-star etc.)": 16,
+  "season type 1": 65,
+  "season type 5": 1
+ },
+ "source_label_examples": [],
+ "source_label_problems": 0,
+ "teams": {
+  "expected_range": [
+   63,
+   75
+  ],
+  "max_games": 75,
+  "min_games": 64,
+  "n": 30
+ },
+ "timestamps_available": false,
+ "verdict": "通過",
+ "verdict_ok": true
+}

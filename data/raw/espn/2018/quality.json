@@ -1,0 +1,160 @@
+{
+ "box_sources": {
+  "bbref": 172,
+  "espn": 1140
+ },
+ "checks": {
+  "by_kind": {
+   "ml_spread_direction_conflict": 8,
+   "price_out_of_range": 1,
+   "spread_out_of_range": 3,
+   "total_out_of_range": 7
+  },
+  "error_rate_pct": 0.032,
+  "examples": {
+   "ml_spread_direction_conflict": [
+    "400975386/Caesars Sportsbook/current_postgame",
+    "401032841/Caesar's/current_postgame",
+    "401032841/Westgate/current_postgame",
+    "400974882/Caesars Sportsbook/current_postgame",
+    "400974820/Wynn/current_postgame",
+    "400975266/Unibet/current_postgame",
+    "400975266/Wynn/current_postgame",
+    "400975534/Caesars Sportsbook/current_postgame"
+   ],
+   "price_out_of_range": [
+    "400975878/Westgate/current_postgame/ml 1.01"
+   ],
+   "spread_out_of_range": [
+    "400974840/Caesars Sportsbook/current_postgame/spread 30.5",
+    "400975579/Caesars Sportsbook/current_postgame/spread 27.5",
+    "400975638/Caesars Sportsbook/current_postgame/spread -25.5"
+   ],
+   "total_out_of_range": [
+    "400974772/CG Technology/current_postgame/total -1.0",
+    "400974772/Caesars Sportsbook/current_postgame/total -1.0",
+    "400974772/Westgate/current_postgame/total -1.0",
+    "400974772/Wynn/current_postgame/total -1.0",
+    "401031642/CG Technology/current_postgame/total -1.0",
+    "401031648/CG Technology/current_postgame/total -1.0",
+    "401031716/CG Technology/current_postgame/total -1.0"
+   ]
+  },
+  "fails": 32,
+  "n": 99249
+ },
+ "completeness": {
+  "box_issue_examples": [],
+  "box_issues": 0,
+  "complete": 1312,
+  "complete_pct": 100.0,
+  "final": 1312,
+  "incomplete_examples": []
+ },
+ "fetch": {
+  "http_errors": 0,
+  "notes_total": 172,
+  "parse_error_examples": [],
+  "parse_errors": 0,
+  "requests": 3081
+ },
+ "games": {
+  "duplicates": [],
+  "expected_regular": 1230,
+  "postseason": 82,
+  "regular": 1231,
+  "regular_final": 1230,
+  "skipped_at_listing": {
+   "non-NBA teams (all-star etc.)": 10,
+   "season type 1": 70
+  },
+  "status": {
+   "final": 1312,
+   "postponed": 1
+  },
+  "total": 1313
+ },
+ "label": "2017-18",
+ "live": false,
+ "odds": {
+  "books": [
+   [
+    "Caesars Sportsbook",
+    1312
+   ],
+   [
+    "Westgate",
+    1312
+   ],
+   [
+    "CG Technology",
+    1311
+   ],
+   [
+    "Unibet",
+    1311
+   ],
+   [
+    "Wynn",
+    1308
+   ],
+   [
+    "Caesar's",
+    1226
+   ]
+  ],
+  "books_per_game_median": 6.0,
+  "coverage": {
+   "close/ml": {
+    "line_pct": 0.0,
+    "price_pct": 0.0
+   },
+   "close/spread": {
+    "line_pct": 0.0,
+    "price_pct": 0.0
+   },
+   "close/total": {
+    "line_pct": 0.0,
+    "price_pct": 0.0
+   },
+   "current_postgame/ml": {
+    "line_pct": 100.0,
+    "price_pct": 100.0
+   },
+   "current_postgame/spread": {
+    "line_pct": 100.0,
+    "price_pct": 100.0
+   },
+   "current_postgame/total": {
+    "line_pct": 100.0,
+    "price_pct": 100.0
+   },
+   "open/ml": {
+    "line_pct": 0.0,
+    "price_pct": 0.0
+   },
+   "open/spread": {
+    "line_pct": 0.0,
+    "price_pct": 0.0
+   },
+   "open/total": {
+    "line_pct": 0.0,
+    "price_pct": 0.0
+   }
+  },
+  "final_games_with_any_book_pct": 100.0,
+  "opening_feed_agreement": {
+   "agree_pct": null,
+   "n": 0
+  },
+  "timestamps_available": false
+ },
+ "season": 2018,
+ "teams": {
+  "max_games": 82,
+  "min_games": 82,
+  "n": 30
+ },
+ "verdict": "通過",
+ "verdict_ok": true
+}

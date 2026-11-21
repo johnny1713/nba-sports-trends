@@ -95,19 +95,21 @@ def get_valid_f1_games(da, season, as_of=None, exclude_team=None):
       5. 回合數有效（每隊 > 0、共同回合數 > 0）
       6. 2017-18 等 F1 不可用球季：status = unavailable，不讀取任何資料
       7. leave-one-team-out：exclude_team 參與的比賽不計入（另列 loto_excluded，不算資料問題）
-    資料只取自 da.verified_snapshot（一次讀入、通過稽核完整性驗證與來源隔離的快照），不另外讀原始檔。
+    資料只取自已驗證快照（DataAccess 的 F1 專用私有讀取 _f1_*，只做身分檢查），不另外讀原始檔；
+    每一條回傳路徑在回傳前都呼叫 da.check_snapshot 完整比對內容指紋。
     唯一不需要稽核的情況：allowlist 球季（audit_coverage.NO_DATA_SEASONS，只有 2013-14）完全沒有資料
     （status = no_raw_data）；其他球季沒有資料一律拒絕（season_no_data）。
     回傳 History：rows（每隊每場一列）、game_ids、excluded、loto_excluded、warnings、status。"""
     check_purpose(da)
     if feature_deps.availability('F1.net_rating', season)[0] == 'unavailable':
         return History(rows=[], status='unavailable')
-    snap = da.verified_snapshot(season, as_of)         # 唯一資料來源：已驗證快照（稽核、重新稽核、唯一性、來源隔離）
+    snap = da._f1_snapshot(season, as_of)              # 唯一資料來源：已驗證快照（F1 專用私有讀取：身分檢查）
     if snap.status == 'no_raw_data':                   # 只有 allowlist 球季（2013-14）會是空快照，其他球季已被拒絕
+        da.check_snapshot(snap)                        # 回傳前完整比對
         return History(rows=[], status='no_raw_data')
-    flags = da.box_audit_flags(season, as_of, snapshot=snap)
-    schedule = da.games(season, SCOPE, as_of, snapshot=snap)
-    boxes = da.team_boxes(season, SCOPE, list(FIELDS), as_of, snapshot=snap)
+    flags = da._f1_flags(snap, season, as_of)
+    schedule = da._f1_games(snap, season, SCOPE, as_of)
+    boxes = da._f1_team_boxes(snap, season, SCOPE, list(FIELDS), as_of)
     excl_by = defaultdict(list)
     for gid, team, why in da.log[-1].get('excluded', []):
         excl_by[gid].append((team, why))
@@ -163,7 +165,7 @@ def get_valid_f1_games(da, season, as_of=None, exclude_team=None):
             lo, hi = med - WARN_MAD_K * mad, med + WARN_MAD_K * mad
             h.warnings += [{'game_id': gid, 'source': 'f1_pace_band', 'pace_per48': v, 'band': [lo, hi], 'action': 'flag_only'}
                            for gid, v in sorted(paces.items()) if v < lo or v > hi]
-    da.check_snapshot(snap)                            # 使用完再核對一次：內容 = 驗證當下保存在快照外部的預期指紋
+    da.check_snapshot(snap)                            # 回傳前完整比對：內容 = 驗證當下保存在快照外部的預期指紋
     return h
 
 
@@ -272,8 +274,8 @@ def compute(season, purpose='feature_computation', root='.', da=None):
     """批次計算某季賽程上每一場（use_team_stats 範圍）兩隊的賽前 F1。回傳 F1Result（列、排除紀錄、警告）。"""
     da = check_purpose(da or DataAccess(purpose, root=root))
     status, reason = feature_deps.availability('F1.net_rating', season)
-    snap = da.verified_snapshot(season)                # 預測目標賽程也只取自已驗證快照
-    schedule = da.games(season, SCOPE, snapshot=snap)
+    snap = da._f1_snapshot(season)                     # 預測目標賽程也只取自已驗證快照
+    schedule = da._f1_games(snap, season, SCOPE)
     base = {'team_shrinkage_M': SHRINK_GAMES, 'prior_team_weight_W': PRIOR_TEAM_WEIGHT,
             'league_prior_K': None}                       # 方案 A 不使用 K（不適用，不虛構數值）
     if status == 'unavailable':
@@ -283,6 +285,7 @@ def compute(season, purpose='feature_computation', root='.', da=None):
                         'prior_weight_basis': None, 'league_games_asof': None, 'league_games_asof_excl_team': None,
                         'excluded_history_games': None, **base})
                 for g in schedule for t, o in ((g['home'], g['away']), (g['away'], g['home']))]
+        da.check_snapshot(snap)                         # 2017-18：已持有該季快照（只用賽程），回傳前完整比對
         return F1Result(rows, [], [])
     hist = get_valid_f1_games(da, season)
     by_date = defaultdict(list)
@@ -336,6 +339,7 @@ def compute(season, purpose='feature_computation', root='.', da=None):
         for e in excl_dates.get(d, []):
             for t in e['teams']:
                 excl_count[t] += 1
+    da.check_snapshot(snap)                            # 回傳前完整比對（預測目標賽程所在的快照）
     return F1Result(out, hist.excluded, hist.warnings)
 
 
@@ -379,16 +383,25 @@ def prior_context(da, season):
     return prev, prev_teams, prev_league, fallback_season, fallback_league
 
 
-def season_of(da, as_of, feature='F1.net_rating'):
-    """as_of 所屬球季。依據的分類列必須與該季已驗證快照中的分類列相同（分類表竄改 → 拒絕）；
-    F1 不可用的球季（2017-18）不讀任何資料，直接回傳球季。"""
+def _season_of(da, as_of, feature='F1.net_rating'):
+    """（內部）as_of 所屬球季與所用的快照。依據的分類列必須與該季已驗證快照中的分類列相同（分類表竄改 → 拒絕）；
+    只做身分檢查——呼叫端之後一定會對同一份快照呼叫 get_valid_f1_games（結尾完整比對）。
+    F1 不可用的球季（2017-18）不讀任何資料，回傳 (球季, None)。"""
     row = da._season_row_of(as_of)
     season = int(row['season'])
     if feature_deps.availability(feature, season)[0] == 'unavailable':
-        return season
-    snap = da.verified_snapshot(season, as_of)
+        return season, None
+    snap = da._f1_snapshot(season, as_of)
     if dict(snap.classifications.get(row['game_id']) or {}) != dict(row):
         raise integrity.AuditIntegrityError('classification_mismatch', f"{row['game_id']}: 判定球季所用的分類列與已驗證快照不同")
+    return season, snap
+
+
+def season_of(da, as_of, feature='F1.net_rating'):
+    """as_of 所屬球季（公開）：回傳前完整比對所用的快照。"""
+    season, snap = _season_of(da, as_of, feature)
+    if snap is not None:
+        da.check_snapshot(snap)
     return season
 
 
@@ -397,7 +410,7 @@ def prior_source(da, team, as_of, feature='F1.net_rating'):
     有效比賽一律取自 get_valid_f1_games(as_of, exclude_team=team)，決策一律走 compute 用的同一個 _prior，
     不另外計數。"""
     check_purpose(da)
-    season = season_of(da, as_of, feature)
+    season, _ = _season_of(da, as_of, feature)        # 身分檢查；同一份快照在下面的 get_valid_f1_games 結尾完整比對
     if feature_deps.availability(feature, season)[0] == 'unavailable':
         return {'feature': feature, 'status': 'unavailable'}
     prev, prev_teams, prev_league, fb_season, fb_league = prior_context(da, season)
@@ -405,6 +418,8 @@ def prior_source(da, team, as_of, feature='F1.net_rating'):
     loto = Acc()
     for r in cur.rows:
         loto.add(r)
+    # 完整比對：當季快照在上面 get_valid_f1_games 結尾、上季／後備季在 prior_context 的 get_valid_f1_games 結尾，
+    # 都發生在各自最後一次讀取之後；之後只用已複製出來的數值
     _, src, seasons, basis, weight = _prior(team, prev, prev_teams, prev_league, loto, fb_season, fb_league)
     out = {'feature': feature, 'team': team, 'as_of': as_of, 'source': src, 'seasons': seasons,
            'prior_weight': weight, 'prior_weight_basis': basis,
@@ -427,12 +442,12 @@ def prior_source(da, team, as_of, feature='F1.net_rating'):
 def f1_reference(da, team, as_of):
     """逐場參考實作（測試用）：直接以 DataAccess(as_of) 讀資料重算單一隊伍的累計與先驗來源。"""
     check_purpose(da)
-    season = season_of(da, as_of)
-    snap = da.verified_snapshot(season, as_of)
-    sched = da.games(season, SCOPE, as_of, snapshot=snap)
+    season, _ = _season_of(da, as_of)
+    snap = da._f1_snapshot(season, as_of)
+    sched = da._f1_games(snap, season, SCOPE, as_of)
     rows = []
-    boxes = {(b['game_id'], b['team']): b for b in da.team_boxes(season, SCOPE, list(FIELDS), as_of, snapshot=snap)}
-    flags = da.box_audit_flags(season, as_of, snapshot=snap)
+    boxes = {(b['game_id'], b['team']): b for b in da._f1_team_boxes(snap, season, SCOPE, list(FIELDS), as_of)}
+    flags = da._f1_flags(snap, season, as_of)
     for g in sched:
         a, b = boxes.get((g['game_id'], g['home'])), boxes.get((g['game_id'], g['away']))
         if not a or not b:
@@ -444,5 +459,5 @@ def f1_reference(da, team, as_of):
     acc = Acc()
     for r in rows:
         acc.add(r)
-    src = da.f1_prior_source(team, as_of, 'F1.net_rating')
+    src = da.f1_prior_source(team, as_of, 'F1.net_rating')   # 其中 get_valid_f1_games 結尾對同一份快照完整比對（在上面讀取之後）
     return acc, src

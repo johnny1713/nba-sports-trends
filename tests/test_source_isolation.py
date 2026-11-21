@@ -218,13 +218,15 @@ class SnapshotIsTheOnlySource(Base):
 
 class F1SourceStructure(unittest.TestCase):
     def test_every_f1_data_read_uses_the_verified_snapshot(self):
-        """F1 程式裡每一個讀賽程／box／稽核旗標的呼叫都帶 snapshot=snap，沒有其他讀檔路徑。"""
+        """F1 只透過 DataAccess 的 F1 專用私有讀取（_f1_*）取資料，每個讀取都帶同一份快照；不呼叫公開讀取入口，
+        也沒有其他讀檔路徑。"""
         import re
         src = open(f1.__file__, encoding='utf-8').read()
-        lines = [l for l in src.splitlines() if re.search(r'\bda\.(games|team_boxes|box_audit_flags)\(', l)]
-        self.assertGreaterEqual(len(lines), 6)
+        self.assertFalse(re.findall(r'\bda\.(games|team_boxes|box_audit_flags|verified_snapshot)\(', src))
+        lines = [l for l in src.splitlines() if re.search(r'\bda\._f1_(games|team_boxes|flags)\(', l)]
+        self.assertGreaterEqual(len(lines), 7)
         for l in lines:
-            self.assertIn('snapshot=snap', l, l)
+            self.assertRegex(l, r'_f1_\w+\(snap,', l)
         for banned in ('_raw_games', '_raw_boxes', '_merged', 'read_jsonl_gz', 'open('):
             self.assertNotIn(banned, src)
 

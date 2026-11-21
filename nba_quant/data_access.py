@@ -174,47 +174,87 @@ class DataAccess:
     def _raw_boxes(self, season):
         return self._merged(season)[1]
 
-    def verified_snapshot(self, season, as_of=None):
-        """已驗證的資料快照（audit_coverage.load_snapshot）：一次讀入 games 與 team boxes，完成稽核完整性驗證、
-        重新稽核、唯一性與來源隔離；同一個 DataAccess 實例內重複使用同一份，使用前都重算內容指紋。
-        先做球季鎖定檢查，鎖定期在讀任何資料前就拒絕。"""
+    # ------------------------------------------------------------ 已驗證資料快照
+    # 權限由 API 區分（2026-11-21，方案 B）：
+    #   公開：verified_snapshot、check_snapshot、games(snapshot=…)、team_boxes(snapshot=…)、box_audit_flags
+    #         → 回傳前一律重算內容指紋、與預期指紋完整比對。
+    #   F1 專用私有：_f1_snapshot、_f1_games、_f1_team_boxes、_f1_flags → 只做身分檢查（同一個快照物件、欄位物件未被替換）；
+    #         呼叫端（features/f1.py）必須在回傳任何結果前呼叫 check_snapshot。沒有任何參數可以讓公開入口略過完整比對。
+    def _load_snapshot(self, season, as_of=None):
+        """球季鎖定檢查 → 取得（必要時建立）本實例的已驗證快照。預期指紋在建立當下保存在快照外部，之後不可更新。"""
         self.check_season(season, as_of)
         if season not in self.__verified:
             from .audit_coverage import load_snapshot
             snap, digest = load_snapshot(season, self.root, self._classification_rows())
             self.__verified[season] = (snap, digest, snap.attribute_ids())
-        snap = self.check_snapshot(self.__verified[season][0], full=False)
-        self.log.append({'call': 'verified_snapshot', 'purpose': self.purpose, 'season': season, 'as_of': as_of,
-                         'status': snap.status, 'coverage_verified': snap.status == 'verified'})
-        return snap
+        return self.__verified[season][0]
 
-    def check_snapshot(self, snapshot, full=True):
-        """快照必須是本實例驗證產生的那一個物件（身分比對），欄位物件沒有被整個替換；full=True 時再重算內容指紋，
-        與驗證當下保存在快照外部的預期指紋比對。預期指紋只在 verified_snapshot 建立快照時寫入一次，沒有任何方法可以更新它。
-        快照本身深層不可變，所以中間步驟用輕量檢查（full=False）；F1 在計算結束時做完整比對。"""
+    def _check_identity(self, snapshot, season=None):
+        """身分檢查：必須是本實例驗證產生的那一個快照物件、欄位物件未被替換、球季相符。不重算內容指紋。"""
+        if season is not None and getattr(snapshot, 'season', None) != season:
+            raise integrity.AuditIntegrityError('snapshot_mismatch', f'快照球季 {getattr(snapshot, "season", None)} ≠ {season}')
         rec = self.__verified.get(getattr(snapshot, 'season', None))
         if rec is None or rec[0] is not snapshot:
             raise integrity.AuditIntegrityError('snapshot_mismatch', '快照不是由這個 DataAccess 的驗證流程產生')
         if snapshot.attribute_ids() != rec[2]:
             raise integrity.AuditIntegrityError('snapshot_mismatch', f'{snapshot.season}: 快照欄位在驗證後被替換')
-        if full and snapshot.content_digest() != rec[1]:
+        return snapshot
+
+    def check_snapshot(self, snapshot):
+        """完整檢查：身分檢查 + 重算內容指紋，與驗證當下保存在快照外部的預期指紋比對。"""
+        self._check_identity(snapshot)
+        if snapshot.content_digest() != self.__verified[snapshot.season][1]:
             raise integrity.AuditIntegrityError('snapshot_mismatch', f'{snapshot.season}: 資料快照與驗證時的內容不一致')
         return snapshot
 
-    def _snapshot_for(self, snapshot, season):
-        if snapshot.season != season:
-            raise integrity.AuditIntegrityError('snapshot_mismatch', f'快照球季 {snapshot.season} ≠ {season}')
-        return self.check_snapshot(snapshot, full=False)
+    def _log_snapshot(self, snap, season, as_of, access):
+        self.log.append({'call': 'verified_snapshot', 'purpose': self.purpose, 'season': season, 'as_of': as_of,
+                         'status': snap.status, 'coverage_verified': snap.status == 'verified', 'access': access})
+
+    def verified_snapshot(self, season, as_of=None):
+        """已驗證的資料快照（audit_coverage.load_snapshot）：一次讀入 games 與 team boxes，完成稽核完整性驗證、
+        重新稽核、唯一性、來源隔離與分類表一致性；同一個 DataAccess 實例內重複使用同一份。
+        先做球季鎖定檢查，鎖定期在讀任何資料前就拒絕；回傳前完整比對內容指紋。"""
+        snap = self._load_snapshot(season, as_of)
+        self.check_snapshot(snap)
+        self._log_snapshot(snap, season, as_of, 'public')
+        return snap
+
+    # ---- F1 專用私有讀取（只做身分檢查；features/f1.py 在回傳結果前呼叫 check_snapshot）
+    def _f1_snapshot(self, season, as_of=None):
+        snap = self._check_identity(self._load_snapshot(season, as_of), season)
+        self._log_snapshot(snap, season, as_of, 'f1_internal')
+        return snap
+
+    def _f1_games(self, snapshot, season, scope, as_of=None):
+        self._check_identity(snapshot, season)
+        return self._games_impl(season, scope, as_of, snapshot)
+
+    def _f1_team_boxes(self, snapshot, season, scope, fields, as_of=None):
+        self._check_identity(snapshot, season)
+        return self._team_boxes_impl(season, scope, fields, as_of, snapshot)
+
+    def _f1_flags(self, snapshot, season, as_of=None):
+        self.check_season(season, as_of)
+        self._check_identity(snapshot, season)
+        return self._flags_impl(season, as_of, snapshot)
 
     # ------------------------------------------------------------ 公開介面
     def games(self, season, scope, as_of=None, snapshot=None):
         """完賽、資料完整、在 scope 內、且（若給 as_of）在 as_of 的美東日期之前的比賽。
-        snapshot：已驗證的資料快照（verified_snapshot）；給定時只用快照內的紀錄，不讀原始檔。"""
+        snapshot：已驗證的資料快照（verified_snapshot）；給定時只用快照內的紀錄，不讀原始檔，回傳前完整比對內容指紋。"""
+        if snapshot is not None:
+            self._check_identity(snapshot, season)
+        out = self._games_impl(season, scope, as_of, snapshot)
+        if snapshot is not None:
+            self.check_snapshot(snapshot)
+        return out
+
+    def _games_impl(self, season, scope, as_of, snapshot):
         self.check_season(season, as_of)
         if scope not in SCOPES:
             raise ValueError(f'未知的資料範圍：{scope}（允許：{SCOPES}）')
         if snapshot is not None:                     # 快照路徑：賽程、box、分類都只取自快照（分類已與重新分類逐筆比對）
-            self._snapshot_for(snapshot, season)
             raw_games, boxes, cls = snapshot.games, snapshot.boxes, snapshot.classifications
         else:
             cls = self._classification()
@@ -246,14 +286,22 @@ class DataAccess:
 
     def team_boxes(self, season, scope, fields, as_of=None, snapshot=None):
         """回傳 [{game_id, team, <fields>}]。要求不可用的欄位直接報錯；需要 tov 時排除 tov_usable = False 的 box。
-        snapshot：已驗證的資料快照；給定時賽程與 box 都只取自快照，不讀原始檔。"""
+        snapshot：已驗證的資料快照；給定時賽程與 box 都只取自快照，不讀原始檔，回傳前完整比對內容指紋。"""
+        if snapshot is not None:
+            self._check_identity(snapshot, season)
+        out = self._team_boxes_impl(season, scope, fields, as_of, snapshot)
+        if snapshot is not None:
+            self.check_snapshot(snapshot)
+        return out
+
+    def _team_boxes_impl(self, season, scope, fields, as_of, snapshot):
         bad = set(fields) & feature_deps.unavailable_bases(season)
         if bad:
             raise FieldUnavailable(f'{season}: 欄位 {sorted(bad)} 整季不可用（不補值、不以 BBRef 覆蓋）')
         unknown = set(fields) - set(feature_deps.BOX_FIELDS) - set(feature_deps.GAME_BOX_FIELDS)
         if unknown:
             raise ValueError(f'未知的 box 欄位：{sorted(unknown)}')
-        games = self.games(season, scope, as_of, snapshot=snapshot)
+        games = self._games_impl(season, scope, as_of, snapshot)
         boxes = snapshot.boxes if snapshot is not None else self._raw_boxes(season)
         out, excluded = [], []
         for g in games:
@@ -283,15 +331,17 @@ class DataAccess:
         return {g: self._neutral.get(g, 'home') for g in game_ids}
 
     def box_audit_flags(self, season, as_of=None, snapshot=None):
-        """box score 稽核 v1 的旗標，依 (game_id, team) 分組（team 為 None 是同場層級）。
-        Fail closed（2026-11-21）：flag 取自已驗證的資料快照（verified_snapshot → audit_coverage.load_snapshot），
+        """box score 稽核 v1 的旗標，依 (game_id, team) 分組（team 為 None 是同場層級），回傳獨立的可變複本。
+        Fail closed（2026-11-21）：flag 取自已驗證的資料快照，回傳前完整比對內容指紋；
         flag 檔或涵蓋清單缺失、版本或稽核程式指紋不符、原始資料指紋不符、未稽核或多餘的比賽、重複 ID、重新稽核結果與
-        flag 檔不同、來源隔離違規等任何一項不符，都拋出 AuditIntegrityError，呼叫端（F1）不得繼續計算。"""
-        if snapshot is None:
-            snapshot = self.verified_snapshot(season, as_of)
-        else:
-            self.check_season(season, as_of)
-            self._snapshot_for(snapshot, season)
+        flag 檔不同、來源隔離違規、分類表不一致等任何一項不符，都拋出 AuditIntegrityError。"""
+        self.check_season(season, as_of)
+        snapshot = self._check_identity(snapshot, season) if snapshot is not None else self._load_snapshot(season, as_of)
+        out = self._flags_impl(season, as_of, snapshot)
+        self.check_snapshot(snapshot)
+        return out
+
+    def _flags_impl(self, season, as_of, snapshot):
         out = {}
         for f in snapshot.flags:                     # 回傳獨立的可變複本，修改它不影響快照
             out.setdefault((f['game_id'], f.get('team')), []).append(integrity.thaw(f))

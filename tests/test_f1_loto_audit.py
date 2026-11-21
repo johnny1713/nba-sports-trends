@@ -7,7 +7,7 @@ import unittest
 from nba_quant import asof, store
 from nba_quant.features import f1
 
-from test_f1 import make_root
+from test_f1 import make_root, seal
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 HAS_DATA = os.path.exists(os.path.join(ROOT, 'data', 'reference', 'game_classification.csv'))
@@ -31,6 +31,7 @@ def run(games, flags=None, season=2020):
         make_root(d, games)
         if flags is not None:
             store.write_jsonl_gz(os.path.join(d, 'data', 'audit', 'box_quality', 'v1', f'{season}_flags.jsonl.gz'), flags)
+            seal(d)                                         # 注入的 flag 改變 flag 檔指紋：重新封存
         return f1.compute(season, root=d)
 
 

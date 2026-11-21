@@ -117,6 +117,9 @@ docs/
   不產生 derived 修正版、不以 BBRef 整季覆蓋 ESPN（核准前）。
 - 來源比對結果須標示範圍：2017-18 為全季逐場，其他季為抽樣（每季 30 場），抽樣結果不可宣稱全季驗證。
 - box score 合理性稽核 `box_quality/v1` 與盤口品質報告分開保存，不影響盤口 PASS 狀態。
+- 稽核 fail closed（2026-11-21）：每季獨立的稽核涵蓋清單 `box_quality/v1/coverage/<季>.json`（`nba_quant/audit_coverage.py`），
+  記錄原始檔指紋與逐場已稽核清單；`DataAccess.box_audit_flags` 讀取前驗證，缺檔、指紋不符、ID 不一致或版本不符一律拒絕。
+  重新回補原始資料後必須重跑 `python -m nba_quant.box_audit` 與 `python -m nba_quant.audit_coverage`。
 
 ### 2.2 TeamBox（每場每隊一筆，**只能用於該場之後的預測**）
 投籃、三分、罰球命中/出手、進攻/防守籃板、失誤、得分、延長賽次數，

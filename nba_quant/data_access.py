@@ -232,16 +232,18 @@ class DataAccess:
         return {g: self._neutral.get(g, 'home') for g in game_ids}
 
     def box_audit_flags(self, season, as_of=None):
-        """box score 稽核 v1 的旗標（data/audit/box_quality/v1/<季>_flags.jsonl.gz），依 (game_id, team) 分組。
-        team 為 None 的是同場（game 層級）旗標。鎖定規則與 games() 相同。檔案不存在 → 回傳空 dict 並記錄。"""
+        """box score 稽核 v1 的旗標，依 (game_id, team) 分組（team 為 None 是同場層級）。
+        Fail closed（2026-11-21）：先經 audit_coverage.verify()——flag 檔或涵蓋清單缺失、版本不符、原始資料指紋不符、
+        未稽核或多餘的比賽、重複 ID 等任何一項不符，都拋出 AuditIntegrityError，呼叫端（F1）不得繼續計算。"""
         self.check_season(season, as_of)
-        p = self._path('data', 'audit', 'box_quality', 'v1', f'{season}_flags.jsonl.gz')
+        from .audit_coverage import paths, verify
+        m = verify(season, self.root)
         out = {}
-        if os.path.exists(p):
-            for f in store.read_jsonl_gz(p):
-                out.setdefault((f['game_id'], f.get('team')), []).append(f)
+        for f in store.read_jsonl_gz(paths(season, self.root)['flags']):
+            out.setdefault((f['game_id'], f.get('team')), []).append(f)
         self.log.append({'call': 'box_audit_flags', 'purpose': self.purpose, 'season': season, 'as_of': as_of,
-                         'returned': sum(len(v) for v in out.values()), 'file_exists': os.path.exists(p)})
+                         'returned': sum(len(v) for v in out.values()), 'coverage_verified': True,
+                         'audited_game_count': m['audited_game_count']})
         return out
 
     def require_features(self, features, season, as_of=None):
@@ -289,35 +291,11 @@ class DataAccess:
                 'stopped': stopped}
 
     def f1_prior_source(self, team, as_of, feature='F1.net_rating'):
-        """F1 收縮先驗的來源：上季同一特徵可用 → 該隊上季值；不可用 → 當時可取得的聯盟平均
-        （當季至今 ≥ MIN_LEAGUE_GAMES_F1 場則用當季至今；否則用最近一個可用的完整球季），不得使用不可用的球季。"""
-        season = self._season_of(as_of)
-        if feature_deps.availability(feature, season)[0] == 'unavailable':
-            return {'feature': feature, 'status': 'unavailable'}
-        prev = season - 1
-        prev_ok = not (feature_deps.closure(feature) & feature_deps.unavailable_bases(prev))
-        if prev_ok:
-            gs = [g for g in self.games(prev, 'use_team_stats') if team in (g['home'], g['away'])]
-            if gs:
-                return {'feature': feature, 'team': team, 'as_of': as_of, 'source': 'team_previous_season', 'seasons': [prev],
-                        'n_games': len(gs), 'period': [gs[0]['start_utc'][:10], gs[-1]['start_utc'][:10]]}
-        # leave-one-team-out（2026-11-21）：門檻以排除目標球隊參與比賽後的場數判斷；
-        # F1 另外再排除 box 無效／稽核 error 的比賽（開發期 2014-15、2018-19 沒有這類比賽，兩者一致，有測試）
-        cur = [g for g in self.games(season, 'use_team_stats', as_of) if team not in (g['home'], g['away'])]
-        if len(cur) >= MIN_LEAGUE_GAMES_F1:
-            return {'feature': feature, 'team': team, 'as_of': as_of, 'source': 'league_average_current_season_to_date',
-                    'seasons': [season], 'n_games': len(cur), 'period': [cur[0]['start_utc'][:10], cur[-1]['start_utc'][:10]],
-                    'excluded_seasons': [] if prev_ok else [prev]}
-        if prev_ok:                                   # 上季可用但沒有資料（2014-15 的上一季）：不補值
-            return {'feature': feature, 'team': team, 'as_of': as_of, 'source': 'missing', 'seasons': [],
-                    'n_games': 0, 'period': None, 'current_season_games_to_date': len(cur)}
-        s = prev - 1
-        while s in feature_deps.SEASON_UNAVAILABLE and feature_deps.closure(feature) & feature_deps.unavailable_bases(s):
-            s -= 1
-        gs = self.games(s, 'use_team_stats')
-        return {'feature': feature, 'team': team, 'as_of': as_of, 'source': 'league_average_latest_available_season',
-                'seasons': [s], 'n_games': len(gs), 'period': [gs[0]['start_utc'][:10], gs[-1]['start_utc'][:10]] if gs else None,
-                'excluded_seasons': [prev], 'current_season_games_to_date': len(cur)}
+        """F1 收縮先驗的來源。不在資料存取層自行計數（2026-11-21 修正）：委派給 F1 的 prior_source，
+        有效比賽由唯一入口 features.f1.get_valid_f1_games 決定（as-of、完賽、兩隊 box、稽核 ERROR、回合數、
+        2017-18 隔離、leave-one-team-out），先驗決策與 F1 批次計算共用同一個 _prior。"""
+        from .features import f1
+        return f1.prior_source(self, team, as_of, feature)
 
     def _season_of(self, as_of):
         """以分類表找 as_of 所屬球季（as_of 為某場比賽的開賽時間）。"""

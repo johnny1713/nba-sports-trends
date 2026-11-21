@@ -113,10 +113,16 @@ def game_checks(game, boxes):
     return out
 
 
-def audit_season(season):
-    d = os.path.join(RAW, str(season))
+def audit_scope(season, root='.'):
+    """稽核範圍（唯一定義）：完賽比賽與其球隊 box。稽核涵蓋清單（audit_coverage.py）也用這個函式。"""
+    d = os.path.join(root, RAW, str(season))
     games = {g['game_id']: g for g in store.read_jsonl_gz(os.path.join(d, 'games.jsonl.gz')) if g['status'] == 'final'}
     boxes = [b for b in store.read_jsonl_gz(os.path.join(d, 'teambox.jsonl.gz')) if b['game_id'] in games]
+    return games, boxes
+
+
+def audit_season(season, root='.'):
+    games, boxes = audit_scope(season, root)
     flags = []
     by_game = defaultdict(dict)
     for b in boxes:

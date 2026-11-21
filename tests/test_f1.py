@@ -5,7 +5,7 @@ import random
 import tempfile
 import unittest
 
-from nba_quant import config, data_access as DA, feature_deps, game_class, store
+from nba_quant import audit_coverage, config, data_access as DA, feature_deps, game_class, store
 from nba_quant.features import f1
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -38,6 +38,20 @@ def make_root(d, games):
     for s in gs:
         store.write_jsonl_gz(os.path.join(d, 'data', 'raw', 'espn', str(s), 'games.jsonl.gz'), gs[s])
         store.write_jsonl_gz(os.path.join(d, 'data', 'raw', 'espn', str(s), 'teambox.jsonl.gz'), bx[s])
+    seal(d)
+
+
+def seal(d, flags=None):
+    """合成資料的稽核封存（fail closed 之後必要）：沒有 flag 檔的球季寫入空 flag 檔（或 flags={季: [...]}），
+    再依目前的原始檔產生稽核涵蓋清單。修改原始檔或 flag 之後必須重新呼叫，否則 F1 會拒絕計算。"""
+    raw = os.path.join(d, 'data', 'raw', 'espn')
+    for s in sorted(int(x) for x in os.listdir(raw) if x.isdigit()):
+        p = audit_coverage.paths(s, d)['flags']
+        if flags and s in flags:
+            store.write_jsonl_gz(p, flags[s])
+        elif not os.path.exists(p):
+            store.write_jsonl_gz(p, [])
+        audit_coverage.build_manifest(s, d, verify_flags=False, now='synthetic')
 
 
 S = 2020

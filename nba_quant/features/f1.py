@@ -41,11 +41,12 @@ box 稽核 v1：error → 該場不進雙方累計；warning → 保留並記錄
 """
 from __future__ import annotations
 
+import os
 import statistics
 from collections import defaultdict
 from dataclasses import dataclass, field
 
-from .. import asof, config, feature_deps
+from .. import asof, audit_coverage, config, feature_deps
 from ..data_access import MIN_LEAGUE_GAMES_F1, DataAccess
 
 SHRINK_GAMES = 10.0
@@ -76,21 +77,39 @@ def team_poss(b):
 
 @dataclass
 class History:
-    """一季的有效歷史比賽（隊場列）與排除／警告紀錄。"""
+    """有效比賽（隊場列）與排除／警告紀錄。"""
     rows: list
     excluded: list = field(default_factory=list)
     warnings: list = field(default_factory=list)
+    game_ids: list = field(default_factory=list)
+    loto_excluded: list = field(default_factory=list)
+    status: str = 'available'
 
 
-def build_history(da, season, schedule=None):
-    """以賽程為準，配對兩隊 box；只有兩隊都有效的比賽進入 rows。"""
+def get_valid_f1_games(da, season, as_of=None, exclude_team=None):
+    """F1 有效比賽的**唯一**判斷入口（2026-11-21）。F1 球隊累計、聯盟先驗、league_games_asof、
+    league_games_asof_excl_team、100 場門檻、f1_prior_source 全部只透過這裡取得有效比賽。依序：
+      1. as-of：只取 as_of 美東日期之前的比賽（as_of 為 None → 整季）
+      2. 完賽、`use_team_stats` 範圍（DataAccess.games）
+      3. 兩隊 box 都存在且欄位齊全（含失誤可用性）
+      4. box 稽核 v1 ERROR 排除（稽核涵蓋清單驗證失敗 → AuditIntegrityError，不計算）
+      5. 回合數有效（每隊 > 0、共同回合數 > 0）
+      6. 2017-18 等 F1 不可用球季：status = unavailable，不讀取任何資料
+      7. leave-one-team-out：exclude_team 參與的比賽不計入（另列 loto_excluded，不算資料問題）
+    唯一不需要稽核的情況：該季賽程為空**且**原始 games／teambox 檔都不存在（完全沒有資料，status = no_raw_data）。
+    回傳 History：rows（每隊每場一列）、game_ids、excluded、loto_excluded、warnings、status。"""
     check_purpose(da)
-    schedule = schedule if schedule is not None else da.games(season, SCOPE)
-    boxes = da.team_boxes(season, SCOPE, list(FIELDS))
+    if feature_deps.availability('F1.net_rating', season)[0] == 'unavailable':
+        return History(rows=[], status='unavailable')
+    schedule = da.games(season, SCOPE, as_of)
+    raw = audit_coverage.paths(season, da.root)
+    if not schedule and not os.path.exists(raw['teambox']) and not os.path.exists(raw['games']):
+        return History(rows=[], status='no_raw_data')  # 該季完全沒有原始資料（例：2014-15 的上一季）：沒有可稽核的比賽
+    boxes = da.team_boxes(season, SCOPE, list(FIELDS), as_of)
     excl_by = defaultdict(list)
     for gid, team, why in da.log[-1].get('excluded', []):
         excl_by[gid].append((team, why))
-    flags = da.box_audit_flags(season)                 # box 稽核 v1：error 排除、warning 保留並記錄
+    flags = da.box_audit_flags(season, as_of)          # fail closed：涵蓋清單不符即拋出錯誤
     by = defaultdict(dict)
     for b in boxes:
         by[b['game_id']][b['team']] = b
@@ -114,10 +133,6 @@ def build_history(da, season, schedule=None):
                                'raw_boxes': {t: {k: got[t][k] for k in FIELDS} for t in teams},
                                'affected': 'excluded from both teams\' F1 history'})
             continue
-        for f in fl:
-            if f['severity'] == 'warning':
-                h.warnings.append({'game_id': gid, 'source': 'box_audit_v1', 'team': f.get('team'), 'check': f['check'],
-                                   'detail': f['detail'], 'action': 'kept_with_warning'})
         a, b = got[g['home']], got[g['away']]
         pa, pb = team_poss(a), team_poss(b)
         gp = (pa + pb) / 2.0
@@ -127,10 +142,18 @@ def build_history(da, season, schedule=None):
                                'raw_boxes': {t: {k: got[t][k] for k in FIELDS} for t in teams},
                                'affected': 'excluded from both teams\' F1 history'})
             continue
+        if exclude_team is not None and exclude_team in teams:
+            h.loto_excluded.append(gid)
+            continue
+        for f in fl:
+            if f['severity'] == 'warning':
+                h.warnings.append({'game_id': gid, 'source': 'box_audit_v1', 'team': f.get('team'), 'check': f['check'],
+                                   'detail': f['detail'], 'action': 'kept_with_warning'})
         mf = (48 + 5 * a['overtimes']) / 48.0
         for t, o in ((a, b), (b, a)):
             h.rows.append({'game_id': gid, 'start_utc': g['start_utc'], 'et_date': asof.et_date(g['start_utc']),
                            'team': t['team'], 'opp': o['team'], 'pf': t['pts'], 'pa': o['pts'], 'poss': gp, 'mf': mf})
+        h.game_ids.append(gid)
     paces = {r['game_id']: r['poss'] / r['mf'] for r in h.rows}
     if len(paces) >= 30:
         med = statistics.median(paces.values())
@@ -140,6 +163,11 @@ def build_history(da, season, schedule=None):
             h.warnings += [{'game_id': gid, 'source': 'f1_pace_band', 'pace_per48': v, 'band': [lo, hi], 'action': 'flag_only'}
                            for gid, v in sorted(paces.items()) if v < lo or v > hi]
     return h
+
+
+def build_history(da, season, schedule=None):
+    """相容名稱：整季的有效比賽（= get_valid_f1_games(da, season)）。schedule 參數已不使用。"""
+    return get_valid_f1_games(da, season)
 
 
 def game_rows(boxes):
@@ -204,7 +232,7 @@ def league_values(acc):
 def season_totals(da, season):
     """某季全季（完整球季，用於下一季的先驗）：每隊與聯盟的累計。只用有效比賽。"""
     check_purpose(da)
-    h = build_history(da, season)
+    h = get_valid_f1_games(da, season)
     teams, league = defaultdict(Acc), Acc()
     for r in h.rows:
         teams[r['team']].add(r)
@@ -253,7 +281,7 @@ def compute(season, purpose='feature_computation', root='.', da=None):
                         'excluded_history_games': None, **base})
                 for g in schedule for t, o in ((g['home'], g['away']), (g['away'], g['home']))]
         return F1Result(rows, [], [])
-    hist = build_history(da, season, schedule)
+    hist = get_valid_f1_games(da, season)
     by_date = defaultdict(list)
     for r in hist.rows:
         by_date[r['et_date']].append(r)
@@ -261,14 +289,7 @@ def compute(season, purpose='feature_computation', root='.', da=None):
     for e in hist.excluded:
         excl_dates[asof.et_date(e['start_utc'])].append(e)
 
-    prev = season - 1
-    prev_teams = prev_league = None
-    if prev_available(prev):
-        prev_teams, prev_league = season_totals(da, prev)
-        if not prev_league.n:
-            prev_teams = prev_league = None              # 上季沒有資料（例如 2014-15 的上一季）
-    fallback_season = None if prev_available(prev) else latest_available_before(prev)
-    fallback_league = league_values(season_totals(da, fallback_season)[1]) if fallback_season else None
+    prev, prev_teams, prev_league, fallback_season, fallback_league = prior_context(da, season)
 
     cur_teams, cur_league = defaultdict(Acc), Acc()
     involved = defaultdict(Acc)                             # 每隊：其參與比賽的兩列（供 leave-one-team-out 扣除）
@@ -340,6 +361,51 @@ def _prior(team, prev, prev_teams, prev_league, loto, fallback_season, fallback_
                 f'{fallback_season} 全季聯盟平均（本季至今排除本隊後 {g} 場 < {MIN_LEAGUE_GAMES_F1}；上季不可用）',
                 'not_applicable')
     return None, 'missing', [], f'無上季資料且本季至今排除本隊後 {g} 場 < {MIN_LEAGUE_GAMES_F1}', 'not_applicable'
+
+
+def prior_context(da, season):
+    """某季先驗所需的上季累計與後備球季（compute 與 prior_source 共用，皆由 get_valid_f1_games 而來）。"""
+    prev = season - 1
+    prev_teams = prev_league = None
+    if prev_available(prev):
+        prev_teams, prev_league = season_totals(da, prev)
+        if not prev_league.n:
+            prev_teams = prev_league = None              # 上季沒有資料（例如 2014-15 的上一季）
+    fallback_season = None if prev_available(prev) else latest_available_before(prev)
+    fallback_league = league_values(season_totals(da, fallback_season)[1]) if fallback_season else None
+    return prev, prev_teams, prev_league, fallback_season, fallback_league
+
+
+def prior_source(da, team, as_of, feature='F1.net_rating'):
+    """單一隊伍在 as_of 時的先驗來源（DataAccess.f1_prior_source 委派到這裡）。
+    有效比賽一律取自 get_valid_f1_games(as_of, exclude_team=team)，決策一律走 compute 用的同一個 _prior，
+    不另外計數。"""
+    check_purpose(da)
+    season = da._season_of(as_of)
+    if feature_deps.availability(feature, season)[0] == 'unavailable':
+        return {'feature': feature, 'status': 'unavailable'}
+    prev, prev_teams, prev_league, fb_season, fb_league = prior_context(da, season)
+    cur = get_valid_f1_games(da, season, as_of, exclude_team=team)
+    loto = Acc()
+    for r in cur.rows:
+        loto.add(r)
+    _, src, seasons, basis, weight = _prior(team, prev, prev_teams, prev_league, loto, fb_season, fb_league)
+    out = {'feature': feature, 'team': team, 'as_of': as_of, 'source': src, 'seasons': seasons,
+           'prior_weight': weight, 'prior_weight_basis': basis,
+           'current_season_valid_game_ids': list(cur.game_ids),
+           'current_season_games_to_date': len(cur.game_ids)}
+    if src == 'team_previous_season':
+        acc = prev_teams[team]
+        out.update({'n_games': acc.n, 'period': [acc.first, acc.last]})
+    elif src == 'league_average_current_season_to_date':
+        out.update({'n_games': len(cur.game_ids), 'period': [loto.first, loto.last] if loto.n else None,
+                    'excluded_seasons': [] if prev_available(prev) else [prev]})
+    elif src == 'league_average_latest_available_season':
+        lg = season_totals(da, fb_season)[1]
+        out.update({'n_games': lg.n // 2, 'period': [lg.first, lg.last] if lg.n else None, 'excluded_seasons': [prev]})
+    else:
+        out.update({'n_games': 0, 'period': None})
+    return out
 
 
 def f1_reference(da, team, as_of):

@@ -5,7 +5,7 @@ import shutil
 import tempfile
 import unittest
 
-from nba_quant import store
+from nba_quant import audit_coverage, store
 from nba_quant.features import f1
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -34,6 +34,11 @@ class ThreeErrorGames(unittest.TestCase):
                         n += 1
                 store.write_jsonl_gz(p, bx)
             self.assertEqual(n, 6)
+            for s in (2020, 2023):                                     # fail closed：原始檔變了 → 舊清單失效、拒絕計算
+                with self.assertRaises(audit_coverage.AuditIntegrityError) as cm:
+                    f1.compute(s, root=d)
+                self.assertEqual(cm.exception.code, 'raw_boxscore_hash')
+                audit_coverage.build_manifest(s, d, verify_flags=False, now='test')   # 沿用原稽核判定（只為隔離數值影響）
             for s, res in base.items():
                 alt = f1.compute(s, root=d)
                 self.assertEqual(alt.rows, res.rows, s)

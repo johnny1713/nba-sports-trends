@@ -7,7 +7,7 @@ from unittest import mock
 from nba_quant import config, data_access as DA, store
 from nba_quant.features import f1
 
-from test_f1 import make_root
+from test_f1 import make_root, seal
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 HAS_DATA = os.path.exists(os.path.join(ROOT, 'data', 'reference', 'game_classification.csv'))
@@ -24,6 +24,7 @@ def compute(games, season=2020, mutate=None):
             bx = list(store.read_jsonl_gz(p))
             mutate(bx)
             store.write_jsonl_gz(p, bx)
+            seal(d)                                         # 原始檔改變：舊清單失效，合成情境下重新封存
         return f1.compute(season, root=d)
 
 
@@ -83,14 +84,14 @@ class Possessions(unittest.TestCase):
         acc = f1.Acc()
         acc.add({'pf': 100, 'pa': 90, 'poss': 0.0, 'mf': 1.0, 'start_utc': '2020-01-02T00:30:00Z'})
         self.assertIsNone(acc.values())
-        real = f1.build_history
+        real = f1.get_valid_f1_games
 
-        def poisoned(da, season, schedule=None):
-            h = real(da, season, schedule)
+        def poisoned(da, season, as_of=None, exclude_team=None):
+            h = real(da, season, as_of, exclude_team)
             for r in h.rows:
                 r['poss'] = 0.0                                         # 模擬累計回合數為 0
             return h
-        with mock.patch.object(f1, 'build_history', poisoned):
+        with mock.patch.object(f1, 'get_valid_f1_games', poisoned):
             res = compute(PRIOR_SEASON + G)
         r = row(res, 'g2', 'A')
         self.assertEqual(r['status'], 'invalid')

@@ -136,7 +136,7 @@ class Isolation2017_18(unittest.TestCase):
     def test_extreme_2017_18_data_leaves_2018_19_unchanged(self):
         """把 2017-18 原始 box（失誤及所有欄位）與比分全部換成極端值：2018-19 F1 逐位相同，且資料存取紀錄從未讀取 2017-18。"""
         with tempfile.TemporaryDirectory() as d:
-            for p in ('data/reference',):
+            for p in ('data/reference', 'data/audit/box_quality'):
                 shutil.copytree(os.path.join(ROOT, p), os.path.join(d, p))
             for s in (2016, 2017, 2018, 2019):
                 shutil.copytree(os.path.join(ROOT, 'data', 'raw', 'espn', str(s)), os.path.join(d, 'data', 'raw', 'espn', str(s)))

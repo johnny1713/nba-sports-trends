@@ -18,7 +18,7 @@ def box(gid, team, pts, fga=85, fta=20, oreb=10, tov=14, ot=0):
             'oreb': oreb, 'dreb': 33, 'tov': tov, 'overtimes': ot, 'source': 'espn:summary'}
 
 
-def make_root(d, games, real_audit=False):
+def make_root(d, games, real_audit=False, empty_prev=True):
     """games: [(gid, season, start_utc, home, away, hp, ap, game_type, home_box_kw, away_box_kw)]"""
     os.makedirs(os.path.join(d, 'data', 'reference'), exist_ok=True)
     with open(os.path.join(d, 'data', 'reference', 'game_classification.csv'), 'w', newline='', encoding='utf-8') as fh:
@@ -28,9 +28,16 @@ def make_root(d, games, real_audit=False):
             w.writerow({'game_id': gid, 'season': s, 'start_utc': t, 'away': a, 'home': h, 'status': 'final',
                         'espn_season_type': 3 if gt == 'POSTSEASON' else 2, 'game_type': gt,
                         'counts_for_standings': game_class.COUNTS[gt], **game_class.uses(gt), 'source_file': 'x', 'basis': 't'})
-    gs, bx = {}, {}
+    gs, bx, pgs, pbx = {}, {}, {}, {}
     for gid, s, t, h, a, hp, ap, gt, *kw in games:
         hk, ak = (kw + [{}, {}])[:2]
+        if gt == 'PLAY_IN':                    # 附加賽與真實資料相同：獨立放在 data/raw/espn_playin/<季>/
+            pgs.setdefault(s, []).append({'game_id': gid, 'season': s, 'season_type': 5, 'start_utc': t, 'home': h,
+                                          'away': a, 'home_pts': hp, 'away_pts': ap, 'status': 'final', 'complete': True})
+            pbx.setdefault(s, []).extend([box(gid, h, hp, **hk), box(gid, a, ap, **ak)])
+            gs.setdefault(s, [])
+            bx.setdefault(s, [])
+            continue
         gs.setdefault(s, []).append({'game_id': gid, 'season': s, 'season_type': 3 if gt == 'POSTSEASON' else 2,
                                      'start_utc': t, 'home': h, 'away': a, 'home_pts': hp, 'away_pts': ap,
                                      'status': 'final', 'complete': True})
@@ -38,6 +45,17 @@ def make_root(d, games, real_audit=False):
     for s in gs:
         store.write_jsonl_gz(os.path.join(d, 'data', 'raw', 'espn', str(s), 'games.jsonl.gz'), gs[s])
         store.write_jsonl_gz(os.path.join(d, 'data', 'raw', 'espn', str(s), 'teambox.jsonl.gz'), bx[s])
+    for s in pgs:
+        store.write_jsonl_gz(os.path.join(d, 'data', 'raw', 'espn_playin', str(s), 'games.jsonl.gz'), pgs[s])
+        store.write_jsonl_gz(os.path.join(d, 'data', 'raw', 'espn_playin', str(s), 'teambox.jsonl.gz'), pbx[s])
+    if empty_prev:
+        # 2026-11-21 起只有 2013-14 可以「完全沒有資料」。合成球季的前幾季改成「已稽核、0 場」的空球季
+        # （空的原始檔 + 空 flag + 清單），行為等同過去的「沒有上一季資料」，但走完整驗證。
+        for s in list(gs):
+            for k in (1, 2, 3):
+                if s - k not in gs and not os.path.isdir(os.path.join(d, 'data', 'raw', 'espn', str(s - k))):
+                    for f in ('games.jsonl.gz', 'teambox.jsonl.gz'):
+                        store.write_jsonl_gz(os.path.join(d, 'data', 'raw', 'espn', str(s - k), f), [])
     seal(d, real_audit=real_audit)
 
 

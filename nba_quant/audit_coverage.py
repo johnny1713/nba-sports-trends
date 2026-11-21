@@ -30,7 +30,8 @@ import json
 import os
 from datetime import datetime, timezone
 
-from . import box_audit, store
+from . import box_audit, integrity, store
+from .integrity import AuditIntegrityError, Snapshot  # noqa: F401（錯誤類別定義在 integrity，這裡重新匯出）
 
 AUDIT_VERSION = 'box_quality_v1'
 REQUIRED_AUDIT_VERSION = AUDIT_VERSION
@@ -38,10 +39,16 @@ REQUIRED_AUDIT_VERSION = AUDIT_VERSION
 #   box_audit.py      稽核規則與稽核範圍定義（audit_season、scope_from_records）
 #   audit_coverage.py 清單的產生與驗證規則（本檔）
 #   store.py          原始資料與 flag 檔的解析（read_jsonl_gz、parse_jsonl_gz_bytes）與寫出
-# 三者的專案內 import 只有彼此；其餘皆為 Python 標準函式庫。資料存取層（data_access.py）與 F1 是 flag 的使用端，
+#   integrity.py      唯一性、來源隔離（espn／espn_playin）、資料快照指紋
+# 四者的專案內 import 只有彼此；其餘皆為 Python 標準函式庫。資料存取層（data_access.py）與 F1 是 flag 的使用端，
 # 不影響稽核結果或清單驗證，不納入（其行為由 F1 測試與九季輸出比對把關）。
-AUDIT_CODE_FILES = ('nba_quant/audit_coverage.py', 'nba_quant/box_audit.py', 'nba_quant/store.py')
+AUDIT_CODE_FILES = ('nba_quant/audit_coverage.py', 'nba_quant/box_audit.py', 'nba_quant/integrity.py', 'nba_quant/store.py')
 CODE_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+# 「沒有任何資料」例外的明確 allowlist（使用者 2026-11-21 決策）。season key 與 data/raw/espn/<季>/、分類表 season 欄相同：
+# 以球季結束年份表示（2015 = 2014-15）。只有 2014（= 2013-14，第一個開發季 2014-15 的上一季，專案從未抓取）可以是空的；
+# 其他任何球季沒有資料一律拒絕（season_no_data）。
+NO_DATA_SEASONS = (2014,)
+PLAYIN_RAW = os.path.join('data', 'raw', 'espn_playin')
 # 內容指紋排除的欄位：audit_timestamp 是「稽核事件時間」metadata，不屬於稽核內容；content_sha256 是指紋本身
 CONTENT_EXCLUDED_FIELDS = ('audit_timestamp', 'content_sha256')
 SCHEMA = {'season': int, 'audit_version': str, 'audit_code_sha256': str, 'audit_code_files': dict,
@@ -50,15 +57,10 @@ SCHEMA = {'season': int, 'audit_version': str, 'audit_code_sha256': str, 'audit_
           'audited_team_box_count': int, 'content_excluded_fields': list, 'audit_timestamp': str, 'content_sha256': str}
 
 
-class AuditIntegrityError(RuntimeError):
-    """稽核完整性錯誤。code：flags_missing、manifest_missing、manifest_unreadable、manifest_invalid、version、
-    audit_code_mismatch、content_hash、season、raw_file_mismatch、raw_missing、raw_unreadable、raw_boxscore_hash、
-    raw_games_hash、flags_hash、flags_unreadable、duplicate_ids、count、not_all_audited、scope_mismatch、
-    flag_outside_scope、stale_audit。"""
-
-    def __init__(self, code, detail):
-        super().__init__(f'[{code}] {detail}')
-        self.code = code
+# AuditIntegrityError 的錯誤代碼：flags_missing、manifest_missing、manifest_unreadable、manifest_invalid、version、
+# audit_code_mismatch、content_hash、season、raw_file_mismatch、raw_missing、raw_unreadable、raw_boxscore_hash、
+# raw_games_hash、flags_hash、flags_unreadable、duplicate_ids、count、not_all_audited、scope_mismatch、
+# flag_outside_scope、stale_audit、duplicate_game、duplicate_box、source_mismatch、season_no_data、snapshot_mismatch。
 
 
 def paths(season, root='.'):
@@ -67,6 +69,13 @@ def paths(season, root='.'):
     return {'teambox': os.path.join(raw, 'teambox.jsonl.gz'), 'games': os.path.join(raw, 'games.jsonl.gz'),
             'flags': os.path.join(base, f'{season}_flags.jsonl.gz'),
             'manifest': os.path.join(base, 'coverage', f'{season}.json')}
+
+
+def playin_paths(season, root='.'):
+    d = os.path.join(root, PLAYIN_RAW, str(season))
+    return {'espn_playin_games': os.path.join(d, 'games.jsonl.gz'),
+            'espn_playin': os.path.join(d, 'teambox.jsonl.gz'),
+            'espn_playin_bbref': os.path.join(d, 'teambox_bbref.jsonl.gz')}
 
 
 def raw_boxscore_relpath(season):
@@ -127,8 +136,9 @@ def _parse_gz(data, code, what):
     return rows
 
 
-def load_raw(season, root='.'):
-    """讀入原始 teambox／games 位元組並解析；回傳 (teambox_sha, games_sha, games, boxes)。"""
+def _load_raw_full(season, root='.'):
+    """讀入原始 teambox／games 位元組（各一次）並解析；回傳 (teambox_sha, games_sha, 稽核範圍 games, 稽核範圍 boxes,
+    全部 games 紀錄, 全部 box 紀錄)。唯一性在稽核範圍建立前檢查（duplicate_game／duplicate_box）。"""
     p = paths(season, root)
     tb = _read_bytes(p['teambox'], 'raw_missing', '原始 box score 檔')
     gm = _read_bytes(p['games'], 'raw_missing', '原始賽程檔')
@@ -136,9 +146,16 @@ def load_raw(season, root='.'):
     box_rows = _parse_gz(tb, 'raw_unreadable', '原始 box score 檔')
     try:
         games, boxes = box_audit.scope_from_records(game_rows, box_rows)
+    except AuditIntegrityError:
+        raise
     except Exception as e:
         raise AuditIntegrityError('raw_unreadable', f'{season}: 原始資料欄位不完整：{type(e).__name__}: {e}') from e
-    return hashlib.sha256(tb).hexdigest(), hashlib.sha256(gm).hexdigest(), games, boxes
+    return hashlib.sha256(tb).hexdigest(), hashlib.sha256(gm).hexdigest(), games, boxes, game_rows, box_rows
+
+
+def load_raw(season, root='.'):
+    """回傳 (teambox_sha, games_sha, 稽核範圍 games, 稽核範圍 boxes)。"""
+    return _load_raw_full(season, root)[:4]
 
 
 def _reaudit(season, root, games, boxes):
@@ -232,6 +249,10 @@ def _check_schema(m, season):
 def verify_and_load(season, root='.'):
     """讀取前的完整性檢查；全部通過才回傳 (清單, flag 紀錄)，否則拋出 AuditIntegrityError（fail closed）。
     回傳的 flag 紀錄就是計算指紋與重新稽核比對的那一份位元組解析出來的，呼叫端不需要再讀檔。"""
+    return _verify(season, root)[:2]
+
+
+def _verify(season, root='.'):
     p = paths(season, root)
     if not os.path.isfile(p['flags']):
         raise AuditIntegrityError('flags_missing', f'{season}: audit flag 檔不存在')
@@ -249,7 +270,7 @@ def verify_and_load(season, root='.'):
     if m['raw_boxscore_file'] != raw_boxscore_relpath(season):
         raise AuditIntegrityError('raw_file_mismatch', f'{season}: 清單的原始檔路徑 {m["raw_boxscore_file"]} ≠ '
                                                        f'{raw_boxscore_relpath(season)}')
-    tb_sha, gm_sha, games, boxes = load_raw(season, root)
+    tb_sha, gm_sha, games, boxes, game_rows, box_rows = _load_raw_full(season, root)
     if tb_sha != m['raw_boxscore_file_hash']:
         raise AuditIntegrityError('raw_boxscore_hash', f'{season}: 原始 box score 指紋不符，清單失效，必須重新稽核')
     if gm_sha != m['raw_games_file_hash']:
@@ -279,11 +300,42 @@ def verify_and_load(season, root='.'):
     redo = _reaudit(season, root, games, boxes)
     if flags != redo:                                                    # 逐筆、全部欄位、含順序
         raise AuditIntegrityError('stale_audit', f'{season}: 目前稽核程式的重新稽核結果與 flag 檔不同；' + _flag_diff(flags, redo))
-    return m, flags
+    return m, flags, game_rows, box_rows
 
 
 def verify(season, root='.'):
     return verify_and_load(season, root)[0]
+
+
+def _season_has_any_data(season, root, classification):
+    files = [paths(season, root)['teambox'], paths(season, root)['games'], *playin_paths(season, root).values()]
+    return (any(os.path.exists(f) for f in files)
+            or any(str(r.get('season')) == str(season) for r in classification.values()))
+
+
+def load_snapshot(season, root='.', classification=None):
+    """F1 唯一的原始資料來源：一次讀入 espn 與 espn_playin 的 games／team boxes，完成稽核完整性驗證
+    （指紋、範圍、重新稽核）、唯一性與來源隔離後，回傳封存的 Snapshot。任何失敗 → AuditIntegrityError，整份拒絕。
+
+    沒有任何資料（espn、espn_playin 原始檔都不存在，分類表也沒有該季比賽）：只有 NO_DATA_SEASONS 回傳
+    status = no_raw_data 的空快照，其他球季 → season_no_data。只要有任何一份資料存在，就走完整驗證（缺檔 → raw_missing）。"""
+    classification = classification or {}
+    if not _season_has_any_data(season, root, classification):
+        if season in NO_DATA_SEASONS:
+            return Snapshot(season, 'no_raw_data').seal()
+        raise AuditIntegrityError('season_no_data', f'{season}: 沒有任何原始資料也沒有分類資料，且不在空資料 allowlist '
+                                                    f'{NO_DATA_SEASONS} 內（可能是整季資料遺失或分類表重建錯誤）')
+    m, flags, game_rows, box_rows = _verify(season, root)
+    pp = playin_paths(season, root)
+    pi = {}
+    for k, path in pp.items():
+        pi[k] = (_parse_gz(_read_bytes(path, 'raw_missing', k), 'raw_unreadable', f'{k} 原始檔')
+                 if os.path.isfile(path) else [])
+    games, boxes = integrity.merge_sources(
+        [('espn', game_rows), ('espn_playin', pi['espn_playin_games'])],
+        [('espn', box_rows), ('espn_playin', pi['espn_playin']), ('espn_playin_bbref', pi['espn_playin_bbref'])],
+        classification)
+    return Snapshot(season, 'verified', m, flags, games, boxes).seal()
 
 
 def main():

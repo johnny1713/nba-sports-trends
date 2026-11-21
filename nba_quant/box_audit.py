@@ -24,7 +24,7 @@ import os
 import statistics
 from collections import Counter, defaultdict
 
-from . import store
+from . import integrity, store
 
 VERSION = 'v1'
 RAW = os.path.join('data', 'raw', 'espn')
@@ -115,7 +115,11 @@ def game_checks(game, boxes):
 
 def scope_from_records(game_rows, box_rows):
     """稽核範圍（唯一定義）：完賽比賽與其球隊 box。輸入為已解析的原始紀錄，讓涵蓋清單驗證可以用
-    「計算指紋的同一份位元組」重新稽核（audit_coverage.verify），不必再讀一次檔案。"""
+    「計算指紋的同一份位元組」重新稽核（audit_coverage.verify），不必再讀一次檔案。
+    稽核前先確認唯一性：game_id 重複或同一場同一隊 box 重複 → 拒絕（不依順序決定採用哪一筆）。"""
+    game_rows, box_rows = list(game_rows), list(box_rows)
+    integrity.check_unique_games(game_rows, 'espn games')
+    integrity.check_unique_boxes(box_rows, 'espn teambox')
     games = {g['game_id']: g for g in game_rows if g['status'] == 'final'}
     boxes = [b for b in box_rows if b['game_id'] in games]
     return games, boxes

@@ -41,12 +41,11 @@ box 稽核 v1：error → 該場不進雙方累計；warning → 保留並記錄
 """
 from __future__ import annotations
 
-import os
 import statistics
 from collections import defaultdict
 from dataclasses import dataclass, field
 
-from .. import asof, audit_coverage, config, feature_deps
+from .. import asof, config, feature_deps
 from ..data_access import MIN_LEAGUE_GAMES_F1, DataAccess
 
 SHRINK_GAMES = 10.0
@@ -96,21 +95,19 @@ def get_valid_f1_games(da, season, as_of=None, exclude_team=None):
       5. 回合數有效（每隊 > 0、共同回合數 > 0）
       6. 2017-18 等 F1 不可用球季：status = unavailable，不讀取任何資料
       7. leave-one-team-out：exclude_team 參與的比賽不計入（另列 loto_excluded，不算資料問題）
-    唯一不需要稽核的情況：該季賽程為空、原始 games／teambox 檔都不存在、**且**分類表沒有該季任何比賽
-    （完全沒有資料，status = no_raw_data）。
+    資料只取自 da.verified_snapshot（一次讀入、通過稽核完整性驗證與來源隔離的快照），不另外讀原始檔。
+    唯一不需要稽核的情況：allowlist 球季（audit_coverage.NO_DATA_SEASONS，只有 2013-14）完全沒有資料
+    （status = no_raw_data）；其他球季沒有資料一律拒絕（season_no_data）。
     回傳 History：rows（每隊每場一列）、game_ids、excluded、loto_excluded、warnings、status。"""
     check_purpose(da)
     if feature_deps.availability('F1.net_rating', season)[0] == 'unavailable':
         return History(rows=[], status='unavailable')
-    schedule = da.games(season, SCOPE, as_of)
-    raw = audit_coverage.paths(season, da.root)
-    if (not schedule and not os.path.exists(raw['teambox']) and not os.path.exists(raw['games'])
-            and not any(str(r.get('season')) == str(season) for r in da._classification().values())):
-        # 該季完全沒有資料（例：2014-15 的上一季）：賽程為空、兩個原始檔都不存在、分類表也沒有該季的比賽。
-        # 分類表有該季比賽卻沒有原始檔 → 不適用例外，照常驗證稽核（raw_missing），不得當成「沒有資料」
+    snap = da.verified_snapshot(season, as_of)         # 唯一資料來源：已驗證快照（稽核、重新稽核、唯一性、來源隔離）
+    if snap.status == 'no_raw_data':                   # 只有 allowlist 球季（2013-14）會是空快照，其他球季已被拒絕
         return History(rows=[], status='no_raw_data')
-    flags = da.box_audit_flags(season, as_of)          # fail closed：先驗證稽核（含重新稽核），通過後才讀 box
-    boxes = da.team_boxes(season, SCOPE, list(FIELDS), as_of)
+    flags = da.box_audit_flags(season, as_of, snapshot=snap)
+    schedule = da.games(season, SCOPE, as_of, snapshot=snap)
+    boxes = da.team_boxes(season, SCOPE, list(FIELDS), as_of, snapshot=snap)
     excl_by = defaultdict(list)
     for gid, team, why in da.log[-1].get('excluded', []):
         excl_by[gid].append((team, why))
@@ -166,6 +163,7 @@ def get_valid_f1_games(da, season, as_of=None, exclude_team=None):
             lo, hi = med - WARN_MAD_K * mad, med + WARN_MAD_K * mad
             h.warnings += [{'game_id': gid, 'source': 'f1_pace_band', 'pace_per48': v, 'band': [lo, hi], 'action': 'flag_only'}
                            for gid, v in sorted(paces.items()) if v < lo or v > hi]
+    snap.check()                                       # 使用完再核對一次：快照在驗證後未被改動
     return h
 
 
@@ -274,7 +272,8 @@ def compute(season, purpose='feature_computation', root='.', da=None):
     """批次計算某季賽程上每一場（use_team_stats 範圍）兩隊的賽前 F1。回傳 F1Result（列、排除紀錄、警告）。"""
     da = check_purpose(da or DataAccess(purpose, root=root))
     status, reason = feature_deps.availability('F1.net_rating', season)
-    schedule = da.games(season, SCOPE)
+    snap = da.verified_snapshot(season)                # 預測目標賽程也只取自已驗證快照
+    schedule = da.games(season, SCOPE, snapshot=snap)
     base = {'team_shrinkage_M': SHRINK_GAMES, 'prior_team_weight_W': PRIOR_TEAM_WEIGHT,
             'league_prior_K': None}                       # 方案 A 不使用 K（不適用，不虛構數值）
     if status == 'unavailable':
@@ -416,10 +415,11 @@ def f1_reference(da, team, as_of):
     """逐場參考實作（測試用）：直接以 DataAccess(as_of) 讀資料重算單一隊伍的累計與先驗來源。"""
     check_purpose(da)
     season = da._season_of(as_of)
-    sched = da.games(season, SCOPE, as_of)
+    snap = da.verified_snapshot(season, as_of)
+    sched = da.games(season, SCOPE, as_of, snapshot=snap)
     rows = []
-    boxes = {(b['game_id'], b['team']): b for b in da.team_boxes(season, SCOPE, list(FIELDS), as_of)}
-    flags = da.box_audit_flags(season, as_of)
+    boxes = {(b['game_id'], b['team']): b for b in da.team_boxes(season, SCOPE, list(FIELDS), as_of, snapshot=snap)}
+    flags = da.box_audit_flags(season, as_of, snapshot=snap)
     for g in sched:
         a, b = boxes.get((g['game_id'], g['home'])), boxes.get((g['game_id'], g['away']))
         if not a or not b:

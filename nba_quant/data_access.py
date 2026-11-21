@@ -25,7 +25,7 @@ import csv
 import os
 from datetime import datetime, timezone
 
-from . import asof, config, feature_deps, store
+from . import asof, config, feature_deps, integrity, store
 from .model_data_stats import tov_definition
 
 PURPOSES = ('data_quality', 'feature_computation', 'training', 'feature_selection', 'tuning', 'model_selection',
@@ -61,6 +61,7 @@ class DataAccess:
             raise ValueError(f'未知的用途：{purpose}（允許：{PURPOSES}）')
         self._purpose, self._run_id, self.root = purpose, run_id, root
         self._cls = None
+        self._snaps = {}       # 已驗證的資料快照（每個 DataAccess 實例、每季一份；F1 只用它，不再重讀原始檔）
         self.log = []          # 每次存取的紀錄（用途、球季、範圍、as_of、回傳筆數、排除原因）
 
     # 用途與 run_id 建立後不可更改（2026-11-21：避免先以 data_quality 建立再改成特徵用途繞過檢查）
@@ -142,35 +143,62 @@ class DataAccess:
                                                                         encoding='utf-8'))}
         return self._cls
 
+    def _merged(self, season):
+        """espn 與 espn_playin 的原始 games／team boxes，依 integrity.merge_sources 的來源隔離規則合併：
+        espn 只能提供 PLAY_IN 以外的比賽、espn_playin 只能提供分類為 PLAY_IN 的比賽；重複的比賽或 box（同來源或跨來源）
+        一律拒絕，不依讀取順序覆蓋。"""
+        def rows(*parts):
+            p = self._path(*parts)
+            return list(store.read_jsonl_gz(p)) if os.path.exists(p) else []
+        e, pi = ('data', 'raw', 'espn', str(season)), ('data', 'raw', 'espn_playin', str(season))
+        return integrity.merge_sources(
+            [('espn', rows(*e, 'games.jsonl.gz')), ('espn_playin', rows(*pi, 'games.jsonl.gz'))],
+            [('espn', rows(*e, 'teambox.jsonl.gz')), ('espn_playin', rows(*pi, 'teambox.jsonl.gz')),
+             ('espn_playin_bbref', rows(*pi, 'teambox_bbref.jsonl.gz'))],
+            self._classification())
+
     def _raw_games(self, season):
-        out = []
-        for p in (self._path('data', 'raw', 'espn', str(season), 'games.jsonl.gz'),
-                  self._path('data', 'raw', 'espn_playin', str(season), 'games.jsonl.gz')):
-            if os.path.exists(p):
-                out += list(store.read_jsonl_gz(p))
-        return out
+        return self._merged(season)[0]
 
     def _raw_boxes(self, season):
-        out = {}
-        for p in (self._path('data', 'raw', 'espn', str(season), 'teambox.jsonl.gz'),
-                  self._path('data', 'raw', 'espn_playin', str(season), 'teambox.jsonl.gz'),
-                  self._path('data', 'raw', 'espn_playin', str(season), 'teambox_bbref.jsonl.gz')):
-            if os.path.exists(p):
-                for b in store.read_jsonl_gz(p):
-                    out[(b['game_id'], b['team'])] = b
-        return out
+        return self._merged(season)[1]
+
+    def verified_snapshot(self, season, as_of=None):
+        """已驗證的資料快照（audit_coverage.load_snapshot）：一次讀入 games 與 team boxes，完成稽核完整性驗證、
+        重新稽核、唯一性與來源隔離；同一個 DataAccess 實例內重複使用同一份，使用前都重算內容指紋。
+        先做球季鎖定檢查，鎖定期在讀任何資料前就拒絕。"""
+        self.check_season(season, as_of)
+        snap = self._snaps.get(season)
+        if snap is None:
+            from .audit_coverage import load_snapshot
+            snap = load_snapshot(season, self.root, self._classification())
+            self._snaps[season] = snap
+        snap.check()
+        self.log.append({'call': 'verified_snapshot', 'purpose': self.purpose, 'season': season, 'as_of': as_of,
+                         'status': snap.status, 'coverage_verified': snap.status == 'verified'})
+        return snap
+
+    def _snapshot_for(self, snapshot, season):
+        if snapshot.season != season:
+            raise integrity.AuditIntegrityError('snapshot_mismatch', f'快照球季 {snapshot.season} ≠ {season}')
+        return snapshot.check()
 
     # ------------------------------------------------------------ 公開介面
-    def games(self, season, scope, as_of=None):
-        """完賽、資料完整、在 scope 內、且（若給 as_of）在 as_of 的美東日期之前的比賽。"""
+    def games(self, season, scope, as_of=None, snapshot=None):
+        """完賽、資料完整、在 scope 內、且（若給 as_of）在 as_of 的美東日期之前的比賽。
+        snapshot：已驗證的資料快照（verified_snapshot）；給定時只用快照內的紀錄，不讀原始檔。"""
         self.check_season(season, as_of)
         if scope not in SCOPES:
             raise ValueError(f'未知的資料範圍：{scope}（允許：{SCOPES}）')
         cls = self._classification()
-        boxes = None
+        if snapshot is not None:
+            self._snapshot_for(snapshot, season)
+            raw_games, boxes = snapshot.games, snapshot.boxes
+        else:
+            raw_games, boxes = self._merged(season)
         out = []
         cutoff = asof.et_date(as_of) if as_of else None
-        for g in self._raw_games(season):
+        for g in raw_games:
             if g['status'] != 'final':
                 continue
             c = cls.get(g['game_id'])
@@ -181,7 +209,6 @@ class DataAccess:
             if g.get('complete') is not True:
                 if c['game_type'] != 'PLAY_IN':
                     continue
-                boxes = boxes if boxes is not None else self._raw_boxes(season)
                 if not ((g['game_id'], g['home']) in boxes and (g['game_id'], g['away']) in boxes):
                     continue
             if cutoff and asof.et_date(g['start_utc']) >= cutoff:
@@ -194,16 +221,17 @@ class DataAccess:
                          'returned': len(out)})
         return out
 
-    def team_boxes(self, season, scope, fields, as_of=None):
-        """回傳 [{game_id, team, <fields>}]。要求不可用的欄位直接報錯；需要 tov 時排除 tov_usable = False 的 box。"""
+    def team_boxes(self, season, scope, fields, as_of=None, snapshot=None):
+        """回傳 [{game_id, team, <fields>}]。要求不可用的欄位直接報錯；需要 tov 時排除 tov_usable = False 的 box。
+        snapshot：已驗證的資料快照；給定時賽程與 box 都只取自快照，不讀原始檔。"""
         bad = set(fields) & feature_deps.unavailable_bases(season)
         if bad:
             raise FieldUnavailable(f'{season}: 欄位 {sorted(bad)} 整季不可用（不補值、不以 BBRef 覆蓋）')
         unknown = set(fields) - set(feature_deps.BOX_FIELDS) - set(feature_deps.GAME_BOX_FIELDS)
         if unknown:
             raise ValueError(f'未知的 box 欄位：{sorted(unknown)}')
-        games = self.games(season, scope, as_of)
-        boxes = self._raw_boxes(season)
+        games = self.games(season, scope, as_of, snapshot=snapshot)
+        boxes = snapshot.boxes if snapshot is not None else self._raw_boxes(season)
         out, excluded = [], []
         for g in games:
             for t in (g['home'], g['away']):
@@ -231,20 +259,22 @@ class DataAccess:
                              if os.path.exists(p) else {})
         return {g: self._neutral.get(g, 'home') for g in game_ids}
 
-    def box_audit_flags(self, season, as_of=None):
+    def box_audit_flags(self, season, as_of=None, snapshot=None):
         """box score 稽核 v1 的旗標，依 (game_id, team) 分組（team 為 None 是同場層級）。
-        Fail closed（2026-11-21）：先經 audit_coverage.verify_and_load()——flag 檔或涵蓋清單缺失、版本或稽核程式指紋不符、
-        原始資料指紋不符、未稽核或多餘的比賽、重複 ID、重新稽核結果與 flag 檔不同等任何一項不符，都拋出
-        AuditIntegrityError，呼叫端（F1）不得繼續計算。"""
-        self.check_season(season, as_of)
-        from .audit_coverage import verify_and_load
-        m, flags = verify_and_load(season, self.root)        # 含讀取時重新稽核；flag 取自通過驗證的同一份位元組
+        Fail closed（2026-11-21）：flag 取自已驗證的資料快照（verified_snapshot → audit_coverage.load_snapshot），
+        flag 檔或涵蓋清單缺失、版本或稽核程式指紋不符、原始資料指紋不符、未稽核或多餘的比賽、重複 ID、重新稽核結果與
+        flag 檔不同、來源隔離違規等任何一項不符，都拋出 AuditIntegrityError，呼叫端（F1）不得繼續計算。"""
+        if snapshot is None:
+            snapshot = self.verified_snapshot(season, as_of)
+        else:
+            self.check_season(season, as_of)
+            self._snapshot_for(snapshot, season)
         out = {}
-        for f in flags:
+        for f in snapshot.flags:
             out.setdefault((f['game_id'], f.get('team')), []).append(f)
         self.log.append({'call': 'box_audit_flags', 'purpose': self.purpose, 'season': season, 'as_of': as_of,
-                         'returned': sum(len(v) for v in out.values()), 'coverage_verified': True,
-                         'audited_game_count': m['audited_game_count']})
+                         'returned': sum(len(v) for v in out.values()), 'coverage_verified': snapshot.status == 'verified',
+                         'audited_game_count': (snapshot.manifest or {}).get('audited_game_count', 0)})
         return out
 
     def require_features(self, features, season, as_of=None):

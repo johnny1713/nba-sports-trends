@@ -149,14 +149,15 @@ class AuditFailClosed(unittest.TestCase):
             self.refused('version')
 
     # ---- 稽核程式指紋 ----
-    def test_code_fingerprint_covers_three_files(self):
+    def test_code_fingerprint_covers_all_audit_files(self):
         m = store.read_json(self.p['manifest'])
         self.assertEqual(sorted(m['audit_code_files']),
-                         ['nba_quant/audit_coverage.py', 'nba_quant/box_audit.py', 'nba_quant/store.py'])
+                         ['nba_quant/audit_coverage.py', 'nba_quant/box_audit.py', 'nba_quant/integrity.py',
+                          'nba_quant/store.py'])
         self.assertEqual(m['audit_code_sha256'], audit_coverage.combine_code_sha(m['audit_code_files']))
 
     def test_code_01_03_any_code_file_changed_refused(self):
-        """1. box_audit.py、2. audit_coverage.py、3. store.py 任何一個實際內容改變（版本字串不變）→ 舊清單拒絕。"""
+        """box_audit.py、audit_coverage.py、store.py、integrity.py 任何一個實際內容改變（版本字串不變）→ 舊清單拒絕。"""
         for rel in audit_coverage.AUDIT_CODE_FILES:
             with self.subTest(rel), tempfile.TemporaryDirectory() as c:
                 with mock.patch.object(audit_coverage, 'CODE_ROOT', code_copy(c, mutate=rel)):
@@ -358,12 +359,16 @@ class NoRawDataException(unittest.TestCase):
     """11. 2013-14 空資料例外：只有「賽程為空」且「原始 games、teambox 檔都不存在」才成立。"""
 
     def test_positive_season_without_any_raw_data(self):
+        """只有 allowlist 的 2013-14（season key 2014）可以完全沒有資料；其餘見 test_source_isolation.NoDataAllowlist。"""
         with tempfile.TemporaryDirectory() as d:
-            make_root(d, G, real_audit=True)
+            make_root(d, [(x[0], 2015, x[2].replace('2020', '2015'), *x[3:]) for x in G], real_audit=True, empty_prev=False)
             da = DA.DataAccess('feature_computation', root=d)
-            h = f1.get_valid_f1_games(da, 2019)
+            h = f1.get_valid_f1_games(da, 2014)
             self.assertEqual((h.status, h.game_ids), ('no_raw_data', []))
             self.assertFalse([x for x in da.log if x['call'] == 'box_audit_flags'])
+            with self.assertRaises(AuditIntegrityError) as cm:
+                f1.get_valid_f1_games(da, 2013)
+            self.assertEqual(cm.exception.code, 'season_no_data')
 
     def test_negative_raw_exists_schedule_empty_still_audited(self):
         with tempfile.TemporaryDirectory() as d:

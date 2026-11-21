@@ -1321,6 +1321,11 @@
   "401773152"
  ],
  "audited_team_box_count": 2630,
+ "content_excluded_fields": [
+  "audit_timestamp",
+  "content_sha256"
+ ],
+ "content_sha256": "7ff637fd0ea0ca3329838da07c4c75f63f366ea1276dfa1be45f5b95f51ab973",
  "expected_game_count": 1315,
  "expected_game_ids": [
   "401703370",

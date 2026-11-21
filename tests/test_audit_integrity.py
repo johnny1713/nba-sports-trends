@@ -148,6 +148,60 @@ class AuditFailClosed(unittest.TestCase):
         edit_manifest(self.d, lambda m: m.update(audit_version='box_quality_v0'))
         self.refused('version')
 
+    def test_08c_audit_code_changed_version_not_bumped_refused(self):
+        """稽核程式改變但 audit_version 忘記更新：保留舊清單 → 以程式指紋拒絕。"""
+        from unittest import mock
+        self.assertEqual(store.read_json(manifest_path(self.d))['audit_version'], audit_coverage.AUDIT_VERSION)
+        with mock.patch.object(audit_coverage, '_code_sha', lambda: '0' * 64):
+            self.refused('audit_code_hash')
+
+    def test_08d_real_code_file_change_refused(self):
+        """不靠 mock：實際換一份內容不同的稽核程式檔（只加一行註解），舊清單必須失效。"""
+        import shutil
+        from unittest import mock
+        from nba_quant import box_audit
+        alt = os.path.join(self.d, 'box_audit_changed.py')
+        shutil.copy(box_audit.__file__, alt)
+        with open(alt, 'a', encoding='utf-8') as fh:
+            fh.write('\n# changed\n')
+        with mock.patch.object(box_audit, '__file__', alt):
+            self.refused('audit_code_hash')
+
+    def test_08e_required_version_bumped_old_manifest_refused(self):
+        """程式要求的稽核版本升級，但舊清單仍存在 → 拒絕。"""
+        from unittest import mock
+        with mock.patch.object(audit_coverage, 'REQUIRED_AUDIT_VERSION', 'box_quality_v2'):
+            self.refused('version')
+
+    def test_08f_matching_code_and_manifest_pass(self):
+        m = audit_coverage.verify(2020, self.d)
+        self.assertEqual(m['audit_code_sha256'], audit_coverage._code_sha())
+        self.assertEqual(m['audit_version'], audit_coverage.REQUIRED_AUDIT_VERSION)
+        self.assertEqual(m['content_sha256'], audit_coverage.content_sha(m))
+
+    def test_08g_content_fingerprint_tamper_refused(self):
+        edit_manifest(self.d, lambda m: m.update(audited_team_box_count=m['audited_team_box_count'] + 1))
+        self.refused('content_hash')
+        edit_manifest(self.d, lambda m: m.pop('content_sha256'))
+        self.refused('content_hash')
+
+    def test_content_fingerprint_independent_of_timestamp(self):
+        """相同原始資料、flag、稽核程式：不同時間重建 → 內容指紋相同；檔案只有 audit_timestamp 不同。"""
+        a = audit_coverage.build_manifest(2020, self.d, verify_flags=False, now='2026-01-01T00:00:00+00:00')
+        fa = store.sha256_file(manifest_path(self.d))
+        b = audit_coverage.build_manifest(2020, self.d, verify_flags=False, now='2026-02-01T00:00:00+00:00')
+        fb = store.sha256_file(manifest_path(self.d))
+        self.assertEqual(a['content_sha256'], b['content_sha256'])
+        self.assertNotEqual(fa, fb)                                    # 檔案位元組含事件時間，本來就會不同
+        self.assertEqual({k for k in a if a[k] != b[k]}, {'audit_timestamp'})
+        audit_coverage.verify(2020, self.d)
+
+    def test_content_fingerprint_changes_with_content(self):
+        a = audit_coverage.build_manifest(2020, self.d, verify_flags=False, now='t')
+        seal(self.d, {2020: [{'game_id': 'g1', 'team': 'B', 'check': 'x', 'detail': '', 'severity': 'warning'}]})
+        b = store.read_json(manifest_path(self.d))
+        self.assertNotEqual(a['content_sha256'], b['content_sha256'])  # flag 不同 → 內容指紋不同
+
     def test_08b_flag_outside_audited_scope_refused(self):
         p = audit_coverage.paths(2020, self.d)['flags']
         store.write_jsonl_gz(p, [{'game_id': 'nope', 'team': 'B', 'check': 'x', 'detail': '', 'severity': 'error'}])
@@ -287,8 +341,11 @@ class RealData(unittest.TestCase):
             self.assertFalse(set(ids) & set(h.game_ids))
 
     def test_all_seasons_coverage_verified(self):
+        files = sorted(os.listdir(os.path.join(ROOT, 'data', 'audit', 'box_quality', 'v1', 'coverage')))
+        self.assertEqual(files, [f'{s}.json' for s in range(2015, 2026)])          # 11 份完整
         for s in range(2015, 2026):
             m = audit_coverage.verify(s, ROOT)
+            self.assertEqual(m['audit_code_sha256'], audit_coverage._code_sha())
             self.assertEqual(m['expected_game_ids'], m['audited_game_ids'])
             self.assertEqual(m['expected_game_count'], m['audited_game_count'])
 

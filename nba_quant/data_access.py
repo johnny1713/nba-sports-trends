@@ -231,6 +231,19 @@ class DataAccess:
                              if os.path.exists(p) else {})
         return {g: self._neutral.get(g, 'home') for g in game_ids}
 
+    def box_audit_flags(self, season, as_of=None):
+        """box score 稽核 v1 的旗標（data/audit/box_quality/v1/<季>_flags.jsonl.gz），依 (game_id, team) 分組。
+        team 為 None 的是同場（game 層級）旗標。鎖定規則與 games() 相同。檔案不存在 → 回傳空 dict 並記錄。"""
+        self.check_season(season, as_of)
+        p = self._path('data', 'audit', 'box_quality', 'v1', f'{season}_flags.jsonl.gz')
+        out = {}
+        if os.path.exists(p):
+            for f in store.read_jsonl_gz(p):
+                out.setdefault((f['game_id'], f.get('team')), []).append(f)
+        self.log.append({'call': 'box_audit_flags', 'purpose': self.purpose, 'season': season, 'as_of': as_of,
+                         'returned': sum(len(v) for v in out.values()), 'file_exists': os.path.exists(p)})
+        return out
+
     def require_features(self, features, season, as_of=None):
         """模型輸入檢查：未登記 → KeyError；不可用 → FeatureRejected；回傳每個特徵的狀態。"""
         self.check_season(season, as_of)
@@ -288,7 +301,9 @@ class DataAccess:
             if gs:
                 return {'feature': feature, 'team': team, 'as_of': as_of, 'source': 'team_previous_season', 'seasons': [prev],
                         'n_games': len(gs), 'period': [gs[0]['start_utc'][:10], gs[-1]['start_utc'][:10]]}
-        cur = self.games(season, 'use_team_stats', as_of)
+        # leave-one-team-out（2026-11-21）：門檻以排除目標球隊參與比賽後的場數判斷；
+        # F1 另外再排除 box 無效／稽核 error 的比賽（開發期 2014-15、2018-19 沒有這類比賽，兩者一致，有測試）
+        cur = [g for g in self.games(season, 'use_team_stats', as_of) if team not in (g['home'], g['away'])]
         if len(cur) >= MIN_LEAGUE_GAMES_F1:
             return {'feature': feature, 'team': team, 'as_of': as_of, 'source': 'league_average_current_season_to_date',
                     'seasons': [season], 'n_games': len(cur), 'period': [cur[0]['start_utc'][:10], cur[-1]['start_utc'][:10]],

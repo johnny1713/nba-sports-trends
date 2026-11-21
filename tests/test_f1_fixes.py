@@ -107,15 +107,18 @@ class Possessions(unittest.TestCase):
         self.assertFalse([e for e in res.excluded if e['game_id'] == 'odd'])
 
     @unittest.skipUnless(HAS_DATA, 'no data')
-    def test_5b_real_data_no_exclusions_no_warnings(self):
+    def test_5b_real_data_exclusions_only_audit_errors_and_no_pace_band_warnings(self):
         for s in (2016, 2019, 2021):
             res = f1.compute(s)
-            self.assertEqual((res.excluded, res.warnings), ([], []), s)
+            self.assertEqual(res.excluded, [], s)                                   # 這三季沒有 box 稽核 error
+            self.assertFalse([w for w in res.warnings if w['source'] == 'f1_pace_band'], s)
+            self.assertTrue(all(w['action'] == 'kept_with_warning' for w in res.warnings if w['source'] == 'box_audit_v1'))
 
 
 class PriorFields(unittest.TestCase):
-    REQUIRED = ('prior_ortg', 'prior_drtg', 'prior_net_rating', 'prior_pace', 'prior_source', 'prior_season',
-                'prior_effective_games', 'prior_weight_basis', 'shrink_games', 'prior_team_weight', 'n_games',
+    REQUIRED = ('prior_ortg', 'prior_drtg', 'prior_net_rating', 'prior_pace', 'prior_value', 'prior_source', 'prior_season',
+                'prior_weight', 'prior_weight_basis', 'team_shrinkage_M', 'prior_team_weight_W', 'league_prior_K',
+                'league_games_asof', 'league_games_asof_excl_team', 'n_games',
                 'raw_ortg', 'raw_drtg', 'raw_net_rating', 'raw_pace', 'F1.ortg', 'F1.drtg', 'F1.net_rating', 'F1.pace',
                 'status')
 
@@ -123,11 +126,14 @@ class PriorFields(unittest.TestCase):
         for r in rows:
             for k in self.REQUIRED:
                 self.assertIn(k, r)
+            self.assertNotIn('prior_effective_games', r)                    # 已移除（易與 K 混淆）
+            self.assertIsNone(r['league_prior_K'])                             # 方案 A 不使用 K
             if r['status'] in ('available', 'available_prior_excluded'):
+                self.assertEqual(r['prior_value'], {k: r[f'prior_{k}'] for k in f1.KEYS})
                 for k in f1.KEYS:
                     self.assertIsNotNone(r[f'prior_{k}'])
                     raw = r[f'raw_{k}'] if r[f'raw_{k}'] is not None else 0.0
-                    want = (r['n_games'] * raw + r['shrink_games'] * r[f'prior_{k}']) / (r['n_games'] + r['shrink_games'])
+                    want = (r['n_games'] * raw + r['team_shrinkage_M'] * r[f'prior_{k}']) / (r['n_games'] + r['team_shrinkage_M'])
                     self.assertAlmostEqual(r[f'F1.{k}'], want, places=9)
 
     def test_6_synthetic(self):

@@ -12,7 +12,7 @@ from test_f1 import make_root
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 HAS_DATA = os.path.exists(os.path.join(ROOT, 'data', 'reference', 'game_classification.csv'))
-M = f1.SHRINK_GAMES
+M = f1.SHRINK_GAMES  # team_shrinkage_M
 
 
 def backed_out_prior(r, k):
@@ -115,7 +115,8 @@ class PriorRules(unittest.TestCase):
         for r in random.Random(7).sample(rows, 15):
             acc = f1.Acc()
             for x in f1.game_rows(da.team_boxes(2019, f1.SCOPE, list(f1.FIELDS), r['as_of'])):
-                acc.add(x)
+                if r['team'] not in (x['team'], x['opp']):                 # leave-one-team-out（2026-11-21）
+                    acc.add(x)
             lv = f1.league_values(acc)
             self.assertAlmostEqual(backed_out_prior(r, 'ortg'), lv['ortg'], places=6)
             self.assertAlmostEqual(backed_out_prior(r, 'pace'), lv['pace'], places=6)

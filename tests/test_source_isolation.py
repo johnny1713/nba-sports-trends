@@ -171,7 +171,10 @@ class SnapshotIsTheOnlySource(Base):
     def test_06_snapshot_changed_after_verification_refused(self):
         da = fc(self.d)
         snap = da.verified_snapshot(2020)
-        snap.boxes[('g1', 'A')]['pts'] = 999                         # 驗證後竄改 F1 要用的 box
+        with self.assertRaises(TypeError):                           # 快照深層不可變：無法原地竄改
+            snap.boxes[('g1', 'A')]['pts'] = 999
+        box = dict(snap.boxes[('g1', 'A')], pts=999)                 # 以底層手段整個替換欄位（繞過 frozen）
+        object.__setattr__(snap, 'boxes', type(snap.boxes)({**snap.boxes, ('g1', 'A'): box}))
         with self.assertRaises(AuditIntegrityError) as cm:
             f1.get_valid_f1_games(da, 2020)
         self.assertEqual(cm.exception.code, 'snapshot_mismatch')

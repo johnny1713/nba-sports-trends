@@ -118,7 +118,7 @@ docs/
 - 來源比對結果須標示範圍：2017-18 為全季逐場，其他季為抽樣（每季 30 場），抽樣結果不可宣稱全季驗證。
 - box score 合理性稽核 `box_quality/v1` 與盤口品質報告分開保存，不影響盤口 PASS 狀態。
 - 稽核 fail closed（2026-11-21）：每季獨立的稽核涵蓋清單 `box_quality/v1/coverage/<季>.json`（`nba_quant/audit_coverage.py`），
-  記錄原始檔指紋、逐場已稽核清單與稽核程式指紋（box_audit.py、audit_coverage.py、store.py）；`DataAccess.box_audit_flags` 讀取前驗證並**重新稽核逐筆比對**，任何不符一律以帶代碼的 AuditIntegrityError 拒絕。F1 只使用 `DataAccess.verified_snapshot` 的已驗證快照；espn 只能提供 PLAY_IN 以外的比賽、espn_playin 只能提供分類為 PLAY_IN 的比賽，重複資料（同來源或跨來源）一律拒絕、不依讀取順序覆蓋（`nba_quant/integrity.py`）。只有 2013-14 可以完全沒有資料。
+  記錄原始檔指紋、逐場已稽核清單與稽核程式指紋（box_audit.py、audit_coverage.py、store.py）；`DataAccess.box_audit_flags` 讀取前驗證並**重新稽核逐筆比對**，任何不符一律以帶代碼的 AuditIntegrityError 拒絕。F1 只使用 `DataAccess.verified_snapshot` 的已驗證快照；espn 只能提供 PLAY_IN 以外的比賽、espn_playin 只能提供分類為 PLAY_IN 的比賽，重複資料（同來源或跨來源）一律拒絕、不依讀取順序覆蓋（`nba_quant/integrity.py`）。只有 2013-14 可以完全沒有資料。快照建立時以同一份原始賽程重新分類並與分類表逐筆比對；快照深層不可變，預期指紋保存在 DataAccess（快照外部）。F1 日後的輸出必須在記憶體完成、通過完整性檢查後才整批寫出（暫存目錄 + 完成標記）。
   重新回補原始資料後必須重跑 `python -m nba_quant.box_audit` 與 `python -m nba_quant.audit_coverage`。
 
 ### 2.2 TeamBox（每場每隊一筆，**只能用於該場之後的預測**）

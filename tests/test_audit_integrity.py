@@ -152,8 +152,8 @@ class AuditFailClosed(unittest.TestCase):
     def test_code_fingerprint_covers_all_audit_files(self):
         m = store.read_json(self.p['manifest'])
         self.assertEqual(sorted(m['audit_code_files']),
-                         ['nba_quant/audit_coverage.py', 'nba_quant/box_audit.py', 'nba_quant/integrity.py',
-                          'nba_quant/store.py'])
+                         ['nba_quant/audit_coverage.py', 'nba_quant/box_audit.py', 'nba_quant/game_class.py',
+                          'nba_quant/integrity.py', 'nba_quant/store.py'])
         self.assertEqual(m['audit_code_sha256'], audit_coverage.combine_code_sha(m['audit_code_files']))
 
     def test_code_01_03_any_code_file_changed_refused(self):

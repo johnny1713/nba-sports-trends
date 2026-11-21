@@ -45,7 +45,7 @@ import statistics
 from collections import defaultdict
 from dataclasses import dataclass, field
 
-from .. import asof, config, feature_deps
+from .. import asof, config, feature_deps, integrity
 from ..data_access import MIN_LEAGUE_GAMES_F1, DataAccess
 
 SHRINK_GAMES = 10.0
@@ -163,7 +163,7 @@ def get_valid_f1_games(da, season, as_of=None, exclude_team=None):
             lo, hi = med - WARN_MAD_K * mad, med + WARN_MAD_K * mad
             h.warnings += [{'game_id': gid, 'source': 'f1_pace_band', 'pace_per48': v, 'band': [lo, hi], 'action': 'flag_only'}
                            for gid, v in sorted(paces.items()) if v < lo or v > hi]
-    snap.check()                                       # 使用完再核對一次：快照在驗證後未被改動
+    da.check_snapshot(snap)                            # 使用完再核對一次：內容 = 驗證當下保存在快照外部的預期指紋
     return h
 
 
@@ -379,12 +379,25 @@ def prior_context(da, season):
     return prev, prev_teams, prev_league, fallback_season, fallback_league
 
 
+def season_of(da, as_of, feature='F1.net_rating'):
+    """as_of 所屬球季。依據的分類列必須與該季已驗證快照中的分類列相同（分類表竄改 → 拒絕）；
+    F1 不可用的球季（2017-18）不讀任何資料，直接回傳球季。"""
+    row = da._season_row_of(as_of)
+    season = int(row['season'])
+    if feature_deps.availability(feature, season)[0] == 'unavailable':
+        return season
+    snap = da.verified_snapshot(season, as_of)
+    if dict(snap.classifications.get(row['game_id']) or {}) != dict(row):
+        raise integrity.AuditIntegrityError('classification_mismatch', f"{row['game_id']}: 判定球季所用的分類列與已驗證快照不同")
+    return season
+
+
 def prior_source(da, team, as_of, feature='F1.net_rating'):
     """單一隊伍在 as_of 時的先驗來源（DataAccess.f1_prior_source 委派到這裡）。
     有效比賽一律取自 get_valid_f1_games(as_of, exclude_team=team)，決策一律走 compute 用的同一個 _prior，
     不另外計數。"""
     check_purpose(da)
-    season = da._season_of(as_of)
+    season = season_of(da, as_of, feature)
     if feature_deps.availability(feature, season)[0] == 'unavailable':
         return {'feature': feature, 'status': 'unavailable'}
     prev, prev_teams, prev_league, fb_season, fb_league = prior_context(da, season)
@@ -414,7 +427,7 @@ def prior_source(da, team, as_of, feature='F1.net_rating'):
 def f1_reference(da, team, as_of):
     """逐場參考實作（測試用）：直接以 DataAccess(as_of) 讀資料重算單一隊伍的累計與先驗來源。"""
     check_purpose(da)
-    season = da._season_of(as_of)
+    season = season_of(da, as_of)
     snap = da.verified_snapshot(season, as_of)
     sched = da.games(season, SCOPE, as_of, snapshot=snap)
     rows = []

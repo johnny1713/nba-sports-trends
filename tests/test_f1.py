@@ -18,30 +18,39 @@ def box(gid, team, pts, fga=85, fta=20, oreb=10, tov=14, ot=0):
             'oreb': oreb, 'dreb': 33, 'tov': tov, 'overtimes': ot, 'source': 'espn:summary'}
 
 
+CUP_NOTES = {'CUP_GROUP': ['NBA Cup Group Play'], 'CUP_QUARTERFINAL': ['NBA Cup Quarterfinals'],
+             'CUP_SEMIFINAL': ['NBA Cup Semifinals'], 'CUP_FINAL': ['NBA Cup Championship']}
+SEASON_TYPE = {'POSTSEASON': 3, 'PLAY_IN': 5}
+
+
 def make_root(d, games, real_audit=False, empty_prev=True):
-    """games: [(gid, season, start_utc, home, away, hp, ap, game_type, home_box_kw, away_box_kw)]"""
+    """games: [(gid, season, start_utc, home, away, hp, ap, game_type, home_box_kw, away_box_kw)]
+    原始賽程依 game_type 帶上 ESPN 的 season_type 與盃賽備註；分類表以 game_class.row 從這些原始賽程產生
+    （與真實分類表的產生方式相同），附加賽放在 data/raw/espn_playin/<季>/。"""
     os.makedirs(os.path.join(d, 'data', 'reference'), exist_ok=True)
+    gs, bx, pgs, pbx = {}, {}, {}, {}
+    cls_rows = []
+    for gid, s, t, h, a, hp, ap, gt, *kw in games:
+        hk, ak = (kw + [{}, {}])[:2]
+        g = {'game_id': gid, 'season': s, 'season_type': SEASON_TYPE.get(gt, 2), 'start_utc': t, 'home': h, 'away': a,
+             'home_abbr': h, 'away_abbr': a, 'home_pts': hp, 'away_pts': ap, 'status': 'final', 'complete': True,
+             'notes': CUP_NOTES.get(gt, [])}
+        assert game_class.classify(g)[0] == gt, (gid, gt)
+        kind = 'espn_playin' if gt == 'PLAY_IN' else 'espn'
+        cls_rows.append(game_class.row(g, game_class.source_file(kind, s)))
+        gs.setdefault(s, [])
+        bx.setdefault(s, [])
+        if kind == 'espn_playin':              # 附加賽與真實資料相同：獨立放在 data/raw/espn_playin/<季>/
+            pgs.setdefault(s, []).append(g)
+            pbx.setdefault(s, []).extend([box(gid, h, hp, **hk), box(gid, a, ap, **ak)])
+            continue
+        gs[s].append(g)
+        bx[s].extend([box(gid, h, hp, **hk), box(gid, a, ap, **ak)])
+    cls_rows.sort(key=lambda r: (r['start_utc'], r['game_id']))
     with open(os.path.join(d, 'data', 'reference', 'game_classification.csv'), 'w', newline='', encoding='utf-8') as fh:
         w = csv.DictWriter(fh, fieldnames=game_class.FIELDS)
         w.writeheader()
-        for gid, s, t, h, a, hp, ap, gt, *_ in games:
-            w.writerow({'game_id': gid, 'season': s, 'start_utc': t, 'away': a, 'home': h, 'status': 'final',
-                        'espn_season_type': 3 if gt == 'POSTSEASON' else 2, 'game_type': gt,
-                        'counts_for_standings': game_class.COUNTS[gt], **game_class.uses(gt), 'source_file': 'x', 'basis': 't'})
-    gs, bx, pgs, pbx = {}, {}, {}, {}
-    for gid, s, t, h, a, hp, ap, gt, *kw in games:
-        hk, ak = (kw + [{}, {}])[:2]
-        if gt == 'PLAY_IN':                    # 附加賽與真實資料相同：獨立放在 data/raw/espn_playin/<季>/
-            pgs.setdefault(s, []).append({'game_id': gid, 'season': s, 'season_type': 5, 'start_utc': t, 'home': h,
-                                          'away': a, 'home_pts': hp, 'away_pts': ap, 'status': 'final', 'complete': True})
-            pbx.setdefault(s, []).extend([box(gid, h, hp, **hk), box(gid, a, ap, **ak)])
-            gs.setdefault(s, [])
-            bx.setdefault(s, [])
-            continue
-        gs.setdefault(s, []).append({'game_id': gid, 'season': s, 'season_type': 3 if gt == 'POSTSEASON' else 2,
-                                     'start_utc': t, 'home': h, 'away': a, 'home_pts': hp, 'away_pts': ap,
-                                     'status': 'final', 'complete': True})
-        bx.setdefault(s, []).extend([box(gid, h, hp, **hk), box(gid, a, ap, **ak)])
+        w.writerows(cls_rows)
     for s in gs:
         store.write_jsonl_gz(os.path.join(d, 'data', 'raw', 'espn', str(s), 'games.jsonl.gz'), gs[s])
         store.write_jsonl_gz(os.path.join(d, 'data', 'raw', 'espn', str(s), 'teambox.jsonl.gz'), bx[s])

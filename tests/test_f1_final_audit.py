@@ -24,6 +24,9 @@ class ThreeErrorGames(unittest.TestCase):
             shutil.copytree(os.path.join(ROOT, 'data', 'audit', 'box_quality'), os.path.join(d, 'data', 'audit', 'box_quality'))
             for s in (2019, 2020, 2021, 2022, 2023):
                 shutil.copytree(os.path.join(ROOT, 'data', 'raw', 'espn', str(s)), os.path.join(d, 'data', 'raw', 'espn', str(s)))
+                pi = os.path.join(ROOT, 'data', 'raw', 'espn_playin', str(s))           # 分類表含附加賽：原始資料要完整複製
+                if os.path.isdir(pi):
+                    shutil.copytree(pi, os.path.join(d, 'data', 'raw', 'espn_playin', str(s)))
             n = 0
             for s in (2020, 2023):
                 p = os.path.join(d, 'data', 'raw', 'espn', str(s), 'teambox.jsonl.gz')

@@ -14,16 +14,19 @@
 - espn_playin 的 box 只能屬於 espn_playin 的比賽；espn 的 box 不得屬於 espn_playin 的比賽或分類為 PLAY_IN 的比賽。
 比賽「用途」（F1／F5／Elo 是否納入）仍完全由分類表的 use_* 欄位決定，本模組不改變用途矩陣。
 
-已驗證資料快照（Snapshot）：一次讀入原始 games 與 team boxes，通過稽核完整性驗證（audit_coverage.load_snapshot）後
-交給 F1；建立時記錄內容指紋，使用時重算比對（check），快照內容在驗證後被改動 → snapshot_mismatch。
+已驗證資料快照（Snapshot）：一次讀入原始 games 與 team boxes，通過稽核完整性驗證與分類表一致性檢查
+（audit_coverage.load_snapshot）後交給 F1。快照是深層不可變的；預期內容指紋由 DataAccess 在建立當下保存於快照外部，
+每次使用都以 content_digest() 比對（DataAccess.check_snapshot），不符 → snapshot_mismatch。
 """
 from __future__ import annotations
 
 import hashlib
+import json
 from collections import Counter
 from dataclasses import dataclass, field
+from types import MappingProxyType
 
-from . import store
+
 
 PLAY_IN = 'PLAY_IN'
 GAME_SOURCES = ('espn', 'espn_playin')
@@ -90,28 +93,62 @@ def merge_sources(game_sources, box_sources, classification):
     return games, boxes
 
 
-def _digest(games, boxes, flags):
-    return hashlib.sha256(store.dumps([games, sorted(([k[0], k[1]], v) for k, v in boxes.items()), flags])
-                          .encode('utf-8')).hexdigest()
+def freeze(x):
+    """深層凍結：dict → MappingProxyType（包住一份新的 dict，外部沒有它的參照）、list／tuple → tuple。"""
+    if isinstance(x, (dict, MappingProxyType)):
+        return MappingProxyType({k: freeze(v) for k, v in x.items()})
+    if isinstance(x, (list, tuple)):
+        return tuple(freeze(v) for v in x)
+    return x
 
 
-@dataclass
+def _jsonable(o):
+    if isinstance(o, MappingProxyType):
+        return dict(o)
+    raise TypeError(f'無法序列化 {type(o).__name__}')
+
+
+def thaw(x):
+    """凍結資料的獨立可變複本（回傳給呼叫端用，修改它不會影響快照）。"""
+    if isinstance(x, (dict, MappingProxyType)):
+        return {k: thaw(v) for k, v in x.items()}
+    if isinstance(x, (list, tuple)):
+        return [thaw(v) for v in x]
+    return x
+
+
+@dataclass(frozen=True)
 class Snapshot:
-    """一季已驗證的原始資料快照。status：verified（通過完整驗證）或 no_raw_data（只限 allowlist 球季）。"""
+    """一季已驗證的原始資料快照（不可變）。
+    status：verified（通過完整驗證）或 no_raw_data（只限 allowlist 球季）。
+    games：該季全部原始賽程紀錄（espn + espn_playin）；boxes：{(game_id, team): box}；flags：box 稽核 v1 旗標；
+    classifications：{game_id: 分類表列}，已與「用同一份原始賽程重新分類」的結果逐筆比對通過。
+    manifest：稽核涵蓋清單，只作為 metadata（存取紀錄），**不是**數值計算的依賴，不納入內容指紋。
+    快照沒有自己的「預期指紋」，也沒有重新封存的方法：預期指紋由建立它的受控流程（DataAccess.verified_snapshot）
+    在快照外部保存，比對用 content_digest()。"""
     season: int
     status: str
-    manifest: dict | None = None
-    flags: list = field(default_factory=list)
-    games: list = field(default_factory=list)
-    boxes: dict = field(default_factory=dict)
-    digest: str = ''
+    games: tuple = ()
+    boxes: MappingProxyType = field(default_factory=lambda: MappingProxyType({}))
+    flags: tuple = ()
+    classifications: MappingProxyType = field(default_factory=lambda: MappingProxyType({}))
+    manifest: MappingProxyType | None = None
 
-    def seal(self):
-        self.digest = _digest(self.games, self.boxes, self.flags)
-        return self
+    @classmethod
+    def build(cls, season, status, games=(), boxes=None, flags=(), classifications=None, manifest=None):
+        return cls(season, status, freeze(list(games)), freeze(boxes or {}), freeze(list(flags)),
+                   freeze(classifications or {}), freeze(manifest) if manifest is not None else None)
 
-    def check(self):
-        """使用前重算內容指紋：驗證後快照被改動（或不是驗證流程產生的快照）→ 拒絕。"""
-        if not self.digest or _digest(self.games, self.boxes, self.flags) != self.digest:
-            raise AuditIntegrityError('snapshot_mismatch', f'{self.season}: 資料快照與驗證時的內容不一致')
-        return self
+    def content_digest(self):
+        """內容指紋：season、status、games、boxes、flags、classifications 的全部欄位（固定序列化）。
+        manifest 不納入（不影響數值）。"""
+        body = {'season': self.season, 'status': self.status, 'games': self.games,
+                'boxes': sorted(([k[0], k[1]], v) for k, v in self.boxes.items()),
+                'flags': self.flags,
+                'classifications': sorted(self.classifications.items())}
+        return hashlib.sha256(json.dumps(body, default=_jsonable, ensure_ascii=False, sort_keys=True,
+                                         separators=(',', ':')).encode('utf-8')).hexdigest()
+
+    def attribute_ids(self):
+        """各欄位物件的識別碼（輕量檢查用：偵測以 object.__setattr__ 整個替換欄位）。"""
+        return tuple(id(getattr(self, f)) for f in self.__dataclass_fields__)

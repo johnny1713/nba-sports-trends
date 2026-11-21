@@ -72,6 +72,25 @@ def classify(g):
     return 'REGULAR_SEASON', True, 'ESPN season_type 2，無盃賽備註'
 
 
+def source_file(kind, season):
+    """分類表 source_file 欄位的值（kind：espn／espn_playin）。"""
+    return os.path.join(RAW if kind == 'espn' else PLAYIN, str(season), 'games.jsonl.gz').replace(os.sep, '/')
+
+
+def row(g, src):
+    """單場比賽的分類列（唯一定義）：build() 產生分類表與資料快照驗證分類表（audit_coverage.load_snapshot）共用。"""
+    gt, counts, basis = classify(g)
+    return {'game_id': g['game_id'], 'season': g['season'], 'start_utc': g['start_utc'],
+            'away': g.get('away_abbr'), 'home': g.get('home_abbr'), 'status': g['status'],
+            'espn_season_type': g['season_type'], 'game_type': gt, 'counts_for_standings': counts,
+            **uses(gt), 'source_file': src, 'basis': basis}
+
+
+def as_csv(r):
+    """分類列寫入 CSV 後讀回的樣子（csv.DictWriter：None → ''，其他 → str）。"""
+    return {k: '' if r[k] is None else str(r[k]) for k in FIELDS}
+
+
 def build():
     rows = []
     sources = [(os.path.join(RAW, s, 'games.jsonl.gz')) for s in sorted(os.listdir(RAW))]
@@ -81,12 +100,7 @@ def build():
         if not os.path.exists(p):
             continue
         for g in store.read_jsonl_gz(p):
-            gt, counts, basis = classify(g)
-            rows.append({'game_id': g['game_id'], 'season': g['season'], 'start_utc': g['start_utc'],
-                         'away': g.get('away_abbr'), 'home': g.get('home_abbr'), 'status': g['status'],
-                         'espn_season_type': g['season_type'], 'game_type': gt, 'counts_for_standings': counts,
-                         **uses(gt),
-                         'source_file': p.replace(os.sep, '/'), 'basis': basis})
+            rows.append(row(g, p.replace(os.sep, '/')))
     ids = [r['game_id'] for r in rows]
     if len(ids) != len(set(ids)):
         raise ValueError('game_id 重複：play-in 與一般資料重疊')

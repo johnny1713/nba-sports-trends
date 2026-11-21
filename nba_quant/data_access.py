@@ -61,7 +61,8 @@ class DataAccess:
             raise ValueError(f'未知的用途：{purpose}（允許：{PURPOSES}）')
         self._purpose, self._run_id, self.root = purpose, run_id, root
         self._cls = None
-        self._snaps = {}       # 已驗證的資料快照（每個 DataAccess 實例、每季一份；F1 只用它，不再重讀原始檔）
+        self._cls_rows = None
+        self.__verified = {}   # 已驗證快照的預期內容指紋：{季: (快照, 預期指紋)}，保存在快照外部（私有）
         self.log = []          # 每次存取的紀錄（用途、球季、範圍、as_of、回傳筆數、排除原因）
 
     # 用途與 run_id 建立後不可更改（2026-11-21：避免先以 data_quality 建立再改成特徵用途繞過檢查）
@@ -137,10 +138,20 @@ class DataAccess:
     def _path(self, *p):
         return os.path.join(self.root, *p)
 
+    def _classification_rows(self):
+        if self._cls_rows is None:
+            with open(self._path('data', 'reference', 'game_classification.csv'), encoding='utf-8') as fh:
+                self._cls_rows = list(csv.DictReader(fh))
+        return self._cls_rows
+
     def _classification(self):
         if self._cls is None:
-            self._cls = {r['game_id']: r for r in csv.DictReader(open(self._path('data', 'reference', 'game_classification.csv'),
-                                                                        encoding='utf-8'))}
+            out = {}
+            for r in self._classification_rows():
+                if r['game_id'] in out:                 # 重複的分類列不依讀取順序取捨（2026-11-21）
+                    raise integrity.AuditIntegrityError('classification_duplicate', f"分類表 game_id 重複：{r['game_id']}")
+                out[r['game_id']] = r
+            self._cls = out
         return self._cls
 
     def _merged(self, season):
@@ -168,20 +179,32 @@ class DataAccess:
         重新稽核、唯一性與來源隔離；同一個 DataAccess 實例內重複使用同一份，使用前都重算內容指紋。
         先做球季鎖定檢查，鎖定期在讀任何資料前就拒絕。"""
         self.check_season(season, as_of)
-        snap = self._snaps.get(season)
-        if snap is None:
+        if season not in self.__verified:
             from .audit_coverage import load_snapshot
-            snap = load_snapshot(season, self.root, self._classification())
-            self._snaps[season] = snap
-        snap.check()
+            snap, digest = load_snapshot(season, self.root, self._classification_rows())
+            self.__verified[season] = (snap, digest, snap.attribute_ids())
+        snap = self.check_snapshot(self.__verified[season][0], full=False)
         self.log.append({'call': 'verified_snapshot', 'purpose': self.purpose, 'season': season, 'as_of': as_of,
                          'status': snap.status, 'coverage_verified': snap.status == 'verified'})
         return snap
 
+    def check_snapshot(self, snapshot, full=True):
+        """快照必須是本實例驗證產生的那一個物件（身分比對），欄位物件沒有被整個替換；full=True 時再重算內容指紋，
+        與驗證當下保存在快照外部的預期指紋比對。預期指紋只在 verified_snapshot 建立快照時寫入一次，沒有任何方法可以更新它。
+        快照本身深層不可變，所以中間步驟用輕量檢查（full=False）；F1 在計算結束時做完整比對。"""
+        rec = self.__verified.get(getattr(snapshot, 'season', None))
+        if rec is None or rec[0] is not snapshot:
+            raise integrity.AuditIntegrityError('snapshot_mismatch', '快照不是由這個 DataAccess 的驗證流程產生')
+        if snapshot.attribute_ids() != rec[2]:
+            raise integrity.AuditIntegrityError('snapshot_mismatch', f'{snapshot.season}: 快照欄位在驗證後被替換')
+        if full and snapshot.content_digest() != rec[1]:
+            raise integrity.AuditIntegrityError('snapshot_mismatch', f'{snapshot.season}: 資料快照與驗證時的內容不一致')
+        return snapshot
+
     def _snapshot_for(self, snapshot, season):
         if snapshot.season != season:
             raise integrity.AuditIntegrityError('snapshot_mismatch', f'快照球季 {snapshot.season} ≠ {season}')
-        return snapshot.check()
+        return self.check_snapshot(snapshot, full=False)
 
     # ------------------------------------------------------------ 公開介面
     def games(self, season, scope, as_of=None, snapshot=None):
@@ -190,11 +213,11 @@ class DataAccess:
         self.check_season(season, as_of)
         if scope not in SCOPES:
             raise ValueError(f'未知的資料範圍：{scope}（允許：{SCOPES}）')
-        cls = self._classification()
-        if snapshot is not None:
+        if snapshot is not None:                     # 快照路徑：賽程、box、分類都只取自快照（分類已與重新分類逐筆比對）
             self._snapshot_for(snapshot, season)
-            raw_games, boxes = snapshot.games, snapshot.boxes
+            raw_games, boxes, cls = snapshot.games, snapshot.boxes, snapshot.classifications
         else:
+            cls = self._classification()
             raw_games, boxes = self._merged(season)
         out = []
         cutoff = asof.et_date(as_of) if as_of else None
@@ -270,8 +293,8 @@ class DataAccess:
             self.check_season(season, as_of)
             self._snapshot_for(snapshot, season)
         out = {}
-        for f in snapshot.flags:
-            out.setdefault((f['game_id'], f.get('team')), []).append(f)
+        for f in snapshot.flags:                     # 回傳獨立的可變複本，修改它不影響快照
+            out.setdefault((f['game_id'], f.get('team')), []).append(integrity.thaw(f))
         self.log.append({'call': 'box_audit_flags', 'purpose': self.purpose, 'season': season, 'as_of': as_of,
                          'returned': sum(len(v) for v in out.values()), 'coverage_verified': snapshot.status == 'verified',
                          'audited_game_count': (snapshot.manifest or {}).get('audited_game_count', 0)})
@@ -330,6 +353,10 @@ class DataAccess:
 
     def _season_of(self, as_of):
         """以分類表找 as_of 所屬球季（as_of 為某場比賽的開賽時間）。"""
+        return int(self._season_row_of(as_of)['season'])
+
+    def _season_row_of(self, as_of):
+        """as_of 之前（含）最後一場比賽的分類列（_season_of 的依據）。"""
         t = _parse_ts(as_of)
         best = None
         for r in self._classification().values():
@@ -337,4 +364,4 @@ class DataAccess:
                 best = r
         if best is None:
             raise ValueError(f'{as_of} 早於所有資料')
-        return int(best['season'])
+        return best

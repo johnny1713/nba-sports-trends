@@ -30,7 +30,7 @@ import json
 import os
 from datetime import datetime, timezone
 
-from . import box_audit, integrity, store
+from . import box_audit, game_class, integrity, store
 from .integrity import AuditIntegrityError, Snapshot  # noqa: F401（錯誤類別定義在 integrity，這裡重新匯出）
 
 AUDIT_VERSION = 'box_quality_v1'
@@ -39,10 +39,13 @@ REQUIRED_AUDIT_VERSION = AUDIT_VERSION
 #   box_audit.py      稽核規則與稽核範圍定義（audit_season、scope_from_records）
 #   audit_coverage.py 清單的產生與驗證規則（本檔）
 #   store.py          原始資料與 flag 檔的解析（read_jsonl_gz、parse_jsonl_gz_bytes）與寫出
-#   integrity.py      唯一性、來源隔離（espn／espn_playin）、資料快照指紋
-# 四者的專案內 import 只有彼此；其餘皆為 Python 標準函式庫。資料存取層（data_access.py）與 F1 是 flag 的使用端，
+#   integrity.py      唯一性、來源隔離（espn／espn_playin）、資料快照與內容指紋
+#   game_class.py     比賽分類規則（classify、uses、COUNTS、row）：決定比賽類型與 F1／F5／Elo 用途；
+#                     分類規則改變 → 舊清單失效 → 必須重建分類表並重新驗證
+# 五者的專案內 import 只有彼此；其餘皆為 Python 標準函式庫。資料存取層（data_access.py）與 F1 是 flag 的使用端，
 # 不影響稽核結果或清單驗證，不納入（其行為由 F1 測試與九季輸出比對把關）。
-AUDIT_CODE_FILES = ('nba_quant/audit_coverage.py', 'nba_quant/box_audit.py', 'nba_quant/integrity.py', 'nba_quant/store.py')
+AUDIT_CODE_FILES = ('nba_quant/audit_coverage.py', 'nba_quant/box_audit.py', 'nba_quant/game_class.py',
+                    'nba_quant/integrity.py', 'nba_quant/store.py')
 CODE_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # 「沒有任何資料」例外的明確 allowlist（使用者 2026-11-21 決策）。season key 與 data/raw/espn/<季>/、分類表 season 欄相同：
 # 以球季結束年份表示（2015 = 2014-15）。只有 2014（= 2013-14，第一個開發季 2014-15 的上一季，專案從未抓取）可以是空的；
@@ -307,22 +310,63 @@ def verify(season, root='.'):
     return verify_and_load(season, root)[0]
 
 
+def classification_index(rows):
+    """分類表列 → {game_id: 列}；game_id 重複 → classification_duplicate（不依順序取捨）。"""
+    out = {}
+    for r in rows:
+        if r['game_id'] in out:
+            raise AuditIntegrityError('classification_duplicate', f"分類表 game_id 重複：{r['game_id']}")
+        out[r['game_id']] = r
+    return out
+
+
+def verify_classification(season, sourced_games, classification):
+    """用同一份已讀取的原始賽程重新分類（game_class.row），與分類表該季的列逐筆、逐欄位（game_class.FIELDS 全部）比對。
+    sourced_games：[(來源 espn／espn_playin, games 紀錄)]。回傳 {game_id: 已驗證的分類列}。
+    缺漏 → classification_missing；分類表多出該季比賽 → classification_extra；任何欄位不同 → classification_mismatch。"""
+    expected = {}
+    for kind, rows in sourced_games:
+        src = game_class.source_file(kind, season)
+        for g in rows:
+            try:
+                expected[g['game_id']] = game_class.as_csv(game_class.row(g, src))
+            except Exception as e:
+                raise AuditIntegrityError('classification_mismatch', f"{g.get('game_id')}: 無法重新分類：{e}") from e
+    table = {gid: r for gid, r in classification.items() if r.get('season') == str(season)}
+    missing = sorted(set(expected) - set(table))
+    if missing:
+        raise AuditIntegrityError('classification_missing', f'{season}: 分類表缺少比賽 {missing[:5]}（或球季欄位錯誤）')
+    extra = sorted(set(table) - set(expected))
+    if extra:
+        raise AuditIntegrityError('classification_extra', f'{season}: 分類表多出原始資料沒有的比賽 {extra[:5]}')
+    for gid in sorted(expected):
+        got = {k: table[gid].get(k) for k in game_class.FIELDS}
+        if got != expected[gid] or set(table[gid]) != set(game_class.FIELDS):
+            diff = sorted(k for k in game_class.FIELDS if got[k] != expected[gid][k]) or ['欄位集合']
+            raise AuditIntegrityError('classification_mismatch', f'{season}: {gid} 的分類與重新分類結果不同（{diff}）；'
+                                                                 '必須以 game_class 重建分類表')
+    return {gid: table[gid] for gid in expected}
+
+
 def _season_has_any_data(season, root, classification):
     files = [paths(season, root)['teambox'], paths(season, root)['games'], *playin_paths(season, root).values()]
     return (any(os.path.exists(f) for f in files)
             or any(str(r.get('season')) == str(season) for r in classification.values()))
 
 
-def load_snapshot(season, root='.', classification=None):
+def load_snapshot(season, root='.', classification_rows=()):
     """F1 唯一的原始資料來源：一次讀入 espn 與 espn_playin 的 games／team boxes，完成稽核完整性驗證
-    （指紋、範圍、重新稽核）、唯一性與來源隔離後，回傳封存的 Snapshot。任何失敗 → AuditIntegrityError，整份拒絕。
+    （指紋、範圍、重新稽核）、唯一性、來源隔離與分類表一致性（重新分類、逐筆逐欄位比對）後，
+    回傳 (不可變 Snapshot, 預期內容指紋)。預期指紋由呼叫端（DataAccess）保存在快照外部。
+    任何失敗 → AuditIntegrityError，整份拒絕。
 
     沒有任何資料（espn、espn_playin 原始檔都不存在，分類表也沒有該季比賽）：只有 NO_DATA_SEASONS 回傳
     status = no_raw_data 的空快照，其他球季 → season_no_data。只要有任何一份資料存在，就走完整驗證（缺檔 → raw_missing）。"""
-    classification = classification or {}
+    classification = classification_index(classification_rows)
     if not _season_has_any_data(season, root, classification):
         if season in NO_DATA_SEASONS:
-            return Snapshot(season, 'no_raw_data').seal()
+            snap = Snapshot.build(season, 'no_raw_data')
+            return snap, snap.content_digest()
         raise AuditIntegrityError('season_no_data', f'{season}: 沒有任何原始資料也沒有分類資料，且不在空資料 allowlist '
                                                     f'{NO_DATA_SEASONS} 內（可能是整季資料遺失或分類表重建錯誤）')
     m, flags, game_rows, box_rows = _verify(season, root)
@@ -335,7 +379,9 @@ def load_snapshot(season, root='.', classification=None):
         [('espn', game_rows), ('espn_playin', pi['espn_playin_games'])],
         [('espn', box_rows), ('espn_playin', pi['espn_playin']), ('espn_playin_bbref', pi['espn_playin_bbref'])],
         classification)
-    return Snapshot(season, 'verified', m, flags, games, boxes).seal()
+    cls = verify_classification(season, [('espn', game_rows), ('espn_playin', pi['espn_playin_games'])], classification)
+    snap = Snapshot.build(season, 'verified', games, boxes, flags, cls, m)
+    return snap, snap.content_digest()
 
 
 def main():

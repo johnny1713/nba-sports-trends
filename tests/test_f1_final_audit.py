@@ -5,7 +5,7 @@ import shutil
 import tempfile
 import unittest
 
-from nba_quant import audit_coverage, store
+from nba_quant import audit_coverage, box_audit, store
 from nba_quant.features import f1
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -38,7 +38,12 @@ class ThreeErrorGames(unittest.TestCase):
                 with self.assertRaises(audit_coverage.AuditIntegrityError) as cm:
                     f1.compute(s, root=d)
                 self.assertEqual(cm.exception.code, 'raw_boxscore_hash')
-                audit_coverage.build_manifest(s, d, verify_flags=False, now='test')   # 沿用原稽核判定（只為隔離數值影響）
+                # 依 fail closed 流程：重新執行真實稽核、寫入新 flag、重建清單（暫存目錄，不動 repo）
+                flags = box_audit.audit_season(s, d)[0]
+                self.assertEqual({f['game_id'] for f in flags if f['severity'] == 'error'} & ERR,
+                                 {g for g in ERR if g.startswith('401161') == (s == 2020)})  # 三場仍是 ERROR
+                store.write_jsonl_gz(audit_coverage.paths(s, d)['flags'], flags)
+                audit_coverage.build_manifest(s, d, now='test')
             for s, res in base.items():
                 alt = f1.compute(s, root=d)
                 self.assertEqual(alt.rows, res.rows, s)

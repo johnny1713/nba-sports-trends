@@ -30,8 +30,7 @@ def run(games, flags=None, season=2020):
     with tempfile.TemporaryDirectory() as d:
         make_root(d, games)
         if flags is not None:
-            store.write_jsonl_gz(os.path.join(d, 'data', 'audit', 'box_quality', 'v1', f'{season}_flags.jsonl.gz'), flags)
-            seal(d)                                         # 注入的 flag 改變 flag 檔指紋：重新封存
+            seal(d, {season: flags})                        # 宣告該季的稽核結果（flag 檔 = 宣告內容）並重新封存
         return f1.compute(season, root=d)
 
 

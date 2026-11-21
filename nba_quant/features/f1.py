@@ -96,20 +96,24 @@ def get_valid_f1_games(da, season, as_of=None, exclude_team=None):
       5. 回合數有效（每隊 > 0、共同回合數 > 0）
       6. 2017-18 等 F1 不可用球季：status = unavailable，不讀取任何資料
       7. leave-one-team-out：exclude_team 參與的比賽不計入（另列 loto_excluded，不算資料問題）
-    唯一不需要稽核的情況：該季賽程為空**且**原始 games／teambox 檔都不存在（完全沒有資料，status = no_raw_data）。
+    唯一不需要稽核的情況：該季賽程為空、原始 games／teambox 檔都不存在、**且**分類表沒有該季任何比賽
+    （完全沒有資料，status = no_raw_data）。
     回傳 History：rows（每隊每場一列）、game_ids、excluded、loto_excluded、warnings、status。"""
     check_purpose(da)
     if feature_deps.availability('F1.net_rating', season)[0] == 'unavailable':
         return History(rows=[], status='unavailable')
     schedule = da.games(season, SCOPE, as_of)
     raw = audit_coverage.paths(season, da.root)
-    if not schedule and not os.path.exists(raw['teambox']) and not os.path.exists(raw['games']):
-        return History(rows=[], status='no_raw_data')  # 該季完全沒有原始資料（例：2014-15 的上一季）：沒有可稽核的比賽
+    if (not schedule and not os.path.exists(raw['teambox']) and not os.path.exists(raw['games'])
+            and not any(str(r.get('season')) == str(season) for r in da._classification().values())):
+        # 該季完全沒有資料（例：2014-15 的上一季）：賽程為空、兩個原始檔都不存在、分類表也沒有該季的比賽。
+        # 分類表有該季比賽卻沒有原始檔 → 不適用例外，照常驗證稽核（raw_missing），不得當成「沒有資料」
+        return History(rows=[], status='no_raw_data')
+    flags = da.box_audit_flags(season, as_of)          # fail closed：先驗證稽核（含重新稽核），通過後才讀 box
     boxes = da.team_boxes(season, SCOPE, list(FIELDS), as_of)
     excl_by = defaultdict(list)
     for gid, team, why in da.log[-1].get('excluded', []):
         excl_by[gid].append((team, why))
-    flags = da.box_audit_flags(season, as_of)          # fail closed：涵蓋清單不符即拋出錯誤
     by = defaultdict(dict)
     for b in boxes:
         by[b['game_id']][b['team']] = b

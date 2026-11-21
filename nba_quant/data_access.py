@@ -233,13 +233,14 @@ class DataAccess:
 
     def box_audit_flags(self, season, as_of=None):
         """box score 稽核 v1 的旗標，依 (game_id, team) 分組（team 為 None 是同場層級）。
-        Fail closed（2026-11-21）：先經 audit_coverage.verify()——flag 檔或涵蓋清單缺失、版本不符、原始資料指紋不符、
-        未稽核或多餘的比賽、重複 ID 等任何一項不符，都拋出 AuditIntegrityError，呼叫端（F1）不得繼續計算。"""
+        Fail closed（2026-11-21）：先經 audit_coverage.verify_and_load()——flag 檔或涵蓋清單缺失、版本或稽核程式指紋不符、
+        原始資料指紋不符、未稽核或多餘的比賽、重複 ID、重新稽核結果與 flag 檔不同等任何一項不符，都拋出
+        AuditIntegrityError，呼叫端（F1）不得繼續計算。"""
         self.check_season(season, as_of)
-        from .audit_coverage import paths, verify
-        m = verify(season, self.root)
+        from .audit_coverage import verify_and_load
+        m, flags = verify_and_load(season, self.root)        # 含讀取時重新稽核；flag 取自通過驗證的同一份位元組
         out = {}
-        for f in store.read_jsonl_gz(paths(season, self.root)['flags']):
+        for f in flags:
             out.setdefault((f['game_id'], f.get('team')), []).append(f)
         self.log.append({'call': 'box_audit_flags', 'purpose': self.purpose, 'season': season, 'as_of': as_of,
                          'returned': sum(len(v) for v in out.values()), 'coverage_verified': True,

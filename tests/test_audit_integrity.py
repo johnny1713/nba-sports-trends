@@ -1,16 +1,22 @@
-"""稽核完整性（fail closed）與 F1 有效比賽集合一致性（使用者 2026-11-21 核准的問題 1、問題 2 修正）。T41、T42。
+"""稽核完整性（fail closed）與 F1 有效比賽集合一致性（使用者 2026-11-21 核准）。T41、T42。
 
-T41 稽核涵蓋清單：缺 flag 檔、缺清單、ID 缺漏／多餘／重複、原始檔改動、新增比賽、稽核版本不符 → 一律拒絕計算。
+T41 稽核涵蓋清單：讀取時一律以目前的稽核程式重新稽核並與 flag 檔逐筆比對；稽核程式指紋涵蓋
+    box_audit.py、audit_coverage.py、store.py（CRLF → LF）；任何缺檔、缺欄位、指紋不符、範圍不符、
+    重新稽核不一致 → AuditIntegrityError（帶錯誤代碼）。竄改清單的測試**一律重新計算 content_sha256**，
+    證明內容指紋不是唯一防線，拒絕來自與原始資料、flag 檔與重新稽核的交叉驗證。
+    本類測試的根目錄都用**真實 box 稽核 v1**（make_root(..., real_audit=True)），不使用測試的宣告稽核。
 T42 唯一有效比賽入口 get_valid_f1_games：F1 累計、league_games_asof、league_games_asof_excl_team、100 場門檻、
     f1_prior_source 全部得到相同結果；ERROR／缺 box／回合數無效的排除一致；LOTO 一致；99 場不過、100 場過。
 """
 import csv
 import json
 import os
+import shutil
 import tempfile
 import unittest
+from unittest import mock
 
-from nba_quant import audit_coverage, config, data_access as DA, store
+from nba_quant import audit_coverage, box_audit, config, data_access as DA, store
 from nba_quant.audit_coverage import AuditIntegrityError
 from nba_quant.features import f1
 
@@ -30,12 +36,32 @@ def manifest_path(d, s=2020):
     return audit_coverage.paths(s, d)['manifest']
 
 
-def edit_manifest(d, fn, s=2020):
+def edit_manifest(d, fn, s=2020, recompute=True):
+    """竄改清單。recompute=True（預設）：同時重算 content_sha256，模擬「知道指紋算法的人」改清單。"""
     p = manifest_path(d, s)
     m = store.read_json(p)
     fn(m)
-    with open(p, 'w', encoding='utf-8') as fh:                       # 刻意繞過 build_manifest，模擬被竄改／過期的清單
+    if recompute and 'content_sha256' in m:
+        m['content_sha256'] = audit_coverage.content_sha(m)
+    with open(p, 'w', encoding='utf-8') as fh:
         json.dump(m, fh)
+
+
+def code_copy(d, mutate=None, crlf=False, drop=None):
+    """把三個稽核程式檔複製到暫存目錄（不動 repo 內的檔案），可修改其中一個、轉成 CRLF 或刪掉一個。"""
+    root = os.path.join(d, 'code')
+    for rel in audit_coverage.AUDIT_CODE_FILES:
+        dst = os.path.join(root, *rel.split('/'))
+        os.makedirs(os.path.dirname(dst), exist_ok=True)
+        if rel == drop:
+            continue
+        data = open(os.path.join(audit_coverage.CODE_ROOT, *rel.split('/')), 'rb').read()
+        if rel == mutate:
+            data += b'\n# changed\n'
+        if crlf:
+            data = data.replace(b'\n', b'\r\n')
+        open(dst, 'wb').write(data)
+    return root
 
 
 class AuditFailClosed(unittest.TestCase):
@@ -44,43 +70,185 @@ class AuditFailClosed(unittest.TestCase):
     def setUp(self):
         self.tmp = tempfile.TemporaryDirectory()
         self.d = self.tmp.name
-        make_root(self.d, G)
+        make_root(self.d, G, real_audit=True)                          # flag 檔 = 真實稽核結果
+        self.p = audit_coverage.paths(2020, self.d)
 
     def tearDown(self):
         self.tmp.cleanup()
 
     def refused(self, code):
         with self.assertRaises(AuditIntegrityError) as cm:
-            f1.compute(2020, root=self.d)
-        self.assertEqual(cm.exception.code, code)
-        with self.assertRaises(AuditIntegrityError):                  # 資料存取層與唯一入口同樣拒絕
-            DA.DataAccess('feature_computation', root=self.d).box_audit_flags(2020)
-        with self.assertRaises(AuditIntegrityError):
-            f1.get_valid_f1_games(DA.DataAccess('feature_computation', root=self.d), 2020)
+            audit_coverage.verify(2020, self.d)
+        self.assertEqual(cm.exception.code, code, str(cm.exception))
+        for call in (lambda: DA.DataAccess('feature_computation', root=self.d).box_audit_flags(2020),
+                     lambda: f1.get_valid_f1_games(DA.DataAccess('feature_computation', root=self.d), 2020),
+                     lambda: f1.compute(2020, root=self.d)):
+            with self.assertRaises(AuditIntegrityError) as cm:
+                call()
+            self.assertEqual(cm.exception.code, code)
 
+    # ---- 正常 ----
+    def test_09_reaudit_matches_flags_passes(self):
+        """正常：重新稽核與 flag 檔完全一致 → 通過；回傳的 flag 就是真實稽核結果。"""
+        m, flags = audit_coverage.verify_and_load(2020, self.d)
+        self.assertEqual(flags, box_audit.audit_season(2020, self.d)[0])
+        self.assertEqual(m['audit_code_sha256'], audit_coverage._code_sha())
+        self.assertEqual(m['expected_game_ids'], ['g1', 'g2', 'g3'])
+        self.assertTrue(f1.compute(2020, root=self.d).rows)
+
+    # ---- 檔案缺失與格式 ----
     def test_01_flag_file_missing_refused(self):
-        os.remove(audit_coverage.paths(2020, self.d)['flags'])
+        os.remove(self.p['flags'])
         self.refused('flags_missing')
 
     def test_02_empty_flag_file_without_manifest_refused(self):
-        self.assertEqual(list(store.read_jsonl_gz(audit_coverage.paths(2020, self.d)['flags'])), [])   # 空 flag 檔
-        os.remove(manifest_path(self.d))
+        store.write_jsonl_gz(self.p['flags'], [])
+        os.remove(self.p['manifest'])
         self.refused('manifest_missing')
 
+    def test_10a_manifest_malformed_json(self):
+        open(self.p['manifest'], 'w').write('{"season": 2020,')
+        self.refused('manifest_unreadable')
+
+    def test_10b_manifest_empty_file(self):
+        open(self.p['manifest'], 'w').write('')
+        self.refused('manifest_unreadable')
+
+    def test_10c_manifest_not_object(self):
+        open(self.p['manifest'], 'w').write('[1, 2]')
+        self.refused('manifest_invalid')
+
+    def test_10d_raw_teambox_missing(self):
+        os.remove(self.p['teambox'])
+        self.refused('raw_missing')
+
+    def test_10e_raw_games_missing(self):
+        os.remove(self.p['games'])
+        self.refused('raw_missing')
+
+    def test_10f_raw_corrupted(self):
+        open(self.p['teambox'], 'wb').write(b'not gzip')
+        with self.assertRaises(AuditIntegrityError) as cm:
+            audit_coverage.verify(2020, self.d)
+        self.assertEqual(cm.exception.code, 'raw_unreadable')
+
+    def test_10g_unknown_or_mistyped_field_with_recomputed_content(self):
+        edit_manifest(self.d, lambda m: m.update(note='x'))
+        self.refused('manifest_invalid')
+        seal(self.d, real_audit=True)
+        edit_manifest(self.d, lambda m: m.update(audited_game_count='3'))
+        self.refused('manifest_invalid')
+
+    # ---- 稽核版本 ----
+    def test_08_manifest_version_changed_refused(self):
+        edit_manifest(self.d, lambda m: m.update(audit_version='box_quality_v0'))
+        self.refused('version')
+
+    def test_08e_required_version_bumped_old_manifest_refused(self):
+        with mock.patch.object(audit_coverage, 'REQUIRED_AUDIT_VERSION', 'box_quality_v2'):
+            self.refused('version')
+
+    # ---- 稽核程式指紋 ----
+    def test_code_fingerprint_covers_three_files(self):
+        m = store.read_json(self.p['manifest'])
+        self.assertEqual(sorted(m['audit_code_files']),
+                         ['nba_quant/audit_coverage.py', 'nba_quant/box_audit.py', 'nba_quant/store.py'])
+        self.assertEqual(m['audit_code_sha256'], audit_coverage.combine_code_sha(m['audit_code_files']))
+
+    def test_code_01_03_any_code_file_changed_refused(self):
+        """1. box_audit.py、2. audit_coverage.py、3. store.py 任何一個實際內容改變（版本字串不變）→ 舊清單拒絕。"""
+        for rel in audit_coverage.AUDIT_CODE_FILES:
+            with self.subTest(rel), tempfile.TemporaryDirectory() as c:
+                with mock.patch.object(audit_coverage, 'CODE_ROOT', code_copy(c, mutate=rel)):
+                    self.refused('audit_code_mismatch')
+
+    def test_code_04_crlf_and_lf_checkout_same_fingerprint(self):
+        with tempfile.TemporaryDirectory() as c:
+            root = code_copy(c, crlf=True)
+            self.assertTrue(b'\r\n' in open(os.path.join(root, 'nba_quant', 'store.py'), 'rb').read())
+            self.assertEqual(audit_coverage.code_files(root), audit_coverage.code_files())
+            with mock.patch.object(audit_coverage, 'CODE_ROOT', root):
+                audit_coverage.verify(2020, self.d)                          # CRLF checkout 不誤拒
+
+    def test_code_05_missing_audit_code_sha256_refused(self):
+        edit_manifest(self.d, lambda m: m.pop('audit_code_sha256'))
+        self.refused('audit_code_mismatch')
+
+    def test_code_06_missing_single_file_fingerprint_refused(self):
+        def drop(m):
+            del m['audit_code_files']['nba_quant/store.py']
+            m['audit_code_sha256'] = audit_coverage.combine_code_sha(m['audit_code_files'])   # 組合指紋也重算
+        edit_manifest(self.d, drop)
+        self.refused('audit_code_mismatch')
+
+    def test_code_06b_forged_file_fingerprint_refused(self):
+        def forge(m):
+            m['audit_code_files']['nba_quant/box_audit.py'] = '0' * 64
+            m['audit_code_sha256'] = audit_coverage.combine_code_sha(m['audit_code_files'])
+        edit_manifest(self.d, forge)
+        self.refused('audit_code_mismatch')
+
+    def test_code_06c_combined_fingerprint_inconsistent_refused(self):
+        edit_manifest(self.d, lambda m: m.update(audit_code_sha256='0' * 64))
+        self.refused('audit_code_mismatch')
+
+    def test_code_06d_code_file_missing_on_disk_refused(self):
+        with tempfile.TemporaryDirectory() as c:
+            with mock.patch.object(audit_coverage, 'CODE_ROOT', code_copy(c, drop='nba_quant/store.py')):
+                self.refused('audit_code_mismatch')
+
+    # ---- 內容指紋 ----
+    def test_content_hash_not_updated_refused(self):
+        edit_manifest(self.d, lambda m: m.update(audited_team_box_count=99), recompute=False)
+        self.refused('content_hash')
+
+    def test_content_hash_missing_refused(self):
+        edit_manifest(self.d, lambda m: m.pop('content_sha256'), recompute=False)
+        self.refused('content_hash')
+
+    def test_content_fingerprint_independent_of_timestamp(self):
+        """相同原始資料、flag、稽核程式：不同時間重建 → 內容指紋相同；只有 audit_timestamp 不同。"""
+        a = audit_coverage.build_manifest(2020, self.d, now='2026-01-01T00:00:00+00:00')
+        b = audit_coverage.build_manifest(2020, self.d, now='2026-02-01T00:00:00+00:00')
+        self.assertEqual(a['content_sha256'], b['content_sha256'])
+        self.assertEqual({k for k in a if a[k] != b[k]}, {'audit_timestamp'})
+        audit_coverage.verify(2020, self.d)
+
+    def test_manifest_file_is_deterministic(self):
+        a = open(self.p['manifest'], 'rb').read()
+        audit_coverage.build_manifest(2020, self.d, now='synthetic')
+        self.assertEqual(open(self.p['manifest'], 'rb').read(), a)
+
+    # ---- 7. 重算內容指紋仍被原始資料交叉驗證擋下 ----
+    def test_07_important_fields_with_recomputed_content_refused(self):
+        def drop_both(m):
+            for k in ('expected', 'audited'):
+                m[f'{k}_game_ids'] = m[f'{k}_game_ids'][1:]
+                m[f'{k}_game_count'] -= 1
+        cases = [
+            ('raw_boxscore_file_hash', lambda m: m.update(raw_boxscore_file_hash='0' * 64), 'raw_boxscore_hash'),
+            ('raw_games_file_hash', lambda m: m.update(raw_games_file_hash='0' * 64), 'raw_games_hash'),
+            ('flags_file_hash', lambda m: m.update(flags_file_hash='0' * 64), 'flags_hash'),
+            ('audited_team_box_count', lambda m: m.update(audited_team_box_count=m['audited_team_box_count'] - 1),
+             'scope_mismatch'),
+            ('raw_boxscore_file', lambda m: m.update(raw_boxscore_file='data/raw/espn/2019/teambox.jsonl.gz'),
+             'raw_file_mismatch'),
+            ('season', lambda m: m.update(season=2019), 'season'),
+            ('ids both lists', drop_both, 'scope_mismatch'),
+        ]
+        for name, fn, code in cases:
+            with self.subTest(name):
+                seal(self.d, real_audit=True)
+                edit_manifest(self.d, fn)
+                self.refused(code)
+
+    # ---- ID 清單 ----
     def test_03_one_audited_id_missing_refused(self):
         def drop(m):
             m['audited_game_ids'] = m['audited_game_ids'][1:]
             m['audited_game_count'] -= 1
         edit_manifest(self.d, drop)
         self.refused('not_all_audited')
-
-    def test_03b_id_missing_from_both_lists_refused(self):
-        def drop(m):
-            for k in ('expected', 'audited'):
-                m[f'{k}_game_ids'] = m[f'{k}_game_ids'][1:]
-                m[f'{k}_game_count'] -= 1
-        edit_manifest(self.d, drop)
-        self.refused('scope_mismatch')                                  # 原始資料有、清單沒有 → 未稽核的比賽
 
     def test_04_extra_nonexistent_id_refused(self):
         def add(m):
@@ -108,22 +276,20 @@ class AuditFailClosed(unittest.TestCase):
         edit_manifest(self.d, lambda m: m.update(audited_game_count=m['audited_game_count'] + 1))
         self.refused('count')
 
+    # ---- 原始資料變動 ----
     def test_06_one_raw_box_field_changed_refused(self):
-        p = audit_coverage.paths(2020, self.d)['teambox']
-        bx = list(store.read_jsonl_gz(p))
-        bx[0]['tov'] += 1                                               # 只改一個欄位
-        store.write_jsonl_gz(p, bx)
+        bx = list(store.read_jsonl_gz(self.p['teambox']))
+        bx[0]['tov'] += 1
+        store.write_jsonl_gz(self.p['teambox'], bx)
         self.refused('raw_boxscore_hash')
 
     def test_07_new_game_invalidates_old_manifest(self):
-        old = store.read_json(manifest_path(self.d))
-        p = audit_coverage.paths(2020, self.d)
-        bx = list(store.read_jsonl_gz(p['teambox']))
-        gs = list(store.read_jsonl_gz(p['games']))
+        bx = list(store.read_jsonl_gz(self.p['teambox']))
+        gs = list(store.read_jsonl_gz(self.p['games']))
         bx += [dict(bx[0], game_id='g9'), dict(bx[1], game_id='g9')]
         gs.append(dict(gs[0], game_id='g9', start_utc='2020-01-08T00:30:00Z'))
-        store.write_jsonl_gz(p['teambox'], bx)
-        store.write_jsonl_gz(p['games'], gs)
+        store.write_jsonl_gz(self.p['teambox'], bx)
+        store.write_jsonl_gz(self.p['games'], gs)
         cls = os.path.join(self.d, 'data', 'reference', 'game_classification.csv')   # 回補時分類表也會跟著重建
         with open(cls, encoding='utf-8', newline='') as fh:
             rows = list(csv.DictReader(fh))
@@ -133,103 +299,102 @@ class AuditFailClosed(unittest.TestCase):
             w.writeheader()
             w.writerows(rows)
         self.refused('raw_boxscore_hash')
-        # 即使有人只把指紋改成新檔的（不重新稽核），新增的比賽仍不在清單內 → 拒絕
-        edit_manifest(self.d, lambda m: m.update(raw_boxscore_file_hash=store.sha256_file(p['teambox']),
-                                                 raw_games_file_hash=store.sha256_file(p['games'])))
+        # 只把指紋改成新檔的（並重算內容指紋），不重新稽核：新比賽不在清單內 → 拒絕
+        edit_manifest(self.d, lambda m: m.update(raw_boxscore_file_hash=store.sha256_file(self.p['teambox']),
+                                                 raw_games_file_hash=store.sha256_file(self.p['games'])))
         self.refused('scope_mismatch')
-        self.assertNotIn('g9', old['audited_game_ids'])                 # 舊清單不會自動沿用
 
-    def test_07b_flag_file_changed_refused(self):
-        p = audit_coverage.paths(2020, self.d)['flags']
-        store.write_jsonl_gz(p, [{'game_id': 'g1', 'team': 'B', 'check': 'x', 'detail': '', 'severity': 'warning'}])
-        self.refused('flags_hash')
+    # ---- flag 與重新稽核 ----
+    def test_08_verify_flags_false_inconsistent_flags_refused(self):
+        """8. verify_flags=False 可以寫出清單，但 flag 與實際稽核不一致 → 正式 verify 拒絕（stale_audit）。"""
+        fake = box_audit.audit_season(2020, self.d)[0] + [
+            {'game_id': 'g1', 'team': 'A', 'source': 'espn', 'level': 'record', 'check': 'zero_value',
+             'severity': 'error', 'detail': 'tov'}]
+        store.write_jsonl_gz(self.p['flags'], fake)
+        audit_coverage.build_manifest(2020, self.d, verify_flags=False, now='t')
+        self.refused('stale_audit')
 
-    def test_08_audit_version_incompatible_refused(self):
-        edit_manifest(self.d, lambda m: m.update(audit_version='box_quality_v0'))
-        self.refused('version')
+    def test_08b_flags_missing_a_record_or_field_changed_refused(self):
+        real = box_audit.audit_season(2020, self.d)[0]
+        self.assertTrue(real, '測試資料需要至少一筆真實稽核 flag')
+        variants = {'drop_record': real[1:],
+                    'severity': [dict(real[0], severity='warning' if real[0]['severity'] == 'error' else 'error')] + real[1:],
+                    'team': [dict(real[0], team='Z')] + real[1:],
+                    'check': [dict(real[0], check='other')] + real[1:],
+                    'detail': [dict(real[0], detail='x')] + real[1:]}
+        for name, flags in variants.items():
+            with self.subTest(name):
+                store.write_jsonl_gz(self.p['flags'], flags)
+                audit_coverage.build_manifest(2020, self.d, verify_flags=False, now='t')
+                with self.assertRaises(AuditIntegrityError) as cm:
+                    audit_coverage.verify(2020, self.d)
+                self.assertIn(cm.exception.code, ('stale_audit', 'flag_outside_scope'))
 
-    def test_08c_audit_code_changed_version_not_bumped_refused(self):
-        """稽核程式改變但 audit_version 忘記更新：保留舊清單 → 以程式指紋拒絕。"""
-        from unittest import mock
-        self.assertEqual(store.read_json(manifest_path(self.d))['audit_version'], audit_coverage.AUDIT_VERSION)
-        with mock.patch.object(audit_coverage, '_code_sha', lambda: '0' * 64):
-            self.refused('audit_code_hash')
-
-    def test_08d_real_code_file_change_refused(self):
-        """不靠 mock：實際換一份內容不同的稽核程式檔（只加一行註解），舊清單必須失效。"""
-        import shutil
-        from unittest import mock
-        from nba_quant import box_audit
-        alt = os.path.join(self.d, 'box_audit_changed.py')
-        shutil.copy(box_audit.__file__, alt)
-        with open(alt, 'a', encoding='utf-8') as fh:
-            fh.write('\n# changed\n')
-        with mock.patch.object(box_audit, '__file__', alt):
-            self.refused('audit_code_hash')
-
-    def test_08e_required_version_bumped_old_manifest_refused(self):
-        """程式要求的稽核版本升級，但舊清單仍存在 → 拒絕。"""
-        from unittest import mock
-        with mock.patch.object(audit_coverage, 'REQUIRED_AUDIT_VERSION', 'box_quality_v2'):
-            self.refused('version')
-
-    def test_08f_matching_code_and_manifest_pass(self):
-        m = audit_coverage.verify(2020, self.d)
-        self.assertEqual(m['audit_code_sha256'], audit_coverage._code_sha())
-        self.assertEqual(m['audit_version'], audit_coverage.REQUIRED_AUDIT_VERSION)
-        self.assertEqual(m['content_sha256'], audit_coverage.content_sha(m))
-
-    def test_08g_content_fingerprint_tamper_refused(self):
-        edit_manifest(self.d, lambda m: m.update(audited_team_box_count=m['audited_team_box_count'] + 1))
-        self.refused('content_hash')
-        edit_manifest(self.d, lambda m: m.pop('content_sha256'))
-        self.refused('content_hash')
-
-    def test_content_fingerprint_independent_of_timestamp(self):
-        """相同原始資料、flag、稽核程式：不同時間重建 → 內容指紋相同；檔案只有 audit_timestamp 不同。"""
-        a = audit_coverage.build_manifest(2020, self.d, verify_flags=False, now='2026-01-01T00:00:00+00:00')
-        fa = store.sha256_file(manifest_path(self.d))
-        b = audit_coverage.build_manifest(2020, self.d, verify_flags=False, now='2026-02-01T00:00:00+00:00')
-        fb = store.sha256_file(manifest_path(self.d))
-        self.assertEqual(a['content_sha256'], b['content_sha256'])
-        self.assertNotEqual(fa, fb)                                    # 檔案位元組含事件時間，本來就會不同
-        self.assertEqual({k for k in a if a[k] != b[k]}, {'audit_timestamp'})
-        audit_coverage.verify(2020, self.d)
-
-    def test_content_fingerprint_changes_with_content(self):
-        a = audit_coverage.build_manifest(2020, self.d, verify_flags=False, now='t')
-        seal(self.d, {2020: [{'game_id': 'g1', 'team': 'B', 'check': 'x', 'detail': '', 'severity': 'warning'}]})
-        b = store.read_json(manifest_path(self.d))
-        self.assertNotEqual(a['content_sha256'], b['content_sha256'])  # flag 不同 → 內容指紋不同
-
-    def test_08b_flag_outside_audited_scope_refused(self):
-        p = audit_coverage.paths(2020, self.d)['flags']
-        store.write_jsonl_gz(p, [{'game_id': 'nope', 'team': 'B', 'check': 'x', 'detail': '', 'severity': 'error'}])
+    def test_08c_flag_outside_audited_scope_refused(self):
+        store.write_jsonl_gz(self.p['flags'], [{'game_id': 'nope', 'team': 'B', 'check': 'x', 'detail': '',
+                                                'severity': 'error'}])
         audit_coverage.build_manifest(2020, self.d, verify_flags=False, now='t')
         self.refused('flag_outside_scope')
 
-    def test_09_fully_audited_season_without_error_passes(self):
-        m = audit_coverage.verify(2020, self.d)
-        self.assertEqual(m['expected_game_ids'], ['g1', 'g2', 'g3'])
-        self.assertEqual(m['expected_game_ids'], m['audited_game_ids'])
-        h = f1.get_valid_f1_games(DA.DataAccess('feature_computation', root=self.d), 2020)
-        self.assertEqual((h.game_ids, h.excluded), (['g1', 'g2', 'g3'], []))
-        self.assertTrue(f1.compute(2020, root=self.d).rows)
-
-    def test_manifest_is_deterministic(self):
-        a = open(manifest_path(self.d), 'rb').read()
-        audit_coverage.build_manifest(2020, self.d, verify_flags=False, now='synthetic')
-        self.assertEqual(open(manifest_path(self.d), 'rb').read(), a)
+    def test_08d_flag_file_changed_after_manifest_refused(self):
+        store.write_jsonl_gz(self.p['flags'], [])
+        self.refused('flags_hash')
 
     def test_stale_audit_refused_when_building(self):
-        """產生清單時重新稽核：結果與既有 flag 檔不同 → 拒絕產生（不得把舊稽核套到新原始資料）。"""
-        p = audit_coverage.paths(2020, self.d)['teambox']
-        bx = list(store.read_jsonl_gz(p))
+        bx = list(store.read_jsonl_gz(self.p['teambox']))
         bx[0]['tov'] = 0                                                # 會被 box 稽核 v1 標記的值
-        store.write_jsonl_gz(p, bx)
+        store.write_jsonl_gz(self.p['teambox'], bx)
         with self.assertRaises(AuditIntegrityError) as cm:
             audit_coverage.build_manifest(2020, self.d)
         self.assertEqual(cm.exception.code, 'stale_audit')
+
+    def test_reaudit_uses_same_bytes_no_second_raw_read(self):
+        """重新稽核使用計算指紋的同一份已讀取位元組：verify 期間不呼叫從檔案讀範圍的 audit_scope。"""
+        with mock.patch.object(box_audit, 'audit_scope', side_effect=AssertionError('不應重讀原始檔')):
+            audit_coverage.verify(2020, self.d)
+
+
+class NoRawDataException(unittest.TestCase):
+    """11. 2013-14 空資料例外：只有「賽程為空」且「原始 games、teambox 檔都不存在」才成立。"""
+
+    def test_positive_season_without_any_raw_data(self):
+        with tempfile.TemporaryDirectory() as d:
+            make_root(d, G, real_audit=True)
+            da = DA.DataAccess('feature_computation', root=d)
+            h = f1.get_valid_f1_games(da, 2019)
+            self.assertEqual((h.status, h.game_ids), ('no_raw_data', []))
+            self.assertFalse([x for x in da.log if x['call'] == 'box_audit_flags'])
+
+    def test_negative_raw_exists_schedule_empty_still_audited(self):
+        with tempfile.TemporaryDirectory() as d:
+            make_root(d, G, real_audit=True)
+            da = DA.DataAccess('feature_computation', root=d)
+            h = f1.get_valid_f1_games(da, 2020, as_of='2020-01-01T00:00:00Z')    # 賽程為空，但原始檔存在
+            self.assertEqual((h.status, h.game_ids), ('available', []))
+            self.assertTrue([x for x in da.log if x['call'] == 'box_audit_flags' and x['coverage_verified']])
+            os.remove(audit_coverage.paths(2020, d)['manifest'])
+            with self.assertRaises(AuditIntegrityError) as cm:
+                f1.get_valid_f1_games(DA.DataAccess('feature_computation', root=d), 2020, as_of='2020-01-01T00:00:00Z')
+            self.assertEqual(cm.exception.code, 'manifest_missing')
+
+    def test_negative_only_one_raw_file_missing(self):
+        for missing in ('teambox', 'games'):
+            with self.subTest(missing), tempfile.TemporaryDirectory() as d:
+                make_root(d, G, real_audit=True)
+                os.remove(audit_coverage.paths(2020, d)[missing])
+                for as_of in (None, '2020-01-01T00:00:00Z'):            # 有賽程／賽程為空都不得走例外
+                    with self.assertRaises(AuditIntegrityError) as cm:
+                        f1.get_valid_f1_games(DA.DataAccess('feature_computation', root=d), 2020, as_of)
+                    self.assertEqual(cm.exception.code, 'raw_missing')
+
+    def test_negative_both_raw_missing_but_schedule_present(self):
+        with tempfile.TemporaryDirectory() as d:
+            make_root(d, G, real_audit=True)
+            for k in ('teambox', 'games'):
+                os.remove(audit_coverage.paths(2020, d)[k])
+            with self.assertRaises(AuditIntegrityError) as cm:
+                f1.get_valid_f1_games(DA.DataAccess('feature_computation', root=d), 2020)
+            self.assertEqual(cm.exception.code, 'raw_missing')
 
 
 def bad_season(n_valid, season=2020):
@@ -323,12 +488,16 @@ class SharedValidSet(unittest.TestCase):
             with self.assertRaises(AuditIntegrityError):
                 DA.DataAccess('feature_computation', root=d).f1_prior_source('A', '2020-01-06T00:30:00Z')
 
-    def test_season_without_any_raw_data_needs_no_audit(self):
-        """完全沒有原始資料的球季（例：2014-15 的上一季）回傳空集合，不視為稽核缺失；有資料就一定要稽核。"""
-        with tempfile.TemporaryDirectory() as d:
-            make_root(d, G)
-            h = f1.get_valid_f1_games(DA.DataAccess('feature_computation', root=d), 2019)
-            self.assertEqual((h.status, h.game_ids), ('no_raw_data', []))
+
+class NoTestHooksInProduction(unittest.TestCase):
+    def test_declared_audit_exists_only_in_tests(self):
+        """宣告稽核（tests/conftest.py）只存在於測試；正式程式沒有任何略過重新稽核的開關。"""
+        pkg = os.path.join(ROOT, 'nba_quant')
+        for dp, _, fs in os.walk(pkg):
+            for f in fs:
+                if f.endswith('.py'):
+                    src = open(os.path.join(dp, f), encoding='utf-8').read()
+                    self.assertNotIn('synthetic_audit', src, f)
 
 
 @unittest.skipUnless(HAS_DATA, 'no data')
@@ -344,8 +513,11 @@ class RealData(unittest.TestCase):
         files = sorted(os.listdir(os.path.join(ROOT, 'data', 'audit', 'box_quality', 'v1', 'coverage')))
         self.assertEqual(files, [f'{s}.json' for s in range(2015, 2026)])          # 11 份完整
         for s in range(2015, 2026):
-            m = audit_coverage.verify(s, ROOT)
+            m, flags = audit_coverage.verify_and_load(s, ROOT)             # 含讀取時重新稽核
             self.assertEqual(m['audit_code_sha256'], audit_coverage._code_sha())
+            self.assertEqual(sorted(m['audit_code_files']), sorted(audit_coverage.AUDIT_CODE_FILES))
+            self.assertIsNone(__import__('conftest').declared(s, ROOT))   # 真實資料不使用宣告稽核
+            self.assertEqual(flags, list(store.read_jsonl_gz(audit_coverage.paths(s, ROOT)['flags'])))
             self.assertEqual(m['expected_game_ids'], m['audited_game_ids'])
             self.assertEqual(m['expected_game_count'], m['audited_game_count'])
 

@@ -33,6 +33,13 @@ def read_jsonl_gz(path: str) -> Iterator[dict]:
                 yield json.loads(line)
 
 
+def parse_jsonl_gz_bytes(data: bytes) -> list:
+    """把已讀入記憶體的 .jsonl.gz 位元組解析成紀錄（與 read_jsonl_gz 相同規則：略過空白行）。
+    稽核涵蓋清單驗證用：計算指紋與解析使用同一份位元組，避免兩次讀檔之間檔案被替換。"""
+    text = gzip.decompress(data).decode('utf-8').replace('\r\n', '\n').replace('\r', '\n')   # 同文字模式的通用換行
+    return [json.loads(line) for line in text.split('\n') if line.strip()]
+
+
 def write_json(path: str, obj) -> str:
     data = (json.dumps(obj, ensure_ascii=False, sort_keys=True, indent=1) + '\n').encode('utf-8')
     _atomic_write(path, data)

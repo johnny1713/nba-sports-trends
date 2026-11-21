@@ -1,5 +1,10 @@
 {
- "audit_code_sha256": "0961c3de73c49dfd4956c341df85a3e8cc6228c890f4cfa5075b9fb77bc98e24",
+ "audit_code_files": {
+  "nba_quant/audit_coverage.py": "82a2f966aae14cfbcb6693264a1422f571e203187819cda3c32767a7739d3853",
+  "nba_quant/box_audit.py": "f61016d466075200a1adcdc051d46eb39eeb8f3f5f3d8f2d231143a6c6dc1c9f",
+  "nba_quant/store.py": "d0a5a7f4108e080a23df5cf447544b518c9c18931680c5b59f73b372f1324547"
+ },
+ "audit_code_sha256": "035cfa58b786972036e6842b0dd7d173de4d2d7acf9d9689d7c1c8c2688252e2",
  "audit_timestamp": "2026-11-21T08:55:35+00:00",
  "audit_version": "box_quality_v1",
  "audited_game_count": 1312,
@@ -1322,7 +1327,7 @@
   "audit_timestamp",
   "content_sha256"
  ],
- "content_sha256": "983ee02242746572866392ed8d437f9169854327c06b29842ad069824b2f251f",
+ "content_sha256": "d29868aaec868fcd7ebd57c6d52d1635bcfb17e06038f18f0bab2a82b4ec7c3b",
  "expected_game_count": 1312,
  "expected_game_ids": [
   "401070213",

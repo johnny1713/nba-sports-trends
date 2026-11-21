@@ -113,16 +113,24 @@ def game_checks(game, boxes):
     return out
 
 
-def audit_scope(season, root='.'):
-    """稽核範圍（唯一定義）：完賽比賽與其球隊 box。稽核涵蓋清單（audit_coverage.py）也用這個函式。"""
-    d = os.path.join(root, RAW, str(season))
-    games = {g['game_id']: g for g in store.read_jsonl_gz(os.path.join(d, 'games.jsonl.gz')) if g['status'] == 'final'}
-    boxes = [b for b in store.read_jsonl_gz(os.path.join(d, 'teambox.jsonl.gz')) if b['game_id'] in games]
+def scope_from_records(game_rows, box_rows):
+    """稽核範圍（唯一定義）：完賽比賽與其球隊 box。輸入為已解析的原始紀錄，讓涵蓋清單驗證可以用
+    「計算指紋的同一份位元組」重新稽核（audit_coverage.verify），不必再讀一次檔案。"""
+    games = {g['game_id']: g for g in game_rows if g['status'] == 'final'}
+    boxes = [b for b in box_rows if b['game_id'] in games]
     return games, boxes
 
 
-def audit_season(season, root='.'):
-    games, boxes = audit_scope(season, root)
+def audit_scope(season, root='.'):
+    """從檔案讀取稽核範圍（範圍定義見 scope_from_records）。"""
+    d = os.path.join(root, RAW, str(season))
+    return scope_from_records(store.read_jsonl_gz(os.path.join(d, 'games.jsonl.gz')),
+                              store.read_jsonl_gz(os.path.join(d, 'teambox.jsonl.gz')))
+
+
+def audit_season(season, root='.', scope=None):
+    """單季稽核。scope = (games, boxes) 時直接使用已讀取的範圍（不重讀檔案），否則從 root 讀取。"""
+    games, boxes = scope if scope is not None else audit_scope(season, root)
     flags = []
     by_game = defaultdict(dict)
     for b in boxes:

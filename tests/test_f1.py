@@ -18,7 +18,7 @@ def box(gid, team, pts, fga=85, fta=20, oreb=10, tov=14, ot=0):
             'oreb': oreb, 'dreb': 33, 'tov': tov, 'overtimes': ot, 'source': 'espn:summary'}
 
 
-def make_root(d, games):
+def make_root(d, games, real_audit=False):
     """games: [(gid, season, start_utc, home, away, hp, ap, game_type, home_box_kw, away_box_kw)]"""
     os.makedirs(os.path.join(d, 'data', 'reference'), exist_ok=True)
     with open(os.path.join(d, 'data', 'reference', 'game_classification.csv'), 'w', newline='', encoding='utf-8') as fh:
@@ -38,20 +38,36 @@ def make_root(d, games):
     for s in gs:
         store.write_jsonl_gz(os.path.join(d, 'data', 'raw', 'espn', str(s), 'games.jsonl.gz'), gs[s])
         store.write_jsonl_gz(os.path.join(d, 'data', 'raw', 'espn', str(s), 'teambox.jsonl.gz'), bx[s])
-    seal(d)
+    seal(d, real_audit=real_audit)
 
 
-def seal(d, flags=None):
-    """合成資料的稽核封存（fail closed 之後必要）：沒有 flag 檔的球季寫入空 flag 檔（或 flags={季: [...]}），
-    再依目前的原始檔產生稽核涵蓋清單。修改原始檔或 flag 之後必須重新呼叫，否則 F1 會拒絕計算。"""
+def seal(d, flags=None, real_audit=False):
+    """合成資料的稽核封存（fail closed 之後必要）。
+    real_audit=False：每季的稽核結果是「宣告的」——flags={季: [...]} 指定，否則沿用既有宣告、預設 []；
+      宣告寫到 synthetic_audit/<季>.json，由 tests/conftest.py 在測試期間當成該根目錄的稽核結果。
+    real_audit=True：不宣告，flag 檔 = 真實 box 稽核 v1 的結果。
+    兩種情況 flag 檔都寫成稽核結果本身，並以 verify_flags=True 產生清單（產生時就逐筆比對）。
+    修改原始檔或 flag 之後必須重新呼叫，否則 F1 會拒絕計算。"""
+    import json
+    from nba_quant import box_audit
     raw = os.path.join(d, 'data', 'raw', 'espn')
     for s in sorted(int(x) for x in os.listdir(raw) if x.isdigit()):
-        p = audit_coverage.paths(s, d)['flags']
-        if flags and s in flags:
-            store.write_jsonl_gz(p, flags[s])
-        elif not os.path.exists(p):
-            store.write_jsonl_gz(p, [])
-        audit_coverage.build_manifest(s, d, verify_flags=False, now='synthetic')
+        marker = os.path.join(d, 'synthetic_audit', f'{s}.json')
+        if real_audit:
+            if os.path.exists(marker):
+                os.remove(marker)
+        else:
+            if flags and s in flags:
+                decl = flags[s]
+            elif os.path.exists(marker):
+                decl = json.load(open(marker, encoding='utf-8'))
+            else:
+                decl = []
+            os.makedirs(os.path.dirname(marker), exist_ok=True)
+            with open(marker, 'w', encoding='utf-8') as fh:
+                json.dump(decl, fh)
+        store.write_jsonl_gz(audit_coverage.paths(s, d)['flags'], box_audit.audit_season(s, d)[0])
+        audit_coverage.build_manifest(s, d, verify_flags=True, now='synthetic')
 
 
 S = 2020

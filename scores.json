@@ -3600,5 +3600,109 @@
     "spread_away": null
    }
   ]
+ },
+ "2026-11-20": {
+  "complete": true,
+  "games": [
+   {
+    "away": "hornets",
+    "away_score": 97,
+    "cover": "home",
+    "final": true,
+    "gid": "388223",
+    "home": "hawks",
+    "home_score": 111,
+    "preseason": false,
+    "spread_away": null
+   },
+   {
+    "away": "raptors",
+    "away_score": 105,
+    "cover": "away",
+    "final": true,
+    "gid": "388224",
+    "home": "pistons",
+    "home_score": 102,
+    "preseason": false,
+    "spread_away": null
+   },
+   {
+    "away": "magic",
+    "away_score": 113,
+    "cover": "home",
+    "final": true,
+    "gid": "388225",
+    "home": "nets",
+    "home_score": 111,
+    "preseason": false,
+    "spread_away": null
+   },
+   {
+    "away": "pacers",
+    "away_score": 119,
+    "cover": "home",
+    "final": true,
+    "gid": "388226",
+    "home": "cavaliers",
+    "home_score": 128,
+    "preseason": false,
+    "spread_away": null
+   },
+   {
+    "away": "wizards",
+    "away_score": 98,
+    "cover": "away",
+    "final": true,
+    "gid": "388227",
+    "home": "bulls",
+    "home_score": 94,
+    "preseason": false,
+    "spread_away": null
+   },
+   {
+    "away": "pelicans",
+    "away_score": 120,
+    "cover": "away",
+    "final": true,
+    "gid": "388228",
+    "home": "thunder",
+    "home_score": 126,
+    "preseason": false,
+    "spread_away": null
+   },
+   {
+    "away": "suns",
+    "away_score": 111,
+    "cover": "away",
+    "final": true,
+    "gid": "388229",
+    "home": "jazz",
+    "home_score": 101,
+    "preseason": false,
+    "spread_away": null
+   },
+   {
+    "away": "rockets",
+    "away_score": 124,
+    "cover": "home",
+    "final": true,
+    "gid": "388231",
+    "home": "nuggets",
+    "home_score": 133,
+    "preseason": false,
+    "spread_away": null
+   },
+   {
+    "away": "kings",
+    "away_score": 104,
+    "cover": "away",
+    "final": true,
+    "gid": "388230",
+    "home": "lakers",
+    "home_score": 106,
+    "preseason": false,
+    "spread_away": null
+   }
+  ]
  }
 }

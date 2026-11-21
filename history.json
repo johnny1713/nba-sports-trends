@@ -3796,6 +3796,128 @@
     "warn": 0
    }
   ],
+  "results": {
+   "388223": {
+    "away": 97,
+    "home": 111
+   },
+   "388224": {
+    "away": 105,
+    "home": 102
+   },
+   "388225": {
+    "away": 113,
+    "home": 111
+   },
+   "388226": {
+    "away": 119,
+    "home": 128
+   },
+   "388227": {
+    "away": 98,
+    "home": 94
+   },
+   "388228": {
+    "away": 120,
+    "home": 126
+   },
+   "388229": {
+    "away": 111,
+    "home": 101
+   },
+   "388230": {
+    "away": 104,
+    "home": 106
+   },
+   "388231": {
+    "away": 124,
+    "home": 133
+   }
+  }
+ },
+ "2026-11-21": {
+  "games": {
+   "388760": {
+    "away": "bucks",
+    "home": "76ers"
+   },
+   "388761": {
+    "away": "trail blazers",
+    "home": "knicks"
+   },
+   "388762": {
+    "away": "grizzlies",
+    "home": "timberwolves"
+   },
+   "388763": {
+    "away": "pelicans",
+    "home": "spurs"
+   },
+   "388764": {
+    "away": "clippers",
+    "home": "mavericks"
+   },
+   "388765": {
+    "away": "celtics",
+    "home": "kings"
+   }
+  },
+  "picks": [
+   {
+    "algo": "combined",
+    "bet_on": "home",
+    "direction": null,
+    "gid": "388760",
+    "line": null,
+    "market": "Moneyline",
+    "score": 63.3,
+    "score_sit": null,
+    "score_trend": 63.3,
+    "top_ai": true,
+    "top_sides": true,
+    "top_totals": false,
+    "warn": 0
+   },
+   {
+    "algo": "trend",
+    "bet_on": "home",
+    "direction": null,
+    "gid": "388760",
+    "line": null,
+    "market": "Moneyline",
+    "score": 63.3,
+    "score_sit": null,
+    "score_trend": 63.3,
+    "warn": 0
+   },
+   {
+    "algo": "combined",
+    "bet_on": "home",
+    "direction": null,
+    "gid": "388763",
+    "line": null,
+    "market": "Moneyline",
+    "score": 53.2,
+    "score_sit": null,
+    "score_trend": 53.2,
+    "top_ai": true,
+    "top_sides": true,
+    "top_totals": false,
+    "warn": 0
+   },
+   {
+    "algo": "trend",
+    "bet_on": "home",
+    "direction": null,
+    "gid": "388763",
+    "line": null,
+    "market": "Moneyline",
+    "score": 53.2,
+    "score_sit": null,
+    "score_trend": 53.2,
+    "warn": 0
+   }
+  ],
   "results": {}
  }
 }

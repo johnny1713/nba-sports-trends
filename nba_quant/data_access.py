@@ -59,9 +59,18 @@ class DataAccess:
     def __init__(self, purpose, run_id=None, root='.'):
         if purpose not in PURPOSES:
             raise ValueError(f'未知的用途：{purpose}（允許：{PURPOSES}）')
-        self.purpose, self.run_id, self.root = purpose, run_id, root
+        self._purpose, self._run_id, self.root = purpose, run_id, root
         self._cls = None
         self.log = []          # 每次存取的紀錄（用途、球季、範圍、as_of、回傳筆數、排除原因）
+
+    # 用途與 run_id 建立後不可更改（2026-11-21：避免先以 data_quality 建立再改成特徵用途繞過檢查）
+    @property
+    def purpose(self):
+        return self._purpose
+
+    @property
+    def run_id(self):
+        return self._run_id
 
     # ------------------------------------------------------------ 鎖定
     def check_season(self, season, as_of=None):

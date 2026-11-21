@@ -17,7 +17,7 @@ M = f1.SHRINK_GAMES
 
 def backed_out_prior(r, k):
     """由輸出反推先驗值：F1 = (n × raw + M × prior)/(n + M)。"""
-    raw = r['raw'][k] if r['raw'] else 0.0
+    raw = r[f'raw_{k}'] if r[f'raw_{k}'] is not None else 0.0
     return ((r['n_games'] + M) * r[f'F1.{k}'] - r['n_games'] * raw) / M
 
 
@@ -26,18 +26,18 @@ class HandCalculations(unittest.TestCase):
     def test_real_game_0ot_phi_at_bos(self):
         """2022-10-18 PHI@BOS：PHI poss = 80-4+14+0.44*28 = 102.32；BOS = 82-6+11+0.44*28 = 99.32；平均 100.82。"""
         r = [x for x in f1.compute_season(2023) if x['game_id'] == '401468170' and x['n_games'] == 1]
-        r = [x for x in r if x['raw'] and abs(x['raw']['pace'] - 100.82) < 1e-9][0]   # PHI 第 2 場，賽前只打過那一場
-        self.assertAlmostEqual(r['raw']['ortg'], 100 * 117 / 100.82, places=9)
-        self.assertAlmostEqual(r['raw']['drtg'], 100 * 126 / 100.82, places=9)
-        self.assertAlmostEqual(r['raw']['pace'], 100.82, places=9)
+        r = [x for x in r if x['raw_pace'] is not None and abs(x['raw_pace'] - 100.82) < 1e-9][0]   # PHI 第 2 場，賽前只打過那一場
+        self.assertAlmostEqual(r['raw_ortg'], 100 * 117 / 100.82, places=9)
+        self.assertAlmostEqual(r['raw_drtg'], 100 * 126 / 100.82, places=9)
+        self.assertAlmostEqual(r['raw_pace'], 100.82, places=9)
 
     @unittest.skipUnless(HAS_DATA, 'no data')
     def test_real_game_1ot_ny_at_mem(self):
         """2022-10-19 NY@MEM（1 OT）：(110.92 + 112.12)/2 = 111.52；Pace = 111.52 / (53/48) = 101.00。"""
         r = [x for x in f1.compute_season(2023) if x['game_id'] == '401468178' and x['n_games'] == 1]
-        r = [x for x in r if abs(x['raw']['ortg'] - 100 * 112 / 111.52) < 1e-9][0]
-        self.assertAlmostEqual(r['raw']['drtg'], 100 * 115 / 111.52, places=9)
-        self.assertAlmostEqual(r['raw']['pace'], 111.52 / (53 / 48), places=9)
+        r = [x for x in r if abs(x['raw_ortg'] - 100 * 112 / 111.52) < 1e-9][0]
+        self.assertAlmostEqual(r['raw_drtg'], 100 * 115 / 111.52, places=9)
+        self.assertAlmostEqual(r['raw_pace'], 111.52 / (53 / 48), places=9)
 
     def test_2ot_synthetic_with_real_numbers(self):
         """MIL@OKC 2022-11-10（2 OT）數據：(121.68 + 116.36)/2 = 119.02；Pace = 119.02 / (58/48) = 98.50。"""
@@ -47,9 +47,9 @@ class HandCalculations(unittest.TestCase):
         with tempfile.TemporaryDirectory() as d:
             make_root(d, g)
             r = [x for x in f1.compute_season(2020, root=d) if x['game_id'] == 'nx' and x['team'] == 'MIL'][0]
-        self.assertAlmostEqual(r['raw']['pace'], 119.02 / (58 / 48), places=9)
-        self.assertAlmostEqual(r['raw']['ortg'], 100 * 136 / 119.02, places=9)
-        self.assertAlmostEqual(round(r['raw']['pace'], 2), 98.50)
+        self.assertAlmostEqual(r['raw_pace'], 119.02 / (58 / 48), places=9)
+        self.assertAlmostEqual(r['raw_ortg'], 100 * 136 / 119.02, places=9)
+        self.assertAlmostEqual(round(r['raw_pace'], 2), 98.50)
 
 
 class FormulaProperties(unittest.TestCase):
@@ -64,9 +64,9 @@ class FormulaProperties(unittest.TestCase):
              ('c', 2020, '2020-01-06T00:30:00Z', 'A', 'B', 100, 100, 'REGULAR_SEASON')]
         r = [x for x in self.run_rows(g) if x['game_id'] == 'c' and x['team'] == 'A'][0]
         pa, pb = 100 - 10 + 14 + 0.44 * 20, 70 - 10 + 14 + 0.44 * 20
-        self.assertAlmostEqual(r['raw']['ortg'], 100 * (120 + 90) / (pa + pb))
+        self.assertAlmostEqual(r['raw_ortg'], 100 * (120 + 90) / (pa + pb))
         mean_of_games = (100 * 120 / pa + 100 * 90 / pb) / 2
-        self.assertNotAlmostEqual(r['raw']['ortg'], mean_of_games, places=3)
+        self.assertNotAlmostEqual(r['raw_ortg'], mean_of_games, places=3)
 
     def test_overtime_changes_only_pace(self):
         base = [('a', 2020, '2020-01-02T00:30:00Z', 'A', 'B', 120, 110, 'REGULAR_SEASON'),
@@ -74,17 +74,17 @@ class FormulaProperties(unittest.TestCase):
         ot = [('a', 2020, '2020-01-02T00:30:00Z', 'A', 'B', 120, 110, 'REGULAR_SEASON', {'ot': 2}, {'ot': 2}), base[1]]
         r0 = [x for x in self.run_rows(base) if x['game_id'] == 'z' and x['team'] == 'A'][0]
         r2 = [x for x in self.run_rows(ot) if x['game_id'] == 'z' and x['team'] == 'A'][0]
-        self.assertEqual(r0['raw']['ortg'], r2['raw']['ortg'])           # 回合數沒有被延長賽改動
-        self.assertEqual(r0['raw']['drtg'], r2['raw']['drtg'])
-        self.assertAlmostEqual(r2['raw']['pace'], r0['raw']['pace'] * 48 / 58)
+        self.assertEqual(r0['raw_ortg'], r2['raw_ortg'])           # 回合數沒有被延長賽改動
+        self.assertEqual(r0['raw_drtg'], r2['raw_drtg'])
+        self.assertAlmostEqual(r2['raw_pace'], r0['raw_pace'] * 48 / 58)
 
     def test_team_fields_come_from_own_box(self):
         """本隊回合數只用本隊的 FGA／OREB／TOV／FTA：改對手的 OREB 只透過『兩隊平均』影響，幅度為一半。"""
         g = [('a', 2020, '2020-01-02T00:30:00Z', 'A', 'B', 110, 100, 'REGULAR_SEASON'),
              ('z', 2020, '2020-01-04T00:30:00Z', 'A', 'B', 100, 90, 'REGULAR_SEASON')]
         g2 = [('a', 2020, '2020-01-02T00:30:00Z', 'A', 'B', 110, 100, 'REGULAR_SEASON', {}, {'oreb': 20}), g[1]]
-        p0 = [x for x in self.run_rows(g) if x['game_id'] == 'z' and x['team'] == 'A'][0]['raw']['pace']
-        p1 = [x for x in self.run_rows(g2) if x['game_id'] == 'z' and x['team'] == 'A'][0]['raw']['pace']
+        p0 = [x for x in self.run_rows(g) if x['game_id'] == 'z' and x['team'] == 'A'][0]['raw_pace']
+        p1 = [x for x in self.run_rows(g2) if x['game_id'] == 'z' and x['team'] == 'A'][0]['raw_pace']
         self.assertAlmostEqual(p0 - p1, 10 / 2)
 
 
@@ -126,8 +126,8 @@ class PriorRules(unittest.TestCase):
         k = srcs.index('league_average_current_season_to_date')
         self.assertTrue(all(s == 'league_average_latest_available_season' for s in srcs[:k]))
         self.assertTrue(all(s == 'league_average_current_season_to_date' for s in srcs[k:]))   # 切換後不再切回
-        self.assertTrue(all(r['prior_seasons'] == [2017] for r in rows[:k]))
-        self.assertTrue(all(r['prior_seasons'] == [2019] for r in rows[k:]))
+        self.assertTrue(all(r['prior_season'] == [2017] for r in rows[:k]))
+        self.assertTrue(all(r['prior_season'] == [2019] for r in rows[k:]))
 
 
 @unittest.skipUnless(HAS_DATA, 'no data')

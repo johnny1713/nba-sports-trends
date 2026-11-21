@@ -56,16 +56,16 @@ class Formula(unittest.TestCase):
     def test_possessions_and_ratings(self):
         r = run(G)[('g3', 'A')]            # A 只打過 g1：poss = 85-10+14+0.44*20 = 97.8（兩隊相同）
         self.assertEqual(r['n_games'], 1)
-        self.assertAlmostEqual(r['raw']['ortg'], 100 * 110 / 97.8)
-        self.assertAlmostEqual(r['raw']['drtg'], 100 * 100 / 97.8)
-        self.assertAlmostEqual(r['raw']['net_rating'], 100 * 10 / 97.8)
-        self.assertAlmostEqual(r['raw']['pace'], 97.8)
+        self.assertAlmostEqual(r['raw_ortg'], 100 * 110 / 97.8)
+        self.assertAlmostEqual(r['raw_drtg'], 100 * 100 / 97.8)
+        self.assertAlmostEqual(r['raw_net_rating'], 100 * 10 / 97.8)
+        self.assertAlmostEqual(r['raw_pace'], 97.8)
 
     def test_overtime_pace(self):
         g = [('o1', S, '2020-01-02T00:30:00Z', 'A', 'B', 120, 118, 'REGULAR_SEASON', {'ot': 1}, {'ot': 1}),
              ('o2', S, '2020-01-05T00:30:00Z', 'A', 'B', 100, 90, 'REGULAR_SEASON')]
         r = run(g)[('o2', 'A')]
-        self.assertAlmostEqual(r['raw']['pace'], 97.8 / (53 / 48))
+        self.assertAlmostEqual(r['raw_pace'], 97.8 / (53 / 48))
 
     def test_shrinkage_formula(self):
         r = run(G)[('g3', 'A')]
@@ -117,9 +117,9 @@ class Season2017_18_and_2018_19(unittest.TestCase):
         self.assertEqual(base, alt)                                  # 2017-18 任意改動都不影響 2018-19
         for r in base.values():
             self.assertEqual(r['status'], 'available_prior_excluded')
-            self.assertNotIn(2018, r['prior_seasons'])
+            self.assertNotIn(2018, r['prior_season'])
             self.assertEqual(r['prior_source'], 'league_average_latest_available_season')
-            self.assertEqual(r['prior_seasons'], [2017])
+            self.assertEqual(r['prior_season'], [2017])
 
 
 class Locks(unittest.TestCase):
@@ -146,9 +146,9 @@ class RealData(unittest.TestCase):
                 self.assertEqual([acc.first, acc.last] if acc.n else None, r['period'])
                 if acc.n:
                     for k, v in acc.values().items():
-                        self.assertAlmostEqual(v, r['raw'][k], places=9)
+                        self.assertAlmostEqual(v, r[f'raw_{k}'], places=9)
                 self.assertEqual(src['source'], r['prior_source'], (season, r['game_id']))
-                self.assertEqual(src['seasons'], r['prior_seasons'])
+                self.assertEqual(src['seasons'], r['prior_season'])
 
     def test_status_matches_dependency_rules(self):
         for season in (2016, 2018, 2019):
@@ -159,7 +159,7 @@ class RealData(unittest.TestCase):
     def test_prior_never_from_unavailable_season(self):
         for season in range(2015, 2024):
             for r in f1.compute_season(season):
-                self.assertNotIn(2018, r.get('prior_seasons') or [])
+                self.assertNotIn(2018, r.get('prior_season') or [])
 
     def test_deterministic(self):
         self.assertEqual(f1.compute_season(2021), f1.compute_season(2021))

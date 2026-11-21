@@ -1,7 +1,7 @@
 """
-F1 球季累計效率（第一階段 stage 2；使用者 2026-11-20 第八輪核准開始 F1）。
+F1 球季累計效率（第一階段 stage 2；2026-11-21 修正四個程式缺口，公式與先驗規則不變）。
 
-定義（每隊、每場預測，只用該場**美東日期之前**、同一球季、`use_team_stats` 範圍內已完賽的比賽）：
+定義（每隊、每場預測，只用該場**美東日期之前**、同一球季、`use_team_stats` 範圍內已完賽、且**有效**的比賽）：
 
     回合數（每隊每場）  poss_T = FGA − OREB + TOV + 0.44 × FTA
     該場回合數          game_poss = (poss_T + poss_O) / 2
@@ -11,50 +11,133 @@ F1 球季累計效率（第一階段 stage 2；使用者 2026-11-20 第八輪核
     Net_raw  = ORtg_raw − DRtg_raw
     Pace_raw = Σ game_poss / Σ minutes_factor         （每 48 分鐘回合數）
 
-收縮（n = 本季至今場數，M = SHRINK_GAMES）：  F1 = (n × raw + M × prior) / (n + M)
-先驗（來源由資料存取層的 f1_prior_source 規則決定，本模組在批次計算時以相同規則重現並有測試比對）：
+收縮（n = 該隊本季至今有效場數，M = SHRINK_GAMES）：  F1 = (n × raw + M × prior) / (n + M)
+先驗（現行 A；B 方案待核准，見 f1_prior_B_proposal.md 審查文件）：
     team_previous_season                   prior = W × 該隊上季全季值 + (1 − W) × 上季聯盟平均
     league_average_current_season_to_date  prior = 本季至今聯盟平均（上季不可用，且本季至今 ≥ 100 場）
     league_average_latest_available_season prior = 最近一個可用完整球季的聯盟平均（上季不可用、本季至今 < 100 場）
     上季沒有資料（2014-15 開季）            prior = 本季至今聯盟平均（≥ 100 場），否則 status = missing（不補值）
-聯盟平均：ORtg 與 DRtg 的聯盟平均相同（每一分同時是某隊得分與另一隊失分），Net 的聯盟平均為 0。
+聯盟平均：總量加權；ORtg 與 DRtg 的聯盟平均相同，Net 的聯盟平均為 0。
+
+資料有效性（2026-11-21）：
+- 賽程與特徵輸出分離：預測目標場次以 DataAccess.games()（賽程）為準逐場輸出，**不需要該場自己的 box**。
+- 歷史比賽只有在**兩隊 box 都有效**時才進入累計：任一隊缺漏（缺 box、缺欄位、失誤不可用）→ 該場不計算共同回合數，
+  雙方都不累計，記錄於 excluded（場次、球隊、原因）。不以另一隊資料推測缺漏隊伍。
+- 單場回合數：每隊 poss_T > 0 且 game_poss > 0；否則 invalid_possessions，排除並保留原始數據。
+- 異常值警告（只標記、不排除、不影響數值）：該季有效比賽的每 48 分鐘回合數超出「中位數 ± 6 × 1.4826 × MAD」
+  （與 box 稽核 v1 相同方法；開發期 9,519 場實際 0 場超出）。
+- 狀態：available、available_prior_excluded、unavailable（依賴規則不可用）、missing（沒有先驗）、
+  invalid（累計回合數 ≤ 0 卻有場數，理論上不會發生，發生即不輸出數值）。
+
+用途（2026-11-21）：每個公開入口都自行檢查 DataAccess 的用途，只允許 ALLOWED_PURPOSES；data_quality 等其他用途一律拒絕，
+不只靠資料存取層。
 
 參數 SHRINK_GAMES = 10、PRIOR_TEAM_WEIGHT = 0.5 是預先登記的預設值，**沒有用任何資料調整**；
 未來若要調整，只能用開發期資料（config.DEV_SEASONS）。
-
-可用性：由 feature_deps 判定。2017-18：F1 全部 unavailable（回合數依賴失誤），不輸出數值；
-2018-19：available_prior_excluded，先驗不得使用 2017-18。
-資料只透過 DataAccess 讀取；盤口、box score 以外的資料一律不用。
 """
 from __future__ import annotations
 
+import statistics
 from collections import defaultdict
+from dataclasses import dataclass, field
 
-from .. import asof, feature_deps
+from .. import asof, config, feature_deps
 from ..data_access import MIN_LEAGUE_GAMES_F1, DataAccess
 
 SHRINK_GAMES = 10.0
 PRIOR_TEAM_WEIGHT = 0.5
 FEATURES = ('F1.ortg', 'F1.drtg', 'F1.net_rating', 'F1.pace')
+KEYS = ('ortg', 'drtg', 'net_rating', 'pace')
 FIELDS = ('pts', 'fga', 'fta', 'oreb', 'tov', 'overtimes')
 SCOPE = 'use_team_stats'
+ALLOWED_PURPOSES = ('feature_computation', 'history_features', 'validation', 'final_evaluation')
+WARN_MAD_K = 6.0
+
+
+class PurposeNotAllowed(config.HoldoutLocked):
+    pass
+
+
+def check_purpose(da):
+    if not isinstance(da, DataAccess):
+        raise PurposeNotAllowed('F1 只接受 DataAccess')
+    if da.purpose not in ALLOWED_PURPOSES:
+        raise PurposeNotAllowed(f'F1 特徵計算不接受用途 {da.purpose}（只允許 {ALLOWED_PURPOSES}）')
+    return da
 
 
 def team_poss(b):
     return b['fga'] - b['oreb'] + b['tov'] + 0.44 * b['fta']
 
 
+@dataclass
+class History:
+    """一季的有效歷史比賽（隊場列）與排除／警告紀錄。"""
+    rows: list
+    excluded: list = field(default_factory=list)
+    warnings: list = field(default_factory=list)
+
+
+def build_history(da, season, schedule=None):
+    """以賽程為準，配對兩隊 box；只有兩隊都有效的比賽進入 rows。"""
+    check_purpose(da)
+    schedule = schedule if schedule is not None else da.games(season, SCOPE)
+    boxes = da.team_boxes(season, SCOPE, list(FIELDS))
+    excl_by = defaultdict(list)
+    for gid, team, why in da.log[-1].get('excluded', []):
+        excl_by[gid].append((team, why))
+    by = defaultdict(dict)
+    for b in boxes:
+        by[b['game_id']][b['team']] = b
+    h = History(rows=[])
+    for g in schedule:
+        gid, teams = g['game_id'], (g['home'], g['away'])
+        got = by.get(gid, {})
+        missing = [t for t in teams if t not in got]
+        if missing:
+            reasons = dict(excl_by.get(gid, []))
+            h.excluded.append({'game_id': gid, 'start_utc': g['start_utc'], 'teams': list(teams),
+                               'missing_teams': missing, 'reason': ';'.join(sorted({reasons.get(t, 'missing_box') for t in missing})),
+                               'affected': 'excluded from both teams\' F1 history'})
+            continue
+        a, b = got[g['home']], got[g['away']]
+        pa, pb = team_poss(a), team_poss(b)
+        gp = (pa + pb) / 2.0
+        if pa <= 0 or pb <= 0 or gp <= 0:
+            h.excluded.append({'game_id': gid, 'start_utc': g['start_utc'], 'teams': list(teams), 'missing_teams': [],
+                               'reason': 'invalid_possessions', 'poss': {g['home']: pa, g['away']: pb},
+                               'raw_boxes': {t: {k: got[t][k] for k in FIELDS} for t in teams},
+                               'affected': 'excluded from both teams\' F1 history'})
+            continue
+        mf = (48 + 5 * a['overtimes']) / 48.0
+        for t, o in ((a, b), (b, a)):
+            h.rows.append({'game_id': gid, 'start_utc': g['start_utc'], 'et_date': asof.et_date(g['start_utc']),
+                           'team': t['team'], 'opp': o['team'], 'pf': t['pts'], 'pa': o['pts'], 'poss': gp, 'mf': mf})
+    paces = {r['game_id']: r['poss'] / r['mf'] for r in h.rows}
+    if len(paces) >= 30:
+        med = statistics.median(paces.values())
+        mad = statistics.median(abs(v - med) for v in paces.values()) * 1.4826
+        if mad > 0:
+            lo, hi = med - WARN_MAD_K * mad, med + WARN_MAD_K * mad
+            h.warnings = [{'game_id': gid, 'pace_per48': v, 'band': [lo, hi], 'action': 'flag_only'}
+                          for gid, v in sorted(paces.items()) if v < lo or v > hi]
+    return h
+
+
 def game_rows(boxes):
-    """把球隊 box 配成每隊每場一列：team、opp、得分、失分、該場回合數、時間係數。"""
+    """（相容用）把球隊 box 配成每隊每場一列；只收兩隊都在且回合數 > 0 的比賽。"""
     by = defaultdict(list)
     for b in boxes:
         by[b['game_id']].append(b)
     rows = []
     for gid, bs in by.items():
         if len(bs) != 2:
-            continue                        # 只有一隊的 box（被排除）→ 整場不用，不補值
+            continue
         a, b = bs
-        gp = (team_poss(a) + team_poss(b)) / 2.0
+        pa, pb = team_poss(a), team_poss(b)
+        gp = (pa + pb) / 2.0
+        if pa <= 0 or pb <= 0 or gp <= 0:
+            continue
         mf = (48 + 5 * a['overtimes']) / 48.0
         for t, o in ((a, b), (b, a)):
             rows.append({'game_id': gid, 'start_utc': t['start_utc'], 'et_date': asof.et_date(t['start_utc']),
@@ -74,19 +157,19 @@ class Acc:
         self.pa += r['pa']
         self.poss += r['poss']
         self.mf += r['mf']
-        d = r['start_utc'][:10]
+        d = asof.et_date(r['start_utc']).isoformat()              # 期間以美東日期記錄
         self.first = d if self.first is None or d < self.first else self.first
         self.last = d if self.last is None or d > self.last else self.last
 
     def values(self):
-        if not self.n or not self.poss:
+        if not self.n or self.poss <= 0 or self.mf <= 0:
             return None
         o, d = 100 * self.pf / self.poss, 100 * self.pa / self.poss
         return {'ortg': o, 'drtg': d, 'net_rating': o - d, 'pace': self.poss / self.mf}
 
 
 def league_values(acc):
-    """聯盟平均（每場每隊各算一次，所以 pf 與 pa 總和相同；Net = 0）。"""
+    """聯盟平均（總量加權：每場每隊各算一次，所以 pf 與 pa 總和相同；Net = 0）。"""
     v = acc.values()
     if v is None:
         return None
@@ -94,10 +177,11 @@ def league_values(acc):
 
 
 def season_totals(da, season):
-    """某季全季（完整球季，用於下一季的先驗）：每隊與聯盟的累計。"""
-    rows = game_rows(da.team_boxes(season, SCOPE, list(FIELDS)))
+    """某季全季（完整球季，用於下一季的先驗）：每隊與聯盟的累計。只用有效比賽。"""
+    check_purpose(da)
+    h = build_history(da, season)
     teams, league = defaultdict(Acc), Acc()
-    for r in rows:
+    for r in h.rows:
         teams[r['team']].add(r)
         league.add(r)
     return teams, league
@@ -114,77 +198,123 @@ def latest_available_before(season):
     return s
 
 
-def compute_season(season, purpose='feature_computation', root='.', da=None):
-    """批次計算某季每一場（use_team_stats 範圍）兩隊的賽前 F1。回傳每隊每場一列。"""
-    da = da or DataAccess(purpose, root=root)
-    status = feature_deps.availability('F1.net_rating', season)[0]
-    games = da.games(season, SCOPE)
+def _empty(rec):
+    for k in KEYS:
+        rec[f'raw_{k}'] = None
+        rec[f'prior_{k}'] = None
+        rec[f'F1.{k}'] = None
+    return rec
+
+
+@dataclass
+class F1Result:
+    rows: list
+    excluded: list
+    warnings: list
+
+
+def compute(season, purpose='feature_computation', root='.', da=None):
+    """批次計算某季賽程上每一場（use_team_stats 範圍）兩隊的賽前 F1。回傳 F1Result（列、排除紀錄、警告）。"""
+    da = check_purpose(da or DataAccess(purpose, root=root))
+    status, reason = feature_deps.availability('F1.net_rating', season)
+    schedule = da.games(season, SCOPE)
+    base = {'shrink_games': SHRINK_GAMES, 'prior_team_weight': PRIOR_TEAM_WEIGHT}
     if status == 'unavailable':
-        return [{'game_id': g['game_id'], 'team': t, 'season': season, 'as_of': g['start_utc'], 'status': 'unavailable',
-                 'n_games': None, 'raw': None, 'prior_source': None, 'prior_seasons': [],
-                 'reason': feature_deps.availability('F1.net_rating', season)[1], **{f: None for f in FEATURES}}
-                for g in games for t in (g['home'], g['away'])]
-    rows = game_rows(da.team_boxes(season, SCOPE, list(FIELDS)))
+        rows = [_empty({'game_id': g['game_id'], 'team': t, 'opp': o, 'season': season, 'as_of': g['start_utc'],
+                        'status': 'unavailable', 'reason': reason, 'n_games': None, 'period': None,
+                        'prior_source': None, 'prior_season': [], 'prior_effective_games': None, 'prior_weight_basis': None,
+                        'excluded_history_games': None, **base})
+                for g in schedule for t, o in ((g['home'], g['away']), (g['away'], g['home']))]
+        return F1Result(rows, [], [])
+    hist = build_history(da, season, schedule)
     by_date = defaultdict(list)
-    for r in rows:
+    for r in hist.rows:
         by_date[r['et_date']].append(r)
+    excl_dates = defaultdict(list)
+    for e in hist.excluded:
+        excl_dates[asof.et_date(e['start_utc'])].append(e)
 
     prev = season - 1
     prev_teams = prev_league = None
     if prev_available(prev):
-        try:
-            prev_teams, prev_league = season_totals(da, prev)
-        except FileNotFoundError:
-            prev_teams = None
-        if prev_teams is not None and not prev_league.n:
-            prev_teams = prev_league = None          # 上季沒有資料（例如 2014-15 的上一季）
+        prev_teams, prev_league = season_totals(da, prev)
+        if not prev_league.n:
+            prev_teams = prev_league = None              # 上季沒有資料（例如 2014-15 的上一季）
     fallback_season = None if prev_available(prev) else latest_available_before(prev)
     fallback_league = league_values(season_totals(da, fallback_season)[1]) if fallback_season else None
 
     cur_teams, cur_league = defaultdict(Acc), Acc()
+    excl_count = defaultdict(int)
     out = []
-    by_game = {g['game_id']: g for g in games}
-    for d in sorted(by_date):
-        todays = by_date[d]
+    sched_by_date = defaultdict(list)
+    for g in schedule:
+        sched_by_date[asof.et_date(g['start_utc'])].append(g)
+    for d in sorted(set(sched_by_date) | set(by_date) | set(excl_dates)):
         lg = league_values(cur_league)
-        for r in todays:
-            g = by_game[r['game_id']]
-            acc = cur_teams[r['team']]
-            prior, src, seasons = _prior(r['team'], prev, prev_teams, prev_league, cur_league, lg,
-                                         fallback_season, fallback_league)
-            raw = acc.values()
-            rec = {'game_id': r['game_id'], 'team': r['team'], 'opp': r['opp'], 'season': season, 'as_of': g['start_utc'],
-                   'n_games': acc.n, 'period': [acc.first, acc.last] if acc.n else None, 'prior_source': src,
-                   'prior_seasons': seasons, 'shrink_games': SHRINK_GAMES, 'prior_team_weight': PRIOR_TEAM_WEIGHT,
-                   'status': status, 'raw': raw}
-            if prior is None:
-                rec.update({'status': 'missing', **{f: None for f in FEATURES}})
-            else:
-                for k in ('ortg', 'drtg', 'net_rating', 'pace'):
-                    x = raw[k] if raw else 0.0
-                    rec[f'F1.{k}'] = (acc.n * x + SHRINK_GAMES * prior[k]) / (acc.n + SHRINK_GAMES)
-            out.append(rec)
-        for r in todays:                            # 當天的比賽要到隔天才加入累計
+        for g in sched_by_date.get(d, []):                  # 預測目標：以賽程為準，不需要本場 box
+            for t, o in ((g['home'], g['away']), (g['away'], g['home'])):
+                acc = cur_teams[t]
+                prior, src, seasons, basis = _prior(t, prev, prev_teams, prev_league, cur_league, lg,
+                                                    fallback_season, fallback_league)
+                raw = acc.values()
+                rec = {'game_id': g['game_id'], 'team': t, 'opp': o, 'season': season, 'as_of': g['start_utc'],
+                       'n_games': acc.n, 'period': [acc.first, acc.last] if acc.n else None,
+                       'prior_source': src, 'prior_season': seasons, 'prior_effective_games': SHRINK_GAMES,
+                       'prior_weight_basis': basis, 'excluded_history_games': excl_count[t],
+                       'status': status, 'reason': reason if status != 'available' else '', **base}
+                for k in KEYS:
+                    rec[f'raw_{k}'] = raw[k] if raw else None
+                    rec[f'prior_{k}'] = prior[k] if prior else None
+                if acc.n and raw is None:                          # 有場數但累計無效：比「沒有先驗」更嚴重，優先標 invalid
+                    rec.update({'status': 'invalid', 'reason': '累計回合數 ≤ 0', **{f: None for f in FEATURES}})
+                elif prior is None:
+                    rec.update({'status': 'missing', 'reason': '沒有可用的先驗（不補值）', **{f: None for f in FEATURES}})
+                else:
+                    for k in KEYS:
+                        x = raw[k] if raw else 0.0                # n = 0 時權重為 0，x 不影響結果
+                        rec[f'F1.{k}'] = (acc.n * x + SHRINK_GAMES * prior[k]) / (acc.n + SHRINK_GAMES)
+                out.append(rec)
+        for r in by_date.get(d, []):                         # 當天的有效比賽要到隔天才加入累計
             cur_teams[r['team']].add(r)
             cur_league.add(r)
-    return out
+        for e in excl_dates.get(d, []):
+            for t in e['teams']:
+                excl_count[t] += 1
+    return F1Result(out, hist.excluded, hist.warnings)
+
+
+def compute_season(season, purpose='feature_computation', root='.', da=None):
+    """相容介面：只回傳列。"""
+    return compute(season, purpose, root, da).rows
 
 
 def _prior(team, prev, prev_teams, prev_league, cur_league, cur_lg_values, fallback_season, fallback_league):
-    if prev_teams is not None and team in prev_teams:
-        tv, lv = prev_teams[team].values(), league_values(prev_league)
-        return ({k: PRIOR_TEAM_WEIGHT * tv[k] + (1 - PRIOR_TEAM_WEIGHT) * lv[k] for k in tv}, 'team_previous_season', [prev])
+    tv = prev_teams[team].values() if prev_teams is not None and team in prev_teams else None
+    lv = league_values(prev_league) if prev_league is not None else None
+    if tv is not None and lv is not None:                # 上季該隊或聯盟累計無效（回合數 ≤ 0）→ 視同沒有上季值，不代入
+        return ({k: PRIOR_TEAM_WEIGHT * tv[k] + (1 - PRIOR_TEAM_WEIGHT) * lv[k] for k in tv}, 'team_previous_season', [prev],
+                f'{PRIOR_TEAM_WEIGHT} × 該隊 {prev} 全季值 + {1 - PRIOR_TEAM_WEIGHT} × {prev} 聯盟平均')
     if cur_league.n >= MIN_LEAGUE_GAMES_F1 * 2:      # cur_league 以「隊場」計，每場兩列
-        return cur_lg_values, 'league_average_current_season_to_date', [prev + 1]
+        return (cur_lg_values, 'league_average_current_season_to_date', [prev + 1],
+                f'本季至今聯盟平均（{cur_league.n // 2} 場 ≥ {MIN_LEAGUE_GAMES_F1}）')
     if fallback_league is not None:
-        return fallback_league, 'league_average_latest_available_season', [fallback_season]
-    return None, 'missing', []
+        return (fallback_league, 'league_average_latest_available_season', [fallback_season],
+                f'{fallback_season} 全季聯盟平均（本季至今 {cur_league.n // 2} 場 < {MIN_LEAGUE_GAMES_F1}；上季不可用）')
+    return None, 'missing', [], f'無上季資料且本季至今 {cur_league.n // 2} 場 < {MIN_LEAGUE_GAMES_F1}'
 
 
 def f1_reference(da, team, as_of):
-    """逐場參考實作（測試用）：直接以 DataAccess(as_of) 讀資料重算單一隊伍的 F1，用來比對批次結果。"""
+    """逐場參考實作（測試用）：直接以 DataAccess(as_of) 讀資料重算單一隊伍的累計與先驗來源。"""
+    check_purpose(da)
     season = da._season_of(as_of)
-    rows = [r for r in game_rows(da.team_boxes(season, SCOPE, list(FIELDS), as_of)) if r['team'] == team]
+    sched = da.games(season, SCOPE, as_of)
+    rows = []
+    boxes = {(b['game_id'], b['team']): b for b in da.team_boxes(season, SCOPE, list(FIELDS), as_of)}
+    for g in sched:
+        a, b = boxes.get((g['game_id'], g['home'])), boxes.get((g['game_id'], g['away']))
+        if not a or not b:
+            continue
+        rows += [r for r in game_rows([a, b]) if r['team'] == team]
     acc = Acc()
     for r in rows:
         acc.add(r)

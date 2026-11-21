@@ -334,7 +334,7 @@ UTC 11:00～13:30（美東 06:00～08:30），NBA 不在此時段開賽。記錄
 不會造成資料洩漏。其中 401161536（GS @ PHX）使 GS 在 2020-03-01 有兩場，WSH @ GS 的預測評分因此不含 PHX 那場結果（較保守）。
 不變式測試只允許這個已登記的例外；出現任何新的同日兩場都會失敗。
 
-### 3.7 F1 球季累計效率（stage 2，`nba_quant/features/f1.py`，已實作，待審查）
+### 3.7 F1 球季累計效率（stage 2，`nba_quant/features/f1.py`；先驗 B 方案待核准：docs/reports/model_data/v1/f1_prior_B_proposal.md）
 
 **定義**（每隊、每場預測；只用該場美東日期之前、同一球季、`use_team_stats` 範圍內已完賽的比賽）
 
@@ -354,6 +354,17 @@ UTC 11:00～13:30（美東 06:00～08:30），NBA 不在此時段開賽。記錄
 - 依賴：`F1.*` → ortg／drtg／net_rating／pace → possessions（fga、oreb、tov、fta，兩隊）＋ pts ＋ overtimes（Pace）。
 - 每列輸出：四個特徵值、原始值（raw）、本季至今場數、資料期間、先驗來源與球季、M、W、狀態（available／available_prior_excluded／unavailable／missing）。
 - 不使用季後賽、附加賽；盃賽冠軍戰納入。只透過 DataAccess；2023-24、2024-25、2025-26 一律被拒絕。
+
+**2026-11-21 修正（公式與先驗規則不變；開發期 2014-15～2022-23 所有數值與狀態與 aff54ca 逐位相同）**
+
+| 缺口 | 修正 |
+|---|---|
+| 1 缺 box 的比賽沒有輸出 | 賽程與特徵輸出分離：預測目標以 `DataAccess.games()` 逐場輸出，不需要該場 box。歷史比賽任一隊 box 缺漏（缺 box、缺欄位、失誤不可用）→ 不計算共同回合數、雙方都不累計，記錄於 `excluded`（場次、球隊、缺漏隊伍、原因、影響範圍）；每列另有 `excluded_history_games`。不以另一隊資料推測 |
+| 2 零回合數與異常值 | 每隊回合數 > 0 且共同回合數 > 0 才有效，否則 `invalid_possessions` 排除並保留原始數據；累計回合數 ≤ 0 → `invalid`、不輸出數值（優先於 missing）。異常值只**警告**：每 48 分鐘回合數超出該季「中位數 ± 6 × 1.4826 × MAD」（box 稽核 v1 的方法），不排除、不影響數值；開發期 9,519 場實際分布 82.1～121.3、帶寬約 68～134，0 場被標記 |
+| 3 先驗值 | 每列輸出 `prior_ortg／prior_drtg／prior_net_rating／prior_pace`、`prior_source`、`prior_season`、`prior_effective_games`（= M）、`prior_weight_basis`（先驗組成的文字說明）、`shrink_games`（M）、`prior_team_weight`（W）、`n_games`、`raw_*`、`F1.*`（收縮後）、`status`；期間改以美東日期記錄 |
+| 4 data_quality 後門 | `compute`／`compute_season`／`build_history`／`season_totals`／`f1_reference` 每個入口都自行檢查用途，只接受 feature_computation、history_features、validation、final_evaluation；`DataAccess.purpose`、`run_id` 改為唯讀（建立後不能改用途）|
+
+狀態：available、available_prior_excluded、unavailable（依賴規則）、missing（沒有先驗）、invalid（累計無效）。
 
 **實際樣本（波士頓）**
 
@@ -561,6 +572,7 @@ UTC 11:00～13:30（美東 06:00～08:30），NBA 不在此時段開賽。記錄
 | T30 | 需要總失誤的特徵只讀 `tov_usable` = True 的 box；2017-18 與 2020-21 附加賽的 box 被排除，但同場仍進 F5 與 Elo（資料存取層在模型實作前完成；各特徵層級隨特徵完成）| 失誤定義一致 |
 | T31 | 特徵依賴：所有特徵遞迴解析到基礎欄位、偵測循環、未登記特徵報錯；2017-18 不可用集合精確等於依賴鏈碰到 tov 的特徵（性質測試）；F3 獨立因素、F4 比分版、F7 比分類、F5、Elo 可用；2018-19 的 F1／F2／F7.pace_sum 為 available_prior_excluded；其他季全部可用（已實作）| 依賴鏈不外漏 |
 | T34 | F1：公式（回合數、ORtg／DRtg／Net、延長賽 Pace）；未來比賽與同日較早比賽不影響；季後賽與附加賽不使用、盃賽冠軍戰使用；沒有先驗時 missing 不補值；2017-18 unavailable 且無數值；2018-19 任意改動 2017-18 資料結果不變、先驗來源為 2016-17；批次結果與 DataAccess(as_of) 逐場參考實作一致（3 季 × 25 場隨機抽樣）；狀態與依賴規則一致；鎖定季全部拒絕；可重現（已實作）| F1 |
+| T37 | F1 缺口修正：缺目標比賽 box 仍輸出、缺歷史比賽任一隊 box 雙方都不累計並記錄、單場回合數 0（兩隊或單隊）排除且保留原始數據、累計回合數 0 → invalid、異常值只標記、實際資料 0 排除 0 警告、每列完整先驗欄位且 F1 可由欄位重算、data_quality 與其他非特徵用途經直接呼叫／批次／其他函式／參數不一致皆拒絕、建立後改用途與假物件皆拒絕、允許用途仍受鎖定與 as_of 限制（已實作）| F1 缺口 |
 | T36 | F1 第二輪審查補充：實際比賽逐項手算（0 OT PHI@BOS、1 OT NY@MEM）、2 OT 合成、總量相除非逐場平均、延長賽只影響 Pace、本隊欄位、正常球季先驗整季固定、先驗 = W×上季球隊 + (1−W)×上季聯盟、本季至今聯盟先驗遵守 as-of、2018-19 先驗只切換一次、2017-18 全部換成極端值後 2018-19 逐位不變且從未讀取 2017-18、無快取、鎖定與 history_features 無法繞道、F1 不輸出指標（已實作；審查報告 docs/reports/model_data/v1/f1_review_round2.md）| F1 審查 |
 | T35 | 2023-24 驗證期鎖定與 history_features：凍結前只限 data_quality；凍結後登記一次 validation 並記錄版本、參數、凍結時間；不得重跑；history_features 必須 as_of、目標球季須授權、不得讀未來球季、不得輸出指標（已實作）| 驗證期 |
 | T33 | 資料存取層附加：F2／F1 跨球季 fallback（2018-19 不回溯 2017-18、不足標 missing、記錄場次與期間）、F4／F7 聯盟層級讀取只見預測日前資料、結構測試（特徵／模型／回測程式不得直接讀原始資料）、新增中間欄位無法洗掉 tov 依賴（已實作）| 防繞道 |

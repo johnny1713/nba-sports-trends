@@ -3704,5 +3704,76 @@
     "spread_away": null
    }
   ]
+ },
+ "2026-11-21": {
+  "complete": true,
+  "games": [
+   {
+    "away": "bucks",
+    "away_score": 129,
+    "cover": "away",
+    "final": true,
+    "gid": "388760",
+    "home": "76ers",
+    "home_score": 132,
+    "preseason": false,
+    "spread_away": null
+   },
+   {
+    "away": "trail blazers",
+    "away_score": 96,
+    "cover": "home",
+    "final": true,
+    "gid": "388761",
+    "home": "knicks",
+    "home_score": 97,
+    "preseason": false,
+    "spread_away": null
+   },
+   {
+    "away": "clippers",
+    "away_score": 100,
+    "cover": "home",
+    "final": true,
+    "gid": "388764",
+    "home": "mavericks",
+    "home_score": 110,
+    "preseason": false,
+    "spread_away": null
+   },
+   {
+    "away": "pelicans",
+    "away_score": 91,
+    "cover": "home",
+    "final": true,
+    "gid": "388763",
+    "home": "spurs",
+    "home_score": 114,
+    "preseason": false,
+    "spread_away": null
+   },
+   {
+    "away": "grizzlies",
+    "away_score": 95,
+    "cover": "home",
+    "final": true,
+    "gid": "388762",
+    "home": "timberwolves",
+    "home_score": 104,
+    "preseason": false,
+    "spread_away": null
+   },
+   {
+    "away": "celtics",
+    "away_score": 96,
+    "cover": "home",
+    "final": true,
+    "gid": "388765",
+    "home": "kings",
+    "home_score": 97,
+    "preseason": false,
+    "spread_away": null
+   }
+  ]
  }
 }

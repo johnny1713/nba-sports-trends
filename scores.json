@@ -3972,5 +3972,43 @@
     "spread_away": null
    }
   ]
+ },
+ "2026-11-24": {
+  "complete": true,
+  "games": [
+   {
+    "away": "pistons",
+    "away_score": 104,
+    "cover": "away",
+    "final": true,
+    "gid": "388232",
+    "home": "magic",
+    "home_score": 86,
+    "preseason": false,
+    "spread_away": null
+   },
+   {
+    "away": "celtics",
+    "away_score": 131,
+    "cover": "away",
+    "final": true,
+    "gid": "388233",
+    "home": "wizards",
+    "home_score": 116,
+    "preseason": false,
+    "spread_away": null
+   },
+   {
+    "away": "mavericks",
+    "away_score": 120,
+    "cover": "away",
+    "final": true,
+    "gid": "388234",
+    "home": "nuggets",
+    "home_score": 101,
+    "preseason": false,
+    "spread_away": null
+   }
+  ]
  }
 }

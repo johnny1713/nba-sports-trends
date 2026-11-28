@@ -4127,7 +4127,7 @@
     "home": "knicks",
     "home_score": null,
     "preseason": false,
-    "spread_away": 2.5
+    "spread_away": null
    },
    {
     "away": "bucks",
@@ -4193,7 +4193,7 @@
     "home": "suns",
     "home_score": null,
     "preseason": false,
-    "spread_away": 3.5
+    "spread_away": 4.5
    },
    {
     "away": "pelicans",
@@ -4237,7 +4237,7 @@
     "home": "spurs",
     "home_score": null,
     "preseason": false,
-    "spread_away": 5.5
+    "spread_away": 6.5
    }
   ]
  }
